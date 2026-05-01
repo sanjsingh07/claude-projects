@@ -1,0 +1,321 @@
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
+import { User, AyanamsaType, DivisionalChartType } from '@types';
+import { secureStorage } from '@utils/secureStorage';
+
+// API URL configuration
+const DEFAULT_API_URL = 'http://localhost:3000/api';
+// For iOS simulator/emulator, use your machine's IP or host.docker.internal
+const IOS_SIMULATOR_URL = 'http://host.docker.internal:3000/api';
+const ANDROID_EMULATOR_URL = 'http://10.0.2.2:3000/api';
+
+const getApiUrl = () => {
+  // Check if we have a custom URL in app.json
+  const configUrl = Constants.expoConfig?.extra?.apiUrl;
+  if (configUrl) {
+    return configUrl;
+  }
+
+  // Fallback based on platform
+  if (Platform.OS === 'android') {
+    return ANDROID_EMULATOR_URL;
+  }
+
+  if (Platform.OS === 'ios') {
+    return IOS_SIMULATOR_URL;
+  }
+
+  return DEFAULT_API_URL;
+};
+
+const API_URL = getApiUrl();
+
+console.log('API_URL:', API_URL);
+
+interface ApiError {
+  code: string;
+  message: string;
+  details?: unknown;
+}
+
+class ApiService {
+  private client: AxiosInstance;
+  private refreshPromise: Promise<void> | null = null;
+
+  constructor() {
+    this.client = axios.create({
+      baseURL: API_URL,
+      timeout: 30000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    this.setupInterceptors();
+  }
+
+  private setupInterceptors(): void {
+    // Request interceptor - add auth token
+    this.client.interceptors.request.use(
+      async (config) => {
+        const token = await secureStorage.getItem('accessToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // Response interceptor - unwrap response.data
+    this.client.interceptors.response.use(
+      (response) => response.data,
+      async (error: AxiosError<ApiError>) => {
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            await this.refreshAccessToken();
+            const newToken = await secureStorage.getItem('accessToken');
+            if (newToken) {
+              originalRequest.headers = {
+                ...originalRequest.headers,
+                Authorization: `Bearer ${newToken}`,
+              };
+            }
+            return this.client(originalRequest);
+          } catch (refreshError) {
+            return Promise.reject(refreshError);
+          }
+        }
+
+        return Promise.reject(this.handleError(error));
+      }
+    );
+  }
+
+  private async refreshAccessToken(): Promise<void> {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    this.refreshPromise = new Promise(async (resolve, reject) => {
+      try {
+        const refreshToken = await secureStorage.getItem('refreshToken');
+        if (!refreshToken) {
+          throw new Error('No refresh token');
+        }
+
+        const response = await fetch(`${API_URL}/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Refresh failed');
+        }
+
+        const data = await response.json();
+        await this.setTokens(data.data.tokens.accessToken, data.data.tokens.refreshToken);
+        resolve();
+      } catch (error) {
+        await this.clearTokens();
+        reject(error);
+      } finally {
+        this.refreshPromise = null;
+      }
+    });
+
+    return this.refreshPromise;
+  }
+
+  private handleError(error: AxiosError<ApiError>): ApiError {
+    console.log('API Error:', error.message, error.code);
+
+    if (error.response?.data) {
+      return error.response.data;
+    }
+
+    if (error.message === 'Network Error') {
+      return {
+        code: 'NETWORK_ERROR',
+        message: `Cannot connect to server at ${API_URL}. Make sure the backend is running and the API URL is correct.`
+      };
+    }
+
+    return { code: 'UNKNOWN_ERROR', message: 'An unexpected error occurred' };
+  }
+
+  async setTokens(accessToken: string, refreshToken: string): Promise<void> {
+    await secureStorage.setItem('accessToken', accessToken);
+    await secureStorage.setItem('refreshToken', refreshToken);
+  }
+
+  async clearTokens(): Promise<void> {
+    await secureStorage.deleteItem('accessToken');
+    await secureStorage.deleteItem('refreshToken');
+  }
+
+  // ==================== AUTH ====================
+
+  async login(email: string, password: string) {
+    console.log('Logging in with:', { email });
+    const response = await this.client.post('/auth/login', { email, password });
+    console.log('Login response:', response);
+    const tokens = response.data?.tokens;
+    if (!tokens) {
+      throw new Error('No tokens in response');
+    }
+    await this.setTokens(tokens.accessToken, tokens.refreshToken);
+    return response;
+  }
+
+  async register(data: {
+    email: string;
+    password: string;
+    birthDate: string;
+    birthTime?: string;
+    birthTimezone: string;
+    birthLatitude?: number;
+    birthLongitude?: number;
+    birthLocationName?: string;
+  }) {
+    console.log('Registering with:', { email: data.email, birthDate: data.birthDate });
+    const response = await this.client.post('/auth/register', data);
+    console.log('Register response:', response);
+    const tokens = response.data?.tokens;
+    if (!tokens) {
+      throw new Error('No tokens in response');
+    }
+    await this.setTokens(tokens.accessToken, tokens.refreshToken);
+    return response;
+  }
+
+  async logout(): Promise<void> {
+    const refreshToken = await secureStorage.getItem('refreshToken');
+    if (refreshToken) {
+      await this.client.post('/auth/logout', { refreshToken });
+    }
+    await this.clearTokens();
+  }
+
+  async socialLogin(provider: 'google' | 'apple', idToken: string) {
+    const response = await this.client.post('/auth/social', { provider, idToken });
+    const tokens = response.data?.tokens;
+    if (!tokens) {
+      throw new Error('No tokens in response');
+    }
+    await this.setTokens(tokens.accessToken, tokens.refreshToken);
+    return response;
+  }
+
+  // ==================== USER ====================
+
+  async getCurrentUser() {
+    return this.client.get('/users/me');
+  }
+
+  async updateUser(data: Partial<User>) {
+    return this.client.patch('/users/me', data);
+  }
+
+  async getUserProfile(userId: string) {
+    return this.client.get(`/users/${userId}/profile`);
+  }
+
+  // ==================== CHART ====================
+
+  async getNatalChart() {
+    return this.client.get('/chart');
+  }
+
+  async recalculateChart(houseSystem?: string) {
+    return this.client.post('/chart/recalculate', { houseSystem });
+  }
+
+  async getTransits() {
+    return this.client.get('/chart/transits');
+  }
+
+  // ==================== VEDIC CHART ====================
+
+  async calculateVedicChart(ayanamsa?: AyanamsaType) {
+    return this.client.post('/vedic/calculate', { ayanamsa: ayanamsa || 'lahiri' });
+  }
+
+  async getVedicChart() {
+    return this.client.get('/vedic');
+  }
+
+  async getDivisionalChart(chartType: DivisionalChartType) {
+    return this.client.get(`/vedic/divisional/${chartType}`);
+  }
+
+  async getNakshatra() {
+    return this.client.get('/vedic/nakshatra');
+  }
+
+  async recalculateVedicChart(ayanamsa: AyanamsaType) {
+    return this.client.post('/vedic/recalculate', { ayanamsa });
+  }
+
+  // ==================== HOROSCOPE ====================
+
+  async getTodayHoroscope() {
+    return this.client.get('/horoscope/today');
+  }
+
+  async getHoroscopeByDate(date: string) {
+    return this.client.get(`/horoscope/${date}`);
+  }
+
+  async getHoroscopeHistory(page = 1, limit = 30) {
+    return this.client.get('/horoscope/history', { params: { page, limit } });
+  }
+
+  async bookmarkHoroscope(id: string, bookmarked: boolean) {
+    return this.client.post(`/horoscope/${id}/bookmark`, { bookmarked });
+  }
+
+  async shareHoroscope(id: string) {
+    return this.client.post(`/horoscope/${id}/share`);
+  }
+
+  // ==================== FRIENDS ====================
+
+  async getFriends() {
+    return this.client.get('/friends');
+  }
+
+  async getFriendRequests() {
+    return this.client.get('/friends/requests');
+  }
+
+  async sendFriendRequest(userId: string) {
+    return this.client.post('/friends/request', { userId });
+  }
+
+  async acceptFriendRequest(requestId: string) {
+    return this.client.post('/friends/accept', { requestId });
+  }
+
+  async rejectFriendRequest(requestId: string) {
+    return this.client.post('/friends/reject', { requestId });
+  }
+
+  async removeFriend(friendshipId: string) {
+    return this.client.delete(`/friends/${friendshipId}`);
+  }
+
+  // ==================== COMPATIBILITY ====================
+
+  async getCompatibility(userId: string) {
+    return this.client.get(`/compatibility/${userId}`);
+  }
+}
+
+export const api = new ApiService();

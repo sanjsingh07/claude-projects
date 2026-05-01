@@ -1,0 +1,79 @@
+import { z } from "zod";
+
+const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  PORT: z.string().default("3000"),
+  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+
+  // Database
+  DATABASE_URL: z.string(),
+  DATABASE_URL_NON_POOLING: z.string().optional(),
+
+  // Redis
+  REDIS_HOST: z.string().default("localhost"),
+  REDIS_PORT: z.string().default("6379"),
+  REDIS_PASSWORD: z.string().optional(),
+  REDIS_DB: z.string().default("0"),
+
+  // JWT
+  JWT_SECRET: z.string(),
+  JWT_EXPIRES_IN: z.string().default("15m"),
+  JWT_REFRESH_SECRET: z.string(),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+
+  // OAuth
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_CALLBACK_URL: z.string().optional(),
+
+  APPLE_CLIENT_ID: z.string().optional(),
+  APPLE_TEAM_ID: z.string().optional(),
+  APPLE_KEY_ID: z.string().optional(),
+  APPLE_PRIVATE_KEY: z.string().optional(),
+
+  // AI Provider: 'anthropic' or 'nvidia' (default: nvidia)
+  AI_PROVIDER: z.enum(["anthropic", "nvidia"]).default("nvidia"),
+
+  // Anthropic (optional — used when AI_PROVIDER=anthropic)
+  ANTHROPIC_API_KEY: z.string().optional(),
+  ANTHROPIC_MODEL: z.string().default("claude-3-5-sonnet-20241022"),
+
+  // NVIDIA NIM (optional — used when AI_PROVIDER=nvidia)
+  NVIDIA_API_KEY: z.string().optional(),
+  NVIDIA_MODEL: z.string().default("qwen/qwen3.5-397b-a17b"),
+  NVIDIA_BASE_URL: z.string().default("https://integrate.api.nvidia.com/v1"),
+
+  // Push Notifications
+  FIREBASE_PROJECT_ID: z.string().optional(),
+  FIREBASE_PRIVATE_KEY: z.string().optional(),
+  FIREBASE_CLIENT_EMAIL: z.string().optional(),
+  EXPO_ACCESS_TOKEN: z.string().optional(),
+
+  // App
+  APP_URL: z.string().default("http://localhost:3000"),
+  API_URL: z.string().default("http://localhost:3000"),
+  ALLOWED_ORIGINS: z
+    .string()
+    .transform((s) => s.split(","))
+    .optional(),
+
+  // Rate Limiting
+  RATE_LIMIT_WINDOW_MS: z.string().default("900000"), // 15 minutes
+  RATE_LIMIT_MAX_REQUESTS: z.string().default("100"),
+});
+
+const parsed = envSchema.safeParse(process.env);
+
+if (!parsed.success) {
+  console.error("❌ Invalid environment variables:");
+  parsed.error.issues.forEach((issue) => {
+    console.error(`  - ${issue.path.join(".")}: ${issue.message}`);
+  });
+  process.exit(1);
+}
+
+export const env = parsed.data;
+
+export type Env = z.infer<typeof envSchema>;

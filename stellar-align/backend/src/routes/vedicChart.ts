@@ -1,0 +1,326 @@
+import { Router, Request, Response, NextFunction } from "express";
+import { body } from "express-validator";
+import { authMiddleware } from "../middleware/auth";
+import { prisma } from "../config/database";
+import { calculateNatalChart } from "../services/astrology";
+import { calculateVedicChart } from "../services/vedicAstrology";
+import { AyanamsaType } from "../types/astrology";
+
+const router = Router();
+
+router.use(authMiddleware);
+
+// GET /vedic/chart - Get user's Vedic chart with all divisional charts
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const chart = await prisma.natalChart.findUnique({
+      where: { userId: req.userId },
+      include: {
+        divisionalCharts: true,
+      },
+    });
+
+    if (!chart) {
+      res.status(404).json({
+        success: false,
+        error: {
+          code: "NOT_FOUND",
+          message: "Natal chart not found",
+        },
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: chart,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /vedic/calculate - Calculate Vedic chart with divisional charts
+router.post(
+  "/calculate",
+  [
+    body("ayanamsa")
+      .optional()
+      .isIn(["lahiri", "raman", "krishnamurti", "fagan-bradley"]),
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: req.userId },
+      });
+
+      if (!user) {
+        res.status(404).json({
+          success: false,
+          error: { code: "NOT_FOUND", message: "User not found" },
+        });
+        return;
+      }
+
+      if (!user.birthLatitude || !user.birthLongitude) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: "INVALID_BIRTH_DATA",
+            message: "Birth location required",
+          },
+        });
+        return;
+      }
+
+      const ayanamsaType = (req.body.ayanamsa as AyanamsaType) || "lahiri";
+      const birthTime = user.birthTime
+        ? user.birthTime.toTimeString().slice(0, 5)
+        : "12:00";
+
+      // First calculate the base natal chart (tropical positions)
+      const chartData = await calculateNatalChart(
+        user.birthDate,
+        birthTime,
+        user.birthLatitude,
+        user.birthLongitude,
+        user.birthTimezone
+      );
+
+      // Calculate Vedic chart with divisional charts
+      const vedicChart = await calculateVedicChart(
+        {
+          date: user.birthDate,
+          time: birthTime,
+          latitude: user.birthLatitude,
+          longitude: user.birthLongitude,
+          timezone: user.birthTimezone,
+          ayanamsa: ayanamsaType,
+        },
+        chartData
+      );
+
+      // Get Moon's nakshatra info
+      const moonNakshatra = vedicChart.nakshatras.moon;
+
+      // Upsert natal chart with Vedic data
+      const userId = req.userId!;
+      const chart = await prisma.natalChart.upsert({
+        where: { userId },
+        create: {
+          userId,
+          sunSign: chartData.sun.sign,
+          moonSign: chartData.moon.sign,
+          risingSign: chartData.ascendant.sign,
+          planetaryPositions: {
+            sun: chartData.sun,
+            moon: chartData.moon,
+            mercury: chartData.mercury,
+            venus: chartData.venus,
+            mars: chartData.mars,
+            jupiter: chartData.jupiter,
+            saturn: chartData.saturn,
+            uranus: chartData.uranus,
+            neptune: chartData.neptune,
+            pluto: chartData.pluto,
+            chiron: chartData.chiron,
+            lilith: chartData.lilith,
+            node: chartData.node,
+            ascendant: chartData.ascendant,
+            midheaven: chartData.midheaven,
+          } as any,
+          houses: chartData.houses as any,
+          aspects: chartData.aspects as any,
+          chartPattern: undefined,
+          houseSystem: "whole", // Vedic uses whole sign
+          calculationMethod: "vedic",
+          zodiacType: "sidereal",
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+        },
+        update: {
+          sunSign: chartData.sun.sign,
+          moonSign: chartData.moon.sign,
+          risingSign: chartData.ascendant.sign,
+          planetaryPositions: {
+            sun: chartData.sun,
+            moon: chartData.moon,
+            mercury: chartData.mercury,
+            venus: chartData.venus,
+            mars: chartData.mars,
+            jupiter: chartData.jupiter,
+            saturn: chartData.saturn,
+            uranus: chartData.uranus,
+            neptune: chartData.neptune,
+            pluto: chartData.pluto,
+            chiron: chartData.chiron,
+            lilith: chartData.lilith,
+            node: chartData.node,
+            ascendant: chartData.ascendant,
+            midheaven: chartData.midheaven,
+          } as any,
+          houses: chartData.houses as any,
+          aspects: chartData.aspects as any,
+          chartPattern: undefined,
+          houseSystem: "whole",
+          calculationMethod: "vedic",
+          zodiacType: "sidereal",
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+          calculatedAt: new Date(),
+        },
+      });
+
+      // Create or update divisional charts
+      const divisionalChartsData = [
+        { chartType: "D1", data: vedicChart.d1 },
+        { chartType: "D2", data: vedicChart.d2 },
+        { chartType: "D4", data: vedicChart.d4 },
+        { chartType: "D9", data: vedicChart.d9 },
+        { chartType: "D10", data: vedicChart.d10 },
+        { chartType: "D11", data: vedicChart.d11 },
+      ];
+
+      // Delete existing divisional charts and create new ones
+      await prisma.divisionalChart.deleteMany({
+        where: { natalChartId: chart.id },
+      });
+
+      await prisma.divisionalChart.createMany({
+        data: divisionalChartsData.map((dc) => ({
+          natalChartId: chart.id,
+          chartType: dc.chartType,
+          planetaryPositions: dc.data.planetaryPositions as any,
+          ascendant: dc.data.ascendant,
+          ascendantDegree: dc.data.ascendantDegree,
+          houses: dc.data.houses as any,
+        })),
+      });
+
+      // Fetch complete chart with divisional charts
+      const completeChart = await prisma.natalChart.findUnique({
+        where: { userId },
+        include: { divisionalCharts: true },
+      });
+
+      res.json({
+        success: true,
+        data: {
+          ...completeChart,
+          vedicChart: {
+            ayanamsa: vedicChart.ayanamsa,
+            ayanamsaType: vedicChart.ayanamsaType,
+            nakshatras: vedicChart.nakshatras,
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// GET /vedic/chart/divisional/:chartType - Get specific divisional chart
+router.get(
+  "/divisional/:chartType",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { chartType } = req.params;
+      const validTypes = ["D1", "D2", "D4", "D9", "D10", "D11"];
+
+      if (!validTypes.includes(chartType)) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: "INVALID_CHART_TYPE",
+            message: `Chart type must be one of: ${validTypes.join(", ")}`,
+          },
+        });
+        return;
+      }
+
+      const natalChart = await prisma.natalChart.findUnique({
+        where: { userId: req.userId },
+      });
+
+      if (!natalChart) {
+        res.status(404).json({
+          success: false,
+          error: { code: "NOT_FOUND", message: "Natal chart not found" },
+        });
+        return;
+      }
+
+      const divisionalChart = await prisma.divisionalChart.findFirst({
+        where: {
+          natalChartId: natalChart.id,
+          chartType,
+        },
+      });
+
+      if (!divisionalChart) {
+        res.status(404).json({
+          success: false,
+          error: { code: "NOT_FOUND", message: "Divisional chart not found" },
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        data: divisionalChart,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// GET /vedic/chart/nakshatra - Get user's nakshatra details
+router.get("/nakshatra", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const chart = await prisma.natalChart.findUnique({
+      where: { userId: req.userId },
+    });
+
+    if (!chart) {
+      res.status(404).json({
+        success: false,
+        error: { code: "NOT_FOUND", message: "Natal chart not found" },
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: {
+        nakshatra: chart.nakshatra,
+        pada: chart.nakshatraPada,
+        lord: chart.nakshatraLord,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /vedic/recalculate - Recalculate Vedic chart with different ayanamsa
+router.post(
+  "/recalculate",
+  [
+    body("ayanamsa")
+      .optional()
+      .isIn(["lahiri", "raman", "krishnamurti", "fagan-bradley"]),
+  ],
+  async (req: Request, _res: Response, next: NextFunction) => {
+    // Delegate to the calculate endpoint logic - just call calculate
+    req.url = '/calculate';
+    return next();
+  }
+);
+
+export default router;

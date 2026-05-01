@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  emailVerified         Boolean   @default(false)
+  passwordHash          String?
+  authProvider          String    @default("email")
+  providerId            String?
+  displayName           String?
+  bio                   String?
+  avatarUrl             String?
+  birthDate             DateTime
+  birthTime             DateTime?
+  birthLocationName     String?
+  birthLatitude         Float?
+  birthLongitude        Float?
+  birthTimezone         String
+  birthUtcOffset        Int?
+  notificationSettings  Json      @default("{\"pushTime\": \"09:00\", \"marketing\": false, \"transitAlerts\": true, \"dailyHoroscope\": true, \"friendActivity\": false}")
+  privacySettings       Json      @default("{\"chartVisible\": \"friends\", \"profileVisible\": true, \"allowCompatibility\": true}")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  lastLoginAt           DateTime?
+  lastActiveAt          DateTime  @default(now())
+  isActive              Boolean   @default(true)
+  isDeleted             Boolean   @default(false)
+  deletedAt             DateTime?
+  requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
+  addresseeCompat       CompatibilityReport[] @relation("AddresseeCompat")
+  horoscopes            DailyHoroscope[]
+  receivedFriendships   Friendship[] @relation("Addressee")
+  sentFriendships       Friendship[] @relation("Requester")
+  natalChart            NatalChart?
+  notifications         Notification[]
+  pushTokens            PushToken[]
+
+  @@index([email])
+  @@index([authProvider, providerId])
+  @@index([birthDate])
+}
+
+model NatalChart {
+  id                    String    @id @default(uuid())
+  userId                String    @unique
+  sunSign               String
+  moonSign              String
+  risingSign            String?
+  planetaryPositions    Json
+  houses                Json
+  aspects               Json
+  chartPattern          String?
+  calculationMethod     String    @default("swiss_ephemeris")
+  houseSystem           String    @default("placidus")
+  zodiacType            String    @default("sidereal")
+  ayanamsa              String    @default("lahiri")
+  nakshatra             String?
+  nakshatraPada         Int?
+  nakshatraLord         String?
+  calculatedAt          DateTime  @default(now())
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  divisionalCharts      DivisionalChart[]
+
+  @@index([userId])
+  @@index([sunSign, moonSign, risingSign])
+}
+
+model DivisionalChart {
+  id                  String   @id @default(uuid())
+  natalChartId        String
+  chartType           String   // D1, D2, D4, D9, D10, D11
+  planetaryPositions  Json     // { sun: { sign: "Aries", degree: 15 }, ... }
+  ascendant           String
+  ascendantDegree     Float
+  houses              Json
+  createdAt           DateTime @default(now())
+  natalChart          NatalChart @relation(fields: [natalChartId], references: [id], onDelete: Cascade)
+
+  @@index([natalChartId])
+  @@index([chartType])
+}
+
+model DailyHoroscope {
+  id                  String    @id @default(uuid())
+  userId              String
+  forDate             DateTime
+  moonSign            String?
+  moonPhase           String?
+  activeTransits      Json?
+  contentSelf         String
+  contentWork         String
+  contentLove         String
+  contentSocial       String
+  generatedBy         String    @default("claude")
+  generationVersion   Int       @default(1)
+  viewedAt            DateTime?
+  shared              Boolean   @default(false)
+  bookmarked          Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, forDate])
+  @@index([userId, forDate])
+}
+
+model Transit {
+  id            String   @id @default(uuid())
+  transitPlanet String
+  natalPlanet   String?
+  targetSign    String?
+  aspectType    String?
+  startDate     DateTime
+  exactDate     DateTime?
+  endDate       DateTime
+  description   String
+  intensity     Int
+  appliesToSigns String[]
+
+  @@index([startDate, endDate])
+}
+
+model Friendship {
+  id            String   @id @default(uuid())
+  requesterId   String
+  addresseeId   String
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  acceptedAt    DateTime?
+  addressee     User     @relation("Addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+  requester     User     @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([requesterId])
+  @@index([addresseeId])
+  @@index([status])
+}
+
+model CompatibilityReport {
+  id                String    @id @default(uuid())
+  user1Id           String
+  user2Id           String
+  overallScore      Float
+  scores            Json
+  synastryAspects   Json?
+  compositeChartId  String?
+  interpretation    String?
+  strengths         Json?
+  challenges        Json?
+  advice            String?
+  generatedAt       DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  user1             User      @relation("RequesterCompat", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2             User      @relation("AddresseeCompat", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+}
+
+model PushToken {
+  id         String   @id @default(uuid())
+  userId     String
+  token      String
+  platform   String
+  deviceId   String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, token])
+  @@index([userId])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  title       String
+  body        String
+  data        Json?
+  sentAt      DateTime @default(now())
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  pushTokenId String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ContentTemplate {
+  id           String   @id @default(uuid())
+  category     String
+  sign         String?
+  aspectPattern String?
+  moonPhase    String?
+  templateText String
+  tone         String   @default("balanced")
+  intensity    Int
+  usageCount   Int      @default(0)
+  lastUsedAt   DateTime?
+  createdAt    DateTime @default(now())
+  isActive     Boolean  @default(true)
+
+  @@index([category, sign])
+}
+
+model JobLog {
+  id         String   @id @default(uuid())
+  jobType    String
+  status     String
+  payload    Json?
+  result     Json?
+  errorMessage String?
+  startedAt  DateTime?
+  completedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([jobType])
+  @@index([status])
+}
+
+model AnalyticsEvent {
+  id            String   @id @default(uuid())
+  userId        String?
+  eventType     String
+  eventCategory String?
+  eventData     Json?
+  sessionId     String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
+}
+
+model ChatSession {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  ChatMessage[]
+
+  @@index([userId])
+}
+
+model ChatMessage {
+  id         String   @id @default(uuid())
+  sessionId  String
+  role       String   // "user" or "assistant"
+  content    String
+  createdAt  DateTime @default(now())
+  session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([createdAt])
+}

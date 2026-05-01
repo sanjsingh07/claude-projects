@@ -1,0 +1,902 @@
+import React, { useState } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput,
+  FlatList,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Ionicons } from '@expo/vector-icons';
+import { DateTime } from 'luxon';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
+import { CostarText, CostarCard } from '@components/CostarCard';
+import { CostarBackground } from '@components/CostarBackground';
+import { SignIcon } from '@components/SignIcon';
+import { CostarButton } from '@components/CostarButton';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@store/authStore';
+import { useAuth } from '@hooks/useAuth';
+import { colors, spacing } from '@theme/theme';
+
+type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  Main: undefined;
+  Profile: undefined;
+};
+
+interface LocationSuggestion {
+  name: string;
+  displayName: string;
+  lat: string;
+  lon: string;
+}
+
+export const ProfileScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const queryClient = useQueryClient();
+const { updateProfile, isUpdatingProfile, logout: authLogout } = useAuth();
+const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutation({
+  mutationFn: async () => {
+    const response = await axios.post('/api/chart/recalculate');
+    return response.data;
+  },
+  onSuccess: () => {
+    Alert.alert('Success', 'Natal chart recalculated');
+    queryClient.invalidateQueries({ queryKey: ['user'] });
+    queryClient.invalidateQueries({ queryKey: ['horoscope'] });
+    queryClient.invalidateQueries({ queryKey: ['chart'] });
+  },
+  onError: (error: any) => {
+    Alert.alert('Error', error.message || 'Failed to recalculate chart');
+  },
+});
+  const user = useAuthStore((state) => state.user);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    birthDate: user?.birthDate || '',
+    birthTime: user?.birthTime || '',
+    birthTimezone: user?.birthTimezone || 'Asia/Kolkata',
+    birthLocationName: user?.birthLocationName || '',
+    birthLatitude: (user as any)?.birthLatitude || undefined,
+    birthLongitude: (user as any)?.birthLongitude || undefined,
+  });
+
+  // Date picker state
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [datePickerDate, setDatePickerDate] = useState(new Date());
+
+  // Time picker state
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [timePickerDate, setTimePickerDate] = useState(new Date());
+
+  // Location picker state
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [locationSearch, setLocationSearch] = useState('');
+  const [locationSuggestions, setLocationSuggestions] = useState<LocationSuggestion[]>([]);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+
+  const debouncedSearch = useDebounce(locationSearch, 500);
+
+  // Fetch location suggestions from OpenStreetMap Nominatim
+  React.useEffect(() => {
+    const fetchLocations = async () => {
+      if (!debouncedSearch.trim()) {
+        setLocationSuggestions([]);
+        return;
+      }
+
+      setIsLoadingLocations(true);
+
+      try {
+        const response = await axios.get(
+          'https://nominatim.openstreetmap.org/search',
+          {
+            params: {
+              q: debouncedSearch,
+              format: 'json',
+              limit: 10,
+              addressdetails: 1,
+            },
+            headers: {
+              'Accept-Language': 'en',
+            },
+          }
+        );
+
+        const suggestions: LocationSuggestion[] = response.data.map((item: any) => {
+          const addr = item.address || {};
+          const parts = [
+            addr.city || addr.town || addr.village || addr.county || '',
+            addr.state || '',
+            addr.country || '',
+          ].filter(Boolean);
+
+          return {
+            name: item.display_name,
+            displayName: parts.length > 0 ? parts.join(', ') : item.display_name,
+            lat: item.lat,
+            lon: item.lon,
+          };
+        });
+
+        setLocationSuggestions(suggestions);
+      } catch (error: any) {
+        console.error('Location search error:', error);
+      } finally {
+        setIsLoadingLocations(false);
+      }
+    };
+
+    if (debouncedSearch.trim()) {
+      fetchLocations();
+    } else {
+      setLocationSuggestions([]);
+    }
+  }, [debouncedSearch]);
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (selectedDate) {
+      setDatePickerDate(selectedDate);
+      setEditData({ ...editData, birthDate: selectedDate.toISOString() });
+    }
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+  };
+
+  const handleTimeChange = (event: any, selectedTime?: Date) => {
+    if (selectedTime) {
+      setTimePickerDate(selectedTime);
+      const hours = selectedTime.getHours().toString().padStart(2, '0');
+      const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
+      setEditData({ ...editData, birthTime: `${hours}:${minutes}` });
+    }
+    if (Platform.OS === 'android') {
+      setShowTimePicker(false);
+    }
+  };
+
+  const handleOpenTimePicker = () => {
+    // Initialize time picker with existing time or current time
+    if (editData.birthTime) {
+      const [hours, minutes] = editData.birthTime.split(':');
+      const initialTime = new Date();
+      initialTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+      setTimePickerDate(initialTime);
+    }
+    setShowTimePicker(true);
+  };
+
+  const handleOpenDatePicker = () => {
+    // Initialize date picker with existing date or current date
+    if (editData.birthDate) {
+      const initialDate = new Date(editData.birthDate);
+      setDatePickerDate(initialDate);
+    }
+    setShowDatePicker(true);
+  };
+
+  const handleLocationSelect = (location: LocationSuggestion) => {
+    setEditData({
+      ...editData,
+      birthLocationName: location.displayName,
+      birthLatitude: parseFloat(location.lat),
+      birthLongitude: parseFloat(location.lon),
+    });
+    setShowLocationModal(false);
+    setLocationSearch('');
+    setLocationSuggestions([]);
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateProfile({
+        birthDate: editData.birthDate || undefined,
+        birthTime: editData.birthTime || undefined,
+        birthTimezone: editData.birthTimezone,
+        birthLocationName: editData.birthLocationName,
+        birthLatitude: editData.birthLatitude,
+        birthLongitude: editData.birthLongitude,
+      });
+      setIsEditing(false);
+      Alert.alert('Success', 'Profile updated successfully');
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to update profile');
+    }
+  };
+
+  const handleCancel = () => {
+    setEditData({
+      birthDate: user?.birthDate || '',
+      birthTime: user?.birthTime || '',
+      birthTimezone: user?.birthTimezone || 'Asia/Kolkata',
+      birthLocationName: user?.birthLocationName || '',
+      birthLatitude: (user as any)?.birthLatitude || undefined,
+      birthLongitude: (user as any)?.birthLongitude || undefined,
+    });
+    setIsEditing(false);
+  };
+
+  const getZodiacSign = (): string => {
+    if (!editData.birthDate) return '';
+    const birthDate = DateTime.fromISO(editData.birthDate);
+    const day = birthDate.day;
+    const month = birthDate.month;
+
+    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'aries';
+    if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'taurus';
+    if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'gemini';
+    if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'cancer';
+    if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'leo';
+    if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'virgo';
+    if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'libra';
+    if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'scorpio';
+    if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'sagittarius';
+    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'capricorn';
+    if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'aquarius';
+    if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'pisces';
+
+    return '';
+  };
+
+  const zodiacSign = getZodiacSign();
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const formatTime = (timeString: string) => {
+    if (!timeString) return '';
+
+    // Handle ISO date string from backend (e.g., "2000-01-01T14:30:00.000Z")
+    // Extract hours and minutes from the date
+    let hours: number, minutes: number;
+
+    if (timeString.includes('T')) {
+      // It's an ISO date string, parse it
+      const date = new Date(timeString);
+      hours = date.getUTCHours();
+      minutes = date.getUTCMinutes();
+    } else {
+      // It's a simple HH:mm string
+      const [h, m] = timeString.split(':');
+      hours = parseInt(h, 10);
+      minutes = parseInt(m, 10);
+    }
+
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHour = hours % 12 || 12;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    return `${displayHour}:${displayMinutes} ${ampm}`;
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            await authLogout();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <CostarBackground />
+        <View style={styles.loadingContainer}>
+          <CostarText variant="heading3">Loading...</CostarText>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CostarBackground />
+
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color={colors.white} />
+        </TouchableOpacity>
+        <CostarText variant="heading3" uppercase>
+          Profile
+        </CostarText>
+        <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(!isEditing)}>
+          {isEditing ? (
+            <>
+              <Ionicons name="close" size={24} color={colors.white} />
+              <CostarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
+                Cancel
+              </CostarText>
+            </>
+          ) : (
+            <>
+              <Ionicons name="create-outline" size={24} color={colors.white} />
+              <CostarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
+                Edit
+              </CostarText>
+            </>
+          )}
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Avatar and Name Section */}
+        <View style={styles.avatarSection}>
+          <View style={styles.avatarLarge}>
+            <CostarText variant="heading2">
+              {(user.email || 'U').charAt(0).toUpperCase()}
+            </CostarText>
+          </View>
+          <CostarText variant="heading2" style={styles.email}>
+            {user.email}
+          </CostarText>
+          {zodiacSign && (
+            <View style={styles.zodiacRow}>
+              <SignIcon sign={zodiacSign as any} size={24} color={colors.gray400} />
+              <CostarText variant="body" color={colors.gray400} style={styles.zodiacText}>
+                {zodiacSign.charAt(0).toUpperCase() + zodiacSign.slice(1)}
+              </CostarText>
+            </View>
+          )}
+        </View>
+
+        {/* Account Info Card */}
+        <CostarCard variant="bordered" style={styles.card}>
+          <CostarText variant="label" style={styles.cardTitle}>
+            Account Information
+          </CostarText>
+
+          {/* Birth Date */}
+          <View style={styles.profileItem}>
+            <CostarText variant="caption" color={colors.gray500}>
+              Birth Date
+            </CostarText>
+            {isEditing ? (
+              <TouchableOpacity
+                style={styles.editableField}
+                onPress={handleOpenDatePicker}
+              >
+                <Ionicons name="calendar-outline" size={20} color={colors.gray400} />
+                <CostarText variant="body" style={styles.editableFieldText}>
+                  {editData.birthDate ? formatDate(editData.birthDate) : 'Select date'}
+                </CostarText>
+                <Ionicons name="chevron-down" size={20} color={colors.gray400} />
+              </TouchableOpacity>
+            ) : (
+              <CostarText variant="body">
+                {editData.birthDate ? formatDate(editData.birthDate) : 'Not set'}
+              </CostarText>
+            )}
+          </View>
+
+          {/* Birth Time */}
+          <View style={styles.profileItem}>
+            <CostarText variant="caption" color={colors.gray500}>
+              Birth Time
+            </CostarText>
+            {isEditing ? (
+              <TouchableOpacity
+                style={styles.editableField}
+                onPress={handleOpenTimePicker}
+              >
+                <Ionicons name="time-outline" size={20} color={colors.gray400} />
+                <CostarText variant="body" style={styles.editableFieldText}>
+                  {editData.birthTime ? formatTime(editData.birthTime) : 'Select time'}
+                </CostarText>
+                <Ionicons name="chevron-down" size={20} color={colors.gray400} />
+              </TouchableOpacity>
+            ) : (
+              <CostarText variant="body">
+                {editData.birthTime ? formatTime(editData.birthTime) : 'Not set'}
+              </CostarText>
+            )}
+          </View>
+
+          {/* Birth Location */}
+          <View style={styles.profileItem}>
+            <CostarText variant="caption" color={colors.gray500}>
+              Birth Location
+            </CostarText>
+            {isEditing ? (
+              <TouchableOpacity
+                style={styles.editableField}
+                onPress={() => setShowLocationModal(true)}
+              >
+                <Ionicons name="location-outline" size={20} color={colors.gray400} />
+                <CostarText variant="body" style={styles.editableFieldText}>
+                  {editData.birthLocationName || 'Select location'}
+                </CostarText>
+                <Ionicons name="chevron-down" size={20} color={colors.gray400} />
+              </TouchableOpacity>
+            ) : (
+              <CostarText variant="body">
+                {editData.birthLocationName || 'Not set'}
+              </CostarText>
+            )}
+          </View>
+
+          {/* Timezone */}
+          <View style={styles.profileItem}>
+            <CostarText variant="caption" color={colors.gray500}>
+              Timezone
+            </CostarText>
+            {isEditing ? (
+              <View style={styles.timezoneContainer}>
+                {TIMEZONES.map((tz) => (
+                  <TouchableOpacity
+                    key={tz.value}
+                    style={
+                      editData.birthTimezone === tz.value
+                        ? styles.timezoneButtonActive
+                        : styles.timezoneButton
+                    }
+                    onPress={() =>
+                      setEditData({ ...editData, birthTimezone: tz.value })
+                    }
+                  >
+                    <CostarText
+                      variant="bodySmall"
+                      style={
+                        editData.birthTimezone === tz.value
+                          ? styles.timezoneTextActive
+                          : styles.timezoneText
+                      }
+                    >
+                      {tz.label}
+                    </CostarText>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <CostarText variant="body">{editData.birthTimezone || 'Not set'}</CostarText>
+            )}
+          </View>
+
+          {/* Save Button */}
+          {isEditing && (
+            <View style={styles.saveButtonContainer}>
+              <CostarButton onPress={handleSave} loading={isUpdatingProfile}>
+                Save Changes
+              </CostarButton>
+            </View>
+          )}
+        </CostarCard>
+
+        {/* Settings Card */}
+        <CostarCard variant="bordered" style={styles.card}>
+          <CostarText variant="label" style={styles.cardTitle}>
+            Settings
+          </CostarText>
+
+          <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color={colors.error} />
+            <CostarText
+              variant="body"
+              style={{ color: colors.error, flex: 1, marginLeft: spacing.md }}
+            >
+              Logout
+            </CostarText>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.settingItem}>
+            <Ionicons name="trash-outline" size={20} color={colors.error} />
+            <CostarText
+              variant="body"
+              style={{ color: colors.error, flex: 1, marginLeft: spacing.md }}
+            >
+              Delete Account
+            </CostarText>
+          </TouchableOpacity>
+        </CostarCard>
+
+        <View style={styles.bottomSpacing} />
+      </ScrollView>
+
+      {/* Date Picker Modal */}
+      <Modal
+        visible={showDatePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowDatePicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CostarText variant="heading3" uppercase>
+                Select Date
+              </CostarText>
+              <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                <Ionicons name="close" size={24} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pickerWrapper}>
+              <DateTimePicker
+                value={datePickerDate}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.modalConfirmButton}
+              onPress={() => setShowDatePicker(false)}
+            >
+              <CostarText variant="label" style={styles.modalConfirmText}>
+                Done
+              </CostarText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Time Picker Modal */}
+      <Modal
+        visible={showTimePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowTimePicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CostarText variant="heading3" uppercase>
+                Select Time
+              </CostarText>
+              <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                <Ionicons name="close" size={24} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pickerWrapper}>
+              <DateTimePicker
+                value={timePickerDate}
+                mode="time"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleTimeChange}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.modalConfirmButton}
+              onPress={() => setShowTimePicker(false)}
+            >
+              <CostarText variant="label" style={styles.modalConfirmText}>
+                Done
+              </CostarText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Location Picker Modal */}
+      <Modal
+        visible={showLocationModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowLocationModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CostarText variant="heading3" uppercase>
+                Select Location
+              </CostarText>
+              <TouchableOpacity onPress={() => setShowLocationModal(false)}>
+                <Ionicons name="close" size={24} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.locationSearchContainer}>
+              <Ionicons name="search" size={20} color={colors.gray500} style={styles.searchIcon} />
+              <TextInput
+                style={styles.locationSearch}
+                placeholder="Search city, state, country..."
+                placeholderTextColor={colors.gray600}
+                value={locationSearch}
+                onChangeText={setLocationSearch}
+                autoCapitalize="words"
+              />
+              {isLoadingLocations && (
+                <ActivityIndicator size="small" color={colors.gray500} style={styles.searchLoader} />
+              )}
+            </View>
+
+            <FlatList
+              data={locationSuggestions}
+              keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.locationItem}
+                  onPress={() => handleLocationSelect(item)}
+                >
+                  <Ionicons name="location" size={20} color={colors.gray400} />
+                  <View style={styles.locationTextContainer}>
+                    <CostarText variant="body" style={styles.locationName}>
+                      {item.displayName}
+                    </CostarText>
+                    <CostarText variant="bodySmall" color={colors.gray500}>
+                      {item.name}
+                    </CostarText>
+                  </View>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={
+                !isLoadingLocations && locationSearch.trim().length > 0 ? (
+                  <View style={styles.emptyContainer}>
+                    <Ionicons name="search-outline" size={40} color={colors.gray600} />
+                    <CostarText variant="body" color={colors.gray500} style={styles.emptyText}>
+                      No locations found
+                    </CostarText>
+                  </View>
+                ) : null
+              }
+            />
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+};
+
+const TIMEZONES = [
+  { label: 'IST (UTC+5:30)', value: 'Asia/Kolkata' },
+  { label: 'EST (UTC-5:00)', value: 'America/New_York' },
+  { label: 'PST (UTC-8:00)', value: 'America/Los_Angeles' },
+  { label: 'GMT (UTC+0:00)', value: 'Europe/London' },
+  { label: 'CET (UTC+1:00)', value: 'Europe/Paris' },
+  { label: 'JST (UTC+9:00)', value: 'Asia/Tokyo' },
+  { label: 'AEST (UTC+10:00)', value: 'Australia/Sydney' },
+];
+
+// Debounce hook
+const useDebounce = (value: string, delay: number): string => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+  },
+  backButton: {
+    padding: spacing.sm,
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.sm,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: spacing.lg,
+  },
+  avatarSection: {
+    alignItems: 'center',
+    paddingVertical: spacing['2xl'],
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray800,
+    marginBottom: spacing.lg,
+  },
+  avatarLarge: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+  },
+  email: {
+    marginBottom: spacing.sm,
+  },
+  zodiacRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.sm,
+  },
+  zodiacText: {
+    marginLeft: spacing.sm,
+  },
+  card: {
+    marginBottom: spacing.lg,
+  },
+  cardTitle: {
+    marginBottom: spacing.lg,
+    paddingBottom: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray800,
+  },
+  profileItem: {
+    marginBottom: spacing.lg,
+  },
+  editableField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.gray700,
+    borderRadius: 8,
+    padding: spacing.md,
+    backgroundColor: colors.gray900,
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  editableFieldText: {
+    color: colors.white,
+    flex: 1,
+  },
+  timezoneContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  timezoneButton: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.gray700,
+  },
+  timezoneButtonActive: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.white,
+    backgroundColor: colors.white + '20',
+  },
+  timezoneText: {
+    color: colors.gray400,
+  },
+  timezoneTextActive: {
+    color: colors.white,
+  },
+  saveButtonContainer: {
+    marginTop: spacing.lg,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray800,
+  },
+  settingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    gap: spacing.md,
+  },
+  bottomSpacing: {
+    height: spacing['3xl'],
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: colors.gray900,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray800,
+  },
+  pickerWrapper: {
+    paddingVertical: spacing.lg,
+    alignItems: 'center',
+  },
+  modalConfirmButton: {
+    alignSelf: 'center',
+    paddingHorizontal: spacing['2xl'],
+    paddingVertical: spacing.md,
+  },
+  modalConfirmText: {
+    color: colors.white,
+  },
+  locationSearchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.gray700,
+    borderRadius: 8,
+    margin: spacing.lg,
+    paddingHorizontal: spacing.md,
+    backgroundColor: colors.gray800,
+  },
+  searchIcon: {
+    marginRight: spacing.sm,
+  },
+  locationSearch: {
+    flex: 1,
+    paddingVertical: spacing.md,
+    color: colors.white,
+    fontSize: 16,
+  },
+  searchLoader: {
+    marginLeft: spacing.sm,
+  },
+  locationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray800,
+  },
+  locationTextContainer: {
+    flex: 1,
+    marginLeft: spacing.md,
+  },
+  locationName: {
+    color: colors.white,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: spacing['2xl'],
+  },
+  emptyText: {
+    marginTop: spacing.md,
+  },
+});
+
+export default ProfileScreen;
