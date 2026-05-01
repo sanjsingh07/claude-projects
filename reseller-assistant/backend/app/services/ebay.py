@@ -74,10 +74,7 @@ class eBayService:
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": f"Basic {self.api_key}" if self.api_key else ""
                 },
-                data={
-                    "grant_type": "client_credentials",
-                    "scope": "https://api.ebay.com/oauth/api_scope"
-                }
+                data="grant_type=client_credentials&scope=https%3A%2F%2Fapi.ebay.com%2Foauth%2Fapi_scope"
             )
             data = response.json()
             self._access_token = data.get("access_token")

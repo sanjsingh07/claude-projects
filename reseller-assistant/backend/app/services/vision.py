@@ -56,7 +56,7 @@ class VisionService:
 
             # Call Claude API
             message = self.client.messages.create(
-                model="claude-sonnet-4-6-20250929",
+                model="claude-3-sonnet-20240229",
                 max_tokens=500,
                 messages=[{
                     "role": "user",
@@ -113,8 +113,14 @@ class VisionService:
             )
 
     def _extract_json(self, text: str) -> Optional[str]:
-        """Extract JSON object from text response."""
-        # Try to find JSON object in response
+        """Extract JSON object from text response, handling markdown code blocks."""
+        # First, try to extract from markdown code block
+        import re
+        json_match = re.search(r'```json\s*([\s\S]*?)```', text)
+        if json_match:
+            return json_match.group(1).strip()
+
+        # Fallback: try to find JSON object in response
         start = text.find("{")
         end = text.rfind("}") + 1
         if start >= 0 and end > start:

@@ -2,13 +2,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files for dependency installation
+COPY package.json package-lock.json* ./
 
 # Install dependencies
 RUN npm install
 
-# Copy application
+# Copy application source
 COPY . .
 
 EXPOSE 5173
