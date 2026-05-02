@@ -214,8 +214,8 @@ function calcSunPosition(jd: number): {
   distance: number;
 } {
   const earthPos = calcHeliocentricPosition(planetModels.EARTH, jd);
-  // Sun is opposite Earth in heliocentric coords
-  const longitude = normalizeAngle(((earthPos.lon + 180) * 180) / Math.PI);
+  // Sun is opposite Earth in heliocentric coords (add 180° to Earth's longitude)
+  const longitude = normalizeAngle((earthPos.lon * 180) / Math.PI + 180);
   const distance = earthPos.dist;
   return { longitude, latitude: 0, distance };
 }
