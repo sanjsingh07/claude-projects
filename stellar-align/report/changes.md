@@ -53,6 +53,46 @@ Fixed critical bugs in both Western and Vedic natal chart calculations that were
 ### Test Data
 Birth: August 23, 1997, 06:00 AM, Khandwa, Madhya Pradesh, India
 
+## 2026-05-02 - Fixed Moon Position Calculation (Radians to Degrees Bug)
+
+### Summary
+Fixed critical bug where Moon longitude from `astronomia/moonposition` was being treated as degrees when it's actually in **radians**.
+
+### The Bug
+- **Issue**: `moonposition.position(jd)` returns longitude in RADIANS, not degrees
+- **Before**: `const longitude = normalizeAngle(moonPos.lon);` - treated radians as degrees
+- **After**: `const longitude = normalizeAngle((moonPos.lon * 180) / Math.PI);` - proper conversion
+- **Impact**: Moon position was off by ~57x (radians vs degrees)
+
+### Verification Results (August 25, 1997, 06:00 AM, Khandwa, India)
+
+**Western (Tropical) Chart:**
+| Planet | Expected | Before Fix | After Fix |
+|--------|----------|------------|-----------|
+| Lagna | Leo | Leo ✅ | Leo ✅ |
+| Sun | Virgo | Virgo ✅ | Virgo ✅ |
+| Moon | Gemini | Aries ❌ | Gemini ✅ |
+| Mercury | Virgo | Virgo ✅ | Virgo ✅ |
+| Venus | Libra | Libra ✅ | Libra ✅ |
+| Mars | Scorpio | Scorpio ✅ | Scorpio ✅ |
+| Jupiter | Aquarius | Aquarius ✅ | Aquarius ✅ |
+| Saturn | Aries | Aries ✅ | Aries ✅ |
+
+**Vedic (Sidereal) Chart:**
+| Planet | Expected | Before Fix | After Fix |
+|--------|----------|------------|-----------|
+| Sun | Leo | Leo ✅ | Leo ✅ |
+| Moon | Taurus | Pisces ❌ | Taurus ✅ |
+| Mercury | Leo | Leo ✅ | Leo ✅ |
+| Venus | Virgo | Virgo ✅ | Virgo ✅ |
+| Mars | Libra | Libra ✅ | Libra ✅ |
+| Jupiter | Capricorn | Capricorn ✅ | Capricorn ✅ |
+| Saturn | Pisces | Pisces ✅ | Pisces ✅ |
+| Rahu | Leo | Leo ✅ | Leo ✅ |
+
+### Files Modified
+- `backend/src/services/astrology.ts` - Fixed Moon longitude conversion from radians to degrees
+
 ## 2026-05-02 - Added Automatic Chart Recalculation on Birth Data Update
 
 ### Summary
