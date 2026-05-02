@@ -226,8 +226,8 @@ function calcMoonPosition(jd: number): {
   distance: number;
 } {
   const moonPos = moonposition.position(jd);
-  // moonposition returns ecliptic coords already
-  const longitude = normalizeAngle(moonPos.lon);
+  // moonposition returns ecliptic longitude in RADIANS, convert to degrees
+  const longitude = normalizeAngle((moonPos.lon * 180) / Math.PI);
   const latitude = moonPos.lat;
   const distance = moonPos.dist;
   return { longitude, latitude, distance };
