@@ -52,3 +52,37 @@ Fixed critical bugs in both Western and Vedic natal chart calculations that were
 
 ### Test Data
 Birth: August 23, 1997, 06:00 AM, Khandwa, Madhya Pradesh, India
+
+## 2026-05-02 - Added Automatic Chart Recalculation on Birth Data Update
+
+### Summary
+Implemented automatic recalculation of both Western (Natal) and Vedic charts when user updates their birth data. Previously, charts were only calculated if they didn't exist.
+
+### Changes
+
+#### 1. Modified `userController.ts` - Automatic Chart Recalculation
+- **Added**: `calculateVedicChartForUserInternal()` method to calculate Vedic charts with divisional charts
+- **Refactored**: `calculateNatalChartForUserInternal()` now accepts `forceRecalculate` parameter
+- **Added**: `calculateAllChartsForUserInternal()` to calculate both Western and Vedic charts
+- **Updated**: `updateCurrentUser()` to trigger chart recalculation when birth data changes (date, time, latitude, longitude)
+
+#### 2. Behavior Changes
+- **Before**: Charts were only calculated if no chart existed
+- **After**: Charts are automatically recalculated whenever birth data is updated
+- **Vedic charts**: Now automatically calculated alongside Western charts
+
+### How It Works
+
+When a user updates their profile with birth data:
+1. Backend validates the birth data (date, time, coordinates)
+2. If all required fields are present, charts are recalculated asynchronously
+3. Both Western (Natal) and Vedic charts are generated
+4. Existing charts are updated (upsert), not just created
+5. Divisional charts (D1-D11) are also updated for Vedic
+
+### Files Modified
+- `backend/src/controllers/userController.ts` - Complete rewrite of chart calculation logic
+
+### API Endpoints Affected
+- `PATCH /users/me` - Now triggers chart recalculation on birth data changes
+- `POST /users/me/recalculate-chart` - Now recalculates both Western and Vedic charts

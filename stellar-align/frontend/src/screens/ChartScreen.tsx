@@ -261,6 +261,7 @@ export const ChartScreen: React.FC = () => {
           // Western Chart View
           <>
             {/* Big Three Card */}
+            {console.log("printing chart: ", chart)}
             <CostarCard variant="bordered" style={styles.card}>
               <CostarText variant="label" style={styles.cardTitle}>
                 The Big Three

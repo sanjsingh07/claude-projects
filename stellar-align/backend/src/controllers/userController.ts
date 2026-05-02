@@ -3,6 +3,7 @@ import { prisma } from "../config/database";
 import { cache } from "../config/redis";
 import { ApiError, NotFoundError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
+import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
 
 export class UserController {
@@ -92,9 +93,8 @@ export class UserController {
       }
 
       // Convert birthTime string (HH:mm) to Date object if provided
+      // Use a fixed reference date (2000-01-01) to store only the time
       if (updateData.birthTime) {
-        // Convert time string "HH:mm" to Date object
-        // Use a fixed reference date (2000-01-01) to store only the time
         const [hours, minutes] = updateData.birthTime.split(":");
         // Create date in UTC to avoid timezone issues
         const timeDate = new Date(Date.UTC(2000, 0, 1, parseInt(hours, 10), parseInt(minutes, 10), 0, 0));
@@ -123,26 +123,26 @@ export class UserController {
       // Invalidate cache
       await cache.delete(`user:${req.userId}`);
 
-      // If birth data was updated and we have all required fields, calculate natal chart
-      if (
-        (updateData.birthDate || updateData.birthLatitude || updateData.birthLongitude || updateData.birthTime) &&
-        user.birthLatitude != null &&
-        user.birthLongitude != null
-      ) {
-        logger.info("Triggering natal chart calculation", {
+      // If birth data was updated, trigger recalculation of both Western and Vedic charts
+      const birthDataUpdated = !!(updateData.birthDate || updateData.birthTime || updateData.birthLatitude !== undefined || updateData.birthLongitude !== undefined);
+      const hasAllBirthData = user.birthLatitude != null && user.birthLongitude != null && user.birthDate != null;
+
+      if (birthDataUpdated && hasAllBirthData) {
+        logger.info("Birth data updated, triggering chart recalculation", {
           userId: req.userId,
           birthLatitude: user.birthLatitude,
           birthLongitude: user.birthLongitude,
         });
-        
-        // Call natal chart calculation synchronously (fire-and-forget)
+
+        // Call chart calculation asynchronously (fire-and-forget)
         // We use setImmediate to avoid blocking the response
         setImmediate(async () => {
           try {
-            await userController.calculateNatalChartForUserInternal(req.userId!);
-            logger.info("Natal chart calculation completed", { userId: req.userId });
+            // Force recalculate even if chart exists
+            await userController.calculateAllChartsForUserInternal(req.userId!);
+            logger.info("Chart recalculation completed", { userId: req.userId });
           } catch (err: any) {
-            logger.error("Natal chart calculation failed", {
+            logger.error("Chart recalculation failed", {
               userId: req.userId,
               error: err?.message || String(err),
               stack: err?.stack,
@@ -150,9 +150,9 @@ export class UserController {
           }
         });
       } else {
-        logger.info("Skipping natal chart calculation", {
+        logger.info("Skipping chart recalculation", {
           userId: req.userId,
-          hasBirthData: !!(updateData.birthDate || updateData.birthLatitude || updateData.birthLongitude || updateData.birthTime),
+          hasBirthData: birthDataUpdated,
           hasLat: user.birthLatitude != null,
           hasLon: user.birthLongitude != null,
         });
@@ -169,14 +169,30 @@ export class UserController {
     }
   }
 
-  private async calculateNatalChartForUserInternal(userId: string): Promise<void> {
+  /**
+   * Calculate both Western (Natal) and Vedic charts for a user
+   */
+  private async calculateAllChartsForUserInternal(userId: string): Promise<void> {
+    // Calculate Western chart first
+    await this.calculateNatalChartForUserInternal(userId, true);
+
+    // Then calculate Vedic chart
+    await this.calculateVedicChartForUserInternal(userId, "lahiri");
+  }
+
+  /**
+   * Calculate Western natal chart for a user
+   * @param userId - The user ID
+   * @param forceRecalculate - If true, recalculate even if chart exists
+   */
+  private async calculateNatalChartForUserInternal(userId: string, forceRecalculate: boolean = false): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { natalChart: true },
     });
 
-    // Skip if user not found or already has a natal chart
-    if (!user || user.natalChart) {
+    // Skip if user not found or already has a natal chart (unless forcing recalculate)
+    if (!user || (user.natalChart && !forceRecalculate)) {
       return;
     }
 
@@ -197,9 +213,39 @@ export class UserController {
         user.birthTimezone || "UTC",
       );
 
-      await prisma.natalChart.create({
-        data: {
+      // Use upsert to create or update
+      await prisma.natalChart.upsert({
+        where: { userId },
+        create: {
           userId,
+          sunSign: chartData.sun.sign,
+          moonSign: chartData.moon.sign,
+          risingSign: chartData.ascendant?.sign || "unknown",
+          planetaryPositions: {
+            sun: chartData.sun,
+            moon: chartData.moon,
+            mercury: chartData.mercury,
+            venus: chartData.venus,
+            mars: chartData.mars,
+            jupiter: chartData.jupiter,
+            saturn: chartData.saturn,
+            uranus: chartData.uranus,
+            neptune: chartData.neptune,
+            pluto: chartData.pluto,
+            chiron: chartData.chiron,
+            lilith: chartData.lilith,
+            node: chartData.node,
+            ascendant: chartData.ascendant,
+            midheaven: chartData.midheaven,
+          } as any,
+          houses: chartData.houses as any,
+          aspects: chartData.aspects as any,
+          chartPattern: undefined,
+          houseSystem: "placidus",
+          calculationMethod: "astronomia",
+          calculatedAt: new Date(),
+        },
+        update: {
           sunSign: chartData.sun.sign,
           moonSign: chartData.moon.sign,
           risingSign: chartData.ascendant?.sign || "unknown",
@@ -238,6 +284,170 @@ export class UserController {
     }
   }
 
+  /**
+   * Calculate Vedic chart for a user
+   * @param userId - The user ID
+   * @param ayanamsaType - The ayanamsa type to use (default: lahiri)
+   */
+  private async calculateVedicChartForUserInternal(userId: string, ayanamsaType: "lahiri" | "raman" | "krishnamurti" | "fagan-bradley" = "lahiri"): Promise<void> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { natalChart: true },
+    });
+
+    // Skip if user not found or doesn't have birth data
+    if (!user || !user.birthDate || user.birthLatitude == null || user.birthLongitude == null) {
+      return;
+    }
+
+    // Skip if no Western chart exists (we need it as base)
+    if (!user.natalChart) {
+      logger.warn("Cannot calculate Vedic chart without Western chart", { userId });
+      return;
+    }
+
+    try {
+      const timeStr = user.birthTime
+        ? user.birthTime.toISOString().slice(11, 16)
+        : "12:00";
+
+      // First calculate the base natal chart (tropical positions)
+      const chartData = await astrologyService.calculateNatalChart(
+        user.birthDate,
+        timeStr,
+        user.birthLatitude,
+        user.birthLongitude,
+        user.birthTimezone || "UTC",
+      );
+
+      // Calculate Vedic chart with divisional charts
+      const vedicChart = await calculateVedicChart(
+        {
+          date: user.birthDate,
+          time: timeStr,
+          latitude: user.birthLatitude,
+          longitude: user.birthLongitude,
+          timezone: user.birthTimezone || "UTC",
+          ayanamsa: ayanamsaType,
+        },
+        chartData,
+      );
+
+      // Get Moon's nakshatra info
+      const moonNakshatra = vedicChart.nakshatras.moon;
+
+      // Upsert natal chart with Vedic data
+      const chart = await prisma.natalChart.upsert({
+        where: { userId },
+        create: {
+          userId,
+          sunSign: chartData.sun.sign,
+          moonSign: chartData.moon.sign,
+          risingSign: chartData.ascendant.sign,
+          planetaryPositions: {
+            sun: chartData.sun,
+            moon: chartData.moon,
+            mercury: chartData.mercury,
+            venus: chartData.venus,
+            mars: chartData.mars,
+            jupiter: chartData.jupiter,
+            saturn: chartData.saturn,
+            uranus: chartData.uranus,
+            neptune: chartData.neptune,
+            pluto: chartData.pluto,
+            chiron: chartData.chiron,
+            lilith: chartData.lilith,
+            node: chartData.node,
+            ascendant: chartData.ascendant,
+            midheaven: chartData.midheaven,
+          } as any,
+          houses: chartData.houses as any,
+          aspects: chartData.aspects as any,
+          chartPattern: undefined,
+          houseSystem: "whole",
+          calculationMethod: "vedic",
+          zodiacType: "sidereal",
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+        },
+        update: {
+          sunSign: chartData.sun.sign,
+          moonSign: chartData.moon.sign,
+          risingSign: chartData.ascendant.sign,
+          planetaryPositions: {
+            sun: chartData.sun,
+            moon: chartData.moon,
+            mercury: chartData.mercury,
+            venus: chartData.venus,
+            mars: chartData.mars,
+            jupiter: chartData.jupiter,
+            saturn: chartData.saturn,
+            uranus: chartData.uranus,
+            neptune: chartData.neptune,
+            pluto: chartData.pluto,
+            chiron: chartData.chiron,
+            lilith: chartData.lilith,
+            node: chartData.node,
+            ascendant: chartData.ascendant,
+            midheaven: chartData.midheaven,
+          } as any,
+          houses: chartData.houses as any,
+          aspects: chartData.aspects as any,
+          chartPattern: undefined,
+          houseSystem: "whole",
+          calculationMethod: "vedic",
+          zodiacType: "sidereal",
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+          calculatedAt: new Date(),
+        },
+      });
+
+      // Create or update divisional charts
+      const divisionalChartsData = [
+        { chartType: "D1", data: vedicChart.d1 },
+        { chartType: "D2", data: vedicChart.d2 },
+        { chartType: "D4", data: vedicChart.d4 },
+        { chartType: "D9", data: vedicChart.d9 },
+        { chartType: "D10", data: vedicChart.d10 },
+        { chartType: "D11", data: vedicChart.d11 },
+      ];
+
+      // Delete existing divisional charts and create new ones
+      await prisma.divisionalChart.deleteMany({
+        where: { natalChartId: chart.id },
+      });
+
+      await prisma.divisionalChart.createMany({
+        data: divisionalChartsData.map((dc) => ({
+          natalChartId: chart.id,
+          chartType: dc.chartType,
+          planetaryPositions: dc.data.planetaryPositions as any,
+          ascendant: dc.data.ascendant,
+          ascendantDegree: dc.data.ascendantDegree,
+          houses: dc.data.houses as any,
+        })),
+      });
+
+      logger.info("Vedic chart calculated and saved successfully", {
+        userId,
+        ayanamsa: vedicChart.ayanamsa,
+        nakshatra: moonNakshatra.name,
+      });
+    } catch (error) {
+      logger.error("Vedic chart calculation failed", {
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      throw error;
+    }
+  }
+
   // POST /users/me/recalculate-chart
   async recalculateNatalChart(
     req: Request,
@@ -252,8 +462,8 @@ export class UserController {
         where: { userId },
       });
 
-      // Recalculate
-      await this.calculateNatalChartForUserInternal(userId);
+      // Recalculate both Western and Vedic charts
+      await this.calculateAllChartsForUserInternal(userId);
 
       res.json({
         success: true,
