@@ -52,10 +52,14 @@ async function startServer(): Promise<void> {
     }
     logger.info("Database connected");
 
-    // Start HTTP server
-    const server = app.listen(PORT, () => {
-      logger.info(`Server running on port ${PORT} in ${env.NODE_ENV} mode`);
+    // Start HTTP serverF
+    // const server = app.listen(PORT, () F=> {
+    //   logger.info(`Server running on port ${PORT} in ${env.NODE_ENV} mode`);
+    // });
+    const server = app.listen(PORT, "0.0.0.0", () => {
+      logger.info(`Server running on http://0.0.0.0:${PORT} in ${env.NODE_ENV} mode`);
     });
+
 
     // Handle server errors
     server.on("error", (error: Error) => {

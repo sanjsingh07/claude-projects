@@ -28,7 +28,8 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID"],
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors({ origin: true, credentials: true }));
 
 // Request ID tracking
 app.use(requestIdMiddleware);

@@ -5,7 +5,7 @@ import { User, AyanamsaType, DivisionalChartType } from '@types';
 import { secureStorage } from '@utils/secureStorage';
 
 // API URL configuration
-const DEFAULT_API_URL = 'http://localhost:3000/api';
+const DEFAULT_API_URL = process.env.API_URL || 'http://localhost:3000/api';
 // For iOS simulator/emulator, use your machine's IP or host.docker.internal
 const IOS_SIMULATOR_URL = 'http://host.docker.internal:3000/api';
 const ANDROID_EMULATOR_URL = 'http://10.0.2.2:3000/api';
@@ -106,6 +106,8 @@ class ApiService {
       try {
         const refreshToken = await secureStorage.getItem('refreshToken');
         if (!refreshToken) {
+          // No refresh token stored, clear any existing tokens and reject
+          await this.clearTokens();
           throw new Error('No refresh token');
         }
 
@@ -116,11 +118,18 @@ class ApiService {
         });
 
         if (!response.ok) {
+          // Refresh failed, clear tokens
+          await this.clearTokens();
           throw new Error('Refresh failed');
         }
 
-        const data = await response.json();
-        await this.setTokens(data.data.tokens.accessToken, data.data.tokens.refreshToken);
+        const result = await response.json();
+        // Backend returns: { success: true, data: { tokens: { accessToken, refreshToken } } }
+        const tokens = result.data?.tokens || result.tokens;
+        if (!tokens) {
+          throw new Error('No tokens in refresh response');
+        }
+        await this.setTokens(tokens.accessToken, tokens.refreshToken);
         resolve();
       } catch (error) {
         await this.clearTokens();
@@ -166,7 +175,8 @@ class ApiService {
     console.log('Logging in with:', { email });
     const response = await this.client.post('/auth/login', { email, password });
     console.log('Login response:', response);
-    const tokens = response.data?.tokens;
+    // Response is already unwrapped by interceptor, so response.data contains { user, tokens }
+    const tokens = response.data?.tokens || response.data?.data?.tokens;
     if (!tokens) {
       throw new Error('No tokens in response');
     }
@@ -187,7 +197,8 @@ class ApiService {
     console.log('Registering with:', { email: data.email, birthDate: data.birthDate });
     const response = await this.client.post('/auth/register', data);
     console.log('Register response:', response);
-    const tokens = response.data?.tokens;
+    // Response is already unwrapped by interceptor, so response.data contains { user, tokens }
+    const tokens = response.data?.tokens || response.data?.data?.tokens;
     if (!tokens) {
       throw new Error('No tokens in response');
     }
