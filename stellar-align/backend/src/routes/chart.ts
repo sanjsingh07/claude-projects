@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
+import { HouseSystem } from "@prisma/client";
 
 const router = Router();
 
@@ -86,7 +87,14 @@ router.post(
         return;
       }
 
-      const houseSystem = req.body.houseSystem || "placidus";
+      const houseSystemMap: Record<string, HouseSystem> = {
+        placidus: HouseSystem.PLACIDUS,
+        koch: HouseSystem.KOCH,
+        equal: HouseSystem.EQUAL,
+        whole: HouseSystem.WHOLE_SIGN,
+        porphyry: HouseSystem.PORPHYRY,
+      };
+      const houseSystem = houseSystemMap[req.body.houseSystem || "placidus"];
 
       const chartData = await astrologyService.calculateNatalChart(
         user.birthDate,
