@@ -224,6 +224,8 @@ export interface DivisionalChartPosition {
   sign: ZodiacSign;
   degree: number;
   house: number;
+  retrograde?: boolean;
+  combust?: boolean;
 }
 
 export interface DivisionalChart {
@@ -263,4 +265,3 @@ export interface VedicBirthData {
   timezone: string;
   ayanamsa?: AyanamsaType;
 }
-

@@ -12,7 +12,7 @@ function tropicalFromSidereal(siderealLongitude: number): number {
   return (siderealLongitude + ayanamsa) % 360;
 }
 
-function position(planet: PlanetName, siderealLongitude: number): PlanetPosition {
+function position(planet: PlanetName, siderealLongitude: number, retrograde = false): PlanetPosition {
   return {
     planet,
     longitude: tropicalFromSidereal(siderealLongitude),
@@ -22,7 +22,7 @@ function position(planet: PlanetName, siderealLongitude: number): PlanetPosition
     signDegree: 0,
     degree: 0,
     minute: 0,
-    retrograde: false,
+    retrograde,
     house: 1,
     speed: 0,
   };
@@ -35,7 +35,7 @@ function planet(chart: { planetaryPositions: Array<{ planet: string; sign: Zodia
 const natalChartData: NatalChartData = {
   sun: position("SUN", 10), // Aries 10 degrees
   moon: position("MOON", 50), // Taurus 20 degrees
-  mercury: position("MERCURY", 32), // Taurus 2 degrees
+  mercury: position("MERCURY", 18, true), // Aries 18 degrees
   venus: position("VENUS", 71), // Gemini 11 degrees
   mars: position("MARS", 0),
   jupiter: position("JUPITER", 229), // Scorpio 19 degrees
@@ -73,17 +73,33 @@ describe("calculateVedicChart", () => {
     expect(chart.d2.ascendant).toBe(ZodiacSign.CANCER);
     expect(planet(chart.d2, "sun")?.sign).toBe(ZodiacSign.LEO);
     expect(planet(chart.d2, "moon")?.sign).toBe(ZodiacSign.LEO);
+    expect(planet(chart.d2, "node")?.sign).toBe(ZodiacSign.LEO);
+    expect(planet(chart.d2, "ketu")?.sign).toBe(ZodiacSign.LEO);
 
     expect(chart.d4.ascendant).toBe(ZodiacSign.LEO);
     expect(planet(chart.d4, "sun")?.sign).toBe(ZodiacSign.CANCER);
 
     expect(chart.d9.ascendant).toBe(ZodiacSign.PISCES);
-    expect(planet(chart.d9, "mercury")?.sign).toBe(ZodiacSign.CAPRICORN);
+    expect(planet(chart.d9, "mercury")?.sign).toBe(ZodiacSign.VIRGO);
 
     expect(chart.d10.ascendant).toBe(ZodiacSign.PISCES);
-    expect(planet(chart.d10, "mercury")?.sign).toBe(ZodiacSign.CAPRICORN);
+    expect(planet(chart.d10, "mercury")?.sign).toBe(ZodiacSign.LIBRA);
 
     expect(planet(chart.d11, "venus")?.sign).toBe(ZodiacSign.GEMINI);
     expect(planet(chart.d11, "jupiter")?.sign).toBe(ZodiacSign.PISCES);
+  });
+
+  it("carries retrograde and combust flags into divisional chart positions", async () => {
+    const chart = await calculateVedicChart(
+      { date, time: "00:00", latitude: 0, longitude: 0, timezone: "UTC", ayanamsa: AyanamsaType.LAHIRI },
+      natalChartData,
+    );
+    const mercury = chart.d1.planetaryPositions.find((p) => p.planet === "mercury");
+    const mars = chart.d1.planetaryPositions.find((p) => p.planet === "mars");
+
+    expect(mercury?.retrograde).toBe(true);
+    expect(mercury?.combust).toBe(true);
+    expect(mars?.retrograde).toBe(false);
+    expect(mars?.combust).toBe(true);
   });
 });

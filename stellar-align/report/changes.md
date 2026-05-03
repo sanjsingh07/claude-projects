@@ -78,3 +78,29 @@ Refactored the Stellar Align backend to improve astrological precision, database
 - `backend/src/services/vedicAstrology.test.ts`
 - `frontend/src/components/VedicChartCard.tsx`
 - `report/changes.md`
+
+---
+
+## Vedic Node And Planet Status Display
+
+**Date/Time:** Mon May  4 01:54:45 IST 2026
+
+### What Changed and Why
+- Fixed Rahu/Ketu placement in divisional charts by calculating Ketu through the backend varga mapping instead of synthesizing it as Rahu's opposite sign in the frontend.
+- Added retrograde and combust metadata to stored divisional chart planet positions so the UI can show status markers next to planet names.
+- Removed frontend-only opposite-sign Ketu generation, which was incorrect for D2 Hora and can be incorrect in other divisional charts.
+
+### Summary of Changes
+- Backend now derives Ketu from the node longitude plus 180 degrees and maps it independently through D1/D2/D4/D9/D10/D11.
+- Backend divisional chart positions now include optional `retrograde` and `combust` flags.
+- Frontend renders labels like `mercury(R)`, `mercury(c)`, or `mercury(Rc)` based on those flags.
+- Added regression coverage for D2 Rahu/Ketu same-sign placement and retrograde/combust metadata.
+
+### Files Modified
+- `backend/src/services/astrology.ts`
+- `backend/src/services/vedicAstrology.ts`
+- `backend/src/services/vedicAstrology.test.ts`
+- `backend/src/types/astrology.ts`
+- `frontend/src/components/VedicChartCard.tsx`
+- `frontend/src/types/index.ts`
+- `report/changes.md`

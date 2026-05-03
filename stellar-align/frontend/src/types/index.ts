@@ -148,6 +148,8 @@ export interface DivisionalChartPosition {
   sign: string;
   degree: number;
   house: number;
+  retrograde?: boolean;
+  combust?: boolean;
 }
 
 export interface DivisionalChart {

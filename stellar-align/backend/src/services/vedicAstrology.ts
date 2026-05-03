@@ -53,6 +53,11 @@ function getDegreeInSign(longitude: number): number {
   return ((longitude % 360) + 360) % 360 % 30;
 }
 
+function getAngularDistance(a: number, b: number): number {
+  const diff = Math.abs(normalizeAngle(a) - normalizeAngle(b));
+  return diff > 180 ? 360 - diff : diff;
+}
+
 // ────────────────────────────────────────────
 // Ayanamsa calculation (Swiss Ephemeris)
 // ────────────────────────────────────────────
@@ -166,6 +171,20 @@ function getDivisionalDegreeForChart(degreeInSign: number, chartType: Divisional
   return Math.round(degreeInSign * 10000) / 10000;
 }
 
+function isCombust(planet: PlanetPosition, sun: PlanetPosition): boolean {
+  const combustionOrbs: Partial<Record<PlanetName, number>> = {
+    MOON: 12,
+    MARS: 17,
+    MERCURY: planet.retrograde ? 12 : 14,
+    VENUS: planet.retrograde ? 8 : 10,
+    JUPITER: 11,
+    SATURN: 15,
+  };
+  const orb = combustionOrbs[planet.planet];
+
+  return typeof orb === "number" && getAngularDistance(planet.longitude, sun.longitude) <= orb;
+}
+
 function createHouses(ascSign: ZodiacSign) {
   const ascIndex = getSignIndex(ascSign);
   return Array.from({ length: 12 }, (_, i) => ({
@@ -174,7 +193,7 @@ function createHouses(ascSign: ZodiacSign) {
 }
 
 function calculateDivisional(
-  planets: PlanetPosition[], ascendant: PlanetPosition, ayanamsa: number,
+  planets: PlanetPosition[], ascendant: PlanetPosition, ayanamsa: number, sun: PlanetPosition,
   chartType: DivisionalChartType,
 ): DivisionalChart {
   const planetaryPositions: DivisionalChartPosition[] = planets.map((p) => {
@@ -190,6 +209,8 @@ function calculateDivisional(
       sign: dSign,
       degree: dDegree,
       house: 1, // Will be calculated after ascendant is set
+      retrograde: p.retrograde,
+      combust: isCombust(p, sun),
     };
   });
 
@@ -321,6 +342,11 @@ export async function calculateVedicChart(
     natalChartData.saturn, natalChartData.uranus, natalChartData.neptune,
     natalChartData.pluto, natalChartData.chiron, natalChartData.lilith,
     natalChartData.node,
+    {
+      ...natalChartData.node,
+      planet: "KETU",
+      longitude: normalizeAngle(natalChartData.node.longitude + 180),
+    },
   ];
 
   const ascendant: PlanetPosition = {
@@ -334,12 +360,12 @@ export async function calculateVedicChart(
     retrograde: false, house: 1, speed: 0,
   };
 
-  const d1 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D1);
-  const d2 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D2);
-  const d4 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D4);
-  const d9 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D9);
-  const d10 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D10);
-  const d11 = calculateDivisional(planets, ascendant, ayanamsa, DivisionalChartType.D11);
+  const d1 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D1);
+  const d2 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D2);
+  const d4 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D4);
+  const d9 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D9);
+  const d10 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D10);
+  const d11 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D11);
 
   const moonSidereal = toSiderealLongitude(natalChartData.moon.longitude, ayanamsa);
   const moonNakshatra = calculateNakshatra(moonSidereal);

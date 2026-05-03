@@ -22,21 +22,6 @@ const SIGN_ICONS: Record<string, string> = {
   sagittarius: '♐', capricorn: '♑', aquarius: '♒', pisces: '♓',
 };
 
-const SIGN_ORDER = [
-  'aries',
-  'taurus',
-  'gemini',
-  'cancer',
-  'leo',
-  'virgo',
-  'libra',
-  'scorpio',
-  'sagittarius',
-  'capricorn',
-  'aquarius',
-  'pisces',
-];
-
 function normalizeSign(sign: string): string {
   return sign?.toLowerCase?.().replace(/_/g, ' ') || '';
 }
@@ -44,15 +29,6 @@ function normalizeSign(sign: string): string {
 function formatSign(sign: string): string {
   const normalized = normalizeSign(sign);
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
-}
-
-function oppositeSign(sign: string): string {
-  const index = SIGN_ORDER.indexOf(normalizeSign(sign));
-  return index >= 0 ? SIGN_ORDER[(index + 6) % 12] : sign;
-}
-
-function oppositeHouse(house: number): number {
-  return ((house + 5) % 12) + 1;
 }
 
 function displayPlanetName(planet: string): string {
@@ -66,35 +42,19 @@ function displayPlanetName(planet: string): string {
   return normalized.replace(/_/g, ' ');
 }
 
+function displayPlanetLabel(planet: DivisionalChartPosition): string {
+  const markers = `${planet.retrograde ? 'R' : ''}${planet.combust ? 'c' : ''}`;
+  const name = displayPlanetName(planet.planet);
+
+  return markers ? `${name}(${markers})` : name;
+}
+
 function formatDegree(degree?: number | null): string {
   if (typeof degree !== 'number' || Number.isNaN(degree)) {
     return '0';
   }
 
   return Number.isInteger(degree) ? degree.toString() : degree.toFixed(2);
-}
-
-function withRahuKetu(positions: DivisionalChartPosition[]): DivisionalChartPosition[] {
-  const hasKetu = positions.some((position) =>
-    ['south_node', 'southnode', 'ketu'].includes(position.planet?.toLowerCase?.() || '')
-  );
-  const rahu = positions.find((position) =>
-    ['node', 'true_node', 'mean_node', 'north_node', 'northnode', 'rahu'].includes(position.planet?.toLowerCase?.() || '')
-  );
-
-  if (!rahu || hasKetu) {
-    return positions;
-  }
-
-  return [
-    ...positions,
-    {
-      ...rahu,
-      planet: 'ketu',
-      sign: oppositeSign(rahu.sign),
-      house: rahu.house ? oppositeHouse(rahu.house) : rahu.house,
-    },
-  ];
 }
 
 export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra }) => {
@@ -106,7 +66,7 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
   const renderPlanetList = () => {
     const planetsBySign: Record<string, DivisionalChartPosition[]> = {};
 
-    withRahuKetu(chart.planetaryPositions).forEach((planet) => {
+    chart.planetaryPositions.forEach((planet) => {
       const sign = normalizeSign(planet.sign);
       if (!planetsBySign[sign]) {
         planetsBySign[sign] = [];
@@ -122,7 +82,7 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
         </View>
         {planets.map((planet) => (
           <View key={planet.planet} style={styles.planetRow}>
-            <Text style={styles.planetName}>{displayPlanetName(planet.planet)}</Text>
+            <Text style={styles.planetName}>{displayPlanetLabel(planet)}</Text>
             <Text style={styles.planetDegree}>
               {formatDegree(planet.degree)}°{planet.house ? ` H${planet.house}` : ''}
             </Text>

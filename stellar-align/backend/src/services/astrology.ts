@@ -50,6 +50,7 @@ export type PlanetName =
   | "CHIRON"
   | "LILITH"
   | "NODE"
+  | "KETU"
   | "ASCENDANT"
   | "MIDHEAVEN";
 
@@ -623,5 +624,4 @@ export const astrologyService = {
   getMoonPhase,
   getChartElements,
 };
-
 
