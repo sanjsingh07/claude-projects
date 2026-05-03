@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { CostarCard, CostarText } from '@components/CostarCard';
@@ -51,11 +51,11 @@ export const ChartScreen: React.FC = () => {
     selectedDivisionalChart,
     divisionalCharts,
     nakshatra,
-    calculateVedicChart,
     getVedicChart,
     selectDivisionalChart,
   } = useVedicChart();
   const [showVedic, setShowVedic] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Query for Western natal chart
   const {
@@ -84,11 +84,10 @@ export const ChartScreen: React.FC = () => {
     },
   });
 
-  // Mutation to calculate Vedic chart
-  const calculateVedic = useMutation({
-    mutationFn: async (ayanamsa: 'lahiri' | 'raman' | 'krishnamurti' | 'fagan-bradley' = 'lahiri') => {
-      const response = await calculateVedicChart(ayanamsa);
-      return response;
+  // Mutation to load existing Vedic chart without recalculating or overwriting stored chart data
+  const loadVedic = useMutation({
+    mutationFn: async () => {
+      return getVedicChart();
     },
   });
 
@@ -117,10 +116,12 @@ export const ChartScreen: React.FC = () => {
       setShowVedic(false);
     } else {
       try {
-        await calculateVedic.mutateAsync('lahiri');
+        if (!Object.values(divisionalCharts).some(Boolean)) {
+          await loadVedic.mutateAsync();
+        }
         setShowVedic(true);
       } catch (err: any) {
-        Alert.alert('Error', 'Failed to calculate Vedic chart. Please try again.');
+        Alert.alert('Error', 'Failed to load Vedic chart. Please try again.');
       }
     }
   };
@@ -129,8 +130,21 @@ export const ChartScreen: React.FC = () => {
     selectDivisionalChart(type);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      if (showVedic) {
+        await getVedicChart();
+      } else {
+        await refetchChart();
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const isLoading = isChartLoading || calculateWesternChart.isPending;
-  const isVedicLoadingState = calculateVedic.isPending;
+  const isVedicLoadingState = loadVedic.isPending;
 
   if (isLoading) {
     return (
@@ -182,7 +196,21 @@ export const ChartScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <CostarBackground />
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.white}
+            colors={[colors.white]}
+            progressBackgroundColor={colors.gray900}
+            title="Refreshing chart..."
+            titleColor={colors.gray400}
+          />
+        }
+      >
         {/* Header */}
         <View style={styles.header}>
           <CostarText variant="heading2" uppercase>
@@ -200,6 +228,15 @@ export const ChartScreen: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
+
+        {isRefreshing && (
+          <View style={styles.refreshStatus}>
+            <ActivityIndicator size="small" color={colors.white} />
+            <CostarText variant="bodySmall" style={styles.refreshStatusText}>
+              {showVedic ? 'Refreshing Vedic chart...' : 'Refreshing natal chart...'}
+            </CostarText>
+          </View>
+        )}
 
         {showVedic ? (
           // Vedic Chart View
@@ -365,6 +402,22 @@ const styles = StyleSheet.create({
   },
   toggleButtonText: {
     color: colors.white,
+  },
+  refreshStatus: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.gray900,
+    borderWidth: 1,
+    borderColor: colors.gray800,
+    borderRadius: 20,
+  },
+  refreshStatusText: {
+    marginLeft: spacing.sm,
+    color: colors.gray400,
   },
   card: {
     marginBottom: spacing.lg,

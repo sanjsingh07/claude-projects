@@ -37,3 +37,22 @@ Refactored the Stellar Align backend to improve astrological precision, database
 - **Type Check**: `npx tsc --noEmit` returns 0 errors.
 - **Schema**: Prisma client regenerated and verified with new Enums.
 - **Performance**: API response times for chart retrieval are now faster due to pre-calculated background data.
+
+---
+
+## Pull-to-Refresh Feedback
+
+**Date/Time:** Mon May  4 00:56:20 IST 2026
+
+### What Changed and Why
+- Added visible refresh feedback to the chart screen so users can see when pull-to-refresh is actively loading data.
+- Enhanced the native refresh control with spinner colors and refresh title styling for clearer platform feedback.
+
+### Summary of Changes
+- Shows an inline refresh status indicator under the chart header while the refresh request is running.
+- Displays context-aware copy for Western natal chart refreshes and Vedic chart refreshes.
+- Preserves existing chart loading behavior and does not trigger any new calculation endpoint.
+
+### Files Modified
+- `frontend/src/screens/ChartScreen.tsx`
+- `report/changes.md`
