@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { DivisionalChart, Nakshatra } from '@types';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { DivisionalChart, DivisionalChartPosition, Nakshatra } from '@types';
 
 interface VedicChartCardProps {
   chart: DivisionalChart;
@@ -22,28 +22,96 @@ const SIGN_ICONS: Record<string, string> = {
   sagittarius: '♐', capricorn: '♑', aquarius: '♒', pisces: '♓',
 };
 
+const SIGN_ORDER = [
+  'aries',
+  'taurus',
+  'gemini',
+  'cancer',
+  'leo',
+  'virgo',
+  'libra',
+  'scorpio',
+  'sagittarius',
+  'capricorn',
+  'aquarius',
+  'pisces',
+];
+
+function normalizeSign(sign: string): string {
+  return sign?.toLowerCase?.().replace(/_/g, ' ') || '';
+}
+
+function formatSign(sign: string): string {
+  const normalized = normalizeSign(sign);
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function oppositeSign(sign: string): string {
+  const index = SIGN_ORDER.indexOf(normalizeSign(sign));
+  return index >= 0 ? SIGN_ORDER[(index + 6) % 12] : sign;
+}
+
+function oppositeHouse(house: number): number {
+  return ((house + 5) % 12) + 1;
+}
+
+function displayPlanetName(planet: string): string {
+  const normalized = planet?.toLowerCase?.() || '';
+  if (['node', 'true_node', 'mean_node', 'north_node', 'northnode', 'rahu'].includes(normalized)) {
+    return 'Rahu';
+  }
+  if (['south_node', 'southnode', 'ketu'].includes(normalized)) {
+    return 'Ketu';
+  }
+  return normalized.replace(/_/g, ' ');
+}
+
+function withRahuKetu(positions: DivisionalChartPosition[]): DivisionalChartPosition[] {
+  const hasKetu = positions.some((position) =>
+    ['south_node', 'southnode', 'ketu'].includes(position.planet?.toLowerCase?.() || '')
+  );
+  const rahu = positions.find((position) =>
+    ['node', 'true_node', 'mean_node', 'north_node', 'northnode', 'rahu'].includes(position.planet?.toLowerCase?.() || '')
+  );
+
+  if (!rahu || hasKetu) {
+    return positions;
+  }
+
+  return [
+    ...positions,
+    {
+      ...rahu,
+      planet: 'ketu',
+      sign: oppositeSign(rahu.sign),
+      house: rahu.house ? oppositeHouse(rahu.house) : rahu.house,
+    },
+  ];
+}
+
 export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra }) => {
   const chartInfo = CHART_INFO[chart.chartType] || { name: chart.chartType, purpose: '' };
 
   const renderPlanetList = () => {
-    const planetsBySign: Record<string, typeof chart.planetaryPositions> = {};
+    const planetsBySign: Record<string, DivisionalChartPosition[]> = {};
 
-    chart.planetaryPositions.forEach((planet) => {
-      if (!planetsBySign[planet.sign]) {
-        planetsBySign[planet.sign] = [];
+    withRahuKetu(chart.planetaryPositions).forEach((planet) => {
+      const sign = normalizeSign(planet.sign);
+      if (!planetsBySign[sign]) {
+        planetsBySign[sign] = [];
       }
-      planetsBySign[planet.sign].push(planet);
+      planetsBySign[sign].push(planet);
     });
 
     return Object.entries(planetsBySign).map(([sign, planets]) => (
       <View key={sign} style={styles.signGroup}>
         <View style={styles.signHeader}>
           <Text style={styles.signIcon}>{SIGN_ICONS[sign] || sign}</Text>
-          <Text style={styles.signName}>{sign}</Text>
+          <Text style={styles.signName}>{formatSign(sign)}</Text>
         </View>
         {planets.map((planet) => (
           <View key={planet.planet} style={styles.planetRow}>
-            <Text style={styles.planetName}>{planet.planet}</Text>
+            <Text style={styles.planetName}>{displayPlanetName(planet.planet)}</Text>
             <Text style={styles.planetDegree}>
               {planet.degree}°{planet.house ? ` H${planet.house}` : ''}
             </Text>
@@ -64,7 +132,7 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
         <View style={styles.ascendantBox}>
           <Text style={styles.ascendantLabel}>Ascendant</Text>
           <Text style={styles.ascendantValue}>
-            {SIGN_ICONS[chart.ascendant]} {chart.ascendant}
+            {SIGN_ICONS[normalizeSign(chart.ascendant)]} {formatSign(chart.ascendant)}
           </Text>
           <Text style={styles.ascendantDegree}>{chart.ascendantDegree}°</Text>
         </View>
@@ -93,8 +161,9 @@ export const VedicChartSelector: React.FC<{
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selector}>
       {Object.entries(CHART_INFO).map(([type, info]) => (
-        <View
+        <TouchableOpacity
           key={type}
+          onPress={() => onSelectChart(type as 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11')}
           style={[
             styles.selectorButton,
             selectedChart === type && styles.selectorButtonSelected,
@@ -116,7 +185,7 @@ export const VedicChartSelector: React.FC<{
           >
             {info.name}
           </Text>
-        </View>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );

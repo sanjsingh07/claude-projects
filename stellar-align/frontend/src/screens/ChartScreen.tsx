@@ -224,9 +224,9 @@ export const ChartScreen: React.FC = () => {
                 chart={divisionalCharts[selectedDivisionalChart]!}
                 nakshatra={nakshatra}
               />
-            ) : vedicNatalChart?.divisionalCharts?.[0] ? (
+            ) : divisionalCharts.D1 ? (
               <VedicChartCard
-                chart={vedicNatalChart.divisionalCharts[0] as any}
+                chart={divisionalCharts.D1}
                 nakshatra={nakshatra}
               />
             ) : !isVedicLoadingState ? (

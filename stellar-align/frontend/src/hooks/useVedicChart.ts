@@ -38,6 +38,9 @@ export const useVedicChart = () => {
         data.divisionalCharts?.forEach((chart: any) => {
           setDivisionalChart(chart.chartType, chart);
         });
+        if (data.divisionalCharts?.some((chart: any) => chart.chartType === 'D1')) {
+          setSelectedDivisionalChart('D1');
+        }
 
         // Store nakshatra info
         if (data.nakshatra || data.data?.nakshatra) {
@@ -80,6 +83,9 @@ export const useVedicChart = () => {
         data.divisionalCharts?.forEach((chart: any) => {
           setDivisionalChart(chart.chartType, chart);
         });
+        if (data.divisionalCharts?.some((chart: any) => chart.chartType === 'D1')) {
+          setSelectedDivisionalChart('D1');
+        }
 
         return data;
       }
