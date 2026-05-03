@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/database";
 import { ApiError } from "../utils/errors";
 import logger from "../config/logger";
+import { ChatRole } from "@prisma/client";
 
 // System prompt for the astrology chatbot
 const ASTROLOGY_SYSTEM_PROMPT = `You are an expert astrologer and spiritual guide. You have deep knowledge of:
@@ -127,7 +128,7 @@ export class ChatController {
       await prisma.chatMessage.create({
         data: {
           sessionId: chatSession.id,
-          role: 'user',
+          role: ChatRole.USER,
           content: message,
         },
       });
@@ -175,7 +176,7 @@ User's Natal Chart Context:
       const assistantMessage = await prisma.chatMessage.create({
         data: {
           sessionId: chatSession.id,
-          role: 'assistant',
+          role: ChatRole.ASSISTANT,
           content: responseText,
         },
       });

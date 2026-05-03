@@ -5,6 +5,7 @@ import { ApiError, NotFoundError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
+import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipStatus } from "@prisma/client";
 
 export class UserController {
   // GET /users/me
@@ -177,7 +178,7 @@ export class UserController {
     await this.calculateNatalChartForUserInternal(userId, true);
 
     // Then calculate Vedic chart
-    await this.calculateVedicChartForUserInternal(userId, "lahiri");
+    await this.calculateVedicChartForUserInternal(userId, AyanamsaType.LAHIRI);
   }
 
   /**
@@ -220,7 +221,7 @@ export class UserController {
           userId,
           sunSign: chartData.sun.sign,
           moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant?.sign || "unknown",
+          risingSign: chartData.ascendant?.sign || null,
           planetaryPositions: {
             sun: chartData.sun,
             moon: chartData.moon,
@@ -241,14 +242,14 @@ export class UserController {
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "placidus",
-          calculationMethod: "astronomia",
+          houseSystem: HouseSystem.PLACIDUS,
+          calculationMethod: "swiss_ephemeris",
           calculatedAt: new Date(),
         },
         update: {
           sunSign: chartData.sun.sign,
           moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant?.sign || "unknown",
+          risingSign: chartData.ascendant?.sign || null,
           planetaryPositions: {
             sun: chartData.sun,
             moon: chartData.moon,
@@ -269,8 +270,8 @@ export class UserController {
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "placidus",
-          calculationMethod: "astronomia",
+          houseSystem: HouseSystem.PLACIDUS,
+          calculationMethod: "swiss_ephemeris",
           calculatedAt: new Date(),
         },
       });
@@ -287,9 +288,9 @@ export class UserController {
   /**
    * Calculate Vedic chart for a user
    * @param userId - The user ID
-   * @param ayanamsaType - The ayanamsa type to use (default: lahiri)
+   * @param ayanamsaType - The ayanamsa type to use (default: LAHIRI)
    */
-  private async calculateVedicChartForUserInternal(userId: string, ayanamsaType: "lahiri" | "raman" | "krishnamurti" | "fagan-bradley" = "lahiri"): Promise<void> {
+  private async calculateVedicChartForUserInternal(userId: string, ayanamsaType: AyanamsaType = AyanamsaType.LAHIRI): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { natalChart: true },
@@ -364,9 +365,9 @@ export class UserController {
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "whole",
+          houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",
-          zodiacType: "sidereal",
+          zodiacType: ZodiacType.SIDEREAL,
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
@@ -396,9 +397,9 @@ export class UserController {
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "whole",
+          houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",
-          zodiacType: "sidereal",
+          zodiacType: ZodiacType.SIDEREAL,
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
@@ -409,12 +410,12 @@ export class UserController {
 
       // Create or update divisional charts
       const divisionalChartsData = [
-        { chartType: "D1", data: vedicChart.d1 },
-        { chartType: "D2", data: vedicChart.d2 },
-        { chartType: "D4", data: vedicChart.d4 },
-        { chartType: "D9", data: vedicChart.d9 },
-        { chartType: "D10", data: vedicChart.d10 },
-        { chartType: "D11", data: vedicChart.d11 },
+        { chartType: DivisionalChartType.D1, data: vedicChart.d1 },
+        { chartType: DivisionalChartType.D2, data: vedicChart.d2 },
+        { chartType: DivisionalChartType.D4, data: vedicChart.d4 },
+        { chartType: DivisionalChartType.D9, data: vedicChart.d9 },
+        { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
+        { chartType: DivisionalChartType.D11, data: vedicChart.d11 },
       ];
 
       // Delete existing divisional charts and create new ones
@@ -520,8 +521,8 @@ export class UserController {
         });
 
         if (friendship) {
-          isFriend = friendship.status === "accepted";
-          friendRequestPending = friendship.status === "pending";
+          isFriend = friendship.status === FriendshipStatus.ACCEPTED;
+          friendRequestPending = friendship.status === FriendshipStatus.PENDING;
         }
       }
 

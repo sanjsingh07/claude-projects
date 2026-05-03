@@ -5,6 +5,7 @@ import { prisma } from "../config/database";
 import logger from "../config/logger";
 import { ApiError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
+import { HouseSystem } from "@prisma/client";
 
 export class AuthController {
   async register(
@@ -297,7 +298,7 @@ export class AuthController {
             userId,
             sunSign: chartData.sun.sign,
             moonSign: chartData.moon.sign,
-            risingSign: chartData.ascendant?.sign || "unknown",
+            risingSign: chartData.ascendant?.sign || null,
             planetaryPositions: {
               sun: chartData.sun,
               moon: chartData.moon,
@@ -318,7 +319,7 @@ export class AuthController {
             houses: chartData.houses as any,
             aspects: chartData.aspects as any,
             chartPattern: undefined,
-            houseSystem: "placidus",
+            houseSystem: HouseSystem.PLACIDUS,
             calculationMethod: "astronomia",
             calculatedAt: new Date(),
           },

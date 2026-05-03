@@ -2,6 +2,7 @@ import logger from "../config/logger";
 import { cache } from "../config/redis";
 import { DateTime } from "luxon";
 import { llmProvider } from "./llmProvider";
+import { ZodiacSign } from "@prisma/client";
 
 export type HoroscopeCategory = "self" | "work" | "love" | "social";
 
@@ -352,16 +353,17 @@ Respond with ONLY the JSON object, no markdown fences.`;
   }
 
   private getElement(sign: string): string {
-    const fire = ["aries", "leo", "sagittarius"];
-    const earth = ["taurus", "virgo", "capricorn"];
-    const air = ["gemini", "libra", "aquarius"];
+    const fire: ZodiacSign[] = [ZodiacSign.ARIES, ZodiacSign.LEO, ZodiacSign.SAGITTARIUS];
+    const earth: ZodiacSign[] = [ZodiacSign.TAURUS, ZodiacSign.VIRGO, ZodiacSign.CAPRICORN];
+    const air: ZodiacSign[] = [ZodiacSign.GEMINI, ZodiacSign.LIBRA, ZodiacSign.AQUARIUS];
 
-    const s = sign.toLowerCase();
+    const s = sign.toUpperCase() as ZodiacSign;
     if (fire.includes(s)) return "fire";
     if (earth.includes(s)) return "earth";
     if (air.includes(s)) return "air";
     return "water";
   }
+
 
   private getMoonPhaseAdvice(phase: string): string {
     const advice: Record<string, string> = {

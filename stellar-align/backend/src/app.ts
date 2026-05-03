@@ -19,16 +19,6 @@ app.use(
 );
 
 // CORS
-const corsOptions = {
-  origin: env.ALLOWED_ORIGINS || [
-    "http://localhost:3000",
-    "http://localhost:8081",
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID"],
-};
-// app.use(cors(corsOptions));
 app.use(cors({ origin: true, credentials: true }));
 
 // Request ID tracking

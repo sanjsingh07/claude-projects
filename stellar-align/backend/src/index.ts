@@ -4,6 +4,8 @@ import { env } from "./config/env";
 import { checkDatabaseHealth, disconnectDatabase } from "./config/database";
 import logger from "./config/logger";
 import { redis } from "./config/redis";
+import { horoscopeQueue } from "./config/queue";
+import { horoscopeWorker } from "./jobs/horoscopeWorker";
 
 const PORT = parseInt(env.PORT);
 
@@ -12,6 +14,14 @@ async function gracefulShutdown(signal: string): Promise<void> {
   logger.info(`Received ${signal}. Shutting down gracefully...`);
 
   try {
+    // Stop worker
+    await horoscopeWorker.close();
+    logger.info("Horoscope worker closed");
+
+    // Close queue
+    await horoscopeQueue.close();
+    logger.info("Horoscope queue closed");
+
     // Close Redis connections
     await redis.quit();
     logger.info("Redis connections closed");
@@ -42,6 +52,31 @@ setInterval(runHealthCheck, 30000);
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 
+// Initialize background jobs
+async function initJobs(): Promise<void> {
+  try {
+    // Remove existing repeatable jobs to avoid duplicates on restart
+    const repeatableJobs = await horoscopeQueue.getRepeatableJobs();
+    for (const job of repeatableJobs) {
+      await horoscopeQueue.removeRepeatableByKey(job.key);
+    }
+
+    // Schedule daily horoscope generation at 03:00 UTC
+    await horoscopeQueue.add(
+      "enqueue-daily-horoscopes",
+      {},
+      {
+        repeat: { pattern: "0 3 * * *" },
+        jobId: "daily-horoscope-scheduler",
+      }
+    );
+
+    logger.info("Background jobs initialized and scheduled");
+  } catch (error) {
+    logger.error("Failed to initialize background jobs", { error });
+  }
+}
+
 // Start server
 async function startServer(): Promise<void> {
   try {
@@ -52,14 +87,13 @@ async function startServer(): Promise<void> {
     }
     logger.info("Database connected");
 
-    // Start HTTP serverF
-    // const server = app.listen(PORT, () F=> {
-    //   logger.info(`Server running on port ${PORT} in ${env.NODE_ENV} mode`);
-    // });
+    // Initialize jobs
+    await initJobs();
+
+    // Start HTTP server
     const server = app.listen(PORT, "0.0.0.0", () => {
       logger.info(`Server running on http://0.0.0.0:${PORT} in ${env.NODE_ENV} mode`);
     });
-
 
     // Handle server errors
     server.on("error", (error: Error) => {

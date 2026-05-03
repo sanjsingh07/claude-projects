@@ -4,6 +4,7 @@ import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { validateRequest } from "../middleware/validator";
 import { ApiError } from "../utils/errors";
+import { FriendshipStatus } from "@prisma/client";
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const friendships = await prisma.friendship.findMany({
       where: {
-        status: "accepted",
+        status: FriendshipStatus.ACCEPTED,
         OR: [{ requesterId: req.userId }, { addresseeId: req.userId }],
       },
       include: {
@@ -37,7 +38,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    const friends = friendships.map((f) => {
+    const friends = friendships.map((f: any) => {
       const friend = f.requesterId === req.userId ? f.addressee : f.requester;
       return {
         friendshipId: f.id,
@@ -59,7 +60,7 @@ router.get("/requests", async (req: Request, res: Response, next: NextFunction) 
     const requests = await prisma.friendship.findMany({
       where: {
         addresseeId: req.userId,
-        status: "pending",
+        status: FriendshipStatus.PENDING,
       },
       include: {
         requester: {
@@ -73,7 +74,7 @@ router.get("/requests", async (req: Request, res: Response, next: NextFunction) 
       },
     });
 
-    const formatted = requests.map((r) => ({
+    const formatted = requests.map((r: any) => ({
       id: r.id,
       from: {
         ...r.requester,
@@ -111,10 +112,10 @@ router.post(
       });
 
       if (existing) {
-        if (existing.status === "accepted") {
+        if (existing.status === FriendshipStatus.ACCEPTED) {
           throw new ApiError(409, "Already friends", "ALREADY_FRIENDS");
         }
-        if (existing.status === "pending") {
+        if (existing.status === FriendshipStatus.PENDING) {
           throw new ApiError(409, "Request already pending", "REQUEST_PENDING");
         }
       }
@@ -123,13 +124,13 @@ router.post(
         data: {
           requesterId: req.userId!,
           addresseeId: userId,
-          status: "pending",
+          status: FriendshipStatus.PENDING,
         },
       });
 
       res.status(201).json({
         success: true,
-        data: { requestId: friendship.id, status: "pending" },
+        data: { requestId: friendship.id, status: FriendshipStatus.PENDING },
       });
     } catch (error) {
       next(error);
@@ -149,10 +150,10 @@ router.post(
         where: {
           id: requestId,
           addresseeId: req.userId,
-          status: "pending",
+          status: FriendshipStatus.PENDING,
         },
         data: {
-          status: "accepted",
+          status: FriendshipStatus.ACCEPTED,
           acceptedAt: new Date(),
         },
       });
@@ -162,7 +163,7 @@ router.post(
 
       res.json({
         success: true,
-        data: { friendshipId: friendship.id, status: "accepted" },
+        data: { friendshipId: friendship.id, status: FriendshipStatus.ACCEPTED },
       });
     } catch (error) {
       next(error);
@@ -182,7 +183,7 @@ router.post(
         where: {
           id: requestId,
           addresseeId: req.userId,
-          status: "pending",
+          status: FriendshipStatus.PENDING,
         },
       });
 
@@ -200,7 +201,7 @@ router.delete("/:id", async (req: Request, res: Response, next: NextFunction) =>
       where: {
         id: req.params.id,
         OR: [{ requesterId: req.userId }, { addresseeId: req.userId }],
-        status: "accepted",
+        status: FriendshipStatus.ACCEPTED,
       },
     });
 
@@ -209,5 +210,6 @@ router.delete("/:id", async (req: Request, res: Response, next: NextFunction) =>
     next(error);
   }
 });
+
 
 export default router;

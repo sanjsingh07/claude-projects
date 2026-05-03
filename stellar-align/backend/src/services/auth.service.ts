@@ -7,6 +7,7 @@ import logger from "../config/logger";
 import { ApiError } from "../utils/errors";
 import { User, UserCreateInput } from "../types/user";
 import { AuthTokens, JwtPayload, RefreshTokenPayload } from "../types/api";
+import { AuthProvider } from "@prisma/client";
 
 const SALT_ROUNDS = 12;
 
@@ -30,7 +31,7 @@ export class AuthService {
       data: {
         email: input.email,
         passwordHash,
-        authProvider: input.authProvider || "email",
+        authProvider: (input.authProvider?.toUpperCase() as AuthProvider) || AuthProvider.EMAIL,
         providerId: input.providerId,
         displayName: input.displayName,
         birthDate: input.birthDate,
@@ -83,8 +84,9 @@ export class AuthService {
     email: string,
     profile: { displayName?: string; avatarUrl?: string },
   ): Promise<{ user: User; tokens: AuthTokens; isNewUser: boolean }> {
+    const authProvider = provider.toUpperCase() as AuthProvider;
     let dbUser = await prisma.user.findFirst({
-      where: { authProvider: provider, providerId },
+      where: { authProvider, providerId },
     });
 
     let isNewUser = false;
@@ -100,7 +102,7 @@ export class AuthService {
         dbUser = await prisma.user.update({
           where: { id: existingByEmail.id },
           data: {
-            authProvider: provider,
+            authProvider,
             providerId,
           },
         });
@@ -110,7 +112,7 @@ export class AuthService {
         dbUser = await prisma.user.create({
           data: {
             email,
-            authProvider: provider,
+            authProvider,
             providerId,
             displayName: profile.displayName,
             avatarUrl: profile.avatarUrl,

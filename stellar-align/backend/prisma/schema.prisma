@@ -7,12 +7,80 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  APPLE
+}
+
+enum ZodiacSign {
+  ARIES
+  TAURUS
+  GEMINI
+  CANCER
+  LEO
+  VIRGO
+  LIBRA
+  SCORPIO
+  SAGITTARIUS
+  CAPRICORN
+  AQUARIUS
+  PISCES
+}
+
+enum HouseSystem {
+  PLACIDUS
+  KOCH
+  WHOLE_SIGN
+  EQUAL
+  PORPHYRY
+}
+
+enum ZodiacType {
+  TROPICAL
+  SIDEREAL
+}
+
+enum AyanamsaType {
+  LAHIRI
+  RAMAN
+  KRISHNAMURTI
+  FAGAN_BRADLEY
+}
+
+enum DivisionalChartType {
+  D1
+  D2
+  D4
+  D9
+  D10
+  D11
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+enum GeneratedBy {
+  CLAUDE
+  RULE_BASED
+  SYSTEM
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
 model User {
   id                    String    @id @default(uuid())
   email                 String    @unique
   emailVerified         Boolean   @default(false)
   passwordHash          String?
-  authProvider          String    @default("email")
+  authProvider          AuthProvider @default(EMAIL)
   providerId            String?
   displayName           String?
   bio                   String?
@@ -50,17 +118,17 @@ model User {
 model NatalChart {
   id                    String    @id @default(uuid())
   userId                String    @unique
-  sunSign               String
-  moonSign              String
-  risingSign            String?
+  sunSign               ZodiacSign
+  moonSign              ZodiacSign
+  risingSign            ZodiacSign?
   planetaryPositions    Json
   houses                Json
   aspects               Json
   chartPattern          String?
   calculationMethod     String    @default("swiss_ephemeris")
-  houseSystem           String    @default("placidus")
-  zodiacType            String    @default("sidereal")
-  ayanamsa              String    @default("lahiri")
+  houseSystem           HouseSystem @default(PLACIDUS)
+  zodiacType            ZodiacType @default(SIDEREAL)
+  ayanamsa              AyanamsaType @default(LAHIRI)
   nakshatra             String?
   nakshatraPada         Int?
   nakshatraLord         String?
@@ -75,9 +143,9 @@ model NatalChart {
 model DivisionalChart {
   id                  String   @id @default(uuid())
   natalChartId        String
-  chartType           String   // D1, D2, D4, D9, D10, D11
-  planetaryPositions  Json     // { sun: { sign: "Aries", degree: 15 }, ... }
-  ascendant           String
+  chartType           DivisionalChartType
+  planetaryPositions  Json     // { sun: { sign: "ARIES", degree: 15 }, ... }
+  ascendant           ZodiacSign
   ascendantDegree     Float
   houses              Json
   createdAt           DateTime @default(now())
@@ -91,14 +159,14 @@ model DailyHoroscope {
   id                  String    @id @default(uuid())
   userId              String
   forDate             DateTime
-  moonSign            String?
+  moonSign            ZodiacSign?
   moonPhase           String?
   activeTransits      Json?
   contentSelf         String
   contentWork         String
   contentLove         String
   contentSocial       String
-  generatedBy         String    @default("claude")
+  generatedBy         GeneratedBy @default(CLAUDE)
   generationVersion   Int       @default(1)
   viewedAt            DateTime?
   shared              Boolean   @default(false)
@@ -114,7 +182,7 @@ model Transit {
   id            String   @id @default(uuid())
   transitPlanet String
   natalPlanet   String?
-  targetSign    String?
+  targetSign    ZodiacSign?
   aspectType    String?
   startDate     DateTime
   exactDate     DateTime?
@@ -130,7 +198,7 @@ model Friendship {
   id            String   @id @default(uuid())
   requesterId   String
   addresseeId   String
-  status        String   @default("pending")
+  status        FriendshipStatus @default(PENDING)
   createdAt     DateTime @default(now())
   acceptedAt    DateTime?
   addressee     User     @relation("Addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
@@ -196,7 +264,7 @@ model Notification {
 model ContentTemplate {
   id           String   @id @default(uuid())
   category     String
-  sign         String?
+  sign         ZodiacSign?
   aspectPattern String?
   moonPhase    String?
   templateText String
@@ -252,7 +320,7 @@ model ChatSession {
 model ChatMessage {
   id         String   @id @default(uuid())
   sessionId  String
-  role       String   // "user" or "assistant"
+  role       ChatRole
   content    String
   createdAt  DateTime @default(now())
   session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
@@ -260,3 +328,4 @@ model ChatMessage {
   @@index([sessionId])
   @@index([createdAt])
 }
+

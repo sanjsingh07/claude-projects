@@ -162,43 +162,147 @@ class NvidiaProvider implements LLMProvider {
 }
 
 // ────────────────────────────────────────────
-// Resolver — picks the configured provider, falls back gracefully
+// Gemini provider
 // ────────────────────────────────────────────
 
-const providers: LLMProvider[] = [
-  new AnthropicProvider(),
-  new NvidiaProvider(),
-];
+class GeminiProvider implements LLMProvider {
+  name = "gemini";
+  isAvailable: boolean;
+  private apiKey: string;
+  private model: string;
 
-export function getLLMProvider(): LLMProvider {
-  const preferred = env.AI_PROVIDER;
-  const provider = providers.find((p) => p.name === preferred && p.isAvailable);
-
-  if (provider) {
-    logger.info(`LLM provider: ${provider.name}`);
-    return provider;
+  constructor() {
+    this.apiKey = env.GEMINI_API_KEY || "";
+    this.model = env.GEMINI_MODEL;
+    this.isAvailable = !!this.apiKey;
   }
 
-  // Fall back to whichever is available
-  const fallback = providers.find((p) => p.isAvailable);
-  if (fallback) {
-    logger.warn(
-      `Preferred provider "${preferred}" unavailable — falling back to ${fallback.name}`,
-    );
-    return fallback;
-  }
+  async complete(
+    messages: LLMMessage[],
+    opts?: LLMOptions,
+  ): Promise<LLMResponse> {
+    if (!this.isAvailable) throw new Error("Gemini API key not configured");
 
-  logger.warn(
-    "No LLM provider configured — AI features will use rule-based fallbacks",
-  );
-  return {
-    name: "none",
-    isAvailable: false,
-    async complete() {
-      throw new Error("No LLM provider available");
-    },
-  };
+    try {
+      const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`,
+        {
+          contents: messages.map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          })),
+          generationConfig: {
+            maxOutputTokens: opts?.maxTokens ?? 2000,
+            temperature: opts?.temperature ?? 0.6,
+          },
+        },
+        { timeout: 30_000 },
+      );
+
+      const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      return { text };
+    } catch (error: any) {
+      logger.error("Gemini LLM error", { error: error.message });
+      throw error;
+    }
+  }
 }
 
-export const llmProvider = getLLMProvider();
+// ────────────────────────────────────────────
+// Groq provider (OpenAI-compatible)
+// ────────────────────────────────────────────
+
+class GroqProvider implements LLMProvider {
+  name = "groq";
+  isAvailable: boolean;
+  private apiKey: string;
+  private model: string;
+
+  constructor() {
+    this.apiKey = env.GROQ_API_KEY || "";
+    this.model = env.GROQ_MODEL;
+    this.isAvailable = !!this.apiKey;
+  }
+
+  async complete(
+    messages: LLMMessage[],
+    opts?: LLMOptions,
+  ): Promise<LLMResponse> {
+    if (!this.isAvailable) throw new Error("Groq API key not configured");
+
+    try {
+      const response = await axios.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          model: this.model,
+          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+          max_tokens: opts?.maxTokens ?? 1000,
+          temperature: opts?.temperature ?? 0.6,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 20_000,
+        },
+      );
+
+      const text = response.data?.choices?.[0]?.message?.content ?? "";
+      return { text };
+    } catch (error: any) {
+      logger.error("Groq LLM error", { error: error.message });
+      throw error;
+    }
+  }
+}
+
+// ────────────────────────────────────────────
+// Resolver & Multi-Provider Wrapper
+// ────────────────────────────────────────────
+
+const availableProviders: LLMProvider[] = [
+  new AnthropicProvider(),
+  new NvidiaProvider(),
+  new GeminiProvider(),
+  new GroqProvider(),
+].filter((p) => p.isAvailable);
+
+class ResilientLLMProvider implements LLMProvider {
+  name = "resilient-wrapper";
+  isAvailable = availableProviders.length > 0;
+
+  async complete(
+    messages: LLMMessage[],
+    opts?: LLMOptions,
+  ): Promise<LLMResponse> {
+    const preferredName = env.AI_PROVIDER;
+    const sorted = [...availableProviders].sort((a, b) => {
+      if (a.name === preferredName) return -1;
+      if (b.name === preferredName) return 1;
+      return 0;
+    });
+
+    if (sorted.length === 0) {
+      throw new Error("No LLM providers available");
+    }
+
+    let lastError: Error | null = null;
+
+    for (const provider of sorted) {
+      try {
+        logger.info(`Attempting LLM completion with ${provider.name}`);
+        return await provider.complete(messages, opts);
+      } catch (error: any) {
+        logger.warn(`LLM provider ${provider.name} failed: ${error.message}`);
+        lastError = error;
+      }
+    }
+
+    throw lastError || new Error("All LLM providers failed");
+  }
+}
+
+export const llmProvider = new ResilientLLMProvider();
 export default llmProvider;
+

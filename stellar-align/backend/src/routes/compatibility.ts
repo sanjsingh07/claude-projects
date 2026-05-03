@@ -4,6 +4,7 @@ import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
 import { cache } from "../config/redis";
 import logger from "../config/logger";
+import { FriendshipStatus } from "@prisma/client";
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get("/:userId", async (req: Request, res: Response, next: NextFunction) =
     // Check friendship status
     const friendship = await prisma.friendship.findFirst({
       where: {
-        status: "accepted",
+        status: FriendshipStatus.ACCEPTED,
         OR: [
           { requesterId: userId1, addresseeId: userId2 },
           { requesterId: userId2, addresseeId: userId1 },

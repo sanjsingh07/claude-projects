@@ -4,7 +4,7 @@ import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { calculateNatalChart } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
-import { AyanamsaType } from "../types/astrology";
+import { AyanamsaType, HouseSystem, ZodiacType, DivisionalChartType } from "@prisma/client";
 
 const router = Router();
 
@@ -73,7 +73,7 @@ router.post(
         return;
       }
 
-      const ayanamsaType = (req.body.ayanamsa as AyanamsaType) || "lahiri";
+      const ayanamsaType = (req.body.ayanamsa?.toUpperCase() as AyanamsaType) || AyanamsaType.LAHIRI;
       const birthTime = user.birthTime
         ? user.birthTime.toTimeString().slice(0, 5)
         : "12:00";
@@ -132,9 +132,9 @@ router.post(
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "whole", // Vedic uses whole sign
+          houseSystem: HouseSystem.WHOLE_SIGN, // Vedic uses whole sign
           calculationMethod: "vedic",
-          zodiacType: "sidereal",
+          zodiacType: ZodiacType.SIDEREAL,
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
@@ -164,9 +164,9 @@ router.post(
           houses: chartData.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
-          houseSystem: "whole",
+          houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",
-          zodiacType: "sidereal",
+          zodiacType: ZodiacType.SIDEREAL,
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
@@ -177,12 +177,12 @@ router.post(
 
       // Create or update divisional charts
       const divisionalChartsData = [
-        { chartType: "D1", data: vedicChart.d1 },
-        { chartType: "D2", data: vedicChart.d2 },
-        { chartType: "D4", data: vedicChart.d4 },
-        { chartType: "D9", data: vedicChart.d9 },
-        { chartType: "D10", data: vedicChart.d10 },
-        { chartType: "D11", data: vedicChart.d11 },
+        { chartType: DivisionalChartType.D1, data: vedicChart.d1 },
+        { chartType: DivisionalChartType.D2, data: vedicChart.d2 },
+        { chartType: DivisionalChartType.D4, data: vedicChart.d4 },
+        { chartType: DivisionalChartType.D9, data: vedicChart.d9 },
+        { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
+        { chartType: DivisionalChartType.D11, data: vedicChart.d11 },
       ];
 
       // Delete existing divisional charts and create new ones
@@ -232,7 +232,7 @@ router.get(
       const { chartType } = req.params;
       const validTypes = ["D1", "D2", "D4", "D9", "D10", "D11"];
 
-      if (!validTypes.includes(chartType)) {
+      if (!validTypes.includes(chartType.toUpperCase())) {
         res.status(400).json({
           success: false,
           error: {
@@ -258,7 +258,7 @@ router.get(
       const divisionalChart = await prisma.divisionalChart.findFirst({
         where: {
           natalChartId: natalChart.id,
-          chartType,
+          chartType: chartType.toUpperCase() as DivisionalChartType,
         },
       });
 
@@ -279,6 +279,7 @@ router.get(
     }
   }
 );
+
 
 // GET /vedic/chart/nakshatra - Get user's nakshatra details
 router.get("/nakshatra", async (req: Request, res: Response, next: NextFunction) => {

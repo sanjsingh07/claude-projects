@@ -45,6 +45,14 @@ const envSchema = z.object({
   NVIDIA_MODEL: z.string().default("qwen/qwen3.5-397b-a17b"),
   NVIDIA_BASE_URL: z.string().default("https://integrate.api.nvidia.com/v1"),
 
+  // Gemini (optional)
+  GEMINI_API_KEY: z.string().optional(),
+  GEMINI_MODEL: z.string().default("gemini-1.5-pro"),
+
+  // Groq (optional)
+  GROQ_API_KEY: z.string().optional(),
+  GROQ_MODEL: z.string().default("llama3-70b-8192"),
+
   // Push Notifications
   FIREBASE_PROJECT_ID: z.string().optional(),
   FIREBASE_PRIVATE_KEY: z.string().optional(),

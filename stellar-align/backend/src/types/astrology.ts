@@ -1,18 +1,14 @@
+import { 
+  ZodiacSign, 
+  HouseSystem as PrismaHouseSystem, 
+  ZodiacType, 
+  AyanamsaType as PrismaAyanamsaType, 
+  DivisionalChartType as PrismaDivisionalChartType 
+} from "@prisma/client";
+
 // Astrology domain types
 
-export type ZodiacSign =
-  | "aries"
-  | "taurus"
-  | "gemini"
-  | "cancer"
-  | "leo"
-  | "virgo"
-  | "libra"
-  | "scorpio"
-  | "sagittarius"
-  | "capricorn"
-  | "aquarius"
-  | "pisces";
+export { ZodiacSign };
 
 export type Planet =
   | "sun"
@@ -28,9 +24,11 @@ export type Planet =
   | "chiron"
   | "north_node"
   | "south_node"
-  | "lilith";
+  | "lilith"
+  | "rahu"
+  | "ketu";
 
-export type HouseSystem = "placidus" | "koch" | "equal" | "whole" | "porphyry";
+export type HouseSystem = PrismaHouseSystem;
 
 export type AspectType =
   | "conjunction"
@@ -130,7 +128,7 @@ export interface DailyHoroscope {
   activeTransits: Transit[];
   categories: HoroscopeCategory[];
   overallTheme: string;
-  generatedBy: "ai" | "rule_based";
+  generatedBy: "CLAUDE" | "RULE_BASED" | "SYSTEM";
   generatedAt: Date;
 }
 
@@ -163,9 +161,9 @@ export interface CompatibilityReport {
 // Vedic Astrology Types
 // ────────────────────────────────────────────
 
-export type ZodiacType = "tropical" | "sidereal";
-export type AyanamsaType = "lahiri" | "raman" | "krishnamurti" | "fagan-bradley";
-export type DivisionalChartType = "D1" | "D2" | "D4" | "D9" | "D10" | "D11";
+export { ZodiacType };
+export type AyanamsaType = PrismaAyanamsaType;
+export type DivisionalChartType = PrismaDivisionalChartType;
 
 // 27 Nakshatras (Lunar Mansions)
 export type NakshatraName =
@@ -265,3 +263,4 @@ export interface VedicBirthData {
   timezone: string;
   ayanamsa?: AyanamsaType;
 }
+

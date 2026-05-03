@@ -5,6 +5,7 @@ import { cache } from "../config/redis";
 import { NotFoundError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
 import logger from "../config/logger";
+import { GeneratedBy } from "@prisma/client";
 
 export class HoroscopeController {
   // GET /horoscope/today
@@ -49,7 +50,7 @@ export class HoroscopeController {
             data: {
               userId,
               forDate: today,
-              moonSign: "unknown",
+              moonSign: null,
               moonPhase: "unknown",
               activeTransits: [],
               contentSelf:
@@ -60,7 +61,7 @@ export class HoroscopeController {
                 "Your love forecast is being calculated with your unique astrological signature.",
               contentSocial:
                 "Your social astrology insights are being generated.",
-              generatedBy: "system",
+              generatedBy: GeneratedBy.SYSTEM,
             },
           });
           // Don't cache placeholder - allow retry on next request
@@ -164,7 +165,7 @@ export class HoroscopeController {
                 data: {
                   userId,
                   forDate: date,
-                  moonSign: "unknown",
+                  moonSign: null,
                   moonPhase: "unknown",
                   activeTransits: [],
                   contentSelf:
@@ -175,7 +176,7 @@ export class HoroscopeController {
                     "Your love forecast is being calculated with your unique astrological signature.",
                   contentSocial:
                     "Your social astrology insights are being generated.",
-                  generatedBy: "system",
+                  generatedBy: GeneratedBy.SYSTEM,
                 },
               });
               res.json({ success: true, data: generated });
