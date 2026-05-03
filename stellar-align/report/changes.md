@@ -56,3 +56,25 @@ Refactored the Stellar Align backend to improve astrological precision, database
 ### Files Modified
 - `frontend/src/screens/ChartScreen.tsx`
 - `report/changes.md`
+
+---
+
+## Vedic Divisional Ascendant Accuracy
+
+**Date/Time:** Mon May  4 01:24:44 IST 2026
+
+### What Changed and Why
+- Corrected Vedic divisional chart ascendant and planet sign mapping to better match Parashara-style varga calculations.
+- Fixed stored divisional degrees so D1 uses the sidereal in-sign degree and divisional charts store the degree within the generated varga sign instead of the original rashi degree.
+- Made frontend ascendant display fall back to the first house data when needed and format fractional degrees cleanly.
+
+### Summary of Changes
+- Updated D2 Hora, D4 Chaturthamsa, D9 Navamsa, D10 Dashamsa, and D11 Rudramsa mappings in the backend Vedic astrology service.
+- Added focused backend regression tests for D1 ascendant storage and varga sign mappings.
+- Kept the change scoped to Vedic divisional chart calculation/display; Western chart calculation was not changed.
+
+### Files Modified
+- `backend/src/services/vedicAstrology.ts`
+- `backend/src/services/vedicAstrology.test.ts`
+- `frontend/src/components/VedicChartCard.tsx`
+- `report/changes.md`

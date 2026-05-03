@@ -66,6 +66,14 @@ function displayPlanetName(planet: string): string {
   return normalized.replace(/_/g, ' ');
 }
 
+function formatDegree(degree?: number | null): string {
+  if (typeof degree !== 'number' || Number.isNaN(degree)) {
+    return '0';
+  }
+
+  return Number.isInteger(degree) ? degree.toString() : degree.toFixed(2);
+}
+
 function withRahuKetu(positions: DivisionalChartPosition[]): DivisionalChartPosition[] {
   const hasKetu = positions.some((position) =>
     ['south_node', 'southnode', 'ketu'].includes(position.planet?.toLowerCase?.() || '')
@@ -91,6 +99,9 @@ function withRahuKetu(positions: DivisionalChartPosition[]): DivisionalChartPosi
 
 export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra }) => {
   const chartInfo = CHART_INFO[chart.chartType] || { name: chart.chartType, purpose: '' };
+  const ascendantHouse = chart.houses?.find((house) => house.house === 1) || chart.houses?.[0];
+  const ascendantSign = chart.ascendant || ascendantHouse?.sign || '';
+  const ascendantDegree = chart.ascendantDegree ?? ascendantHouse?.degree;
 
   const renderPlanetList = () => {
     const planetsBySign: Record<string, DivisionalChartPosition[]> = {};
@@ -113,7 +124,7 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
           <View key={planet.planet} style={styles.planetRow}>
             <Text style={styles.planetName}>{displayPlanetName(planet.planet)}</Text>
             <Text style={styles.planetDegree}>
-              {planet.degree}°{planet.house ? ` H${planet.house}` : ''}
+              {formatDegree(planet.degree)}°{planet.house ? ` H${planet.house}` : ''}
             </Text>
           </View>
         ))}
@@ -132,9 +143,9 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
         <View style={styles.ascendantBox}>
           <Text style={styles.ascendantLabel}>Ascendant</Text>
           <Text style={styles.ascendantValue}>
-            {SIGN_ICONS[normalizeSign(chart.ascendant)]} {formatSign(chart.ascendant)}
+            {SIGN_ICONS[normalizeSign(ascendantSign)]} {formatSign(ascendantSign)}
           </Text>
-          <Text style={styles.ascendantDegree}>{chart.ascendantDegree}°</Text>
+          <Text style={styles.ascendantDegree}>{formatDegree(ascendantDegree)}°</Text>
         </View>
       </View>
 

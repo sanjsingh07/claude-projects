@@ -33,9 +33,8 @@ const NAKSHATRA_LORDS: Record<string, string> = {
   "Purva Bhadrapada": "Jupiter", "Uttara Bhadrapada": "Saturn", Revati: "Mercury",
 };
 
-const FIRE_SIGNS: ZodiacSign[] = [ZodiacSign.ARIES, ZodiacSign.LEO, ZodiacSign.SAGITTARIUS];
-const EARTH_SIGNS: ZodiacSign[] = [ZodiacSign.TAURUS, ZodiacSign.VIRGO, ZodiacSign.CAPRICORN];
-const AIR_SIGNS: ZodiacSign[] = [ZodiacSign.GEMINI, ZodiacSign.LIBRA, ZodiacSign.AQUARIUS];
+const MOVABLE_SIGNS: ZodiacSign[] = [ZodiacSign.ARIES, ZodiacSign.CANCER, ZodiacSign.LIBRA, ZodiacSign.CAPRICORN];
+const FIXED_SIGNS: ZodiacSign[] = [ZodiacSign.TAURUS, ZodiacSign.LEO, ZodiacSign.SCORPIO, ZodiacSign.AQUARIUS];
 
 function normalizeAngle(angle: number): number {
   return ((angle % 360) + 360) % 360;
@@ -91,15 +90,80 @@ export function calculateNakshatra(moonLongitude: number): Nakshatra {
   };
 }
 
-// Divisional chart helpers
+// Divisional chart helpers. These follow the standard Parashara-style varga mappings.
+function getSegmentIndex(degreeInSign: number, divisions: number): number {
+  const segmentSize = 30 / divisions;
+  return Math.min(Math.floor(degreeInSign / segmentSize), divisions - 1);
+}
+
+function getDivisionalDegree(degreeInSign: number, divisions: number): number {
+  const segmentSize = 30 / divisions;
+  const degree = ((degreeInSign % segmentSize) / segmentSize) * 30;
+  return Math.round(degree * 10000) / 10000;
+}
+
+function getHoraSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
+  const signIndex = getSignIndex(sign);
+  const isOddSign = [0, 2, 4, 6, 8, 10].includes(signIndex);
+  const inSecondHalf = degreeInSign >= 15;
+
+  if (isOddSign) {
+    return inSecondHalf ? ZodiacSign.CANCER : ZodiacSign.LEO;
+  }
+
+  return inSecondHalf ? ZodiacSign.LEO : ZodiacSign.CANCER;
+}
+
+function getChaturthamsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
+  const signIndex = getSignIndex(sign);
+  const segment = getSegmentIndex(degreeInSign, 4);
+  return ZODIAC_SIGNS[(signIndex + segment * 3) % 12];
+}
+
 function getNavamsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
-  const navamsaIndex = Math.floor(degreeInSign / (3 + 1/3));
-  let trineGroup = 0;
-  if (FIRE_SIGNS.includes(sign)) trineGroup = 0;
-  else if (EARTH_SIGNS.includes(sign)) trineGroup = 1;
-  else if (AIR_SIGNS.includes(sign)) trineGroup = 2;
-  else trineGroup = 3;
-  return ZODIAC_SIGNS[(trineGroup * 3 + navamsaIndex) % 12];
+  const signIndex = getSignIndex(sign);
+  const navamsaIndex = getSegmentIndex(degreeInSign, 9);
+  const start = MOVABLE_SIGNS.includes(sign)
+    ? signIndex
+    : FIXED_SIGNS.includes(sign)
+      ? (signIndex + 8) % 12
+      : (signIndex + 4) % 12;
+
+  return ZODIAC_SIGNS[(start + navamsaIndex) % 12];
+}
+
+function getDasamsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
+  const signIndex = getSignIndex(sign);
+  const dasamsaIndex = getSegmentIndex(degreeInSign, 10);
+  const start = [0, 2, 4, 6, 8, 10].includes(signIndex) ? signIndex : (signIndex + 8) % 12;
+  return ZODIAC_SIGNS[(start + dasamsaIndex) % 12];
+}
+
+function getRudramsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
+  const signIndex = getSignIndex(sign);
+  const rudramsaIndex = getSegmentIndex(degreeInSign, 11);
+  const start = (12 - signIndex) % 12;
+  return ZODIAC_SIGNS[(start + rudramsaIndex) % 12];
+}
+
+function getDivisionalSign(sign: ZodiacSign, degreeInSign: number, chartType: DivisionalChartType): ZodiacSign {
+  if (chartType === DivisionalChartType.D1) return sign;
+  if (chartType === DivisionalChartType.D2) return getHoraSign(sign, degreeInSign);
+  if (chartType === DivisionalChartType.D4) return getChaturthamsaSign(sign, degreeInSign);
+  if (chartType === DivisionalChartType.D9) return getNavamsaSign(sign, degreeInSign);
+  if (chartType === DivisionalChartType.D10) return getDasamsaSign(sign, degreeInSign);
+  if (chartType === DivisionalChartType.D11) return getRudramsaSign(sign, degreeInSign);
+  return sign;
+}
+
+function getDivisionalDegreeForChart(degreeInSign: number, chartType: DivisionalChartType): number {
+  if (chartType === DivisionalChartType.D1) return Math.round(degreeInSign * 10000) / 10000;
+  if (chartType === DivisionalChartType.D2) return getDivisionalDegree(degreeInSign, 2);
+  if (chartType === DivisionalChartType.D4) return getDivisionalDegree(degreeInSign, 4);
+  if (chartType === DivisionalChartType.D9) return getDivisionalDegree(degreeInSign, 9);
+  if (chartType === DivisionalChartType.D10) return getDivisionalDegree(degreeInSign, 10);
+  if (chartType === DivisionalChartType.D11) return getDivisionalDegree(degreeInSign, 11);
+  return Math.round(degreeInSign * 10000) / 10000;
 }
 
 function createHouses(ascSign: ZodiacSign) {
@@ -118,41 +182,13 @@ function calculateDivisional(
     const degreeInSign = getDegreeInSign(siderealLon);
     const sign = getSignFromLongitude(siderealLon);
 
-    let dSign: ZodiacSign = sign;
-    let dDegree: number = degreeInSign;
-
-    if (chartType === DivisionalChartType.D1) {
-      dSign = sign;
-    } else if (chartType === DivisionalChartType.D2) {
-      const signIndex = getSignIndex(sign);
-      const isOdd = [0, 2, 4, 6, 8, 10].includes(signIndex);
-      const inSecondHalf = degreeInSign >= 15;
-      if (isOdd) {
-        dSign = inSecondHalf ? ZODIAC_SIGNS[(signIndex + 1) % 12] : sign; // Leo / Cancer mapping simplified
-      } else {
-        dSign = inSecondHalf ? sign : ZODIAC_SIGNS[(signIndex + 11) % 12];
-      }
-    } else if (chartType === DivisionalChartType.D4) {
-      const segment = Math.floor(degreeInSign / 7.5);
-      const trineStart = FIRE_SIGNS.includes(sign) ? 0 : EARTH_SIGNS.includes(sign) ? 1 : AIR_SIGNS.includes(sign) ? 2 : 3;
-      dSign = ZODIAC_SIGNS[(trineStart * 3 + segment) % 12];
-    } else if (chartType === DivisionalChartType.D9) {
-      dSign = getNavamsaSign(sign, degreeInSign);
-    } else if (chartType === DivisionalChartType.D10) {
-      const signIndex = getSignIndex(sign);
-      const dasamsaIndex = Math.floor(degreeInSign / 3);
-      const start = [0, 2, 4, 6, 8, 10].includes(signIndex) ? signIndex : (signIndex + 6) % 12;
-      dSign = ZODIAC_SIGNS[(start + dasamsaIndex) % 12];
-    } else if (chartType === DivisionalChartType.D11) {
-      const signIndex = getSignIndex(sign);
-      const ekadasamsaIndex = Math.floor(degreeInSign / (30 / 11));
-      dSign = ZODIAC_SIGNS[(signIndex + ekadasamsaIndex) % 12];
-    }
+    const dSign = getDivisionalSign(sign, degreeInSign, chartType);
+    const dDegree = getDivisionalDegreeForChart(degreeInSign, chartType);
 
     return {
       planet: p.planet.toLowerCase() as any, 
       sign: dSign,
-      degree: Math.floor(dDegree), 
+      degree: dDegree,
       house: 1, // Will be calculated after ascendant is set
     };
   });
@@ -161,32 +197,8 @@ function calculateDivisional(
   const ascDegree = getDegreeInSign(siderealAsc);
   const ascSign = getSignFromLongitude(siderealAsc);
 
-  let dAsc: ZodiacSign = ascSign;
-  let dAscDegree = ascDegree;
-
-  if (chartType === DivisionalChartType.D1) {
-    dAsc = ascSign;
-  } else if (chartType === DivisionalChartType.D2) {
-    const ascIndex = getSignIndex(ascSign);
-    const isOdd = [0, 2, 4, 6, 8, 10].includes(ascIndex);
-    const inSecondHalf = ascDegree >= 15;
-    dAsc = isOdd ? (inSecondHalf ? ZodiacSign.CANCER : ZodiacSign.LEO) : (inSecondHalf ? ZodiacSign.LEO : ZodiacSign.CANCER);
-  } else if (chartType === DivisionalChartType.D4) {
-    const segment = Math.floor(ascDegree / 7.5);
-    const trineStart = FIRE_SIGNS.includes(ascSign) ? 0 : EARTH_SIGNS.includes(ascSign) ? 1 : AIR_SIGNS.includes(ascSign) ? 2 : 3;
-    dAsc = ZODIAC_SIGNS[(trineStart * 3 + segment) % 12];
-  } else if (chartType === DivisionalChartType.D9) {
-    dAsc = getNavamsaSign(ascSign, ascDegree);
-  } else if (chartType === DivisionalChartType.D10) {
-    const ascIndex = getSignIndex(ascSign);
-    const dasamsaIndex = Math.floor(ascDegree / 3);
-    const start = [0, 2, 4, 6, 8, 10].includes(ascIndex) ? ascIndex : (ascIndex + 6) % 12;
-    dAsc = ZODIAC_SIGNS[(start + dasamsaIndex) % 12];
-  } else if (chartType === DivisionalChartType.D11) {
-    const ascIndex = getSignIndex(ascSign);
-    const ekadasamsaIndex = Math.floor(ascDegree / (30 / 11));
-    dAsc = ZODIAC_SIGNS[(ascIndex + ekadasamsaIndex) % 12];
-  }
+  const dAsc = getDivisionalSign(ascSign, ascDegree, chartType);
+  const dAscDegree = getDivisionalDegreeForChart(ascDegree, chartType);
 
   // Final house assignment for divisional chart (Whole Sign)
   const dAscIdx = getSignIndex(dAsc);
@@ -200,7 +212,7 @@ function calculateDivisional(
     chartType,
     planetaryPositions,
     ascendant: dAsc,
-    ascendantDegree: Math.floor(dAscDegree),
+    ascendantDegree: dAscDegree,
     houses: createHouses(dAsc),
   };
 }
