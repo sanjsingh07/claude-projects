@@ -7,6 +7,7 @@ import friendRoutes from "./friends";
 import compatibilityRoutes from "./compatibility";
 import chatRoutes from "./chat";
 import vedicChartRoutes from "./vedicChart";
+import transitRoutes from "./transits";
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use("/friends", friendRoutes);
 router.use("/compatibility", compatibilityRoutes);
 router.use("/chat", chatRoutes);
 router.use("/vedic", vedicChartRoutes);
+router.use("/transits", transitRoutes);
 
 export default router;

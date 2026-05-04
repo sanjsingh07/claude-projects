@@ -9,6 +9,9 @@ export { SignIcon } from './SignIcon';
 export { MoonPhase } from './MoonPhase';
 export { TransitIndicator } from './TransitIndicator';
 export { CompatibilityRing } from './CompatibilityRing';
+export { MoodRing } from './MoodRing';
+export { AspectList } from './AspectList';
+export { TransitCard } from './TransitCard';
 
 // Legacy
 export { Card } from './Card';

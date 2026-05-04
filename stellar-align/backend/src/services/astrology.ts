@@ -608,6 +608,12 @@ export async function generateDailyHoroscope(
 
     const moonPhase = getMoonPhase(sunPos.longitude, moonPos.longitude);
 
+    // Calculate actual transits for the user
+    const userTransits = calculateUserTransits(
+      user.natalChart.planetaryPositions as any,
+      transitPositions as any
+    );
+
     // Prepare Vedic data if applicable
     let vedicData = undefined;
     if (zodiacType === "SIDEREAL") {
@@ -627,7 +633,7 @@ export async function generateDailyHoroscope(
       date,
       moonPos.sign,
       moonPhase,
-      [],
+      userTransits,
       vedicData
     );
 
@@ -637,7 +643,11 @@ export async function generateDailyHoroscope(
         forDate: date,
         moonSign: moonPos.sign,
         moonPhase,
-        activeTransits: [],
+        activeTransits: userTransits as any,
+        energyScore: content.energyScore,
+        moodAspects: content.moodAspects,
+        primaryTransit: content.primaryTransit,
+        aspects: content.aspects,
         contentSelf: content.self,
         contentWork: content.work,
         contentLove: content.love,
@@ -760,6 +770,128 @@ export async function calculateCurrentTransits(): Promise<PlanetPosition[]> {
 
 
 // ────────────────────────────────────────────
+// Transit calculation (against natal chart)
+// ────────────────────────────────────────────
+
+export function calculateUserTransits(
+  natalPositions: Record<string, any>,
+  transitPositions: Record<string, PlanetPosition>,
+): Aspect[] {
+  const transits: Aspect[] = [];
+  const transitPlanets = Object.values(transitPositions);
+  const natalPlanets = Object.values(natalPositions).filter(p => p.longitude !== undefined);
+
+  for (const tPos of transitPlanets) {
+    for (const nPos of natalPlanets) {
+      let diff = Math.abs(tPos.longitude - nPos.longitude);
+      if (diff > 180) diff = 360 - diff;
+
+      for (const [aspectName, aspectData] of Object.entries(ASPECTS)) {
+        const orb = Math.abs(diff - aspectData.angle);
+        if (orb <= aspectData.orb) {
+          transits.push({
+            planet1: tPos.planet, // Transit planet
+            planet2: nPos.planet, // Natal planet
+            type: aspectName as AspectType,
+            angle: aspectData.angle,
+            orb,
+            exact: orb < 1,
+            applying: tPos.speed > 0, // Simplified
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  return transits.sort((a, b) => a.orb - b.orb);
+}
+
+// ────────────────────────────────────────────
+// Forecast calculation
+// ────────────────────────────────────────────
+
+export async function calculateForecast(
+  natalChart: any,
+  startDate: Date,
+  period: "week" | "month" | "year",
+): Promise<any[]> {
+  const endDate = DateTime.fromJSDate(startDate).plus({ 
+    days: period === "week" ? 7 : period === "month" ? 30 : 365 
+  }).toJSDate();
+
+  const { zodiacType, ayanamsa: ayanamsaType, planetaryPositions: natalPositions } = natalChart;
+  const ayanamsaToUse = zodiacType === "SIDEREAL" ? ayanamsaType : undefined;
+
+  // For forecasting, we'll sample the period
+  // Week: every day
+  // Month: every 3 days
+  // Year: every 15 days
+  const step = period === "week" ? 1 : period === "month" ? 3 : 15;
+  const transitsFound = new Map<string, any>();
+
+  let currentDate = DateTime.fromJSDate(startDate);
+  while (currentDate.toJSDate() <= endDate) {
+    const transitPositions = await getPlanetaryPositions(currentDate.toJSDate(), ayanamsaToUse);
+    const dayTransits = calculateUserTransits(natalPositions, transitPositions as any);
+
+    for (const transit of dayTransits) {
+      const key = `${transit.planet1}-${transit.type}-${transit.planet2}`;
+      if (!transitsFound.has(key)) {
+        // Simple heuristic for type and impact
+        let type = "minor";
+        let impact = "moderate";
+        
+        if (["SUN", "MOON", "VENUS", "MARS"].includes(transit.planet1)) {
+           if (transit.exact) {
+             type = "major";
+             impact = "high";
+           }
+        } else if (["SATURN", "PLUTO"].includes(transit.planet1)) {
+           impact = "intense";
+           type = "major";
+        }
+
+        // Generate symbolic line
+        const sym1 = PLANET_SYMBOLS[transit.planet1 as PlanetName] || transit.planet1;
+        const sym2 = PLANET_SYMBOLS[transit.planet2 as PlanetName] || transit.planet2;
+        const aspSym = ASPECT_SYMBOLS[transit.type as AspectType] || transit.type;
+
+        transitsFound.set(key, {
+          date: currentDate.toJSDate(),
+          title: `${capitalize(transit.planet1)} ${transit.type.toLowerCase()} ${capitalize(transit.planet2)}`,
+          type,
+          symbolic: `${sym1} ${aspSym} ${sym2}`,
+          orb: `${Math.floor(transit.orb)}°${Math.round((transit.orb % 1) * 60)}'`,
+          impact: `· ${impact}`,
+          progress: transit.exact ? 100 : (10 - transit.orb) * 10, // Placeholder calculation
+          description: `A ${transit.type.toLowerCase()} aspect from transit ${transit.planet1} to your natal ${transit.planet2}.`,
+        });
+      }
+    }
+    currentDate = currentDate.plus({ days: step });
+  }
+
+  return Array.from(transitsFound.values()).sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
+
+const PLANET_SYMBOLS: Record<PlanetName, string> = {
+  SUN: "☉", MOON: "☽", MERCURY: "☿", VENUS: "♀", MARS: "♂",
+  JUPITER: "♃", SATURN: "♄", URANUS: "♅", NEPTUNE: "♆", PLUTO: "♇",
+  CHIRON: "⚷", LILITH: "⚸", NODE: "☊", KETU: "☋",
+  ASCENDANT: "ASC", MIDHEAVEN: "MC"
+};
+
+const ASPECT_SYMBOLS: Record<AspectType, string> = {
+  CONJUNCTION: "☌", SEXTILE: "✶", SQUARE: "□",
+  TRINE: "△", OPPOSITION: "☍", QUINCUNX: "⚺"
+};
+
+// ────────────────────────────────────────────
 // Service object
 // ────────────────────────────────────────────
 
@@ -772,5 +904,7 @@ export const astrologyService = {
   calculateTransits,
   getMoonPhase,
   getChartElements,
+  calculateUserTransits,
+  calculateForecast,
 };
 

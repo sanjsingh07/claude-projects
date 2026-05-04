@@ -47,6 +47,26 @@ export interface DailyHoroscope {
   moonSign: string;
   moonPhase: string;
   activeTransits?: Transit[];
+  energyScore?: number;
+  moodAspects?: {
+    emotion: string;
+    career: string;
+    love: string;
+    health: string;
+  };
+  primaryTransit?: {
+    title: string;
+    badge: string;
+    planets: string;
+    body: string;
+    source: string;
+  };
+  aspects?: {
+    symbol: string;
+    name: string;
+    description: string;
+    quality: string;
+  }[];
   contentSelf: string;
   contentWork: string;
   contentLove: string;

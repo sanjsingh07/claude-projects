@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, TextStyle, StyleProp } from 'react-native';
 import { colors, typography, spacing, borderRadius, theme } from '@theme/theme';
 
 interface CostarCardProps {
   children: React.ReactNode;
   title?: string;
   icon?: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   variant?: 'default' | 'bordered' | 'filled';
 }
 
@@ -42,9 +42,10 @@ interface CostarTextProps {
     | 'caption'
     | 'label'
     | 'large';
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
   color?: string;
   uppercase?: boolean;
+  serif?: boolean;
   align?: 'auto' | 'left' | 'center' | 'right' | 'justify';
 }
 

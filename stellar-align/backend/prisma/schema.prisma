@@ -162,6 +162,10 @@ model DailyHoroscope {
   moonSign            ZodiacSign?
   moonPhase           String?
   activeTransits      Json?
+  energyScore         Int?
+  moodAspects         Json?
+  primaryTransit      Json?
+  aspects             Json?
   contentSelf         String
   contentWork         String
   contentLove         String

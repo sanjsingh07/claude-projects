@@ -169,9 +169,25 @@ router.post(
         },
       });
 
+      // Transform planetaryPositions object to array for frontend
+      const planetaryPositionsObj = chart.planetaryPositions as any;
+      const positionsArray = planetaryPositionsObj
+        ? Object.values(planetaryPositionsObj).map((p: any) => ({
+            planet: p.planet?.toString?.()?.toLowerCase?.() || p.planet,
+            sign: p.sign,
+            degree: p.degree,
+            minute: p.minute,
+            house: p.house,
+            retrograde: p.retrograde,
+          }))
+        : [];
+
       res.json({
         success: true,
-        data: chart,
+        data: {
+          ...chart,
+          planetaryPositions: positionsArray,
+        },
       });
     } catch (error) {
       next(error);
@@ -179,7 +195,7 @@ router.post(
   },
 );
 
-// GET /chart/transits - Get current transits for user
+// GET /chart/transits - Get transit forecast for user
 router.get("/transits", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({
@@ -195,21 +211,39 @@ router.get("/transits", async (req: Request, res: Response, next: NextFunction) 
       return;
     }
 
-    const { zodiacType, ayanamsa } = user.natalChart;
-    const ayanamsaToUse = zodiacType === "SIDEREAL" ? ayanamsa : undefined;
+    const period = (req.query.period as "week" | "month" | "year") || "week";
+    const startDate = req.query.startDate 
+      ? new Date(req.query.startDate as string) 
+      : new Date();
 
-    const transits = await astrologyService.calculateTransits(new Date(), ayanamsaToUse);
-    const currentPositions = await astrologyService.getPlanetaryPositions(new Date(), ayanamsaToUse);
-    const moonPhase = astrologyService.getMoonPhase(
-      currentPositions.sun?.longitude ?? 0,
-      currentPositions.moon?.longitude ?? 0,
+    const rawTransits = await astrologyService.calculateForecast(
+      user.natalChart,
+      startDate,
+      period
     );
+
+    // Transform for the new Transits screen design
+    const transits = rawTransits.map(t => {
+      const dt = DateTime.fromJSDate(t.date);
+      return {
+        ...t,
+        month: dt.toFormat("LLL").toUpperCase(),
+        day: dt.toFormat("d"),
+        year: dt.toFormat("yyyy"),
+        // Additional UI logic if needed
+      };
+    });
+
+    const endDate = DateTime.fromJSDate(startDate).plus({ 
+      days: period === "week" ? 7 : period === "month" ? 30 : 365 
+    });
 
     res.json({
       success: true,
       data: {
-        date: new Date().toISOString(),
-        moonPhase,
+        title: "Transit forecast",
+        rangeLabel: `${DateTime.fromJSDate(startDate).toFormat("LLL d")} – ${endDate.toFormat("LLL d, yyyy")}`,
+        period,
         transits,
       },
     });

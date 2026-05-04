@@ -248,8 +248,8 @@ class ApiService {
     return this.client.post('/chart/recalculate', { houseSystem });
   }
 
-  async getTransits() {
-    return this.client.get('/chart/transits');
+  async getTransits(period?: 'week' | 'month' | 'year', startDate?: string) {
+    return this.client.get('/transits', { params: { period, startDate } });
   }
 
   // ==================== VEDIC CHART ====================

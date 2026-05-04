@@ -43,7 +43,15 @@ export class HoroscopeController {
           include: { natalChart: true },
         });
 
-        if (!user?.natalChart) {
+        if (!user) {
+          res.status(404).json({
+            success: false,
+            error: { code: "USER_NOT_FOUND", message: "User not found" },
+          });
+          return;
+        }
+
+        if (!user.natalChart) {
           // User doesn't have a natal chart yet - create placeholder
           // Don't cache placeholder - allow retry on next request
           horoscope = await prisma.dailyHoroscope.create({

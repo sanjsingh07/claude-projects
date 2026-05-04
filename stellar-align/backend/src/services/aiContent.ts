@@ -14,6 +14,26 @@ export interface DailyHoroscopeContent {
   overallTheme: string;
   keywords: string[];
   luckyNumbers: number[];
+  energyScore: number;
+  moodAspects: {
+    emotion: string;
+    career: string;
+    love: string;
+    health: string;
+  };
+  primaryTransit: {
+    title: string;
+    badge: string;
+    planets: string;
+    body: string;
+    source: string;
+  };
+  aspects: {
+    symbol: string;
+    name: string;
+    description: string;
+    quality: string;
+  }[];
 }
 
 export interface VedicHoroscopeInput {
@@ -234,15 +254,17 @@ ${vedicSection}
 CURRENT CELESTIAL WEATHER (${date.toDateString()}):
 - Moon: ${moonSign}
 - Moon Phase: ${moonPhase}
-- Active Transits: ${activeTransits.map((t) => t.transitPlanet).join(", ")}
+- Active Transits: ${activeTransits.map((t) => `${t.planet1} ${t.type} ${t.planet2} (orb: ${t.orb.toFixed(1)}°)`).join(", ")}
 
 INSTRUCTIONS:
-Generate 4 category horoscopes (self, work, love, social). Each should be:
-- 2-3 sentences
-- Specific and actionable
-- Reflect current transits
-- Tone: encouraging but grounded
-${isVedic ? "- Incorporate Nakshatra insights and Vedic terminology where appropriate" : ""}
+Generate a comprehensive daily horoscope including:
+1. Category horoscopes (self, work, love, social): 2-3 sentences each, specific and actionable.
+2. Energy Score: A number from 0-100 reflecting the overall celestial support.
+3. Mood Aspects: Categorize the current energy into status words (e.g., "intense", "steady", "rising", "focus", "challenging") for Emotion, Career, Love, and Health.
+4. Primary Transit: Select the most significant transit today from the "Active Transits" list above. Provide a poetic title, a badge ("major" or "minor"), the technical details (e.g., "☉ Sun 14° Taurus ↔ ♄ Saturn 14° Aquarius"), a detailed interpretation (3-4 sentences), and a source/context (e.g., "Yesterday · 1 of 7 active transits").
+5. Today's Aspects: A list of the top 3-4 current aspects with a symbol (□, △, ✕, ☌, ⟂, ◊), a name (e.g., "Moon ⟂ Venus"), a short description, and a quality (e.g., "opposition", "trine", "square", "conjunction", "sextile"). These can be either transits to the natal chart or transits between current planets.
+
+Tone: encouraging but grounded. ${isVedic ? "Incorporate Nakshatra insights and Vedic terminology where appropriate." : ""}
 
 Provide your response as valid JSON:
 {
@@ -250,9 +272,31 @@ Provide your response as valid JSON:
   "work": "...",
   "love": "...",
   "social": "...",
-  "overallTheme": "One word theme for the day",
-  "keywords": ["keyword1", "keyword2", "keyword3"],
-  "luckyNumbers": [7, 14, 21]
+  "overallTheme": "One word theme",
+  "keywords": ["...", "...", "..."],
+  "luckyNumbers": [1, 2, 3],
+  "energyScore": 72,
+  "moodAspects": {
+    "emotion": "intense",
+    "career": "steady",
+    "love": "rising",
+    "health": "focus"
+  },
+  "primaryTransit": {
+    "title": "Poetic Title",
+    "badge": "major",
+    "planets": "Planet 1 Degree Sign ↔ Planet 2 Degree Sign",
+    "body": "Interpretation...",
+    "source": "Source context..."
+  },
+  "aspects": [
+    {
+      "symbol": "□",
+      "name": "Planet 1 Aspect Planet 2",
+      "description": "Short description...",
+      "quality": "square"
+    }
+  ]
 }
 
 Respond with ONLY the JSON object, no markdown fences.`;
@@ -291,6 +335,21 @@ Respond with ONLY the JSON object, no markdown fences.`;
         "balance",
       ],
       luckyNumbers: this.generateLuckyNumbers(natalChart.userId),
+      energyScore: 70,
+      moodAspects: {
+        emotion: "steady",
+        career: "focused",
+        love: "warm",
+        health: "stable"
+      },
+      primaryTransit: {
+        title: "Celestial Balance",
+        badge: "minor",
+        planets: `Moon in ${moonInSign}`,
+        body: `The current ${moonPhase} invites you to harmonize your inner needs with your outer goals.`,
+        source: "Today's positions"
+      },
+      aspects: []
     };
   }
 

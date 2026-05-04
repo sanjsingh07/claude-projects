@@ -7,10 +7,13 @@ import { TodayScreen } from '@screens/TodayScreen';
 import { ProfileScreen } from '@screens/ProfileScreen';
 import { ChartScreen } from '@screens/ChartScreen';
 import { ChatScreen } from '@screens/ChatScreen';
+import { TransitsScreen } from '@screens/TransitsScreen';
+import { CostarText } from '@components';
 
 export type MainTabParamList = {
   Today: undefined;
   Chart: undefined;
+  Transits: undefined;
   Chat: undefined;
   Profile: undefined;
 };
@@ -23,8 +26,8 @@ export const MainNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: colors.white,
-        tabBarInactiveTintColor: colors.gray600,
+        tabBarActiveTintColor: colors.astraFg,
+        tabBarInactiveTintColor: colors.astraMuted,
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
@@ -32,40 +35,53 @@ export const MainNavigator: React.FC = () => {
         name="Today"
         component={TodayScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="sunny" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <View style={{ alignItems: 'center' }}>
+              <View style={[styles.tabRule, { opacity: color === colors.astraFg ? 1 : 0 }]} />
+              <CostarText style={{ fontSize: 20, color, marginTop: 2 }}>✦</CostarText>
+            </View>
           ),
-          tabBarLabel: 'Today',
+          tabBarLabel: 'DAILY',
+        }}
+      />
+      <Tab.Screen
+        name="TRANSITS"
+        component={TransitsScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <CostarText style={{ fontSize: 20, color }}>☇</CostarText>
+          ),
+          tabBarLabel: 'TRANSITS',
         }}
       />
       <Tab.Screen
         name="Chart"
         component={ChartScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="analytics" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <CostarText style={{ fontSize: 20, color }}>⊙</CostarText>
           ),
-          tabBarLabel: 'Chart',
+          tabBarLabel: 'CHART',
         }}
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen}
+        component={ChatScreen} // Placeholder
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <CostarText style={{ fontSize: 20, color }}>💬</CostarText>
           ),
-          tabBarLabel: 'Chat',
+          tabBarLabel: 'CHAT',
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <CostarText style={{ fontSize: 20, color }}>◎</CostarText>
           ),
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'PROFILE',
         }}
       />
     </Tab.Navigator>
@@ -74,19 +90,26 @@ export const MainNavigator: React.FC = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.black,
-    borderTopColor: colors.gray800,
+    backgroundColor: colors.astraBg,
+    borderTopColor: colors.astraBorder,
     borderTopWidth: 1,
-    paddingTop: spacing.sm,
-    paddingBottom: 0,
-    height: 60,
+    height: 70,
+    paddingBottom: 10,
+    paddingTop: 5,
   },
   tabLabel: {
-    fontSize: typography.xs,
-    fontWeight: '600' as const,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 1,
-    marginTop: 4,
+    fontSize: 9,
+    fontWeight: '500' as const,
+    letterSpacing: 0.5,
+    fontFamily: 'DM Sans',
+  },
+  tabRule: {
+    width: 16,
+    height: 2,
+    backgroundColor: colors.astraViolet,
+    borderRadius: 1,
+    position: 'absolute',
+    top: -10,
   },
 });
 

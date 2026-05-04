@@ -23,6 +23,16 @@ export const colors = {
   success: '#00C851',
   warning: '#FFBB33',
 
+  // Astra design colors (mapped from oklch)
+  astraBg: '#0a0b14',
+  astraSurface: '#0e101b',
+  astraFg: '#f8f8f8',
+  astraMuted: '#9697a0',
+  astraBorder: '#1e202e',
+  astraViolet: '#9d8df1',
+  astraPink: '#ff8da1',
+  astraAmber: '#ffc15e',
+
   // Transparent overlays
   overlay: 'rgba(0, 0, 0, 0.8)',
   overlayLight: 'rgba(255, 255, 255, 0.1)',
