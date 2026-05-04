@@ -2,6 +2,16 @@
 node_modules/
 dist/
 
+# Graphify output
+graphify-out/manifest.json    # mtime-based, breaks after git clone
+graphify-out/cost.json        # local only
+graphify-out/cache/           # optional: commit for speed, skip to keep repo small
+
+#llm
+.gemini/
+.claude/
+.codex/
+
 
 # RUST
 **/target/
