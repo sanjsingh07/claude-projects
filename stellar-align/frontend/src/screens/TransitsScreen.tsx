@@ -11,8 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@services/api';
-import { CostarText } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { 
+  CostarText, 
+  CostarBackground 
+} from '@components';
 import { colors } from '@theme/theme';
 
 interface TransitEvent {
@@ -327,7 +329,8 @@ const styles = StyleSheet.create({
   tiTypeText_shadow: { color: colors.astraAmber },
   tiSyms: {
     fontSize: 11,
-    color: colors.astraMuted,
+    color: colors.astraFg,
+    fontWeight: '600',
     fontFamily: 'DM Sans',
   },
   tiBody: {

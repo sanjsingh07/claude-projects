@@ -44,11 +44,7 @@ export class HoroscopeController {
         });
 
         if (!user) {
-          res.status(404).json({
-            success: false,
-            error: { code: "USER_NOT_FOUND", message: "User not found" },
-          });
-          return;
+          throw new NotFoundError("User not found");
         }
 
         if (!user.natalChart) {

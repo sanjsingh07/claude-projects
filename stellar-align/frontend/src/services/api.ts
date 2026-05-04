@@ -31,8 +31,6 @@ const getApiUrl = () => {
 
 const API_URL = getApiUrl();
 
-console.log('API_URL:', API_URL);
-
 interface ApiError {
   code: string;
   message: string;
@@ -173,10 +171,10 @@ class ApiService {
 
   async login(email: string, password: string) {
     console.log('Logging in with:', { email });
-    const response = await this.client.post('/auth/login', { email, password });
+    const response: any = await this.client.post('/auth/login', { email, password });
     console.log('Login response:', response);
-    // Response is already unwrapped by interceptor, so response.data contains { user, tokens }
-    const tokens = response.data?.tokens || response.data?.data?.tokens;
+    // Response is already unwrapped by interceptor, so response is { success, data, meta }
+    const tokens = response.data?.tokens || response.tokens;
     if (!tokens) {
       throw new Error('No tokens in response');
     }
@@ -195,10 +193,10 @@ class ApiService {
     birthLocationName?: string;
   }) {
     console.log('Registering with:', { email: data.email, birthDate: data.birthDate });
-    const response = await this.client.post('/auth/register', data);
+    const response: any = await this.client.post('/auth/register', data);
     console.log('Register response:', response);
-    // Response is already unwrapped by interceptor, so response.data contains { user, tokens }
-    const tokens = response.data?.tokens || response.data?.data?.tokens;
+    // Response is already unwrapped by interceptor, so response is { success, data, meta }
+    const tokens = response.data?.tokens || response.tokens;
     if (!tokens) {
       throw new Error('No tokens in response');
     }
@@ -232,6 +230,18 @@ class ApiService {
 
   async updateUser(data: Partial<User>) {
     return this.client.patch('/users/me', data);
+  }
+
+  async updateProfile(data: any) {
+    return this.client.patch('/users/profile', data);
+  }
+
+  async getSettings() {
+    return this.client.get('/users/settings');
+  }
+
+  async updateSettings(data: any) {
+    return this.client.patch('/users/settings', data);
   }
 
   async getUserProfile(userId: string) {

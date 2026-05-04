@@ -4,11 +4,13 @@ import { useAuthStore } from '@store/authStore';
 import { LoginScreen } from '@screens/Auth/LoginScreen';
 import { RegisterScreen } from '@screens/Auth/RegisterScreen';
 import { MainNavigator } from './MainNavigator';
+import { SettingsScreen } from '@screens/SettingsScreen';
 
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Main: undefined;
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,7 +27,10 @@ export const RootNavigator: React.FC = () => {
       }}
     >
       {isAuthenticated ? (
-        <Stack.Screen name="Main" component={MainNavigator} />
+        <>
+          <Stack.Screen name="Main" component={MainNavigator} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />

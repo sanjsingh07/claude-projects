@@ -614,6 +614,42 @@ export async function generateDailyHoroscope(
       transitPositions as any
     );
 
+    // Also detect major celestial events (Ingress and Retrograde)
+    const yesterdayDate = DateTime.fromJSDate(date).minus({ days: 1 }).toJSDate();
+    const yesterdayPositions = await getPlanetaryPositions(
+      yesterdayDate,
+      zodiacType === "SIDEREAL" ? ayanamsaType : undefined
+    );
+
+    for (const planet in transitPositions) {
+      const pos = (transitPositions as any)[planet];
+      const prevPos = (yesterdayPositions as any)[planet];
+      
+      if (prevPos) {
+        if (pos.sign !== prevPos.sign) {
+          (userTransits as any).push({
+            planet1: planet.toUpperCase(),
+            planet2: pos.sign,
+            type: "INGRESS",
+            orb: 0,
+            exact: true,
+            applying: true,
+            isIngress: true
+          });
+        }
+        if (pos.retrograde !== prevPos.retrograde) {
+          (userTransits as any).push({
+            planet1: planet.toUpperCase(),
+            type: pos.retrograde ? "RETROGRADE_START" : "RETROGRADE_END",
+            orb: 0,
+            exact: true,
+            applying: true,
+            isRetrogradeChange: true
+          });
+        }
+      }
+    }
+
     // Prepare Vedic data if applicable
     let vedicData = undefined;
     if (zodiacType === "SIDEREAL") {

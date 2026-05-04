@@ -3,8 +3,10 @@ import { body } from "express-validator";
 import { userController } from "../controllers/userController";
 import { authMiddleware } from "../middleware/auth";
 import { validateRequest } from "../middleware/validator";
+import { SettingsController } from "../controllers/SettingsController";
 
 const router = Router();
+const settingsController = new SettingsController();
 
 // All routes require authentication
 router.use(authMiddleware);
@@ -29,14 +31,29 @@ router.patch(
   userController.updateCurrentUser,
 );
 
+// PATCH /users/profile - Alias for update birth data as requested
+router.patch(
+  "/profile",
+  [
+    body("birthDate").optional().isISO8601(),
+    body("birthTime").optional().isString(),
+    body("birthLocationName").optional().isString(),
+    body("birthLatitude").optional().isFloat({ min: -90, max: 90 }),
+    body("birthLongitude").optional().isFloat({ min: -180, max: 180 }),
+    body("birthTimezone").optional().isString(),
+    validateRequest,
+  ],
+  userController.updateCurrentUser,
+);
+
 // DELETE /users/me - Delete account
 router.delete("/me", userController.deleteAccount);
 
-// GET /users/me/settings - Get user settings
-router.get("/me/settings", userController.getSettings);
+// GET /users/settings - Get user settings
+router.get("/settings", (req, res, next) => settingsController.getSettings(req, res, next));
 
-// PATCH /users/me/settings - Update user settings
-router.patch("/me/settings", userController.updateSettings);
+// PATCH /users/settings - Update user settings
+router.patch("/settings", (req, res, next) => settingsController.updateSettings(req, res, next));
 
 // POST /users/me/device-token - Register push token
 router.post(

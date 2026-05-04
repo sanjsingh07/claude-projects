@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra — Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(9% 0.015 265);
+  --surface: oklch(12% 0.018 265);
+  --fg: oklch(98% 0.004 265);
+  --muted: oklch(62% 0.018 265);
+  --border: oklch(20% 0.02 265);
+  --accent-violet: oklch(62% 0.18 290);
+  --accent-pink: oklch(72% 0.22 10);
+  --accent-amber: oklch(82% 0.18 75);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { display: flex; align-items: center; justify-content: center; }
+.frame { width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; border-radius: 47px; border: 1.5px solid var(--border); }
+.island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background: #000; border-radius: 20px; z-index: 10; }
+.status-bar { position: absolute; top: 0; left: 0; right: 0; height: 54px; padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; font-size: 15px; font-weight: 600; color: var(--fg); }
+.status-bar .right { display: flex; align-items: center; gap: 5px; }
+.screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; padding: 54px 0 34px; overflow: hidden; }
+
+/* Header */
+.settings-header {
+  flex-shrink: 0;
+  padding: 12px 24px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.back-btn {
+  width: 36px; height: 36px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; font-size: 18px; color: var(--fg);
+  text-decoration: none;
+}
+.settings-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-style: italic;
+  color: var(--fg);
+}
+
+/* Body */
+.settings-body {
+  flex: 1; overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.settings-body::-webkit-scrollbar { display: none; }
+
+/* Section */
+.settings-section { padding: 0 24px; }
+.section-label {
+  font-family: var(--font-body); font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent-violet);
+  padding: 14px 0 8px;
+}
+
+/* Row */
+.settings-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 0; border-bottom: 1px solid var(--border);
+}
+.settings-row:last-child { border-bottom: none; }
+.row-left { display: flex; flex-direction: column; gap: 2px; }
+.row-label { font-family: var(--font-body); font-size: 14px; color: var(--fg); }
+.row-sub { font-family: var(--font-body); font-size: 11px; color: var(--muted); }
+.row-right { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+.arrow { font-size: 14px; color: var(--muted); }
+
+/* Toggle */
+.toggle {
+  width: 48px; height: 28px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; position: relative; cursor: pointer;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--accent-violet); border-color: var(--accent-violet); }
+.toggle::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--fg); transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(20px); }
+
+/* Value badge */
+.val-badge {
+  font-family: var(--font-body); font-size: 12px;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+
+/* Danger row */
+.row-danger .row-label { color: oklch(55% 0.2 25); }
+
+/* Version footer */
+.version-footer {
+  flex-shrink: 0; padding: 16px 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.version-footer .ver {
+  font-family: var(--font-body); font-size: 10px;
+  color: var(--muted); letter-spacing: 0.1em;
+}
+.version-footer .copy {
+  font-family: var(--font-body); font-size: 9px;
+  color: var(--muted); opacity: 0.6; margin-top: 3px;
+}
+
+/* Tab bar */
+.tab-bar { display: flex; border-top: 1px solid var(--border); flex-shrink: 0; padding-top: 2px; }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; cursor: pointer; color: var(--muted); transition: color 0.2s; font-family: var(--font-body); font-size: 9px; letter-spacing: 0.05em; }
+.tab-item.active { color: var(--fg); }
+.tab-item .ico { font-size: 20px; line-height: 1; }
+.tab-item .tab-rule { width: 16px; height: 2px; background: var(--accent-violet); border-radius: 1px; opacity: 0; transition: opacity 0.2s; }
+.tab-item.active .tab-rule { opacity: 1; }
+.indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: var(--fg); border-radius: 3px; opacity: 0.3; z-index: 5; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="island"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="right">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M1 4.5C1 3.67 1.67 3 2.5 3S4 3.67 4 4.5v3C4 8.33 3.33 9 2.5 9S1 8.33 1 7.5v-3zM6 4C6 3.45 6.45 3 7 3s1 .45 1 1v3c0 .55-.45 1-1 1s-1-.45-1-1V4zm2.5 0c0-.55.45-1 1-1s1 .45 1 1v3c0 .55-.45 1-1 1s-1-.45-1-1V4zm5-1c.83 0 1.5.67 1.5 1.5v3c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5v-3C12.5 3.45 13 3 13.5 3zm-1.5 5c.83 0 1.5.67 1.5 1.5S15.33 11 14.5 11s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" fill="currentColor"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 2.4C5.51 2.4 3.5 3.74 3.5 5.2c0 2.1 4.5 4.8 4.5 4.8S12.5 7.3 12.5 5.2C12.5 3.74 10.49 2.4 8 2.4z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+    </div>
+  </div>
+
+  <div class="screen">
+    <div class="settings-header">
+      <a href="05-profile.html" class="back-btn">&#8592;</a>
+      <div class="settings-title">Settings</div>
+    </div>
+
+    <div class="settings-body">
+      <!-- Account -->
+      <div class="settings-section">
+        <div class="section-label">Account</div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Edit birth data</div>
+            <div class="row-sub">March 14, 1991 · 3:42 AM</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Change location</div>
+            <div class="row-sub">San Francisco, CA</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Export chart data</div>
+            <div class="row-sub">PDF · CSV · JSON</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+      </div>
+
+      <!-- Display -->
+      <div class="settings-section">
+        <div class="section-label">Display</div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Chart style</div>
+          </div>
+          <div class="row-right"><span class="val-badge">Western</span><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Default divisional chart</div>
+          </div>
+          <div class="row-right"><span class="val-badge">D1</span><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Dark mode</div>
+          </div>
+          <div class="row-right"><div class="toggle on"></div></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Accent color</div>
+          </div>
+          <div class="row-right"><span class="val-badge">Violet</span><span class="arrow">&#8250;</span></div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="settings-section">
+        <div class="section-label">Notifications</div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Daily reading</div>
+            <div class="row-sub">Every morning at 8:00 AM</div>
+          </div>
+          <div class="row-right"><div class="toggle on"></div></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Transit alerts</div>
+            <div class="row-sub">Major aspects only</div>
+          </div>
+          <div class="row-right"><div class="toggle on"></div></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Compatibility updates</div>
+            <div class="row-sub">Weekly · Monday</div>
+          </div>
+          <div class="row-right"><div class="toggle"></div></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Birthday reminders</div>
+            <div class="row-sub">Friends · 1 day before</div>
+          </div>
+          <div class="row-right"><div class="toggle on"></div></div>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-section">
+        <div class="section-label">Privacy</div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Share birth data</div>
+            <div class="row-sub">Allow compatibility matching</div>
+          </div>
+          <div class="row-right"><div class="toggle"></div></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Analytics</div>
+            <div class="row-sub">Help improve Astra</div>
+          </div>
+          <div class="row-right"><div class="toggle on"></div></div>
+        </div>
+      </div>
+
+      <!-- Support -->
+      <div class="settings-section">
+        <div class="section-label">Support</div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Rate Astra</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">Send feedback</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-left">
+            <div class="row-label">About</div>
+          </div>
+          <div class="row-right"><span class="val-badge">v1.0.0</span><span class="arrow">&#8250;</span></div>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="settings-section">
+        <div class="section-label">Danger zone</div>
+        <div class="settings-row row-danger">
+          <div class="row-left">
+            <div class="row-label">Sign out</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+        <div class="settings-row row-danger">
+          <div class="row-left">
+            <div class="row-label">Delete account</div>
+            <div class="row-sub">Permanent · unrecoverable</div>
+          </div>
+          <div class="row-right"><span class="arrow">&#8250;</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item">
+        <div class="tab-rule"></div><div class="ico">&#8857;</div><div>Chart</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-rule"></div><div class="ico">&#10022;</div><div>Daily</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-rule"></div><div class="ico">&#9743;</div><div>Transits</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-rule"></div><div class="ico">&#9825;</div><div>Match</div>
+      </div>
+      <div class="tab-item active">
+        <div class="tab-rule"></div><div class="ico">&#9881;</div><div>Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="indicator"></div>
+</div>
+</body>
+</html>

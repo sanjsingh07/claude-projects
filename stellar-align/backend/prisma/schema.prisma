@@ -109,10 +109,37 @@ model User {
   natalChart            NatalChart?
   notifications         Notification[]
   pushTokens            PushToken[]
+  settings              UserSettings?
 
   @@index([email])
   @@index([authProvider, providerId])
   @@index([birthDate])
+}
+
+model UserSettings {
+  id                    String    @id @default(uuid())
+  userId                String    @unique
+  chartStyle            String    @default("western")
+  defaultDivisionalChart DivisionalChartType @default(D1)
+  darkMode              Boolean   @default(true)
+  accentColor           String    @default("violet")
+  
+  // Notification flags
+  dailyReadingEnabled   Boolean   @default(true)
+  dailyReadingTime      String    @default("08:00")
+  transitAlertsEnabled  Boolean   @default(true)
+  transitAlertsLevel    String    @default("major")
+  compatibilityEnabled  Boolean   @default(false)
+  compatibilityFreq     String    @default("weekly")
+  birthdayRemindersEnabled Boolean @default(true)
+  
+  // Privacy flags
+  shareBirthData        Boolean   @default(false)
+  analyticsEnabled      Boolean   @default(true)
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model NatalChart {

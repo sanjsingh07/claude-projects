@@ -6,6 +6,7 @@ import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
 import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipStatus } from "@prisma/client";
+import { buildUserProfile } from "../services/userService";
 
 export class UserController {
   // GET /users/me
@@ -24,11 +25,11 @@ export class UserController {
         throw new NotFoundError("User not found");
       }
 
-      const { passwordHash, ...userWithoutPassword } = user;
+      const profile = buildUserProfile(user);
 
       res.json({
         success: true,
-        data: userWithoutPassword,
+        data: profile,
       });
     } catch (error) {
       next(error);

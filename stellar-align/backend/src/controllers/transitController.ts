@@ -14,8 +14,10 @@ export class TransitController {
     try {
       const userId = req.userId!;
       const period = (req.query.period as "week" | "month" | "year") || "week";
+      const startDateQuery = req.query.startDate as string;
+      const startDate = startDateQuery ? new Date(startDateQuery) : new Date();
       
-      const cacheKey = `transits:${userId}:${period}:${new Date().toISOString().split('T')[0]}`;
+      const cacheKey = `transits:${userId}:${period}:${startDate.toISOString().split('T')[0]}`;
       const cached = await cache.get(cacheKey);
       if (cached) {
         res.json({ success: true, data: cached });
@@ -31,7 +33,7 @@ export class TransitController {
         throw new NotFoundError("Natal chart not found. Please calculate your chart first.");
       }
 
-      const data = await getTransitsForPeriod(user.natalChart, period);
+      const data = await getTransitsForPeriod(user.natalChart, period, startDate);
 
       await cache.set(cacheKey, data, 3600); // Cache for 1 hour
 

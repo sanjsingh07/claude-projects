@@ -7,7 +7,7 @@ const HARD_ASPECTS = ["CONJUNCTION", "SQUARE", "OPPOSITION"];
 
 export function classifyTransitType(
   planet1: string,
-  type: string,
+  _type: string,
   isIngress: boolean,
   isRetrogradeChange: boolean,
   orb: number

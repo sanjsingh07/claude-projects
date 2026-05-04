@@ -341,7 +341,6 @@ export const ChartScreen: React.FC = () => {
               {PLANETS.map((planet) => {
                 const position = getPlanetPosition(planet.key);
                 if (!position) return null;
-                {console.log('Rendering planet:', planet.name, position.sign, position.degree)}
                 return (
                   <View key={planet.key} style={styles.planetRow}>
                     <CostarText variant="body" style={styles.planetName}>

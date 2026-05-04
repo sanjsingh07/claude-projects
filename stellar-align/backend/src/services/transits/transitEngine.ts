@@ -1,11 +1,8 @@
 import { DateTime } from "luxon";
 import { 
   getPlanetaryPositions, 
-  calculateUserTransits, 
-  PlanetName, 
-  AspectType 
+  calculateUserTransits
 } from "../astrology";
-import { calculateOrb } from "./orbCalculator";
 import { classifyTransitType, determineImpactLevel } from "./transitClassifier";
 import { computeTransitProgress } from "./progressCalculator";
 import { generateInterpretation } from "./interpretationGenerator";
@@ -41,7 +38,7 @@ export async function getTransitsForPeriod(
   const { zodiacType, ayanamsa: ayanamsaType, planetaryPositions: natalPositions } = natalChart;
   const ayanamsaToUse = zodiacType === "SIDEREAL" ? ayanamsaType : undefined;
 
-  const step = period === "week" ? 1 : period === "month" ? 3 : 15;
+  const step = period === "week" ? 1 : period === "month" ? 1 : 4;
   const transitsFound = new Map<string, any>();
   
   let prevPositions: Record<string, any> | null = null;
@@ -55,7 +52,6 @@ export async function getTransitsForPeriod(
     for (const transit of dayTransits) {
       const key = `aspect-${transit.planet1}-${transit.type}-${transit.planet2}`;
       if (!transitsFound.has(key)) {
-        const orbData = calculateOrb(transit.angle, 0, 0); // Kept for reference but not actually used correctly here.
         // Actually calculateUserTransits returns 'orb' already.
         const formattedOrb = `${Math.floor(transit.orb)}°${Math.round((transit.orb % 1) * 60).toString().padStart(2, '0')}'`;
         
@@ -63,9 +59,9 @@ export async function getTransitsForPeriod(
         const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
         const progress = computeTransitProgress(new Date(), currentDate.toJSDate(), type, transit.orb);
         
-        const sym1 = PLANET_SYMBOLS[transit.planet1] || transit.planet1;
-        const sym2 = PLANET_SYMBOLS[transit.planet2] || transit.planet2;
-        const aspSym = ASPECT_SYMBOLS[transit.type] || transit.type;
+        const sym1 = PLANET_SYMBOLS[transit.planet1.toUpperCase()] || transit.planet1;
+        const sym2 = PLANET_SYMBOLS[transit.planet2.toUpperCase()] || transit.planet2;
+        const aspSym = ASPECT_SYMBOLS[transit.type.toUpperCase()] || transit.type;
 
         transitsFound.set(key, {
           id: key,
@@ -98,8 +94,7 @@ export async function getTransitsForPeriod(
           const key = `ingress-${planet}-${pos.sign}`;
           if (!transitsFound.has(key)) {
             const sym = PLANET_SYMBOLS[planet.toUpperCase()] || planet;
-            const signSym = SIGN_SYMBOLS[pos.sign] || pos.sign;
-            
+            const signSym = SIGN_SYMBOLS[pos.sign.toUpperCase()] || pos.sign;            
             transitsFound.set(key, {
               id: key,
               date: {
@@ -137,7 +132,7 @@ export async function getTransitsForPeriod(
               type: "major",
               title: `${capitalize(planet)} ${pos.retrograde ? 'goes retrograde' : 'goes direct'}`,
               symbols: `${sym} ${pos.retrograde ? 'R' : 'D'}`,
-              description: `<em>${capitalize(planet)} is shifting direction</em>. ${pos.retrograde ? 'Internal reflection' : 'Outer action'} becomes the focus now.`,
+              description: generateInterpretation(capitalize(planet), "", undefined, undefined, false, true),
               impact: { level: "high", label: "Impact: · high" },
               progress: { percentage: null, label: "active" }
             });

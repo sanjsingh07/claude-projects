@@ -66,6 +66,7 @@ router.post(
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
+        include: { natalChart: true },
       });
 
       if (!user) {
@@ -194,63 +195,5 @@ router.post(
     }
   },
 );
-
-// GET /chart/transits - Get transit forecast for user
-router.get("/transits", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.userId },
-      include: { natalChart: true },
-    });
-
-    if (!user?.natalChart) {
-      res.status(404).json({
-        success: false,
-        error: { code: "NOT_FOUND", message: "Natal chart required" },
-      });
-      return;
-    }
-
-    const period = (req.query.period as "week" | "month" | "year") || "week";
-    const startDate = req.query.startDate 
-      ? new Date(req.query.startDate as string) 
-      : new Date();
-
-    const rawTransits = await astrologyService.calculateForecast(
-      user.natalChart,
-      startDate,
-      period
-    );
-
-    // Transform for the new Transits screen design
-    const transits = rawTransits.map(t => {
-      const dt = DateTime.fromJSDate(t.date);
-      return {
-        ...t,
-        month: dt.toFormat("LLL").toUpperCase(),
-        day: dt.toFormat("d"),
-        year: dt.toFormat("yyyy"),
-        // Additional UI logic if needed
-      };
-    });
-
-    const endDate = DateTime.fromJSDate(startDate).plus({ 
-      days: period === "week" ? 7 : period === "month" ? 30 : 365 
-    });
-
-    res.json({
-      success: true,
-      data: {
-        title: "Transit forecast",
-        rangeLabel: `${DateTime.fromJSDate(startDate).toFormat("LLL d")} – ${endDate.toFormat("LLL d, yyyy")}`,
-        period,
-        transits,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 
 export default router;
