@@ -16,10 +16,25 @@ export class HoroscopeController {
   ): Promise<void> {
     try {
       const userId = req.userId!;
-      const today = DateTime.now().setZone("utc").startOf("day").toJSDate();
+      
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { natalChart: true },
+      });
+
+      if (!user) {
+        throw new NotFoundError("User not found");
+      }
+
+      // Use user's birth timezone as a fallback, or a preferred timezone if we had one
+      const userTimezone = user.birthTimezone || "UTC";
+      const today = DateTime.now().setZone(userTimezone).startOf("day").toJSDate();
 
       // Check cache
-      const cacheKey = `horoscope:${userId}:${today.toISOString()}`;
+      const chartContext = user.natalChart
+        ? `${user.natalChart.zodiacType}:${user.natalChart.ayanamsa}:${user.natalChart.calculatedAt.toISOString()}`
+        : "no-chart";
+      const cacheKey = `horoscope:v2:${userId}:${DateTime.fromJSDate(today, { zone: userTimezone }).toISODate()}:${userTimezone}:${chartContext}`;
       const cached = await cache.get(cacheKey);
       if (cached) {
         res.json({ success: true, data: cached });
@@ -35,6 +50,11 @@ export class HoroscopeController {
           },
         },
       });
+
+      if (horoscope && horoscope.generationVersion < 2 && user.natalChart) {
+        await prisma.dailyHoroscope.delete({ where: { id: horoscope.id } });
+        horoscope = null;
+      }
 
       if (!horoscope) {
         // First check if user has a natal chart
@@ -57,6 +77,21 @@ export class HoroscopeController {
               moonSign: null,
               moonPhase: "unknown",
               activeTransits: [],
+              energyScore: 0,
+              moodAspects: {
+                emotion: "pending",
+                career: "pending",
+                love: "pending",
+                health: "pending",
+              },
+              primaryTransit: {
+                title: "Chart pending",
+                badge: "shadow",
+                planets: "Birth chart required",
+                body: "Your natal chart is being calculated. Once it is ready, this card will anchor the day in your placements and current transits.",
+                source: "System",
+              },
+              aspects: [],
               contentSelf:
                 "Your natal chart is being calculated. Please check back soon for your personalized daily horoscope.",
               contentWork:
@@ -118,7 +153,18 @@ export class HoroscopeController {
     try {
       const userId = req.userId!;
       const dateStr = req.params.date;
-      const date = DateTime.fromISO(dateStr).startOf("day").toJSDate();
+      
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { natalChart: true },
+      });
+
+      if (!user) {
+        throw new NotFoundError("User not found");
+      }
+
+      const userTimezone = user.birthTimezone || "UTC";
+      const date = DateTime.fromISO(dateStr).setZone(userTimezone).startOf("day").toJSDate();
 
       if (isNaN(date.getTime())) {
         res.status(400).json({
@@ -129,7 +175,7 @@ export class HoroscopeController {
       }
 
       // Limit to past 30 days and future 7 days
-      const now = DateTime.now().startOf("day");
+      const now = DateTime.now().setZone(userTimezone).startOf("day");
       const requested = DateTime.fromJSDate(date).startOf("day");
       const daysDiff = requested.diff(now, "days").days;
 
@@ -144,7 +190,7 @@ export class HoroscopeController {
         return;
       }
 
-      const horoscope = await prisma.dailyHoroscope.findUnique({
+      let horoscope = await prisma.dailyHoroscope.findUnique({
         where: {
           userId_forDate: {
             userId,
@@ -152,6 +198,11 @@ export class HoroscopeController {
           },
         },
       });
+
+      if (horoscope && horoscope.generationVersion < 2 && user.natalChart) {
+        await prisma.dailyHoroscope.delete({ where: { id: horoscope.id } });
+        horoscope = null;
+      }
 
       if (!horoscope) {
         // Generate if within allowed range
@@ -169,10 +220,25 @@ export class HoroscopeController {
                 data: {
                   userId,
                   forDate: date,
-                  moonSign: null,
-                  moonPhase: "unknown",
-                  activeTransits: [],
-                  contentSelf:
+              moonSign: null,
+              moonPhase: "unknown",
+              activeTransits: [],
+              energyScore: 0,
+              moodAspects: {
+                emotion: "pending",
+                career: "pending",
+                love: "pending",
+                health: "pending",
+              },
+              primaryTransit: {
+                title: "Chart pending",
+                badge: "shadow",
+                planets: "Birth chart required",
+                body: "Your natal chart is being calculated. Once it is ready, this card will anchor the day in your placements and current transits.",
+                source: "System",
+              },
+              aspects: [],
+              contentSelf:
                     "Your natal chart is being calculated. Please check back soon for your personalized horoscope.",
                   contentWork:
                     "Your cosmic work insights are being prepared based on your birth chart.",

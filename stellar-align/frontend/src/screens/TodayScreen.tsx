@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTime } from 'luxon';
@@ -18,16 +19,34 @@ import {
   CostarBackground
 } from '@components';
 import { useHoroscope } from '@hooks/useHoroscope';
-import { useAuthStore } from '@store/authStore';
-import { colors, spacing } from '@theme/theme';
+import { colors } from '@theme/theme';
 
 export const TodayScreen: React.FC = () => {
   const { todayHoroscope, refresh, isLoading } = useHoroscope();
-  const user = useAuthStore((s) => s.user);
 
-  const now = DateTime.now();
-  const dayName = now.toFormat('cccc').toUpperCase();
-  const fullDate = now.toFormat('MMMM d, yyyy');
+  const headerDate = todayHoroscope?.forDate
+    ? DateTime.fromISO(todayHoroscope.forDate)
+    : DateTime.now();
+  const dayName = headerDate.toFormat('cccc').toUpperCase();
+  const fullDate = headerDate.toFormat('MMMM d, yyyy');
+
+  if (isLoading && !todayHoroscope) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <StatusBar barStyle="light-content" />
+        <CostarBackground />
+        <View style={styles.header}>
+          <View style={styles.dateInfo}>
+            <CostarText style={styles.dayText}>TODAY · {dayName}</CostarText>
+            <CostarText style={styles.fullDateText} serif>{fullDate}</CostarText>
+          </View>
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.astraViolet} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // Default data for when horoscope is loading or missing fields
   const moodAspects = todayHoroscope?.moodAspects || {
@@ -63,7 +82,7 @@ export const TodayScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.dateInfo}>
           <CostarText style={styles.dayText}>TODAY · {dayName}</CostarText>
-          <CostarText style={styles.fullDateText}>{fullDate}</CostarText>
+          <CostarText style={styles.fullDateText} serif>{fullDate}</CostarText>
         </View>
         <TouchableOpacity style={styles.notifBadge}>
           <CostarText style={styles.notifIcon}>🔔</CostarText>
@@ -139,10 +158,14 @@ const styles = StyleSheet.create({
     fontFamily: 'DM Sans',
   },
   fullDateText: {
-    fontSize: 22,
+    fontSize: 18,
     color: colors.astraFg,
-    fontWeight: '500',
     fontFamily: 'Instrument Serif',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   notifBadge: {
     width: 34,

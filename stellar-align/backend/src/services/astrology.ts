@@ -504,6 +504,7 @@ export async function getPlanetaryPositions(
     "SATURN",
     "URANUS",
     "NEPTUNE",
+    "PLUTO",
   ];
 
   const positions: any = {};
@@ -579,6 +580,7 @@ export async function generateDailyHoroscope(
 ): Promise<any> {
   try {
     const { prisma } = await import("../config/database");
+    const { getTransitsForPeriod } = await import("./transits/transitEngine");
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -597,7 +599,16 @@ export async function generateDailyHoroscope(
 
     const { zodiacType, ayanamsa: ayanamsaType } = user.natalChart;
     
-    // Calculate transits for the requested date and user's preferred zodiac system
+    // Calculate transits for today using the consolidated transit engine
+    const userTimezone = user.birthTimezone || "UTC";
+    const forecastData = await getTransitsForPeriod(user.natalChart, "week", date, userTimezone);
+    // Filter for transits happening exactly today (or very close)
+    const todayISO = DateTime.fromJSDate(date, { zone: userTimezone }).toISODate();
+    const userTransits = forecastData.transits.filter(t => 
+      DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 1
+    );
+
+    // Get current planetary positions for moon sign/phase
     const transitPositions = await getPlanetaryPositions(
       date, 
       zodiacType === "SIDEREAL" ? ayanamsaType : undefined
@@ -605,50 +616,7 @@ export async function generateDailyHoroscope(
     
     const sunPos = transitPositions.sun as any;
     const moonPos = transitPositions.moon as any;
-
     const moonPhase = getMoonPhase(sunPos.longitude, moonPos.longitude);
-
-    // Calculate actual transits for the user
-    const userTransits = calculateUserTransits(
-      user.natalChart.planetaryPositions as any,
-      transitPositions as any
-    );
-
-    // Also detect major celestial events (Ingress and Retrograde)
-    const yesterdayDate = DateTime.fromJSDate(date).minus({ days: 1 }).toJSDate();
-    const yesterdayPositions = await getPlanetaryPositions(
-      yesterdayDate,
-      zodiacType === "SIDEREAL" ? ayanamsaType : undefined
-    );
-
-    for (const planet in transitPositions) {
-      const pos = (transitPositions as any)[planet];
-      const prevPos = (yesterdayPositions as any)[planet];
-      
-      if (prevPos) {
-        if (pos.sign !== prevPos.sign) {
-          (userTransits as any).push({
-            planet1: planet.toUpperCase(),
-            planet2: pos.sign,
-            type: "INGRESS",
-            orb: 0,
-            exact: true,
-            applying: true,
-            isIngress: true
-          });
-        }
-        if (pos.retrograde !== prevPos.retrograde) {
-          (userTransits as any).push({
-            planet1: planet.toUpperCase(),
-            type: pos.retrograde ? "RETROGRADE_START" : "RETROGRADE_END",
-            orb: 0,
-            exact: true,
-            applying: true,
-            isRetrogradeChange: true
-          });
-        }
-      }
-    }
 
     // Prepare Vedic data if applicable
     let vedicData = undefined;
@@ -689,6 +657,7 @@ export async function generateDailyHoroscope(
         contentLove: content.love,
         contentSocial: content.social,
         generatedBy: llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED",
+        generationVersion: 2,
       },
     });
 
@@ -779,6 +748,7 @@ export async function calculateTransits(
     "SATURN",
     "URANUS",
     "NEPTUNE",
+    "PLUTO",
   ];
 
   const results: PlanetPosition[] = [];
@@ -943,4 +913,3 @@ export const astrologyService = {
   calculateUserTransits,
   calculateForecast,
 };
-

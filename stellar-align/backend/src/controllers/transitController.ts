@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { DateTime } from "luxon";
 import { prisma } from "../config/database";
 import { getTransitsForPeriod } from "../services/transits/transitEngine";
 import { NotFoundError } from "../utils/errors";
@@ -13,17 +14,7 @@ export class TransitController {
   ): Promise<void> {
     try {
       const userId = req.userId!;
-      const period = (req.query.period as "week" | "month" | "year") || "week";
-      const startDateQuery = req.query.startDate as string;
-      const startDate = startDateQuery ? new Date(startDateQuery) : new Date();
       
-      const cacheKey = `transits:${userId}:${period}:${startDate.toISOString().split('T')[0]}`;
-      const cached = await cache.get(cacheKey);
-      if (cached) {
-        res.json({ success: true, data: cached });
-        return;
-      }
-
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: { natalChart: true },
@@ -33,7 +24,25 @@ export class TransitController {
         throw new NotFoundError("Natal chart not found. Please calculate your chart first.");
       }
 
-      const data = await getTransitsForPeriod(user.natalChart, period, startDate);
+      const userTimezone = user.birthTimezone || "UTC";
+      const requestedPeriod = (req.query.period as string) || "week";
+      const period = ["week", "month", "year"].includes(requestedPeriod)
+        ? (requestedPeriod as "week" | "month" | "year")
+        : "week";
+      const startDateQuery = req.query.startDate as string;
+      const startDate = startDateQuery 
+        ? DateTime.fromISO(startDateQuery, { zone: userTimezone }).startOf("day").toJSDate()
+        : DateTime.now().setZone(userTimezone).startOf("day").toJSDate();
+      
+      const chartContext = `${user.natalChart.zodiacType}:${user.natalChart.ayanamsa}:${user.natalChart.calculatedAt.toISOString()}`;
+      const cacheKey = `transits:v2:${userId}:${period}:${DateTime.fromJSDate(startDate, { zone: userTimezone }).toISODate()}:${userTimezone}:${chartContext}`;
+      const cached = await cache.get(cacheKey);
+      if (cached) {
+        res.json({ success: true, data: cached });
+        return;
+      }
+
+      const data = await getTransitsForPeriod(user.natalChart, period, startDate, userTimezone);
 
       await cache.set(cacheKey, data, 3600); // Cache for 1 hour
 

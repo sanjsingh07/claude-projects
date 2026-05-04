@@ -46,7 +46,9 @@ interface CostarTextProps {
   color?: string;
   uppercase?: boolean;
   serif?: boolean;
+  italic?: boolean;
   align?: 'auto' | 'left' | 'center' | 'right' | 'justify';
+  numberOfLines?: number;
 }
 
 export const CostarText: React.FC<CostarTextProps> = ({
@@ -55,7 +57,10 @@ export const CostarText: React.FC<CostarTextProps> = ({
   style,
   color,
   uppercase = false,
+  serif = false,
+  italic = false,
   align = 'left',
+  numberOfLines,
 }) => {
   const getTextStyle = () => {
     switch (variant) {
@@ -88,8 +93,11 @@ export const CostarText: React.FC<CostarTextProps> = ({
         getTextStyle(),
         { color: color || theme.textPrimary, textAlign: align },
         uppercase && styles.uppercase,
+        serif && styles.serif,
+        italic && styles.italic,
         style,
       ]}
+      numberOfLines={numberOfLines}
     >
       {children}
     </Text>
@@ -97,7 +105,7 @@ export const CostarText: React.FC<CostarTextProps> = ({
 };
 
 const styles = StyleSheet.create({
-  // Card styles
+  // ... (existing card styles)
   card: {
     backgroundColor: theme.card,
     borderWidth: 1,
@@ -166,12 +174,14 @@ const styles = StyleSheet.create({
     fontWeight: '400' as const,
     color: theme.textPrimary,
     lineHeight: 24,
+    fontFamily: 'DM Sans',
   },
   bodySmall: {
     fontSize: typography.sm,
     fontWeight: '400' as const,
     color: theme.textSecondary,
     lineHeight: 20,
+    fontFamily: 'DM Sans',
   },
   caption: {
     fontSize: typography.xs,
@@ -179,6 +189,7 @@ const styles = StyleSheet.create({
     color: theme.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    fontFamily: 'DM Sans',
   },
   label: {
     fontSize: typography.sm,
@@ -186,9 +197,16 @@ const styles = StyleSheet.create({
     color: theme.textPrimary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    fontFamily: 'DM Sans',
   },
   uppercase: {
     textTransform: 'uppercase',
+  },
+  serif: {
+    fontFamily: 'Instrument Serif',
+  },
+  italic: {
+    fontStyle: 'italic',
   },
 });
 

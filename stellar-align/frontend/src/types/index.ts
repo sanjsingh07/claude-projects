@@ -41,70 +41,85 @@ export interface Aspect {
   orb: number;
 }
 
+export type HoroscopeCategory = {
+  id: 'self' | 'work' | 'love' | 'social';
+  title: string;
+  icon: string;
+  content: string;
+};
+
 export interface DailyHoroscope {
   id: string;
+  userId: string;
   forDate: string;
   moonSign: string;
   moonPhase: string;
-  activeTransits?: Transit[];
-  energyScore?: number;
-  moodAspects?: {
+  energyScore: number;
+  moodAspects: {
     emotion: string;
     career: string;
     love: string;
     health: string;
   };
-  primaryTransit?: {
+  primaryTransit: {
     title: string;
-    badge: string;
+    badge: 'major' | 'minor' | 'shadow';
     planets: string;
     body: string;
     source: string;
   };
-  aspects?: {
+  aspects: {
     symbol: string;
     name: string;
     description: string;
-    quality: string;
+    quality: 'opposition' | 'trine' | 'square' | 'conjunction' | 'sextile' | 'quincunx' | 'quintile' | 'shadow';
   }[];
   contentSelf: string;
   contentWork: string;
   contentLove: string;
   contentSocial: string;
+  activeTransits: any[];
+  generatedBy: 'CLAUDE' | 'RULE_BASED' | 'SYSTEM';
   viewedAt?: string;
   bookmarked: boolean;
   shared: boolean;
+  createdAt: string;
 }
 
-export interface HoroscopeCategory {
-  id: 'self' | 'work' | 'love' | 'social';
-  title: string;
-  icon: string;
-  content: string;
-}
-
-export interface Friend {
-  friendshipId: string;
-  id: string;
-  displayName: string;
-  avatarUrl?: string;
-  sunSign?: string;
-  compatibilityScore?: number;
-}
-
-export interface CompatibilityReport {
-  id: string;
-  overallScore: number;
-  scores: {
-    emotional: number;
-    intellectual: number;
-    physical: number;
-    spiritual: number;
+export interface TransitForecast {
+  period: 'week' | 'month' | 'year';
+  range: {
+    start: string;
+    end: string;
+    label: string;
   };
-  interpretation?: string;
-  strengths?: string[];
-  challenges?: string[];
-  advice?: string;
+  transits: TransitForecastEvent[];
+}
+
+export interface TransitForecastEvent {
+  id: string;
+  date: {
+    iso: string;
+    month: string;
+    day: number;
+    year: number;
+  };
+  orb: {
+    value: number;
+    formatted: string;
+  };
+  type: 'major' | 'minor' | 'shadow';
+  title: string;
+  symbols: string;
+  description: string;
+  impact: {
+    level: 'low' | 'moderate' | 'high' | 'intense' | 'profound';
+    label: string;
+  };
+  progress: {
+    percentage: number | null;
+    label: string;
+  };
 }
 
 export interface Transit {

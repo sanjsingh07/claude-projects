@@ -11,7 +11,7 @@ import { TransitsScreen } from '@screens/TransitsScreen';
 import { CostarText } from '@components';
 
 export type MainTabParamList = {
-  Today: undefined;
+  Daily: undefined;
   Chart: undefined;
   Transits: undefined;
   Chat: undefined;
@@ -21,6 +21,13 @@ export type MainTabParamList = {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export const MainNavigator: React.FC = () => {
+  const renderTabIcon = (icon: string, color: string) => (
+    <View style={{ alignItems: 'center' }}>
+      <View style={[styles.tabRule, { opacity: color === colors.astraFg ? 1 : 0 }]} />
+      <CostarText style={{ fontSize: 20, color, marginTop: 2 }}>{icon}</CostarText>
+    </View>
+  );
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -32,56 +39,43 @@ export const MainNavigator: React.FC = () => {
       }}
     >
       <Tab.Screen
-        name="Today"
+        name="Daily"
         component={TodayScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <View style={{ alignItems: 'center' }}>
-              <View style={[styles.tabRule, { opacity: color === colors.astraFg ? 1 : 0 }]} />
-              <CostarText style={{ fontSize: 20, color, marginTop: 2 }}>✦</CostarText>
-            </View>
-          ),
-          tabBarLabel: 'DAILY',
+          tabBarIcon: ({ color }) => renderTabIcon('✦', color),
+          tabBarLabel: 'Daily',
         }}
       />
       <Tab.Screen
-        name="TRANSITS"
+        name="Transits"
         component={TransitsScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <CostarText style={{ fontSize: 20, color }}>☇</CostarText>
-          ),
-          tabBarLabel: 'TRANSITS',
+          tabBarIcon: ({ color }) => renderTabIcon('☇', color),
+          tabBarLabel: 'Transits',
         }}
       />
       <Tab.Screen
         name="Chart"
         component={ChartScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <CostarText style={{ fontSize: 20, color }}>⊙</CostarText>
-          ),
-          tabBarLabel: 'CHART',
+          tabBarIcon: ({ color }) => renderTabIcon('⊙', color),
+          tabBarLabel: 'Chart',
         }}
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen} // Placeholder
+        component={ChatScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <CostarText style={{ fontSize: 20, color }}>💬</CostarText>
-          ),
-          tabBarLabel: 'CHAT',
+          tabBarIcon: ({ color }) => renderTabIcon('💬', color),
+          tabBarLabel: 'Chat',
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <CostarText style={{ fontSize: 20, color }}>◎</CostarText>
-          ),
-          tabBarLabel: 'PROFILE',
+          tabBarIcon: ({ color }) => renderTabIcon('◎', color),
+          tabBarLabel: 'Profile',
         }}
       />
     </Tab.Navigator>

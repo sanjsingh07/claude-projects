@@ -18,16 +18,40 @@ export const TransitCard: React.FC<TransitCardProps> = ({
   body,
   source,
 }) => {
+  const badgeColor = 
+    badge === 'major' ? colors.astraPink :
+    badge === 'minor' ? colors.astraViolet :
+    badge === 'shadow' ? colors.astraAmber :
+    colors.astraPink;
+
+  const renderBody = (text: string) => {
+    const parts = text.split(/(<em>.*?<\/em>)/g);
+    return (
+      <CostarText style={styles.body}>
+        {parts.map((part, index) => {
+          if (part.startsWith('<em>') && part.endsWith('</em>')) {
+            return (
+              <CostarText key={index} style={[styles.bodyEm, { color: badgeColor }]}>
+                {part.slice(4, -5)}
+              </CostarText>
+            );
+          }
+          return part;
+        })}
+      </CostarText>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <CostarText style={styles.title}>{title}</CostarText>
-        <View style={styles.badge}>
-          <CostarText style={styles.badgeText}>{badge}</CostarText>
+        <CostarText style={styles.title} serif italic>{title}</CostarText>
+        <View style={[styles.badge, { borderColor: badgeColor }]}>
+          <CostarText style={[styles.badgeText, { color: badgeColor }]}>{badge}</CostarText>
         </View>
       </View>
       <CostarText style={styles.planets}>{planets}</CostarText>
-      <CostarText style={styles.body}>{body}</CostarText>
+      {renderBody(body)}
       <View style={styles.footer}>
         <CostarText style={styles.source}>{source}</CostarText>
       </View>
@@ -53,14 +77,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: colors.astraFg,
-    fontStyle: 'italic',
-    fontFamily: 'Instrument Serif',
     lineHeight: 22,
     flex: 1,
   },
   badge: {
     borderWidth: 1,
-    borderColor: colors.astraPink,
     borderRadius: 20,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -69,7 +90,6 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 9,
-    color: colors.astraPink,
     letterSpacing: 1.8,
     textTransform: 'uppercase',
     fontFamily: 'DM Sans',
@@ -85,6 +105,9 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     color: colors.astraFg,
     fontFamily: 'DM Sans',
+  },
+  bodyEm: {
+    fontStyle: 'italic',
   },
   footer: {
     borderTopWidth: 1,

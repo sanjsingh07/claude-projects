@@ -16,51 +16,16 @@ import {
   CostarBackground 
 } from '@components';
 import { colors } from '@theme/theme';
-
-interface TransitEvent {
-  id: string;
-  date: {
-    iso: string;
-    month: string;
-    day: number;
-    year: number;
-  };
-  orb: {
-    value: number;
-    formatted: string;
-  };
-  type: 'major' | 'minor' | 'shadow';
-  title: string;
-  symbols: string;
-  description: string;
-  impact: {
-    level: string;
-    label: string;
-  };
-  progress: {
-    percentage: number | null;
-    label: string;
-  };
-}
-
-interface TransitData {
-  period: 'week' | 'month' | 'year';
-  range: {
-    start: string;
-    end: string;
-    label: string;
-  };
-  transits: TransitEvent[];
-}
+import { TransitForecast } from '@types';
 
 export const TransitsScreen: React.FC = () => {
   const [period, setPeriod] = useState<'week' | 'month' | 'year'>('week');
 
-  const { data, isLoading, refetch, isFetching } = useQuery<TransitData>({
+  const { data, isLoading, refetch, isFetching } = useQuery<TransitForecast>({
     queryKey: ['transits', period],
     queryFn: async () => {
       const response = await api.getTransits(period);
-      return response.data as TransitData;
+      return response.data as TransitForecast;
     },
   });
 
@@ -103,7 +68,7 @@ export const TransitsScreen: React.FC = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <CostarText style={styles.headerTitle}>Transit forecast</CostarText>
+        <CostarText style={styles.headerTitle} serif italic>Transit forecast</CostarText>
         <CostarText style={styles.headerSubtitle}>{data?.range?.label || '...'}</CostarText>
       </View>
 
@@ -136,14 +101,14 @@ export const TransitsScreen: React.FC = () => {
               <View style={styles.tiLeft}>
                 <View style={styles.tiDate}>
                   <CostarText style={styles.tiMonth}>{item.date.month}</CostarText>
-                  <CostarText style={styles.tiDay}>{item.date.day.toString()}</CostarText>
+                  <CostarText style={styles.tiDay} serif>{item.date.day.toString()}</CostarText>
                   <CostarText style={styles.tiYear}>{item.date.year.toString()}</CostarText>
                 </View>
                 <CostarText style={styles.tiOrb}>orb: {item.orb.formatted}</CostarText>
               </View>
               <View style={styles.tiRight}>
                 <View style={styles.tiHead}>
-                  <CostarText style={styles.tiTitle}>{item.title}</CostarText>
+                  <CostarText style={styles.tiTitle} serif italic>{item.title}</CostarText>
                   <View style={[styles.tiType, styles[`tiType_${item.type}` as keyof typeof styles] as any]}>
                     <CostarText style={[styles.tiTypeText, styles[`tiTypeText_${item.type}` as keyof typeof styles] as any]}>
                       {item.type}
@@ -158,10 +123,13 @@ export const TransitsScreen: React.FC = () => {
                   <CostarText style={styles.tiImpact}>{item.impact.label}</CostarText>
                   <View style={styles.tiProgress}>
                     <View style={styles.progBar}>
-                      <View style={[styles.progFill, { width: item.progress.percentage !== null ? `${item.progress.percentage}%` : '0%' }]} />
+                      <View style={[styles.progFill, { 
+                        width: item.progress.percentage !== null ? `${item.progress.percentage}%` : '0%',
+                        backgroundColor: item.type === 'major' ? colors.astraPink : item.type === 'minor' ? colors.astraViolet : colors.astraAmber
+                      }]} />
                     </View>
-                    <CostarText style={styles.progPct}>
-                      {item.progress.percentage !== null ? `${item.progress.percentage}%` : item.progress.label}
+                    <CostarText style={styles.progPct} numberOfLines={1}>
+                      {typeof item.progress.percentage === 'number' ? `${item.progress.percentage}%` : item.progress.label}
                     </CostarText>
                   </View>
                 </View>
@@ -329,8 +297,7 @@ const styles = StyleSheet.create({
   tiTypeText_shadow: { color: colors.astraAmber },
   tiSyms: {
     fontSize: 11,
-    color: colors.astraFg,
-    fontWeight: '600',
+    color: colors.astraMuted,
     fontFamily: 'DM Sans',
   },
   tiBody: {

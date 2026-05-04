@@ -112,24 +112,84 @@ export interface Transit {
   intensity: 1 | 2 | 3 | 4 | 5;
 }
 
-export interface HoroscopeCategory {
-  category: "self" | "work" | "love" | "social";
-  content: string;
-  keywords: string[];
-  rating: number; // 1-5
+export interface MoodAspects {
+  emotion: string;
+  career: string;
+  love: string;
+  health: string;
+}
+
+export interface PrimaryTransit {
+  title: string;
+  badge: "major" | "minor" | "shadow";
+  planets: string;
+  body: string;
+  source: string;
+}
+
+export interface AspectEntry {
+  symbol: string;
+  name: string;
+  description: string;
+  quality: string;
 }
 
 export interface DailyHoroscope {
   id: string;
   userId: string;
-  date: Date;
+  forDate: Date;
   moonSign: ZodiacSign;
   moonPhase: string;
+  energyScore: number;
+  moodAspects: MoodAspects;
+  primaryTransit: PrimaryTransit;
+  aspects: AspectEntry[];
+  contentSelf: string;
+  contentWork: string;
+  contentLove: string;
+  contentSocial: string;
   activeTransits: Transit[];
-  categories: HoroscopeCategory[];
-  overallTheme: string;
   generatedBy: "CLAUDE" | "RULE_BASED" | "SYSTEM";
-  generatedAt: Date;
+  viewedAt?: Date | null;
+  bookmarked: boolean;
+  shared: boolean;
+  createdAt: Date;
+}
+
+export interface TransitForecastEvent {
+  id: string;
+  date: {
+    iso: string;
+    month: string;
+    day: number;
+    year: number;
+  };
+  orb: {
+    value: number;
+    formatted: string;
+  };
+  type: "major" | "minor" | "shadow";
+  title: string;
+  symbols: string;
+  description: string;
+  impact: {
+    level: string;
+    label: string;
+  };
+  progress: {
+    percentage: number | null;
+    label: string;
+  };
+}
+
+export interface TransitForecast {
+  period: "week" | "month" | "year";
+  range: {
+    start: string;
+    end: string;
+    label: string;
+  };
+  transits: TransitForecastEvent[];
 }
 
 export interface CompatibilityAspect {

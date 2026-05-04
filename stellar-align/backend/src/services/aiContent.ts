@@ -2,7 +2,12 @@ import logger from "../config/logger";
 import { cache } from "../config/redis";
 import { DateTime } from "luxon";
 import { llmProvider } from "./llmProvider";
-import { ZodiacSign } from "@prisma/client";
+import {
+  ASPECT_SYMBOLS,
+  capitalize,
+  formatOrb,
+  PLANET_SYMBOLS,
+} from "./transits/transitConstants";
 
 export type HoroscopeCategory = "self" | "work" | "love" | "social";
 
@@ -11,9 +16,6 @@ export interface DailyHoroscopeContent {
   work: string;
   love: string;
   social: string;
-  overallTheme: string;
-  keywords: string[];
-  luckyNumbers: number[];
   energyScore: number;
   moodAspects: {
     emotion: string;
@@ -72,13 +74,20 @@ class AIContentService {
     activeTransits: any[],
     vedicData?: VedicHoroscopeInput,
   ): Promise<DailyHoroscopeContent> {
-    const cacheKey = `horoscope:${natalChart.userId}:${DateTime.fromJSDate(date).toISODate()}`;
+    const cacheKey = [
+      "horoscope-content",
+      "v2",
+      natalChart.userId,
+      DateTime.fromJSDate(date).toISODate(),
+      natalChart.zodiacType || "TROPICAL",
+      natalChart.ayanamsa || "none",
+    ].join(":");
     const cached = await cache.get<DailyHoroscopeContent>(cacheKey);
     if (cached) return cached;
 
     if (!llmProvider.isAvailable) {
       logger.warn("No LLM provider available, using rule-based fallback");
-      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase);
+      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
     }
 
     try {
@@ -96,7 +105,7 @@ class AIContentService {
         { maxTokens: 2000 },
       );
 
-      const parsed = JSON.parse(this.sanitizeJSON(response.text));
+      const parsed = this.normalizeDailyContent(JSON.parse(this.sanitizeJSON(response.text)), natalChart, moonSign, moonPhase, activeTransits);
 
       await cache.set(cacheKey, parsed, 86400);
       return parsed;
@@ -105,7 +114,7 @@ class AIContentService {
         error,
         provider: llmProvider.name,
       });
-      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase);
+      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
     }
   }
 
@@ -236,35 +245,73 @@ VEDIC ASTROLOGY DATA:
 - Nakshatra: ${vedicData.nakshatra} (Lord: ${vedicData.nakshatraLord})
 - Pada: ${vedicData.nakshatraPada}
 - Ayanamsa: ${vedicData.ayanamsa || "Lahiri"}
-- Divisional Charts Available: ${vedicData.divisionalCharts?.map((c) => c.chartType).join(", ")}
 `
       : "";
 
     const systemType = isVedic ? "Vedic (Sidereal)" : "Western (Tropical)";
 
-    return `You are Stellar Align's resident astrologer. Generate a personalized daily horoscope based on the following data.
+    // Format natal positions for the prompt
+    const natalPos = natalChart.planetaryPositions as any;
+    const natalSummary = Object.entries(natalPos)
+      .filter(([_, pos]: any) => pos.sign)
+      .map(([planet, pos]: any) => `${capitalize(planet)}: ${pos.sign} ${pos.degree ?? pos.signDegree}°${pos.minute ?? 0}'${pos.house ? ` (House ${pos.house})` : ""}`)
+      .join("\n");
+
+    const natalAspects = Array.isArray(natalChart.aspects)
+      ? natalChart.aspects
+          .slice(0, 10)
+          .map((a: any) => `- ${capitalize(a.planet1)} ${String(a.type || a.aspectType).toLowerCase()} ${capitalize(a.planet2)} (${formatOrb(Number(a.orb || 0))} orb)`)
+          .join("\n")
+      : "No natal aspects supplied.";
+
+    const transitSummary = this.formatTransitSummary(activeTransits);
+
+    return `You are Stellar Align's resident astrologer. Generate a deeply personalized daily horoscope based on the following data.
 This chart uses the ${systemType} system.
 
 USER'S NATAL CHART:
-- Sun: ${natalChart.sunSign}
-- Moon: ${natalChart.moonSign}
-- Rising: ${natalChart.risingSign}
-- Moon in House ${natalChart.planetaryPositions?.moon?.house || "?"}
+${natalSummary}
+- Sun Sign: ${natalChart.sunSign}
+- Moon Sign: ${natalChart.moonSign}
+- Rising Sign: ${natalChart.risingSign}
+- Chart Pattern: ${natalChart.chartPattern || "Not specified"}
+- Natal Aspects:
+${natalAspects}
 ${vedicSection}
+
 CURRENT CELESTIAL WEATHER (${date.toDateString()}):
 - Moon: ${moonSign}
 - Moon Phase: ${moonPhase}
-- Active Transits: ${activeTransits.map((t) => `${t.planet1} ${t.type} ${t.planet2} (orb: ${t.orb.toFixed(1)}°)`).join(", ")}
+- Active Transits to Natal Chart:
+${transitSummary}
+
+GOAL:
+Make the daily reading feel deeply personalized, specific, and human. It must look and read like a high-end editorial piece, not a generic horoscope.
 
 INSTRUCTIONS:
-Generate a comprehensive daily horoscope including:
-1. Category horoscopes (self, work, love, social): 2-3 sentences each, specific and actionable.
-2. Energy Score: A number from 0-100 reflecting the overall celestial support.
-3. Mood Aspects: Categorize the current energy into status words (e.g., "intense", "steady", "rising", "focus", "challenging") for Emotion, Career, Love, and Health.
-4. Primary Transit: Select the most significant transit today from the "Active Transits" list above. Provide a poetic title, a badge ("major" or "minor"), the technical details (e.g., "☉ Sun 14° Taurus ↔ ♄ Saturn 14° Aquarius"), a detailed interpretation (3-4 sentences), and a source/context (e.g., "Yesterday · 1 of 7 active transits").
-5. Today's Aspects: A list of the top 3-4 current aspects with a symbol (□, △, ✕, ☌, ⟂, ◊), a name (e.g., "Moon ⟂ Venus"), a short description, and a quality (e.g., "opposition", "trine", "square", "conjunction", "sextile"). These can be either transits to the natal chart or transits between current planets.
+1. SPEAK IN SECOND PERSON ("You are...", "Your heart...").
+2. USE THE NATAL CHART AS THE ANCHOR. The reading must be derived from the user’s natal chart and current transits.
+3. TONE: Intimate, specific, emotionally precise, grounded, and readable. No mystical fluff, no cliché filler, no robotic structure.
+4. NO DISCLAIMERS. No "astrology is for entertainment" or "this is just a guide".
+5. PRIMARY TRANSIT: Select the most significant transit today. This MUST feel like a direct statement about the user's chart.
+6. Do not use generic sign horoscopes. Every sentence should be anchored in the natal placements, houses, natal aspects, current Moon, ingress, retrograde, or active transit data above.
+7. Avoid repeated sentence structures across self, work, love, and social.
 
-Tone: encouraging but grounded. ${isVedic ? "Incorporate Nakshatra insights and Vedic terminology where appropriate." : ""}
+Structure your response with these sections:
+- self, work, love, social: 2-3 sentences each. Distinct, poetic, and grounded.
+- energyScore: 0-100 reflecting celestial support.
+- moodAspects: Exactly 4 status words (e.g., "intense", "steady", "rising", "focus", "challenging", "electric") for emotion, career, love, and health.
+- primaryTransit: Select the most significant transit today. Provide:
+    * title: A poetic, serif-style title (e.g., "Saturn squares your Sun", "Mars enters your 10th house")
+    * badge: exactly one of "major", "minor", "shadow"
+    * planets: Technical detail (e.g., "☉ Sun 14° Taurus ↔ ♄ Saturn 14° Aquarius")
+    * body: A detailed interpretation (3-4 sentences). Use <em>...</em> for emphasis on key phrases.
+    * source: Context line (e.g., "Today · 1 of 7 active transits")
+- aspects: Top 3-4 current aspects. Provide:
+    * symbol: One of (□, △, ✕, ☌, ⟂, ◊, ✶, ☍)
+    * name: (e.g., "Moon ⟂ Venus")
+    * description: Short, punchy description (e.g., "Emotions feel awkward in love").
+    * quality: exactly one of "opposition", "trine", "square", "conjunction", "sextile", "quincunx", "shadow"
 
 Provide your response as valid JSON:
 {
@@ -272,9 +319,6 @@ Provide your response as valid JSON:
   "work": "...",
   "love": "...",
   "social": "...",
-  "overallTheme": "One word theme",
-  "keywords": ["...", "...", "..."],
-  "luckyNumbers": [1, 2, 3],
   "energyScore": 72,
   "moodAspects": {
     "emotion": "intense",
@@ -283,18 +327,18 @@ Provide your response as valid JSON:
     "health": "focus"
   },
   "primaryTransit": {
-    "title": "Poetic Title",
-    "badge": "major",
-    "planets": "Planet 1 Degree Sign ↔ Planet 2 Degree Sign",
-    "body": "Interpretation...",
-    "source": "Source context..."
+    "title": "...",
+    "badge": "...",
+    "planets": "...",
+    "body": "...",
+    "source": "..."
   },
   "aspects": [
     {
-      "symbol": "□",
-      "name": "Planet 1 Aspect Planet 2",
-      "description": "Short description...",
-      "quality": "square"
+      "symbol": "...",
+      "name": "...",
+      "description": "...",
+      "quality": "..."
     }
   ]
 }
@@ -306,51 +350,148 @@ Respond with ONLY the JSON object, no markdown fences.`;
     natalChart: any,
     moonSign: string,
     moonPhase: string,
+    activeTransits: any[] = []
   ): DailyHoroscopeContent {
-    const sunSign = natalChart.sunSign;
-    const moonInSign = moonSign;
+    const sunSign = capitalize(natalChart.sunSign);
+    const risingSign = natalChart.risingSign ? capitalize(natalChart.risingSign) : "your rising sign";
+    const moonInSign = capitalize(moonSign);
 
-    const elements: Record<string, string> = {
-      fire: "energy and initiative",
-      earth: "stability and practical matters",
-      air: "communication and connection",
-      water: "emotions and intuition",
+    const topTransit = activeTransits.length > 0 
+      ? [...activeTransits].sort((a, b) => this.transitImportance(a) - this.transitImportance(b))[0]
+      : null;
+
+    const primaryTransit: any = topTransit ? {
+      title: topTransit.title || `${capitalize(topTransit.planet1)} ${String(topTransit.type).toLowerCase()} your ${capitalize(topTransit.planet2)}`,
+      badge: this.normalizeBadge(topTransit.type),
+      planets: topTransit.symbols || `${PLANET_SYMBOLS[String(topTransit.planet1).toUpperCase()] || topTransit.planet1} ${ASPECT_SYMBOLS[String(topTransit.aspectType || topTransit.type).toUpperCase()] || "↔"} ${PLANET_SYMBOLS[String(topTransit.planet2).toUpperCase()] || topTransit.planet2}`,
+      body: topTransit.description || `${capitalize(topTransit.planet1)} is pressing on your natal ${capitalize(topTransit.planet2)}. <em>The exact point matters:</em> this is not a general mood, but a pressure on a known part of your chart. Let the day show you where the old response has become too small.`,
+      source: `Today · 1 of ${activeTransits.length} active transits`
+    } : {
+      title: `Moon in ${moonInSign}`,
+      badge: "minor",
+      planets: `Moon in ${moonInSign}`,
+      body: `The ${moonPhase} pulls attention toward your ${sunSign} Sun and ${risingSign} way of meeting the world. <em>Keep the day close to the body:</em> small choices will tell you more than broad declarations.`,
+      source: "Today's positions"
     };
 
-    const sunElement = this.getElement(sunSign);
-    const moonElement = this.getElement(moonInSign);
-    const theme = `${elements[sunElement]} combined with ${elements[moonElement]}`;
-
-    return {
-      self: `The ${moonPhase} in ${moonInSign} highlights your ${moonElement} qualities. Take time for self-reflection today.`,
-      work: `Your ${sunSign} energy supports focus on ${theme}. Progress steadily toward your goals.`,
-      love: `The current moon phase suggests ${this.getMoonPhaseAdvice(moonPhase)} in relationships.`,
-      social: `Connect with others meaningfully. Your ${sunSign} nature brings warmth to conversations.`,
-      overallTheme: this.getTheme(moonSign, sunSign),
-      keywords: [
-        sunSign,
-        moonSign,
-        moonPhase.replace("-", " "),
-        "growth",
-        "balance",
-      ],
-      luckyNumbers: this.generateLuckyNumbers(natalChart.userId),
+    return this.normalizeDailyContent({
+      self: `The ${moonPhase} in ${moonInSign} makes your inner weather harder to ignore. Your ${sunSign} Sun wants coherence, while ${risingSign} shows you where the outside world is asking for a cleaner response.`,
+      work: `Move through obligations with fewer explanations and sharper proof. The chart favors one solid repair over three dramatic promises.`,
+      love: `Affection needs precision today. Say the thing you actually mean, especially if your first instinct is to smooth it over.`,
+      social: `Choose the room where your nervous system can stay honest. Your presence lands better when it is not edited for approval.`,
       energyScore: 70,
       moodAspects: {
-        emotion: "steady",
+        emotion: activeTransits.length > 3 ? "intense" : "steady",
         career: "focused",
         love: "warm",
         health: "stable"
       },
-      primaryTransit: {
-        title: "Celestial Balance",
-        badge: "minor",
-        planets: `Moon in ${moonInSign}`,
-        body: `The current ${moonPhase} invites you to harmonize your inner needs with your outer goals.`,
-        source: "Today's positions"
+      primaryTransit,
+      aspects: activeTransits.slice(0, 4).map(t => this.transitToAspectEntry(t))
+    }, natalChart, moonSign, moonPhase, activeTransits);
+  }
+
+  private formatTransitSummary(activeTransits: any[]): string {
+    if (!activeTransits.length) return "- No exact transit contacts found for this local day; use Moon sign/phase and natal chart as the anchor.";
+
+    return activeTransits
+      .slice(0, 12)
+      .map((t, index) => {
+        if (t.title && t.orb?.formatted) {
+          return `- ${index + 1}. ${t.title}; symbols ${t.symbols || "n/a"}; orb ${t.orb.formatted}; type ${t.type}; impact ${t.impact?.level || "moderate"}; description: ${String(t.description || "").replace(/<[^>]*>/g, "")}`;
+        }
+        return `- ${index + 1}. ${capitalize(t.planet1)} ${String(t.type || t.aspectType).toLowerCase()} natal ${capitalize(t.planet2)}; orb ${formatOrb(Number(t.orb || 0))}; exact ${Boolean(t.exact)}`;
+      })
+      .join("\n");
+  }
+
+  private normalizeDailyContent(
+    raw: any,
+    natalChart: any,
+    moonSign: string,
+    moonPhase: string,
+    activeTransits: any[],
+  ): DailyHoroscopeContent {
+    const fallbackTransit = activeTransits[0];
+    const primaryTransit = raw?.primaryTransit || {};
+
+    return {
+      self: this.requiredText(raw?.self, `Your ${capitalize(natalChart.sunSign)} Sun needs an honest read on the room today.`),
+      work: this.requiredText(raw?.work, "Do less performing and more finishing; one clean decision carries the day."),
+      love: this.requiredText(raw?.love, "Keep affection specific. The unsaid thing is louder than usual."),
+      social: this.requiredText(raw?.social, "Stay close to people who let your timing be real."),
+      energyScore: this.clampScore(raw?.energyScore),
+      moodAspects: {
+        emotion: this.shortStatus(raw?.moodAspects?.emotion, "steady"),
+        career: this.shortStatus(raw?.moodAspects?.career, "focused"),
+        love: this.shortStatus(raw?.moodAspects?.love, "warm"),
+        health: this.shortStatus(raw?.moodAspects?.health, "stable"),
       },
-      aspects: []
+      primaryTransit: {
+        title: this.requiredText(primaryTransit.title, fallbackTransit?.title || `Moon in ${capitalize(moonSign)}`),
+        badge: this.normalizeBadge(primaryTransit.badge || fallbackTransit?.type),
+        planets: this.requiredText(primaryTransit.planets, fallbackTransit?.symbols || `Moon in ${capitalize(moonSign)}`),
+        body: this.requiredText(primaryTransit.body, fallbackTransit?.description || `The ${moonPhase} gives your natal chart a quieter signal today. <em>Notice what repeats</em>; that is where the sky is being specific.`),
+        source: this.requiredText(primaryTransit.source, activeTransits.length ? `Today · 1 of ${activeTransits.length} active transits` : "Today's positions"),
+      },
+      aspects: Array.isArray(raw?.aspects) && raw.aspects.length
+        ? raw.aspects.slice(0, 4).map((a: any) => ({
+            symbol: this.requiredText(a.symbol, "✶"),
+            name: this.requiredText(a.name, "Lunar emphasis"),
+            description: this.requiredText(a.description, "A small adjustment changes the tone."),
+            quality: this.normalizeQuality(a.quality),
+          }))
+        : activeTransits.slice(0, 4).map(t => this.transitToAspectEntry(t)),
     };
+  }
+
+  private transitToAspectEntry(t: any) {
+    const quality = this.normalizeQuality(t.quality || t.aspectType || t.type);
+    return {
+      symbol: t.symbol || ASPECT_SYMBOLS[String(t.aspectType || t.type).toUpperCase()] || "✶",
+      name: t.name || t.title || `${capitalize(t.planet1)} ${quality} ${capitalize(t.planet2)}`,
+      description: t.description ? String(t.description).replace(/<[^>]*>/g, "").split(".")[0] : `${capitalize(t.planet1 || "Moon")} makes the chart speak more plainly.`,
+      quality,
+    };
+  }
+
+  private normalizeBadge(value: unknown): "major" | "minor" | "shadow" {
+    const v = String(value || "").toLowerCase();
+    if (v === "major" || v === "minor" || v === "shadow") return v;
+    return "minor";
+  }
+
+  private normalizeQuality(value: unknown): string {
+    const v = String(value || "").toLowerCase();
+    const allowed = ["opposition", "trine", "square", "conjunction", "sextile", "quincunx", "quintile", "shadow"];
+    return allowed.includes(v) ? v : "shadow";
+  }
+
+  private requiredText(value: unknown, fallback: string): string {
+    const text = typeof value === "string" ? value.trim() : "";
+    return text.length ? text : fallback;
+  }
+
+  private shortStatus(value: unknown, fallback: string): string {
+    return this.requiredText(value, fallback).split(/\s+/).slice(0, 2).join(" ").toLowerCase();
+  }
+
+  private clampScore(value: unknown): number {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 70;
+    return Math.max(0, Math.min(100, Math.round(n)));
+  }
+
+  private transitOrbValue(t: any): number {
+    if (typeof t?.orb?.value === "number") return t.orb.value;
+    if (typeof t?.orb === "number") return t.orb;
+    return 99;
+  }
+
+  private transitImportance(t: any): number {
+    const kindWeight = t?.eventKind === "natal_aspect" ? 0 : t?.eventKind === "sky_aspect" ? 1.5 : 3;
+    const typeWeight = t?.type === "major" ? 0 : t?.type === "minor" ? 0.75 : 1.25;
+    return kindWeight + typeWeight + this.transitOrbValue(t);
   }
 
   private generateRuleBasedChartInterpretation(
@@ -409,69 +550,6 @@ Respond with ONLY the JSON object, no markdown fences.`;
       challenges: ["May need patience", "Different approaches"],
       advice: "Practice active listening and mutual respect.",
     };
-  }
-
-  private getElement(sign: string): string {
-    const fire: ZodiacSign[] = [ZodiacSign.ARIES, ZodiacSign.LEO, ZodiacSign.SAGITTARIUS];
-    const earth: ZodiacSign[] = [ZodiacSign.TAURUS, ZodiacSign.VIRGO, ZodiacSign.CAPRICORN];
-    const air: ZodiacSign[] = [ZodiacSign.GEMINI, ZodiacSign.LIBRA, ZodiacSign.AQUARIUS];
-
-    const s = sign.toUpperCase() as ZodiacSign;
-    if (fire.includes(s)) return "fire";
-    if (earth.includes(s)) return "earth";
-    if (air.includes(s)) return "air";
-    return "water";
-  }
-
-
-  private getMoonPhaseAdvice(phase: string): string {
-    const advice: Record<string, string> = {
-      new: "planting seeds for new beginnings",
-      "waxing-crescent": "nurturing growing connections",
-      "first-quarter": "taking action in relationships",
-      "waxing-gibbous": "refining and adjusting",
-      full: "celebrating and releasing",
-      "waning-gibbous": "harvesting insights",
-      "last-quarter": "rebalancing and letting go",
-      "waning-crescent": "resting and preparing",
-    };
-    return advice[phase] || "being authentic";
-  }
-
-  private getTheme(moonSign: string, sunSign: string): string {
-    const themes = [
-      "Transformation",
-      "Discovery",
-      "Balance",
-      "Growth",
-      "Harmony",
-    ];
-    const seed =
-      (sunSign.charCodeAt(0) + moonSign.charCodeAt(0)) % themes.length;
-    return themes[seed];
-  }
-
-  private generateLuckyNumbers(userId: string): number[] {
-    const date = DateTime.now().toFormat("yyyyMMdd");
-    const seed = userId.slice(0, 8) + date;
-    const nums: number[] = [];
-    let hash = this.hashString(seed);
-
-    for (let i = 0; i < 3; i++) {
-      hash = (hash * 31) % 100;
-      nums.push((hash % 59) + 1);
-    }
-
-    return nums.sort((a, b) => a - b);
-  }
-
-  private hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = (hash << 5) - hash + str.charCodeAt(i);
-      hash |= 0;
-    }
-    return Math.abs(hash);
   }
 
   private sanitizeJSON(text: string): string {

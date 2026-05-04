@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import axios from "axios";
-import logger from "../config/logger";
 
 const EPHE_DIR = path.join(process.cwd(), "ephe");
 const BASE_URL = "https://raw.githubusercontent.com/aloistr/swisseph/master/ephe/";
@@ -31,8 +30,8 @@ async function downloadFile(filename: string) {
   const writer = fs.createWriteStream(filePath);
   response.data.pipe(writer);
 
-  return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
+  return new Promise<void>((resolve, reject) => {
+    writer.on("finish", () => resolve());
     writer.on("error", reject);
   });
 }

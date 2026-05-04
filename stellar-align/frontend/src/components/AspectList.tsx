@@ -41,16 +41,16 @@ export const AspectList: React.FC<AspectListProps> = ({ label, aspects }) => {
 
 function getQualityStyle(quality: string) {
   const q = quality.toLowerCase();
-  if (q.includes('opp')) return { backgroundColor: 'rgba(206, 95, 51, 0.15)' };
-  if (q.includes('sq')) return { backgroundColor: 'rgba(157, 141, 241, 0.2)' };
-  if (q.includes('tr')) return { backgroundColor: 'rgba(92, 184, 92, 0.15)' };
-  if (q.includes('sext') || q.includes('quin')) return { backgroundColor: 'rgba(255, 193, 94, 0.15)' };
+  if (q.includes('opp')) return { backgroundColor: 'rgba(255, 141, 161, 0.15)' }; // astraPink with alpha
+  if (q.includes('sq')) return { backgroundColor: 'rgba(157, 141, 241, 0.2)' }; // astraViolet with alpha
+  if (q.includes('tr')) return { backgroundColor: 'rgba(92, 184, 92, 0.15)' }; // green fallback
+  if (q.includes('sext') || q.includes('quin')) return { backgroundColor: 'rgba(255, 193, 94, 0.15)' }; // astraAmber with alpha
   return { backgroundColor: colors.astraBorder };
 }
 
 function getQualityTextStyle(quality: string) {
   const q = quality.toLowerCase();
-  if (q.includes('opp')) return { color: '#ce5f33' };
+  if (q.includes('opp')) return { color: colors.astraPink };
   if (q.includes('sq')) return { color: colors.astraViolet };
   if (q.includes('tr')) return { color: '#5cb85c' };
   if (q.includes('sext') || q.includes('quin')) return { color: colors.astraAmber };
