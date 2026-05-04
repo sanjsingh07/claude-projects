@@ -94,7 +94,7 @@ export const TodayScreen: React.FC = () => {
           />
           <View style={styles.moonInfo}>
             <CostarText variant="caption" color={colors.gray400}>
-              Moon in
+              Today's Moon
             </CostarText>
             <View style={styles.moonSignRow}>
               <SignIcon

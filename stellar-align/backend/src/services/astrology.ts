@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 import logger from "../config/logger";
 import { aiContentService } from "./aiContent";
 import { llmProvider } from "./llmProvider";
-import { ZodiacSign, HouseSystem } from "@prisma/client";
+import { ZodiacSign, HouseSystem, AyanamsaType, ZodiacType } from "@prisma/client";
 import * as sweph from "sweph";
 import path from "path";
 import fs from "fs";
@@ -320,6 +320,8 @@ export async function calculateNatalChart(
   longitude: number,
   timezone: string,
   houseSystem: HouseSystem = HouseSystem.PLACIDUS,
+  zodiacType: ZodiacType = ZodiacType.TROPICAL,
+  ayanamsaType: AyanamsaType = AyanamsaType.LAHIRI,
 ): Promise<NatalChartData> {
   try {
     const timeParts = birthTime.split(":").map(Number);
@@ -336,15 +338,55 @@ export async function calculateNatalChart(
       sweph.constants.SE_GREG_CAL
     );
 
+    let ayanamsa = 0;
+    if (zodiacType === ZodiacType.SIDEREAL) {
+      const { getAyanamsa } = await import("./vedicAstrology");
+      ayanamsa = getAyanamsa(jd, ayanamsaType);
+    }
+
     // Calculate house cusps
-    const { houses, ascendant, midheaven } = calcHouses(jd, latitude, longitude, houseSystem);
+    const { houses: tropicalHouses, ascendant: tropicalAsc, midheaven: tropicalMc } = calcHouses(jd, latitude, longitude, houseSystem);
 
     const planetsToCalc: PlanetName[] = [
       "SUN", "MOON", "MERCURY", "VENUS", "MARS", "JUPITER", "SATURN",
       "URANUS", "NEPTUNE", "PLUTO", "CHIRON", "LILITH", "NODE"
     ];
 
-    const planetPositions = planetsToCalc.map(p => calcPlanetPosition(jd, p));
+    let planetPositions = planetsToCalc.map(p => calcPlanetPosition(jd, p));
+
+    // Convert to Sidereal if requested
+    if (ayanamsa !== 0) {
+      const { toSiderealLongitude } = await import("./vedicAstrology");
+      planetPositions = planetPositions.map(pos => {
+        const siderealLon = toSiderealLongitude(pos.longitude, ayanamsa);
+        return {
+          ...pos,
+          longitude: siderealLon,
+          sign: getSignFromLongitude(siderealLon),
+          ...getSignDegree(siderealLon),
+        };
+      });
+    }
+
+    // Adjust houses for Sidereal
+    let houses = tropicalHouses;
+    let ascendant = tropicalAsc;
+    let midheaven = tropicalMc;
+
+    if (ayanamsa !== 0) {
+      const { toSiderealLongitude } = await import("./vedicAstrology");
+      houses = tropicalHouses.map(h => {
+        const siderealLon = toSiderealLongitude(h.longitude, ayanamsa);
+        return {
+          ...h,
+          longitude: siderealLon,
+          sign: getSignFromLongitude(siderealLon),
+          ...getSignDegree(siderealLon),
+        };
+      });
+      ascendant = toSiderealLongitude(tropicalAsc, ayanamsa);
+      midheaven = toSiderealLongitude(tropicalMc, ayanamsa);
+    }
 
     // Assign houses
     assignHouses(planetPositions, houses, houseSystem);
@@ -417,7 +459,8 @@ export async function calculateNatalChart(
       sunSign: chartData.sun.sign,
       moonSign: chartData.moon.sign,
       risingSign: chartData.ascendant.sign,
-      houseSystem
+      houseSystem,
+      zodiacType
     });
 
     return chartData;
@@ -427,28 +470,64 @@ export async function calculateNatalChart(
   }
 }
 
+
 // ────────────────────────────────────────────
 // Current planetary positions (for transits)
 // ────────────────────────────────────────────
 
-export async function getCurrentPlanetaryPositions(): Promise<Partial<NatalChartData>> {
-  const now = DateTime.utc();
+export async function getPlanetaryPositions(
+  date: Date = new Date(),
+  ayanamsaType?: AyanamsaType,
+): Promise<Partial<NatalChartData>> {
+  const dt = DateTime.fromJSDate(date).toUTC();
   const jd = sweph.julday(
-    now.year, now.month, now.day,
-    now.hour + now.minute / 60 + now.second / 3600,
-    sweph.constants.SE_GREG_CAL
+    dt.year,
+    dt.month,
+    dt.day,
+    dt.hour + dt.minute / 60 + dt.second / 3600,
+    sweph.constants.SE_GREG_CAL,
   );
 
+  let ayanamsa = 0;
+  if (ayanamsaType) {
+    const { getAyanamsa } = await import("./vedicAstrology");
+    ayanamsa = getAyanamsa(jd, ayanamsaType);
+  }
+
   const planets: PlanetName[] = [
-    "SUN", "MOON", "MERCURY", "VENUS", "MARS", "JUPITER", "SATURN", "URANUS", "NEPTUNE"
+    "SUN",
+    "MOON",
+    "MERCURY",
+    "VENUS",
+    "MARS",
+    "JUPITER",
+    "SATURN",
+    "URANUS",
+    "NEPTUNE",
   ];
 
   const positions: any = {};
   for (const p of planets) {
-    positions[p.toLowerCase()] = calcPlanetPosition(jd, p);
+    let pos = calcPlanetPosition(jd, p);
+    if (ayanamsa !== 0) {
+      const { toSiderealLongitude } = await import("./vedicAstrology");
+      const siderealLon = toSiderealLongitude(pos.longitude, ayanamsa);
+      pos = {
+        ...pos,
+        longitude: siderealLon,
+        sign: getSignFromLongitude(siderealLon),
+        ...getSignDegree(siderealLon),
+      };
+    }
+    positions[p.toLowerCase()] = pos;
   }
 
   return positions;
+}
+
+// Keep backward compatibility if needed, but we should use getPlanetaryPositions
+export async function getCurrentPlanetaryPositions(): Promise<Partial<NatalChartData>> {
+  return getPlanetaryPositions(new Date());
 }
 
 // ────────────────────────────────────────────
@@ -503,18 +582,45 @@ export async function generateDailyHoroscope(
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { natalChart: true },
+      include: { 
+        natalChart: {
+          include: {
+            divisionalCharts: true
+          }
+        } 
+      },
     });
 
     if (!user?.natalChart) {
       throw new Error("Natal chart not found");
     }
 
-    const transitPositions = await getCurrentPlanetaryPositions();
+    const { zodiacType, ayanamsa: ayanamsaType } = user.natalChart;
+    
+    // Calculate transits for the requested date and user's preferred zodiac system
+    const transitPositions = await getPlanetaryPositions(
+      date, 
+      zodiacType === "SIDEREAL" ? ayanamsaType : undefined
+    );
+    
     const sunPos = transitPositions.sun as any;
     const moonPos = transitPositions.moon as any;
 
     const moonPhase = getMoonPhase(sunPos.longitude, moonPos.longitude);
+
+    // Prepare Vedic data if applicable
+    let vedicData = undefined;
+    if (zodiacType === "SIDEREAL") {
+      const { calculateNakshatra } = await import("./vedicAstrology");
+      const moonNak = calculateNakshatra(moonPos.longitude);
+      vedicData = {
+        nakshatra: moonNak.name,
+        nakshatraPada: moonNak.pada,
+        nakshatraLord: moonNak.lord,
+        ayanamsa: ayanamsaType,
+        divisionalCharts: user.natalChart.divisionalCharts,
+      };
+    }
 
     const content = await aiContentService.generateDailyHoroscope(
       user.natalChart,
@@ -522,6 +628,7 @@ export async function generateDailyHoroscope(
       moonPos.sign,
       moonPhase,
       [],
+      vedicData
     );
 
     const horoscope = await prisma.dailyHoroscope.create({
@@ -545,6 +652,7 @@ export async function generateDailyHoroscope(
     throw error;
   }
 }
+
 
 // ────────────────────────────────────────────
 // Compatibility calculation
@@ -596,20 +704,60 @@ export async function calculateCompatibility(
 // Transit calculation (current positions)
 // ────────────────────────────────────────────
 
-export async function calculateCurrentTransits(): Promise<PlanetPosition[]> {
-  const now = DateTime.utc();
+export async function calculateTransits(
+  date: Date = new Date(),
+  ayanamsaType?: AyanamsaType,
+): Promise<PlanetPosition[]> {
+  const dt = DateTime.fromJSDate(date).toUTC();
   const jd = sweph.julday(
-    now.year, now.month, now.day,
-    now.hour + now.minute / 60 + now.second / 3600,
-    sweph.constants.SE_GREG_CAL
+    dt.year,
+    dt.month,
+    dt.day,
+    dt.hour + dt.minute / 60 + dt.second / 3600,
+    sweph.constants.SE_GREG_CAL,
   );
 
+  let ayanamsa = 0;
+  if (ayanamsaType) {
+    const { getAyanamsa } = await import("./vedicAstrology");
+    ayanamsa = getAyanamsa(jd, ayanamsaType);
+  }
+
   const planets: PlanetName[] = [
-    "SUN", "MOON", "MERCURY", "VENUS", "MARS", "JUPITER", "SATURN", "URANUS", "NEPTUNE"
+    "SUN",
+    "MOON",
+    "MERCURY",
+    "VENUS",
+    "MARS",
+    "JUPITER",
+    "SATURN",
+    "URANUS",
+    "NEPTUNE",
   ];
 
-  return planets.map(p => calcPlanetPosition(jd, p));
+  const results: PlanetPosition[] = [];
+  for (const p of planets) {
+    let pos = calcPlanetPosition(jd, p);
+    if (ayanamsa !== 0) {
+      const { toSiderealLongitude } = await import("./vedicAstrology");
+      const siderealLon = toSiderealLongitude(pos.longitude, ayanamsa);
+      pos = {
+        ...pos,
+        longitude: siderealLon,
+        sign: getSignFromLongitude(siderealLon),
+        ...getSignDegree(siderealLon),
+      };
+    }
+    results.push(pos);
+  }
+
+  return results;
 }
+
+export async function calculateCurrentTransits(): Promise<PlanetPosition[]> {
+  return calculateTransits(new Date());
+}
+
 
 // ────────────────────────────────────────────
 // Service object
@@ -619,8 +767,9 @@ export const astrologyService = {
   calculateNatalChart,
   generateDailyHoroscope,
   calculateCompatibility,
+  getPlanetaryPositions,
   getCurrentPlanetaryPositions,
-  calculateTransits: calculateCurrentTransits,
+  calculateTransits,
   getMoonPhase,
   getChartElements,
 };

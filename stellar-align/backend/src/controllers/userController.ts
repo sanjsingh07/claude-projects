@@ -312,13 +312,15 @@ export class UserController {
         ? user.birthTime.toISOString().slice(11, 16)
         : "12:00";
 
-      // First calculate the base natal chart (tropical positions)
-      const chartData = await astrologyService.calculateNatalChart(
+      // Vedic calculations ALWAYS need Tropical as the base to correctly apply Ayanamsa
+      const baseTropicalChart = await astrologyService.calculateNatalChart(
         user.birthDate,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
         user.birthTimezone || "UTC",
+        HouseSystem.PLACIDUS,
+        ZodiacType.TROPICAL,
       );
 
       // Calculate Vedic chart with divisional charts
@@ -331,39 +333,27 @@ export class UserController {
           timezone: user.birthTimezone || "UTC",
           ayanamsa: ayanamsaType,
         },
-        chartData,
+        baseTropicalChart,
       );
 
       // Get Moon's nakshatra info
       const moonNakshatra = vedicChart.nakshatras.moon;
+      
+      // Extract D1 positions for the main NatalChart signs
+      const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
+      const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
 
       // Upsert natal chart with Vedic data
       const chart = await prisma.natalChart.upsert({
         where: { userId },
         create: {
           userId,
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
-          aspects: chartData.aspects as any,
+          sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
+          moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          planetaryPositions: vedicChart.d1 as any,
+          houses: vedicChart.d1.houses as any,
+          aspects: baseTropicalChart.aspects as any, // Synastry aspects usually stay based on tropical distance anyway
           chartPattern: undefined,
           houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",
@@ -374,28 +364,12 @@ export class UserController {
           nakshatraLord: moonNakshatra.lord,
         },
         update: {
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
-          aspects: chartData.aspects as any,
+          sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
+          moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          planetaryPositions: vedicChart.d1 as any,
+          houses: vedicChart.d1.houses as any,
+          aspects: baseTropicalChart.aspects as any,
           chartPattern: undefined,
           houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",

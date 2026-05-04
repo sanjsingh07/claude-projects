@@ -208,7 +208,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
   }): string {
     const { natalChart, date, moonSign, moonPhase, activeTransits, vedicData } = params;
 
-    const isVedic = vedicData?.nakshatra && natalChart.zodiacType === "sidereal";
+    const isVedic = vedicData?.nakshatra && (natalChart.zodiacType === "SIDEREAL" || natalChart.zodiacType === "sidereal");
 
     const vedicSection = isVedic
       ? `

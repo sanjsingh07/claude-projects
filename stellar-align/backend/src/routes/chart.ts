@@ -102,6 +102,9 @@ router.post(
         user.birthLatitude,
         user.birthLongitude,
         user.birthTimezone,
+        houseSystem,
+        user.natalChart?.zodiacType || "SIDEREAL",
+        user.natalChart?.ayanamsa || "LAHIRI"
       );
 
       // Upsert natal chart
@@ -192,8 +195,11 @@ router.get("/transits", async (req: Request, res: Response, next: NextFunction) 
       return;
     }
 
-    const transits = await astrologyService.calculateTransits();
-    const currentPositions = await astrologyService.getCurrentPlanetaryPositions();
+    const { zodiacType, ayanamsa } = user.natalChart;
+    const ayanamsaToUse = zodiacType === "SIDEREAL" ? ayanamsa : undefined;
+
+    const transits = await astrologyService.calculateTransits(new Date(), ayanamsaToUse);
+    const currentPositions = await astrologyService.getPlanetaryPositions(new Date(), ayanamsaToUse);
     const moonPhase = astrologyService.getMoonPhase(
       currentPositions.sun?.longitude ?? 0,
       currentPositions.moon?.longitude ?? 0,
@@ -211,5 +217,6 @@ router.get("/transits", async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 });
+
 
 export default router;
