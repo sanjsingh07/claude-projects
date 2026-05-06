@@ -253,3 +253,13 @@ The backend server should be reloaded to pick up the changes.
 - `frontend/src/screens/SettingsScreen.tsx`
 - `frontend/src/store/vedicChartStore.ts`
 - `frontend/src/types/index.ts`
+
+## [2026-05-06] - Refined Transit Categorization
+### Improved
+- **Transit Classification**: Refined the logic in `transitClassifier.ts` to distinguish between "major", "minor", and "shadow" events. Previously, almost all events were flagged as "major".
+- **Major Events**: Now restricted to significant shifts (ingresses, retrograde changes) and tight aspects of outer planets or very tight hard aspects of inner planets.
+- **Minor Events**: Aspects with larger orbs or soft aspects of fast-moving planets are now correctly categorized as "minor".
+- **Impact Levels**: Adjusted impact level determination to provide more nuanced labels (profound, intense, high, moderate, low) based on the specific transit.
+
+### Files Modified
+- `backend/src/services/transits/transitClassifier.ts`
