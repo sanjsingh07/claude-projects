@@ -144,20 +144,12 @@ function getDasamsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
   return ZODIAC_SIGNS[(start + dasamsaIndex) % 12];
 }
 
-function getRudramsaSign(sign: ZodiacSign, degreeInSign: number): ZodiacSign {
-  const signIndex = getSignIndex(sign);
-  const rudramsaIndex = getSegmentIndex(degreeInSign, 11);
-  const start = (12 - signIndex) % 12;
-  return ZODIAC_SIGNS[(start + rudramsaIndex) % 12];
-}
-
 function getDivisionalSign(sign: ZodiacSign, degreeInSign: number, chartType: DivisionalChartType): ZodiacSign {
   if (chartType === DivisionalChartType.D1) return sign;
   if (chartType === DivisionalChartType.D2) return getHoraSign(sign, degreeInSign);
   if (chartType === DivisionalChartType.D4) return getChaturthamsaSign(sign, degreeInSign);
   if (chartType === DivisionalChartType.D9) return getNavamsaSign(sign, degreeInSign);
   if (chartType === DivisionalChartType.D10) return getDasamsaSign(sign, degreeInSign);
-  if (chartType === DivisionalChartType.D11) return getRudramsaSign(sign, degreeInSign);
   return sign;
 }
 
@@ -167,7 +159,6 @@ function getDivisionalDegreeForChart(degreeInSign: number, chartType: Divisional
   if (chartType === DivisionalChartType.D4) return getDivisionalDegree(degreeInSign, 4);
   if (chartType === DivisionalChartType.D9) return getDivisionalDegree(degreeInSign, 9);
   if (chartType === DivisionalChartType.D10) return getDivisionalDegree(degreeInSign, 10);
-  if (chartType === DivisionalChartType.D11) return getDivisionalDegree(degreeInSign, 11);
   return Math.round(degreeInSign * 10000) / 10000;
 }
 
@@ -365,7 +356,6 @@ export async function calculateVedicChart(
   const d4 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D4);
   const d9 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D9);
   const d10 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D10);
-  const d11 = calculateDivisional(planets, ascendant, ayanamsa, natalChartData.sun, DivisionalChartType.D11);
 
   const moonSidereal = toSiderealLongitude(natalChartData.moon.longitude, ayanamsa);
   const moonNakshatra = calculateNakshatra(moonSidereal);
@@ -376,7 +366,7 @@ export async function calculateVedicChart(
   const yogas = detectYogas(d1);
 
   return {
-    d1, d2, d4, d9, d10, d11,
+    d1, d2, d4, d9, d10,
     nakshatras: { moon: moonNakshatra, ascendant: ascNakshatra },
     ayanamsa,
     ayanamsaType,

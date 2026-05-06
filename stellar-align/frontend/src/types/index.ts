@@ -160,7 +160,7 @@ export interface ApiResponse<T> {
 
 export type ZodiacType = 'tropical' | 'sidereal';
 export type AyanamsaType = 'lahiri' | 'raman' | 'krishnamurti' | 'fagan-bradley';
-export type DivisionalChartType = 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11';
+export type DivisionalChartType = 'D1' | 'D2' | 'D4' | 'D9' | 'D10';
 export type ZodiacSign = 'aries' | 'taurus' | 'gemini' | 'cancer' | 'leo' | 'virgo' | 'libra' | 'scorpio' | 'sagittarius' | 'capricorn' | 'aquarius' | 'pisces';
 
 export type NakshatraName =
@@ -208,7 +208,6 @@ export interface VedicChart {
   d4: DivisionalChart;
   d9: DivisionalChart;
   d10: DivisionalChart;
-  d11: DivisionalChart;
   nakshatras: {
     moon: Nakshatra;
     ascendant: Nakshatra;

@@ -54,7 +54,6 @@ enum DivisionalChartType {
   D4
   D9
   D10
-  D11
 }
 
 enum FriendshipStatus {

@@ -308,7 +308,6 @@ export interface VedicChart {
   d4: DivisionalChart; // Chaturthamsa - fortune/property
   d9: DivisionalChart; // Navamsa - spouse, dharma
   d10: DivisionalChart; // Dasamsa - career
-  d11: DivisionalChart; // Ekadasamsa - gains/losses
   nakshatras: {
     moon: Nakshatra;
     ascendant: Nakshatra;

@@ -113,7 +113,6 @@ export const SettingsScreen: React.FC = () => {
     { label: 'D4 (Chaturthamsa)', value: 'D4' },
     { label: 'D9 (Navamsa)', value: 'D9' },
     { label: 'D10 (Dasamsa)', value: 'D10' },
-    { label: 'D11 (Ekadasamsa)', value: 'D11' },
   ];
 
   const accentColorOptions = [

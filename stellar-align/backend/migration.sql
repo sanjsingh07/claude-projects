@@ -14,7 +14,7 @@ CREATE TYPE "ZodiacType" AS ENUM ('TROPICAL', 'SIDEREAL');
 CREATE TYPE "AyanamsaType" AS ENUM ('LAHIRI', 'RAMAN', 'KRISHNAMURTI', 'FAGAN_BRADLEY');
 
 -- CreateEnum
-CREATE TYPE "DivisionalChartType" AS ENUM ('D1', 'D2', 'D4', 'D9', 'D10', 'D11');
+CREATE TYPE "DivisionalChartType" AS ENUM ('D1', 'D2', 'D4', 'D9', 'D10');
 
 -- CreateEnum
 CREATE TYPE "FriendshipStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED', 'BLOCKED');

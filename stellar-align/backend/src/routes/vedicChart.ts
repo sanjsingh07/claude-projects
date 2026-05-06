@@ -5,6 +5,7 @@ import { prisma } from "../config/database";
 import { calculateNatalChart } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import { AyanamsaType, HouseSystem, ZodiacType, DivisionalChartType } from "@prisma/client";
+import { transformPlanetaryPositions } from "../utils/chart";
 
 const router = Router();
 
@@ -33,7 +34,10 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
     res.json({
       success: true,
-      data: chart,
+      data: {
+        ...chart,
+        planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
+      },
     });
   } catch (error) {
     next(error);
@@ -175,14 +179,13 @@ router.post(
         },
       });
 
-      // Create or update divisional charts
+      // Create or update divisional charts (Removed D11)
       const divisionalChartsData = [
         { chartType: DivisionalChartType.D1, data: vedicChart.d1 },
         { chartType: DivisionalChartType.D2, data: vedicChart.d2 },
         { chartType: DivisionalChartType.D4, data: vedicChart.d4 },
         { chartType: DivisionalChartType.D9, data: vedicChart.d9 },
         { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
-        { chartType: DivisionalChartType.D11, data: vedicChart.d11 },
       ];
 
       // Delete existing divisional charts and create new ones
@@ -211,6 +214,7 @@ router.post(
         success: true,
         data: {
           ...completeChart,
+          planetaryPositions: transformPlanetaryPositions(completeChart?.planetaryPositions),
           vedicChart: {
             ayanamsa: vedicChart.ayanamsa,
             ayanamsaType: vedicChart.ayanamsaType,
@@ -230,7 +234,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { chartType } = req.params;
-      const validTypes = ["D1", "D2", "D4", "D9", "D10", "D11"];
+      const validTypes = ["D1", "D2", "D4", "D9", "D10"]; // Removed D11
 
       if (!validTypes.includes(chartType.toUpperCase())) {
         res.status(400).json({
@@ -242,6 +246,7 @@ router.get(
         });
         return;
       }
+
 
       const natalChart = await prisma.natalChart.findUnique({
         where: { userId: req.userId },

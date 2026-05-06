@@ -231,3 +231,25 @@ To verify the fixes work:
 
 
 The backend server should be reloaded to pick up the changes.
+
+## [2026-05-06] - Fixes and D11 Removal
+### Fixed
+- **Western Chart Planetary Positions**: Fixed bug where planetary positions table was empty because the backend was returning an object instead of an array.
+- **Data Consistency**: Added `transformPlanetaryPositions` utility to ensure consistent array format for all chart responses.
+
+### Removed
+- **D11 Divisional Chart**: Removed D11 (Ekadasamsa) from all layers of the application (DB, Backend, Frontend).
+
+### Files Modified
+- `backend/prisma/schema.prisma`
+- `backend/src/routes/chart.ts`
+- `backend/src/routes/vedicChart.ts`
+- `backend/src/services/vedicAstrology.ts`
+- `backend/src/services/vedicAstrology.test.ts`
+- `backend/src/types/astrology.ts`
+- `backend/src/utils/chart.ts`
+- `frontend/src/components/VedicChartCard.tsx`
+- `frontend/src/hooks/useVedicChart.ts`
+- `frontend/src/screens/SettingsScreen.tsx`
+- `frontend/src/store/vedicChartStore.ts`
+- `frontend/src/types/index.ts`

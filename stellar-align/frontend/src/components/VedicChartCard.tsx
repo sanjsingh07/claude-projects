@@ -13,7 +13,6 @@ const CHART_INFO: Record<string, { name: string; purpose: string }> = {
   D4: { name: 'Chaturthamsa', purpose: 'Fortune & Property' },
   D9: { name: 'Navamsa', purpose: 'Spouse, Dharma & Strength' },
   D10: { name: 'Dasamsa', purpose: 'Career & Profession' },
-  D11: { name: 'Ekadasamsa', purpose: 'Gains & Losses' },
 };
 
 const SIGN_ICONS: Record<string, string> = {
@@ -127,14 +126,14 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
 
 export const VedicChartSelector: React.FC<{
   selectedChart: string | null;
-  onSelectChart: (type: 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11') => void;
+  onSelectChart: (type: 'D1' | 'D2' | 'D4' | 'D9' | 'D10') => void;
 }> = ({ selectedChart, onSelectChart }) => {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selector}>
       {Object.entries(CHART_INFO).map(([type, info]) => (
         <TouchableOpacity
           key={type}
-          onPress={() => onSelectChart(type as 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11')}
+          onPress={() => onSelectChart(type as 'D1' | 'D2' | 'D4' | 'D9' | 'D10')}
           style={[
             styles.selectorButton,
             selectedChart === type && styles.selectorButtonSelected,

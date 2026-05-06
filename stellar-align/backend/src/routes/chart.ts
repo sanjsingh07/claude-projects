@@ -4,6 +4,7 @@ import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
 import { HouseSystem } from "@prisma/client";
+import { transformPlanetaryPositions } from "../utils/chart";
 
 const router = Router();
 
@@ -27,24 +28,11 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    // Transform planetaryPositions object to array for frontend
-    const planetaryPositionsObj = chart.planetaryPositions as any;
-    const positionsArray = planetaryPositionsObj
-      ? Object.values(planetaryPositionsObj).map((p: any) => ({
-          planet: p.planet?.toString?.()?.toLowerCase?.() || p.planet,
-          sign: p.sign,
-          degree: p.degree,
-          minute: p.minute,
-          house: p.house,
-          retrograde: p.retrograde,
-        }))
-      : [];
-
     res.json({
       success: true,
       data: {
         ...chart,
-        planetaryPositions: positionsArray,
+        planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
         houses: chart.houses,
         aspects: chart.aspects,
       },
@@ -170,24 +158,11 @@ router.post(
         },
       });
 
-      // Transform planetaryPositions object to array for frontend
-      const planetaryPositionsObj = chart.planetaryPositions as any;
-      const positionsArray = planetaryPositionsObj
-        ? Object.values(planetaryPositionsObj).map((p: any) => ({
-            planet: p.planet?.toString?.()?.toLowerCase?.() || p.planet,
-            sign: p.sign,
-            degree: p.degree,
-            minute: p.minute,
-            house: p.house,
-            retrograde: p.retrograde,
-          }))
-        : [];
-
       res.json({
         success: true,
         data: {
           ...chart,
-          planetaryPositions: positionsArray,
+          planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
         },
       });
     } catch (error) {

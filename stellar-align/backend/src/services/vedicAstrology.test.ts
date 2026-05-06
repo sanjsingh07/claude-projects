@@ -84,9 +84,6 @@ describe("calculateVedicChart", () => {
 
     expect(chart.d10.ascendant).toBe(ZodiacSign.PISCES);
     expect(planet(chart.d10, "mercury")?.sign).toBe(ZodiacSign.LIBRA);
-
-    expect(planet(chart.d11, "venus")?.sign).toBe(ZodiacSign.GEMINI);
-    expect(planet(chart.d11, "jupiter")?.sign).toBe(ZodiacSign.PISCES);
   });
 
   it("carries retrograde and combust flags into divisional chart positions", async () => {

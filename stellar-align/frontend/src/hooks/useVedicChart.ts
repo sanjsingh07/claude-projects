@@ -97,7 +97,7 @@ export const useVedicChart = () => {
     }
   }, []);
 
-  const getDivisionalChart = useCallback(async (chartType: 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11') => {
+  const getDivisionalChart = useCallback(async (chartType: 'D1' | 'D2' | 'D4' | 'D9' | 'D10') => {
     try {
       setLoading(true);
       setError(null);
@@ -145,7 +145,7 @@ export const useVedicChart = () => {
     }
   }, []);
 
-  const selectDivisionalChart = useCallback((type: 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | 'D11' | null) => {
+  const selectDivisionalChart = useCallback((type: 'D1' | 'D2' | 'D4' | 'D9' | 'D10' | null) => {
     setSelectedDivisionalChart(type);
   }, []);
 
