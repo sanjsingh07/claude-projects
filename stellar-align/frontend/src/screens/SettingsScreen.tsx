@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import axios from 'axios';
+import { DateTime } from 'luxon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,6 +29,7 @@ import {
   LocationSuggestion,
   BirthDataEditModal,
   TextInputModal,
+  TimezoneSelectionModal,
 } from '../components/SettingsComponents';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
 
@@ -35,12 +38,12 @@ export const SettingsScreen: React.FC = () => {
   const queryClient = useQueryClient();
   const logout = useAuthStore((state) => state.logout);
 
-  const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | null>(null);
+  const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | 'timezone' | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDailyTimePicker, setShowDailyTimePicker] = useState(false);
-  const [tempDate, setTempDate] = useState<Date | null>(null);
-  const [tempTime, setTempTime] = useState<Date | null>(null);
+  const [isLookupLoading, setIsLookupLoading] = useState(false);
+  const [pickerInitialValue, setPickerInitialValue] = useState<Date | null>(null);
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['profile'],
@@ -82,6 +85,7 @@ export const SettingsScreen: React.FC = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      Alert.alert('Success', 'Profile updated successfully');
     },
     onError: (error: any) => {
       Alert.alert('Error', error.message || 'Failed to update profile');
@@ -129,59 +133,71 @@ export const SettingsScreen: React.FC = () => {
     { label: 'Monthly', value: 'monthly' },
   ];
 
-  const saveBirthDate = () => {
-    if (tempDate) {
-      updateProfileMutation.mutate({ birthDate: tempDate.toISOString() });
-    }
-    setShowDatePicker(false);
-  };
-
-  const saveBirthTime = () => {
-    if (tempTime) {
-      const timeStr = tempTime.getHours().toString().padStart(2, '0') + ':' +
-        tempTime.getMinutes().toString().padStart(2, '0');
-      updateProfileMutation.mutate({ birthTime: timeStr });
-    }
-    setShowTimePicker(false);
-  };
-
-  const saveDailyTime = () => {
-    if (tempTime) {
-      const timeStr = tempTime.getHours().toString().padStart(2, '0') + ':' +
-        tempTime.getMinutes().toString().padStart(2, '0');
-      updateSettingsMutation.mutate({ notifications: { dailyReading: { time: timeStr } } });
-    }
-    setShowDailyTimePicker(false);
+  const getBirthDate = () => {
+    return profile?.birthData?.date ? new Date(profile.birthData.date) : new Date();
   };
 
   const getBirthTimeDate = () => {
-    const date = new Date(1970, 0, 1);
+    const fallback = new Date(1970, 0, 1, 12, 0, 0);
     if (!profile?.birthData?.time) {
-      date.setHours(12, 0, 0, 0);
+      return fallback;
+    }
+    
+    // Parse 'h:mm a' format (e.g., '11:30 AM')
+    const dt = DateTime.fromFormat(profile.birthData.time, 'h:mm a');
+    if (dt.isValid) {
+      const date = new Date(1970, 0, 1);
+      date.setHours(dt.hour, dt.minute, 0, 0);
       return date;
     }
-    const [hours, minutes] = profile.birthData.time.split(':').map(Number);
-    date.setHours(hours, minutes, 0, 0);
-    return date;
+    
+    return fallback;
   };
 
   const getDailyNotificationDate = () => {
-    const date = new Date(1970, 0, 1);
+    const fallback = new Date(1970, 0, 1, 8, 0, 0);
     if (!settings?.notifications?.dailyReading?.time) {
-      date.setHours(8, 0, 0, 0);
+      return fallback;
+    }
+    
+    let dt = DateTime.fromFormat(settings.notifications.dailyReading.time, 'HH:mm');
+    if (!dt.isValid) {
+      dt = DateTime.fromFormat(settings.notifications.dailyReading.time, 'h:mm a');
+    }
+
+    if (dt.isValid) {
+      const date = new Date(1970, 0, 1);
+      date.setHours(dt.hour, dt.minute, 0, 0);
       return date;
     }
-    const [hours, minutes] = settings.notifications.dailyReading.time.split(':').map(Number);
-    date.setHours(hours, minutes, 0, 0);
-    return date;
+    
+    return fallback;
   };
 
-  const handleLocationSelect = (location: LocationSuggestion) => {
-    updateProfileMutation.mutate({
-      birthLocationName: location.displayName,
-      birthLatitude: parseFloat(location.lat),
-      birthLongitude: parseFloat(location.lon),
-    });
+  const handleLocationSelect = async (location: LocationSuggestion) => {
+    setIsLookupLoading(true);
+    try {
+      const response = await axios.get(
+        `https://www.timeapi.io/api/TimeZone/coordinate?latitude=${location.lat}&longitude=${location.lon}`
+      );
+      const timezone = response.data.timeZone;
+      
+      updateProfileMutation.mutate({
+        birthLocationName: location.displayName,
+        birthLatitude: parseFloat(location.lat),
+        birthLongitude: parseFloat(location.lon),
+        birthTimezone: timezone,
+      });
+    } catch (error) {
+      console.error('Timezone lookup error:', error);
+      updateProfileMutation.mutate({
+        birthLocationName: location.displayName,
+        birthLatitude: parseFloat(location.lat),
+        birthLongitude: parseFloat(location.lon),
+      });
+    } finally {
+      setIsLookupLoading(false);
+    }
   };
 
   return (
@@ -248,7 +264,7 @@ export const SettingsScreen: React.FC = () => {
             label="Daily reading"
             sub={`Every morning at ${settings.notifications.dailyReading.time}`}
             onPress={() => {
-              setTempTime(getDailyNotificationDate());
+              setPickerInitialValue(getDailyNotificationDate());
               setShowDailyTimePicker(true);
             }}
             right={
@@ -398,17 +414,28 @@ export const SettingsScreen: React.FC = () => {
         visible={activeModal === 'birthData'}
         date={profile.birthData.formattedDate}
         time={profile.birthData.time}
+        timezone={profile.birthData.timezone?.label || profile.birthTimezone}
         onEditDate={() => {
-          setTempDate(new Date(profile.birthData.date));
+          setPickerInitialValue(getBirthDate());
           setActiveModal(null);
           setShowDatePicker(true);
         }}
         onEditTime={() => {
-          setTempTime(getBirthTimeDate());
+          setPickerInitialValue(getBirthTimeDate());
           setActiveModal(null);
           setShowTimePicker(true);
         }}
+        onEditTimezone={() => {
+          setActiveModal('timezone');
+        }}
         onClose={() => setActiveModal(null)}
+      />
+
+      <TimezoneSelectionModal
+        visible={activeModal === 'timezone'}
+        selectedTimezone={profile.birthTimezone}
+        onSelect={(val) => updateProfileMutation.mutate({ birthTimezone: val })}
+        onClose={() => setActiveModal('birthData')}
       />
 
       <SelectionModal
@@ -460,6 +487,7 @@ export const SettingsScreen: React.FC = () => {
         visible={activeModal === 'location'}
         onSelect={handleLocationSelect}
         onClose={() => setActiveModal(null)}
+        isLoadingExternal={isLookupLoading}
       />
 
       {showDatePicker && (
@@ -471,10 +499,20 @@ export const SettingsScreen: React.FC = () => {
         >
           <CustomScrollerPicker
             mode="date"
-            value={tempDate || new Date(profile.birthData.date)}
+            value={pickerInitialValue || getBirthDate()}
             title="Select Birth Date"
-            onChange={(d) => setTempDate(d)}
-            onSave={saveBirthDate}
+            onSave={(d) => {
+              const newDateISO = d.toISOString();
+              const currentDateISO = profile?.birthData?.date;
+              
+              if (currentDateISO) {
+                const d1 = new Date(newDateISO).setHours(0,0,0,0);
+                const d2 = new Date(currentDateISO).setHours(0,0,0,0);
+                if (d1 === d2) return;
+              }
+              
+              updateProfileMutation.mutate({ birthDate: newDateISO });
+            }}
             onClose={() => setShowDatePicker(false)}
           />
         </Modal>
@@ -489,10 +527,24 @@ export const SettingsScreen: React.FC = () => {
         >
           <CustomScrollerPicker
             mode="time"
-            value={tempTime || getBirthTimeDate()}
+            value={pickerInitialValue || getBirthTimeDate()}
             title="Select Birth Time"
-            onChange={(d) => setTempTime(d)}
-            onSave={saveBirthTime}
+            onSave={(d) => {
+              const timeStr = d.getHours().toString().padStart(2, '0') + ':' +
+                d.getMinutes().toString().padStart(2, '0');
+              
+              let currentTimeStr = '';
+              if (profile?.birthData?.time) {
+                const dt = DateTime.fromFormat(profile.birthData.time, 'h:mm a');
+                if (dt.isValid) {
+                  currentTimeStr = dt.toFormat('HH:mm');
+                }
+              }
+
+              if (timeStr === currentTimeStr) return;
+              
+              updateProfileMutation.mutate({ birthTime: timeStr });
+            }}
             onClose={() => setShowTimePicker(false)}
           />
         </Modal>
@@ -507,10 +559,22 @@ export const SettingsScreen: React.FC = () => {
         >
           <CustomScrollerPicker
             mode="time"
-            value={tempTime || getDailyNotificationDate()}
+            value={pickerInitialValue || getDailyNotificationDate()}
             title="Select Notification Time"
-            onChange={(d) => setTempTime(d)}
-            onSave={saveDailyTime}
+            onSave={(d) => {
+              const timeStr = d.getHours().toString().padStart(2, '0') + ':' +
+                d.getMinutes().toString().padStart(2, '0');
+              
+              let currentTimeStr = settings?.notifications?.dailyReading?.time || '';
+              if (currentTimeStr.includes('AM') || currentTimeStr.includes('PM')) {
+                const dt = DateTime.fromFormat(currentTimeStr, 'h:mm a');
+                if (dt.isValid) currentTimeStr = dt.toFormat('HH:mm');
+              }
+
+              if (timeStr === currentTimeStr) return;
+
+              updateSettingsMutation.mutate({ notifications: { dailyReading: { time: timeStr } } });
+            }}
             onClose={() => setShowDailyTimePicker(false)}
           />
         </Modal>
@@ -555,4 +619,3 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
 });
-

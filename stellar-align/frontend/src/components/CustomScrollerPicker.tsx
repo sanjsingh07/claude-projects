@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { colors } from '../theme/theme';
 
@@ -33,34 +34,43 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
   const height = itemHeight * visibleItems;
   const paddingItems = Math.floor(visibleItems / 2);
 
-  // Add empty items at the top and bottom to center the middle item
-  const extendedData = [...Array(paddingItems).fill(''), ...data, ...Array(paddingItems).fill('')];
-
-  useEffect(() => {
-    const index = data.indexOf(selectedValue);
-    if (index !== -1 && isReady) {
-      // Use setTimeout to ensure the list is ready to scroll
-      const timer = setTimeout(() => {
-        flatListRef.current?.scrollToOffset({
-          offset: index * itemHeight,
-          animated: false,
-        });
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedValue, isReady, data, itemHeight]);
+  const extendedData = useMemo(() => [
+    ...Array(paddingItems).fill(''), 
+    ...data, 
+    ...Array(paddingItems).fill('')
+  ], [data, paddingItems]);
 
   const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const y = event.nativeEvent.contentOffset.y;
     const index = Math.round(y / itemHeight);
     if (index >= 0 && index < data.length) {
-      onValueChange(data[index]);
+      if (data[index] !== selectedValue) {
+        onValueChange(data[index]);
+      }
+    }
+  };
+
+  const handleLayout = () => {
+    const index = data.indexOf(selectedValue);
+    if (index !== -1) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToOffset({
+          offset: index * itemHeight,
+          animated: false,
+        });
+        setIsReady(true);
+      }, 50);
+    } else {
+      setIsReady(true);
     }
   };
 
   return (
-    <View style={[styles.wheelContainer, { width, height }]}>
-      <View style={[styles.selectionOverlay, { height: itemHeight, top: (height - itemHeight) / 2 }]} />
+    <View style={[styles.wheelContainer, { width, height }]} pointerEvents="box-none">
+      <View 
+        style={[styles.selectionOverlay, { height: itemHeight, top: (height - itemHeight) / 2 }]} 
+        pointerEvents="none" 
+      />
       <FlatList
         ref={flatListRef}
         data={extendedData}
@@ -69,7 +79,7 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
           const actualIndex = index - paddingItems;
           const isSelected = data[actualIndex] === selectedValue;
           return (
-            <View style={[styles.item, { height: itemHeight }]}>
+            <View style={[styles.item, { height: itemHeight }]} pointerEvents="none">
               <Text style={[styles.itemText, isSelected && styles.itemTextSelected]}>
                 {item}
               </Text>
@@ -80,13 +90,16 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
         snapToInterval={itemHeight}
         decelerationRate="fast"
         onMomentumScrollEnd={onMomentumScrollEnd}
-        onLayout={() => setIsReady(true)}
+        onScrollEndDrag={onMomentumScrollEnd}
+        onLayout={handleLayout}
         getItemLayout={(_, index) => ({
           length: itemHeight,
           offset: itemHeight * index,
           index,
         })}
         scrollEventThrottle={16}
+        removeClippedSubviews={false}
+        scrollEnabled={true}
       />
     </View>
   );
@@ -95,51 +108,47 @@ const WheelPicker: React.FC<WheelPickerProps> = ({
 interface CustomScrollerPickerProps {
   mode: 'date' | 'time';
   value: Date;
-  onChange: (date: Date) => void;
+  onSave: (date: Date) => void;
   onClose: () => void;
-  onSave: () => void;
   title: string;
 }
 
 export const CustomScrollerPicker: React.FC<CustomScrollerPickerProps> = ({
   mode,
   value,
-  onChange,
-  onClose,
   onSave,
+  onClose,
   title,
 }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date(value));
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? new Date() : d;
+  });
 
-  useEffect(() => {
-    setSelectedDate(new Date(value));
-  }, [value]);
-
-  const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-  const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+  const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), []);
+  const minutes = useMemo(() => Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')), []);
   
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 130 }, (_, i) => (currentYear - i).toString());
-  const months = [
+  const years = useMemo(() => Array.from({ length: 130 }, (_, i) => (currentYear - i).toString()), [currentYear]);
+  const months = useMemo(() => [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  ], []);
   
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  const days = Array.from(
-    { length: getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth()) },
-    (_, i) => (i + 1).toString()
-  );
+  const days = useMemo(() => {
+    const count = getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth());
+    return Array.from({ length: count }, (_, i) => (i + 1).toString());
+  }, [selectedDate.getFullYear(), selectedDate.getMonth()]);
 
   const handleTimeChange = (type: 'hour' | 'minute', val: string) => {
     const newDate = new Date(selectedDate);
     if (type === 'hour') newDate.setHours(parseInt(val));
     else newDate.setMinutes(parseInt(val));
     setSelectedDate(newDate);
-    onChange(newDate);
   };
 
   const handleDateChange = (type: 'year' | 'month' | 'day', val: string) => {
@@ -158,15 +167,18 @@ export const CustomScrollerPicker: React.FC<CustomScrollerPickerProps> = ({
     else if (type === 'day') newDate.setDate(parseInt(val));
     
     setSelectedDate(newDate);
-    onChange(newDate);
   };
 
   return (
     <View style={styles.modalOverlay}>
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
           <Text style={styles.modalTitle}>{title}</Text>
-          <TouchableOpacity onPress={onSave}>
+          <TouchableOpacity onPress={() => {
+            onSave(selectedDate);
+            onClose();
+          }}>
             <Text style={styles.modalDone}>Done</Text>
           </TouchableOpacity>
         </View>
@@ -195,6 +207,7 @@ export const CustomScrollerPicker: React.FC<CustomScrollerPickerProps> = ({
                 width={120}
               />
               <WheelPicker
+                key={`days-${days.length}`}
                 data={days}
                 selectedValue={selectedDate.getDate().toString()}
                 onValueChange={(v) => handleDateChange('day', v)}
@@ -202,7 +215,7 @@ export const CustomScrollerPicker: React.FC<CustomScrollerPickerProps> = ({
               />
               <WheelPicker
                 data={years}
-                selectedValue={selectedDate.getFullYear().toString()}
+                selectedValue={years.includes(selectedDate.getFullYear().toString()) ? selectedDate.getFullYear().toString() : years[0]}
                 onValueChange={(v) => handleDateChange('year', v)}
                 width={80}
               />

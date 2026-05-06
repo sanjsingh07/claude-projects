@@ -8,6 +8,7 @@ export interface LocationSuggestion {
   displayName: string;
   lat: string;
   lon: string;
+  timezone?: string;
 }
 
 export const SettingsHeader: React.FC<{ onBack: () => void }> = ({ onBack }) => {
@@ -124,10 +125,13 @@ export const LocationSelectionModal: React.FC<{
   visible: boolean;
   onSelect: (location: LocationSuggestion) => void;
   onClose: () => void;
-}> = ({ visible, onSelect, onClose }) => {
+  isLoadingExternal?: boolean;
+}> = ({ visible, onSelect, onClose, isLoadingExternal }) => {
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const activeLoading = isLoading || isLoadingExternal;
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -208,7 +212,7 @@ export const LocationSelectionModal: React.FC<{
                 keyboardAppearance="dark"
                 returnKeyType="search"
               />
-              {isLoading && <ActivityIndicator size="small" color={colors.astraViolet} style={styles.searchLoader} />}
+              {activeLoading && <ActivityIndicator size="small" color={colors.astraViolet} style={styles.searchLoader} />}
             </View>
             <FlatList
               data={suggestions}
@@ -220,6 +224,7 @@ export const LocationSelectionModal: React.FC<{
                     onSelect(item);
                     onClose();
                   }}
+                  disabled={activeLoading}
                 >
                   <View>
                     <Text style={styles.optionLabel}>{item.displayName}</Text>
@@ -228,7 +233,7 @@ export const LocationSelectionModal: React.FC<{
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
-                search.length >= 3 && !isLoading ? (
+                search.length >= 3 && !activeLoading ? (
                   <View style={styles.emptyContainer}>
                     <Text style={styles.valText}>No locations found</Text>
                   </View>
@@ -247,10 +252,12 @@ export const BirthDataEditModal: React.FC<{
   visible: boolean;
   date: string;
   time: string;
+  timezone: string;
   onEditDate: () => void;
   onEditTime: () => void;
+  onEditTimezone: () => void;
   onClose: () => void;
-}> = ({ visible, date, time, onEditDate, onEditTime, onClose }) => {
+}> = ({ visible, date, time, timezone, onEditDate, onEditTime, onEditTimezone, onClose }) => {
   if (!visible) return null;
 
   return (
@@ -279,7 +286,114 @@ export const BirthDataEditModal: React.FC<{
                 </View>
                 <Text style={styles.arrow}>›</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.optionItem} onPress={onEditTimezone}>
+                <View>
+                  <Text style={styles.rowSub}>TIMEZONE</Text>
+                  <Text style={[styles.optionLabel, { marginTop: 4 }]}>{timezone}</Text>
+                </View>
+                <Text style={styles.arrow}>›</Text>
+              </TouchableOpacity>
             </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+export const TimezoneSelectionModal: React.FC<{
+  visible: boolean;
+  onSelect: (timezone: string) => void;
+  onClose: () => void;
+  selectedTimezone?: string;
+}> = ({ visible, onSelect, onClose, selectedTimezone }) => {
+  const [search, setSearch] = useState('');
+  const [allTimezones] = useState(() => {
+    try {
+      if (typeof (Intl as any).supportedValuesOf === 'function') {
+        return (Intl as any).supportedValuesOf('timeZone') as string[];
+      }
+    } catch (e) {
+      console.warn('Intl.supportedValuesOf not supported, using fallback');
+    }
+    
+    const fallbacks = [
+      'Africa/Cairo', 'Africa/Johannesburg', 'Africa/Lagos', 'Africa/Nairobi',
+      'America/Anchorage', 'America/Argentina/Buenos_Aires', 'America/Bogota',
+      'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Mexico_City',
+      'America/New_York', 'America/Phoenix', 'America/Sao_Paulo', 'America/Toronto',
+      'America/Vancouver', 'Asia/Bangkok', 'Asia/Dubai', 'Asia/Hong_Kong',
+      'Asia/Jakarta', 'Asia/Jerusalem', 'Asia/Kabul', 'Asia/Karachi', 'Asia/Kolkata',
+      'Asia/Manila', 'Asia/Seoul', 'Asia/Shanghai', 'Asia/Singapore', 'Asia/Taipei',
+      'Asia/Tehran', 'Asia/Tokyo', 'Atlantic/Reykjavik', 'Australia/Adelaide',
+      'Australia/Brisbane', 'Australia/Darwin', 'Australia/Melbourne', 'Australia/Perth',
+      'Australia/Sydney', 'Europe/Amsterdam', 'Europe/Berlin', 'Europe/Brussels',
+      'Europe/Budapest', 'Europe/Copenhagen', 'Europe/Dublin', 'Europe/Helsinki',
+      'Europe/Istanbul', 'Europe/Lisbon', 'Europe/London', 'Europe/Madrid',
+      'Europe/Moscow', 'Europe/Oslo', 'Europe/Paris', 'Europe/Prague', 'Europe/Rome',
+      'Europe/Stockholm', 'Europe/Vienna', 'Europe/Warsaw', 'Europe/Zurich',
+      'Pacific/Auckland', 'Pacific/Fiji', 'Pacific/Honolulu', 'UTC'
+    ];
+    
+    if (selectedTimezone && !fallbacks.includes(selectedTimezone)) {
+      fallbacks.push(selectedTimezone);
+      fallbacks.sort();
+    }
+    
+    return fallbacks;
+  });
+
+  const filteredTimezones = allTimezones.filter(tz => 
+    tz.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (!visible) return null;
+
+  return (
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+      onClose();
+    }}>
+      <View style={styles.modalOverlay}>
+        <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+          <View style={[styles.modalContent, { height: '80%' }]}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Timezone</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search timezone (e.g. London, Kolkata)..."
+                placeholderTextColor={colors.astraMuted}
+                value={search}
+                onChangeText={setSearch}
+                autoFocus
+                keyboardAppearance="dark"
+                returnKeyType="search"
+              />
+            </View>
+            <FlatList
+              data={filteredTimezones}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[styles.optionItem, selectedTimezone === item && styles.optionSelected]}
+                  onPress={() => {
+                    onSelect(item);
+                    onClose();
+                  }}
+                >
+                  <Text style={[styles.optionLabel, selectedTimezone === item && styles.optionLabelSelected]}>
+                    {item}
+                  </Text>
+                  {selectedTimezone === item && <Text style={styles.checkIcon}>✓</Text>}
+                </TouchableOpacity>
+              )}
+              keyboardShouldPersistTaps="handled"
+            />
           </View>
         </TouchableWithoutFeedback>
       </View>
@@ -575,4 +689,3 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
-

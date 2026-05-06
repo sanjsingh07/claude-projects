@@ -97,9 +97,25 @@ export class UserController {
       // Convert birthTime string (HH:mm) to Date object if provided
       // Use a fixed reference date (2000-01-01) to store only the time
       if (updateData.birthTime) {
-        const [hours, minutes] = updateData.birthTime.split(":");
+        if (typeof updateData.birthTime !== 'string' || !updateData.birthTime.includes(':')) {
+           throw new ApiError(400, "Invalid birth time format. Expected HH:mm", "INVALID_TIME");
+        }
+        
+        const parts = updateData.birthTime.split(":");
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        
+        if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+          throw new ApiError(400, "Invalid birth time value. Expected valid hours and minutes.", "INVALID_TIME");
+        }
+        
         // Create date in UTC to avoid timezone issues
-        const timeDate = new Date(Date.UTC(2000, 0, 1, parseInt(hours, 10), parseInt(minutes, 10), 0, 0));
+        const timeDate = new Date(Date.UTC(2000, 0, 1, hours, minutes, 0, 0));
+        
+        if (isNaN(timeDate.getTime())) {
+          throw new ApiError(400, "Invalid birth time resulting in invalid date", "INVALID_TIME");
+        }
+        
         processedData.birthTime = timeDate;
       }
 

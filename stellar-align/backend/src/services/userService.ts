@@ -47,7 +47,9 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
   const birthDateTime = DateTime.fromJSDate(user.birthDate);
   const formattedDate = birthDateTime.toFormat("LLL d, yyyy");
   
-  const birthTime = user.birthTime ? DateTime.fromJSDate(user.birthTime).toFormat("h:mm a") : "12:00 PM";
+  // Important: We use { zone: 'utc' } because the database stores the clock time in a UTC field.
+  // This prevents the server's local timezone (e.g. IST) from shifting the displayed time.
+  const birthTime = user.birthTime ? DateTime.fromJSDate(user.birthTime, { zone: 'utc' }).toFormat("h:mm a") : "12:00 PM";
 
   const astrology: any = {};
   if (natalChart) {
@@ -65,7 +67,6 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
     const sunPos = findPos("SUN");
     const moonPos = findPos("MOON");
     const risingSign = natalChart.risingSign;
-    // Ascendant degree is usually stored in houses or planetaryPositions depending on implementation
     const ascPos = findPos("ASCENDANT");
 
     if (sunPos) {
@@ -133,7 +134,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
       date: user.birthDate.toISOString(),
       formattedDate,
       time: birthTime,
-      isTimeApproximate: false, // Defaulting to false, can be extended later
+      isTimeApproximate: false,
       place: {
         city,
         region,
