@@ -117,9 +117,9 @@ export const VedicChartCard: React.FC<VedicChartCardProps> = ({ chart, nakshatra
         </View>
       )}
 
-      <ScrollView style={styles.chartContent} showsVerticalScrollIndicator={false}>
+      <View style={styles.chartContent}>
         {renderPlanetList()}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   chartContent: {
-    maxHeight: 300,
+    // Removed maxHeight to allow full expansion
   },
   signGroup: {
     marginBottom: 16,

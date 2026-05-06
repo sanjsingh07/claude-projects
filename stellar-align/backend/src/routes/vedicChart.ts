@@ -32,11 +32,29 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
+
     res.json({
       success: true,
       data: {
-        ...chart,
-        planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
+        id: chart.id,
+        userId: chart.userId,
+        sunSign: chart.sunSign,
+        moonSign: chart.moonSign,
+        risingSign: chart.risingSign,
+        planetaryPositions,
+        houses: chart.houses,
+        aspects: chart.aspects,
+        chartPattern: chart.chartPattern,
+        houseSystem: chart.houseSystem,
+        calculationMethod: chart.calculationMethod,
+        zodiacType: chart.zodiacType,
+        ayanamsa: chart.ayanamsa,
+        nakshatra: chart.nakshatra,
+        nakshatraPada: chart.nakshatraPada,
+        nakshatraLord: chart.nakshatraLord,
+        calculatedAt: chart.calculatedAt,
+        divisionalCharts: chart.divisionalCharts,
       },
     });
   } catch (error) {
@@ -107,33 +125,21 @@ router.post(
       // Get Moon's nakshatra info
       const moonNakshatra = vedicChart.nakshatras.moon;
 
+      // Extract D1 positions for the main NatalChart signs
+      const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
+      const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
+
       // Upsert natal chart with Vedic data
       const userId = req.userId!;
       const chart = await prisma.natalChart.upsert({
         where: { userId },
         create: {
           userId,
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
+          sunSign: (d1Sun?.sign as any) || chartData.sun.sign,
+          moonSign: (d1Moon?.sign as any) || chartData.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          planetaryPositions: vedicChart.d1.planetaryPositions as any,
+          houses: vedicChart.d1.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
           houseSystem: HouseSystem.WHOLE_SIGN, // Vedic uses whole sign
@@ -145,27 +151,11 @@ router.post(
           nakshatraLord: moonNakshatra.lord,
         },
         update: {
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
+          sunSign: (d1Sun?.sign as any) || chartData.sun.sign,
+          moonSign: (d1Moon?.sign as any) || chartData.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          planetaryPositions: vedicChart.d1.planetaryPositions as any,
+          houses: vedicChart.d1.houses as any,
           aspects: chartData.aspects as any,
           chartPattern: undefined,
           houseSystem: HouseSystem.WHOLE_SIGN,
@@ -210,11 +200,29 @@ router.post(
         include: { divisionalCharts: true },
       });
 
+      const planetaryPositions = transformPlanetaryPositions(completeChart?.planetaryPositions);
+
       res.json({
         success: true,
         data: {
-          ...completeChart,
-          planetaryPositions: transformPlanetaryPositions(completeChart?.planetaryPositions),
+          id: completeChart?.id,
+          userId: completeChart?.userId,
+          sunSign: completeChart?.sunSign,
+          moonSign: completeChart?.moonSign,
+          risingSign: completeChart?.risingSign,
+          planetaryPositions,
+          houses: completeChart?.houses,
+          aspects: completeChart?.aspects,
+          chartPattern: completeChart?.chartPattern,
+          houseSystem: completeChart?.houseSystem,
+          calculationMethod: completeChart?.calculationMethod,
+          zodiacType: completeChart?.zodiacType,
+          ayanamsa: completeChart?.ayanamsa,
+          nakshatra: completeChart?.nakshatra,
+          nakshatraPada: completeChart?.nakshatraPada,
+          nakshatraLord: completeChart?.nakshatraLord,
+          calculatedAt: completeChart?.calculatedAt,
+          divisionalCharts: completeChart?.divisionalCharts,
           vedicChart: {
             ayanamsa: vedicChart.ayanamsa,
             ayanamsaType: vedicChart.ayanamsaType,

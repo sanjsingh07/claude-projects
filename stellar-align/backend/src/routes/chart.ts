@@ -28,13 +28,27 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
+
     res.json({
       success: true,
       data: {
-        ...chart,
-        planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
+        id: chart.id,
+        userId: chart.userId,
+        sunSign: chart.sunSign,
+        moonSign: chart.moonSign,
+        risingSign: chart.risingSign,
+        planetaryPositions,
         houses: chart.houses,
         aspects: chart.aspects,
+        chartPattern: chart.chartPattern,
+        houseSystem: chart.houseSystem,
+        zodiacType: chart.zodiacType,
+        ayanamsa: chart.ayanamsa,
+        nakshatra: chart.nakshatra,
+        nakshatraPada: chart.nakshatraPada,
+        nakshatraLord: chart.nakshatraLord,
+        calculatedAt: chart.calculatedAt,
       },
     });
   } catch (error) {
@@ -158,11 +172,28 @@ router.post(
         },
       });
 
+      const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
+
       res.json({
         success: true,
         data: {
-          ...chart,
-          planetaryPositions: transformPlanetaryPositions(chart.planetaryPositions),
+          id: chart.id,
+          userId: chart.userId,
+          sunSign: chart.sunSign,
+          moonSign: chart.moonSign,
+          risingSign: chart.risingSign,
+          planetaryPositions,
+          houses: chart.houses,
+          aspects: chart.aspects,
+          chartPattern: chart.chartPattern,
+          houseSystem: chart.houseSystem,
+          calculationMethod: chart.calculationMethod,
+          zodiacType: chart.zodiacType,
+          ayanamsa: chart.ayanamsa,
+          nakshatra: chart.nakshatra,
+          nakshatraPada: chart.nakshatraPada,
+          nakshatraLord: chart.nakshatraLord,
+          calculatedAt: chart.calculatedAt,
         },
       });
     } catch (error) {

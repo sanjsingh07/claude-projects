@@ -263,3 +263,17 @@ The backend server should be reloaded to pick up the changes.
 
 ### Files Modified
 - `backend/src/services/transits/transitClassifier.ts`
+
+## [2026-05-06] - Fixes for Natal and Vedic Chart Display
+### Fixed
+- **Natal Chart Planetary Positions**: Fixed bug where the planetary positions table was empty. Ensured that all chart endpoints explicitly transform stored data into the expected array format for the frontend, avoiding issues with raw Prisma objects and inconsistent storage formats.
+- **Vedic Chart Layout**: Extended the Vedic chart (divisional chart) component to show more content. Removed the 'maxHeight: 300' restriction and nested 'ScrollView' in 'VedicChartCard.tsx' to allow the component to expand fully within its parent container.
+- **Vedic Data Accuracy**: Updated Vedic chart calculation in 'routes/vedicChart.ts' to use Sidereal signs for Sun and Moon, ensuring the Big Three are correctly displayed in the Vedic view.
+- **Data Consistency**: Improved 'transformPlanetaryPositions' utility to be more robust, handling both array and object formats defensively.
+
+### Files Modified
+- `backend/src/routes/chart.ts`
+- `backend/src/routes/vedicChart.ts`
+- `backend/src/controllers/userController.ts`
+- `backend/src/utils/chart.ts`
+- `frontend/src/components/VedicChartCard.tsx`

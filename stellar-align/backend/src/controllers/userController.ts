@@ -374,7 +374,7 @@ export class UserController {
           sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
           moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
           risingSign: vedicChart.d1.ascendant,
-          planetaryPositions: vedicChart.d1 as any,
+          planetaryPositions: vedicChart.d1.planetaryPositions as any,
           houses: vedicChart.d1.houses as any,
           aspects: baseTropicalChart.aspects as any, // Synastry aspects usually stay based on tropical distance anyway
           chartPattern: undefined,
@@ -390,7 +390,7 @@ export class UserController {
           sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
           moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
           risingSign: vedicChart.d1.ascendant,
-          planetaryPositions: vedicChart.d1 as any,
+          planetaryPositions: vedicChart.d1.planetaryPositions as any,
           houses: vedicChart.d1.houses as any,
           aspects: baseTropicalChart.aspects as any,
           chartPattern: undefined,
