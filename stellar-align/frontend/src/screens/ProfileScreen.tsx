@@ -16,7 +16,6 @@ import { useAuthStore } from '@store/authStore';
 import {
   ProfileHero,
   BirthDataGrid,
-  ChartSummaryCard,
   NotificationSection,
   SignOutButton,
 } from '../components/ProfileComponents';
@@ -77,15 +76,6 @@ export const ProfileScreen: React.FC = () => {
     { key: 'Timezone', val: profile.birthData.timezone.label, sub: `UTC ${profile.birthData.timezone.offset >= 0 ? '+' : ''}${profile.birthData.timezone.offset}` },
   ];
 
-  const placements = [
-    { k: 'Sun', v: profile.astrology.sun?.label || '' },
-    { k: 'Moon', v: profile.astrology.moon?.label || '', color: 'accent' as const },
-    { k: 'Rising', v: profile.astrology.rising?.label || '' },
-    { k: 'Mercury', v: profile.astrology.mercury?.label || '', color: 'amber' as const },
-    { k: 'Venus', v: profile.astrology.venus?.label || '' },
-    { k: 'Mars', v: profile.astrology.mars?.label || '' },
-  ];
-
   const notificationItems = [
     {
       k: 'Daily reading',
@@ -133,9 +123,6 @@ export const ProfileScreen: React.FC = () => {
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
           <BirthDataGrid items={birthDataItems} />
-        </View>
-        <View style={styles.section}>
-          <ChartSummaryCard placements={placements} onEditPress={() => navigation.navigate('Settings')} />
         </View>
         <View style={styles.section}>
           <NotificationSection items={notificationItems} />

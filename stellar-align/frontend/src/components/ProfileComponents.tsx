@@ -61,34 +61,6 @@ export const BirthDataGrid: React.FC<{
   );
 };
 
-export const ChartSummaryCard: React.FC<{
-  placements: Array<{ k: string; v: string; color?: 'accent' | 'amber' }>;
-  onEditPress: () => void;
-}> = ({ placements, onEditPress }) => {
-  return (
-    <View style={styles.card}>
-      <View style={styles.cardHead}>
-        <Text style={styles.cardTitle}>Your chart</Text>
-        <TouchableOpacity onPress={onEditPress}>
-          <Text style={styles.editBtn}>edit</Text>
-        </TouchableOpacity>
-      </View>
-      {placements.map((p, i) => (
-        <View key={i} style={[styles.row, i === placements.length - 1 && styles.lastRow]}>
-          <Text style={styles.rowK}>{p.k}</Text>
-          <Text style={[
-            styles.rowV,
-            p.color === 'accent' && styles.rowVAccent,
-            p.color === 'amber' && styles.rowVAmber
-          ]}>
-            {p.v}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-};
-
 export const NotificationSection: React.FC<{
   items: Array<{ k: string; sub: string; on: boolean; onToggle: () => void }>;
 }> = ({ items }) => {
@@ -238,59 +210,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.astraMuted,
     marginTop: 2,
-  },
-  card: {
-    backgroundColor: colors.astraSurface,
-    borderWidth: 1,
-    borderColor: colors.astraBorder,
-    borderRadius: 14,
-    padding: 16,
-    marginHorizontal: 24,
-  },
-  cardHead: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  cardTitle: {
-    fontFamily: 'DMSans-Regular',
-    fontSize: 10,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-    color: colors.astraViolet,
-  },
-  editBtn: {
-    fontFamily: 'DMSans-Regular',
-    fontSize: 11,
-    color: colors.astraMuted,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
-  },
-  lastRow: {
-    borderBottomWidth: 0,
-  },
-  rowK: {
-    fontFamily: 'DMSans-Regular',
-    fontSize: 13,
-    color: colors.astraFg,
-  },
-  rowV: {
-    fontFamily: 'InstrumentSerif-Italic',
-    fontSize: 14,
-    color: colors.astraMuted,
-  },
-  rowVAccent: {
-    color: colors.astraPink,
-  },
-  rowVAmber: {
-    color: colors.astraAmber,
   },
   notifSection: {
     paddingHorizontal: 24,

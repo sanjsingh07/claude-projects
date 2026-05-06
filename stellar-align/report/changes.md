@@ -104,3 +104,12 @@ Refactored the Stellar Align backend to improve astrological precision, database
 - `frontend/src/components/VedicChartCard.tsx`
 - `frontend/src/types/index.ts`
 - `report/changes.md`
+
+## [2026-05-06] Remove redundant 'Your chart' summary from Profile screen
+- Removed `ChartSummaryCard` from `ProfileScreen.tsx` to eliminate redundancy with the dedicated Chart tab.
+- Deleted `ChartSummaryCard` component and its associated styles from `ProfileComponents.tsx`.
+- Cleaned up unused `placements` data fetching/formatting in `ProfileScreen.tsx`.
+
+**Files modified:**
+- `frontend/src/screens/ProfileScreen.tsx`
+- `frontend/src/components/ProfileComponents.tsx`
