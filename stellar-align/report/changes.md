@@ -159,3 +159,10 @@ Refactored the Stellar Align backend to improve astrological precision, database
 - `backend/src/controllers/userController.ts`
 - `backend/src/utils/chart.ts`
 - `frontend/src/components/VedicChartCard.tsx`
+
+## [2026-05-06] - Fix syntax error in chart utility
+### Fixed
+- **Chart Utility Syntax**: Fixed an unterminated multi-line comment and removed a literal '...' placeholder in `backend/src/utils/chart.ts` that was causing compilation failure during development.
+
+### Files Modified
+- `backend/src/utils/chart.ts`
