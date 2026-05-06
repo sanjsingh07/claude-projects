@@ -31,6 +31,7 @@ export interface UserProfileResponse {
     venus?: { sign: ZodiacSign; degree: number; label: string };
     mars?: { sign: ZodiacSign; degree: number; label: string };
   };
+  bio?: string;
   badges: Array<{ label: string; type: "accent" | "pink" | "default" }>;
 }
 
@@ -127,6 +128,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
     id: user.id,
     name: user.displayName || "User",
     avatarInitial: (user.displayName || "U").charAt(0).toUpperCase(),
+    bio: user.bio,
     birthData: {
       date: user.birthDate.toISOString(),
       formattedDate,

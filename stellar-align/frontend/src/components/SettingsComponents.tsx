@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
 import axios from 'axios';
 import { colors } from '../theme/theme';
 
@@ -86,33 +86,37 @@ export const SelectionModal: React.FC<{
   if (!visible) return null;
 
   return (
-    <View style={styles.modalOverlay}>
-      <View style={styles.modalContent}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{title}</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalClose}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.optionsList}>
-          {options.map((opt) => (
-            <TouchableOpacity
-              key={opt.value}
-              style={[styles.optionItem, selectedValue === opt.value && styles.optionSelected]}
-              onPress={() => {
-                onSelect(opt.value);
-                onClose();
-              }}
-            >
-              <Text style={[styles.optionLabel, selectedValue === opt.value && styles.optionLabelSelected]}>
-                {opt.label}
-              </Text>
-              {selectedValue === opt.value && <Text style={styles.checkIcon}>✓</Text>}
-            </TouchableOpacity>
-          ))}
-        </View>
+    <TouchableWithoutFeedback onPress={onClose}>
+      <View style={styles.modalOverlay}>
+        <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{title}</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.optionsList}>
+              {options.map((opt) => (
+                <TouchableOpacity
+                  key={opt.value}
+                  style={[styles.optionItem, selectedValue === opt.value && styles.optionSelected]}
+                  onPress={() => {
+                    onSelect(opt.value);
+                    onClose();
+                  }}
+                >
+                  <Text style={[styles.optionLabel, selectedValue === opt.value && styles.optionLabelSelected]}>
+                    {opt.label}
+                  </Text>
+                  {selectedValue === opt.value && <Text style={styles.checkIcon}>✓</Text>}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -180,52 +184,62 @@ export const LocationSelectionModal: React.FC<{
   if (!visible) return null;
 
   return (
-    <View style={styles.modalOverlay}>
-      <View style={[styles.modalContent, { height: '80%' }]}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Change Location</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalClose}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search city, state, country..."
-            placeholderTextColor={colors.astraMuted}
-            value={search}
-            onChangeText={setSearch}
-            autoFocus
-          />
-          {isLoading && <ActivityIndicator size="small" color={colors.astraViolet} style={styles.searchLoader} />}
-        </View>
-        <FlatList
-          data={suggestions}
-          keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.optionItem}
-              onPress={() => {
-                onSelect(item);
-                onClose();
-              }}
-            >
-              <View>
-                <Text style={styles.optionLabel}>{item.displayName}</Text>
-                <Text style={[styles.rowSub, { marginTop: 4 }]}>{item.name}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          ListEmptyComponent={
-            search.length >= 3 && !isLoading ? (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.valText}>No locations found</Text>
-              </View>
-            ) : null
-          }
-        />
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+      onClose();
+    }}>
+      <View style={styles.modalOverlay}>
+        <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+          <View style={[styles.modalContent, { height: '80%' }]}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Change Location</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search city, state, country..."
+                placeholderTextColor={colors.astraMuted}
+                value={search}
+                onChangeText={setSearch}
+                autoFocus
+                keyboardAppearance="dark"
+                returnKeyType="search"
+              />
+              {isLoading && <ActivityIndicator size="small" color={colors.astraViolet} style={styles.searchLoader} />}
+            </View>
+            <FlatList
+              data={suggestions}
+              keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.optionItem}
+                  onPress={() => {
+                    onSelect(item);
+                    onClose();
+                  }}
+                >
+                  <View>
+                    <Text style={styles.optionLabel}>{item.displayName}</Text>
+                    <Text style={[styles.rowSub, { marginTop: 4 }]}>{item.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={
+                search.length >= 3 && !isLoading ? (
+                  <View style={styles.emptyContainer}>
+                    <Text style={styles.valText}>No locations found</Text>
+                  </View>
+                ) : null
+              }
+              keyboardShouldPersistTaps="handled"
+            />
+          </View>
+        </TouchableWithoutFeedback>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -240,32 +254,36 @@ export const BirthDataEditModal: React.FC<{
   if (!visible) return null;
 
   return (
-    <View style={styles.modalOverlay}>
-      <View style={styles.modalContent}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Edit Birth Data</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalClose}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.optionsList}>
-          <TouchableOpacity style={styles.optionItem} onPress={onEditDate}>
-            <View>
-              <Text style={styles.rowSub}>BIRTH DATE</Text>
-              <Text style={[styles.optionLabel, { marginTop: 4 }]}>{date}</Text>
+    <TouchableWithoutFeedback onPress={onClose}>
+      <View style={styles.modalOverlay}>
+        <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Birth Data</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.arrow}>›</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionItem} onPress={onEditTime}>
-            <View>
-              <Text style={styles.rowSub}>BIRTH TIME</Text>
-              <Text style={[styles.optionLabel, { marginTop: 4 }]}>{time}</Text>
+            <View style={styles.optionsList}>
+              <TouchableOpacity style={styles.optionItem} onPress={onEditDate}>
+                <View>
+                  <Text style={styles.rowSub}>BIRTH DATE</Text>
+                  <Text style={[styles.optionLabel, { marginTop: 4 }]}>{date}</Text>
+                </View>
+                <Text style={styles.arrow}>›</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.optionItem} onPress={onEditTime}>
+                <View>
+                  <Text style={styles.rowSub}>BIRTH TIME</Text>
+                  <Text style={[styles.optionLabel, { marginTop: 4 }]}>{time}</Text>
+                </View>
+                <Text style={styles.arrow}>›</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.arrow}>›</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -280,41 +298,58 @@ export const TextInputModal: React.FC<{
   const [text, setText] = useState(value);
 
   useEffect(() => {
-    if (visible) setText(value);
+    if (visible) {
+      setText(value);
+    }
   }, [visible, value]);
 
   if (!visible) return null;
 
   return (
-    <View style={styles.modalOverlay}>
-      <View style={styles.modalContent}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{title}</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalClose}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            value={text}
-            onChangeText={setText}
-            placeholder={placeholder}
-            placeholderTextColor={colors.astraMuted}
-            autoFocus
-          />
-        </View>
-        <TouchableOpacity 
-          style={styles.saveBtn} 
-          onPress={() => {
-            onSave(text);
-            onClose();
-          }}
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+      onClose();
+    }}>
+      <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ width: '100%' }}
         >
-          <Text style={styles.saveBtnText}>Save Changes</Text>
-        </TouchableOpacity>
+          <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{title}</Text>
+                <TouchableOpacity onPress={onClose}>
+                  <Text style={styles.modalClose}>✕</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={text}
+                  onChangeText={setText}
+                  placeholder={placeholder}
+                  placeholderTextColor={colors.astraMuted}
+                  autoFocus
+                  keyboardAppearance="dark"
+                  selectionColor={colors.astraViolet}
+                  multiline={title.toLowerCase().includes('bio')}
+                />
+              </View>
+              <TouchableOpacity 
+                style={styles.saveBtn} 
+                onPress={() => {
+                  onSave(text);
+                  onClose();
+                }}
+              >
+                <Text style={styles.saveBtnText}>Save Changes</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

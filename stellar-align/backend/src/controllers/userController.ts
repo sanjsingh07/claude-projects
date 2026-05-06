@@ -104,6 +104,12 @@ export class UserController {
       }
 
       // Copy other fields directly
+      if (updateData.displayName) {
+        processedData.displayName = updateData.displayName;
+      }
+      if (updateData.bio !== undefined) {
+        processedData.bio = updateData.bio;
+      }
       if (updateData.birthLocationName) {
         processedData.birthLocationName = updateData.birthLocationName;
       }

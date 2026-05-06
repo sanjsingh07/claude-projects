@@ -86,7 +86,7 @@ export const RegisterScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [datePickerDate, setDatePickerDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [timePickerDate, setTimePickerDate] = useState(new Date());
+  const [timePickerDate, setTimePickerDate] = useState(new Date(2000, 0, 1, 12, 0, 0));
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [locationSearch, setLocationSearch] = useState('');
   const [locationSuggestions, setLocationSuggestions] = useState<LocationSuggestion[]>([]);

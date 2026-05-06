@@ -8,11 +8,11 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { api } from '@services/api';
 import { colors } from '@theme/theme';
 import { useAuthStore } from '@store/authStore';
@@ -28,16 +28,19 @@ import {
   BirthDataEditModal,
   TextInputModal,
 } from '../components/SettingsComponents';
+import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
 
 export const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
   const logout = useAuthStore((state) => state.logout);
 
-  const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'alertLevel' | 'compFreq' | null>(null);
+  const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDailyTimePicker, setShowDailyTimePicker] = useState(false);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
+  const [tempTime, setTempTime] = useState<Date | null>(null);
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['profile'],
@@ -45,6 +48,8 @@ export const SettingsScreen: React.FC = () => {
       const response = await api.getCurrentUser();
       return (response as any).data;
     },
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: settings, isLoading: isSettingsLoading } = useQuery({
@@ -53,6 +58,8 @@ export const SettingsScreen: React.FC = () => {
       const response = await api.getSettings();
       return (response as any).data;
     },
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
   });
 
   const updateSettingsMutation = useMutation({
@@ -122,29 +129,51 @@ export const SettingsScreen: React.FC = () => {
     { label: 'Monthly', value: 'monthly' },
   ];
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (Platform.OS === 'android') setShowDatePicker(false);
-    if (selectedDate) {
-      updateProfileMutation.mutate({ birthDate: selectedDate.toISOString() });
+  const saveBirthDate = () => {
+    if (tempDate) {
+      updateProfileMutation.mutate({ birthDate: tempDate.toISOString() });
     }
+    setShowDatePicker(false);
   };
 
-  const handleTimeChange = (event: any, selectedTime?: Date) => {
-    if (Platform.OS === 'android') setShowTimePicker(false);
-    if (selectedTime) {
-      const timeStr = selectedTime.getHours().toString().padStart(2, '0') + ':' + 
-                      selectedTime.getMinutes().toString().padStart(2, '0');
+  const saveBirthTime = () => {
+    if (tempTime) {
+      const timeStr = tempTime.getHours().toString().padStart(2, '0') + ':' +
+        tempTime.getMinutes().toString().padStart(2, '0');
       updateProfileMutation.mutate({ birthTime: timeStr });
     }
+    setShowTimePicker(false);
   };
 
-  const handleDailyTimeChange = (event: any, selectedTime?: Date) => {
-    if (Platform.OS === 'android') setShowDailyTimePicker(false);
-    if (selectedTime) {
-      const timeStr = selectedTime.getHours().toString().padStart(2, '0') + ':' + 
-                      selectedTime.getMinutes().toString().padStart(2, '0');
+  const saveDailyTime = () => {
+    if (tempTime) {
+      const timeStr = tempTime.getHours().toString().padStart(2, '0') + ':' +
+        tempTime.getMinutes().toString().padStart(2, '0');
       updateSettingsMutation.mutate({ notifications: { dailyReading: { time: timeStr } } });
     }
+    setShowDailyTimePicker(false);
+  };
+
+  const getBirthTimeDate = () => {
+    const date = new Date(1970, 0, 1);
+    if (!profile?.birthData?.time) {
+      date.setHours(12, 0, 0, 0);
+      return date;
+    }
+    const [hours, minutes] = profile.birthData.time.split(':').map(Number);
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+  };
+
+  const getDailyNotificationDate = () => {
+    const date = new Date(1970, 0, 1);
+    if (!settings?.notifications?.dailyReading?.time) {
+      date.setHours(8, 0, 0, 0);
+      return date;
+    }
+    const [hours, minutes] = settings.notifications.dailyReading.time.split(':').map(Number);
+    date.setHours(hours, minutes, 0, 0);
+    return date;
   };
 
   const handleLocationSelect = (location: LocationSuggestion) => {
@@ -199,9 +228,9 @@ export const SettingsScreen: React.FC = () => {
           <SettingsRow
             label="Dark mode"
             right={
-              <Toggle 
-                on={settings.display.darkMode} 
-                onToggle={() => updateSettingsMutation.mutate({ display: { darkMode: !settings.display.darkMode } })} 
+              <Toggle
+                on={settings.display.darkMode}
+                onToggle={() => updateSettingsMutation.mutate({ display: { darkMode: !settings.display.darkMode } })}
               />
             }
           />
@@ -218,13 +247,16 @@ export const SettingsScreen: React.FC = () => {
           <SettingsRow
             label="Daily reading"
             sub={`Every morning at ${settings.notifications.dailyReading.time}`}
-            onPress={() => setShowDailyTimePicker(true)}
+            onPress={() => {
+              setTempTime(getDailyNotificationDate());
+              setShowDailyTimePicker(true);
+            }}
             right={
-              <Toggle 
-                on={settings.notifications.dailyReading.enabled} 
-                onToggle={() => updateSettingsMutation.mutate({ 
-                  notifications: { dailyReading: { enabled: !settings.notifications.dailyReading.enabled } } 
-                })} 
+              <Toggle
+                on={settings.notifications.dailyReading.enabled}
+                onToggle={() => updateSettingsMutation.mutate({
+                  notifications: { dailyReading: { enabled: !settings.notifications.dailyReading.enabled } }
+                })}
               />
             }
           />
@@ -233,11 +265,11 @@ export const SettingsScreen: React.FC = () => {
             sub={settings.notifications.transitAlerts.level === 'major' ? 'Major aspects only' : 'All aspects'}
             onPress={() => setActiveModal('alertLevel')}
             right={
-              <Toggle 
-                on={settings.notifications.transitAlerts.enabled} 
-                onToggle={() => updateSettingsMutation.mutate({ 
-                  notifications: { transitAlerts: { enabled: !settings.notifications.transitAlerts.enabled } } 
-                })} 
+              <Toggle
+                on={settings.notifications.transitAlerts.enabled}
+                onToggle={() => updateSettingsMutation.mutate({
+                  notifications: { transitAlerts: { enabled: !settings.notifications.transitAlerts.enabled } }
+                })}
               />
             }
           />
@@ -246,11 +278,11 @@ export const SettingsScreen: React.FC = () => {
             sub={`${settings.notifications.compatibilityUpdates.frequency.charAt(0).toUpperCase() + settings.notifications.compatibilityUpdates.frequency.slice(1)} updates`}
             onPress={() => setActiveModal('compFreq')}
             right={
-              <Toggle 
-                on={settings.notifications.compatibilityUpdates.enabled} 
-                onToggle={() => updateSettingsMutation.mutate({ 
-                  notifications: { compatibilityUpdates: { enabled: !settings.notifications.compatibilityUpdates.enabled } } 
-                })} 
+              <Toggle
+                on={settings.notifications.compatibilityUpdates.enabled}
+                onToggle={() => updateSettingsMutation.mutate({
+                  notifications: { compatibilityUpdates: { enabled: !settings.notifications.compatibilityUpdates.enabled } }
+                })}
               />
             }
           />
@@ -258,11 +290,11 @@ export const SettingsScreen: React.FC = () => {
             label="Birthday reminders"
             sub="Friends · 1 day before"
             right={
-              <Toggle 
-                on={settings.notifications.birthdayReminders.enabled} 
-                onToggle={() => updateSettingsMutation.mutate({ 
-                  notifications: { birthdayReminders: { enabled: !settings.notifications.birthdayReminders.enabled } } 
-                })} 
+              <Toggle
+                on={settings.notifications.birthdayReminders.enabled}
+                onToggle={() => updateSettingsMutation.mutate({
+                  notifications: { birthdayReminders: { enabled: !settings.notifications.birthdayReminders.enabled } }
+                })}
               />
             }
             isLast
@@ -275,9 +307,9 @@ export const SettingsScreen: React.FC = () => {
             label="Share birth data"
             sub="Allow compatibility matching"
             right={
-              <Toggle 
-                on={settings.privacy.shareBirthData} 
-                onToggle={() => updateSettingsMutation.mutate({ privacy: { shareBirthData: !settings.privacy.shareBirthData } })} 
+              <Toggle
+                on={settings.privacy.shareBirthData}
+                onToggle={() => updateSettingsMutation.mutate({ privacy: { shareBirthData: !settings.privacy.shareBirthData } })}
               />
             }
           />
@@ -285,9 +317,9 @@ export const SettingsScreen: React.FC = () => {
             label="Analytics"
             sub="Help improve Astra"
             right={
-              <Toggle 
-                on={settings.privacy.analytics} 
-                onToggle={() => updateSettingsMutation.mutate({ privacy: { analytics: !settings.privacy.analytics } })} 
+              <Toggle
+                on={settings.privacy.analytics}
+                onToggle={() => updateSettingsMutation.mutate({ privacy: { analytics: !settings.privacy.analytics } })}
               />
             }
             isLast
@@ -331,7 +363,7 @@ export const SettingsScreen: React.FC = () => {
             isDanger
             onPress={() => Alert.alert('Delete Account', 'This action is permanent and cannot be undone.', [
               { text: 'Cancel', style: 'cancel' },
-              { text: 'Delete', style: 'destructive', onPress: () => {} }
+              { text: 'Delete', style: 'destructive', onPress: () => { } }
             ])}
             isLast
           />
@@ -367,10 +399,12 @@ export const SettingsScreen: React.FC = () => {
         date={profile.birthData.formattedDate}
         time={profile.birthData.time}
         onEditDate={() => {
+          setTempDate(new Date(profile.birthData.date));
           setActiveModal(null);
           setShowDatePicker(true);
         }}
         onEditTime={() => {
+          setTempTime(getBirthTimeDate());
           setActiveModal(null);
           setShowTimePicker(true);
         }}
@@ -429,66 +463,57 @@ export const SettingsScreen: React.FC = () => {
       />
 
       {showDatePicker && (
-        <View style={Platform.OS === 'ios' ? styles.pickerModalOverlay : null}>
-          {Platform.OS === 'ios' && (
-            <View style={styles.pickerModalContent}>
-               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Select Date</Text>
-                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                  <Text style={styles.modalClose}>Done</Text>
-                </TouchableOpacity>
-              </View>
-              <DateTimePicker
-                value={new Date(profile.birthData.date)}
-                mode="date"
-                display="spinner"
-                onChange={handleDateChange}
-                maximumDate={new Date()}
-              />
-            </View>
-          )}
-          {Platform.OS === 'android' && (
-            <DateTimePicker
-              value={new Date(profile.birthData.date)}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-              maximumDate={new Date()}
-            />
-          )}
-        </View>
+        <Modal
+          visible={showDatePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowDatePicker(false)}
+        >
+          <CustomScrollerPicker
+            mode="date"
+            value={tempDate || new Date(profile.birthData.date)}
+            title="Select Birth Date"
+            onChange={(d) => setTempDate(d)}
+            onSave={saveBirthDate}
+            onClose={() => setShowDatePicker(false)}
+          />
+        </Modal>
       )}
 
-      {(showTimePicker || showDailyTimePicker) && (
-        <View style={Platform.OS === 'ios' ? styles.pickerModalOverlay : null}>
-          {Platform.OS === 'ios' && (
-            <View style={styles.pickerModalContent}>
-               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Select Time</Text>
-                <TouchableOpacity onPress={() => {
-                  setShowTimePicker(false);
-                  setShowDailyTimePicker(false);
-                }}>
-                  <Text style={styles.modalClose}>Done</Text>
-                </TouchableOpacity>
-              </View>
-              <DateTimePicker
-                value={new Date()}
-                mode="time"
-                display="spinner"
-                onChange={showTimePicker ? handleTimeChange : handleDailyTimeChange}
-              />
-            </View>
-          )}
-          {Platform.OS === 'android' && (
-            <DateTimePicker
-              value={new Date()}
-              mode="time"
-              display="default"
-              onChange={showTimePicker ? handleTimeChange : handleDailyTimeChange}
-            />
-          )}
-        </View>
+      {showTimePicker && (
+        <Modal
+          visible={showTimePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowTimePicker(false)}
+        >
+          <CustomScrollerPicker
+            mode="time"
+            value={tempTime || getBirthTimeDate()}
+            title="Select Birth Time"
+            onChange={(d) => setTempTime(d)}
+            onSave={saveBirthTime}
+            onClose={() => setShowTimePicker(false)}
+          />
+        </Modal>
+      )}
+
+      {showDailyTimePicker && (
+        <Modal
+          visible={showDailyTimePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowDailyTimePicker(false)}
+        >
+          <CustomScrollerPicker
+            mode="time"
+            value={tempTime || getDailyNotificationDate()}
+            title="Select Notification Time"
+            onChange={(d) => setTempTime(d)}
+            onSave={saveDailyTime}
+            onClose={() => setShowDailyTimePicker(false)}
+          />
+        </Modal>
       )}
     </SafeAreaView>
   );
@@ -528,40 +553,6 @@ const styles = StyleSheet.create({
     color: colors.astraMuted,
     opacity: 0.6,
     marginTop: 3,
-  },
-  pickerModalOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'flex-end',
-    zIndex: 2000,
-  },
-  pickerModalContent: {
-    backgroundColor: colors.astraSurface,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingBottom: 40,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
-  },
-  modalTitle: {
-    fontFamily: 'InstrumentSerif-Italic',
-    fontSize: 20,
-    color: colors.astraFg,
-  },
-  modalClose: {
-    fontSize: 18,
-    color: colors.astraViolet,
   },
 });
 
