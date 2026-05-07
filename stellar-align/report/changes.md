@@ -198,3 +198,18 @@ Created 5 new screens for the Astra frontend prototype, following the establishe
 - Used standardized `oklch` color variables for all surfaces and accents.
 - Implemented responsive mobile frame with status bar and home indicator.
 - Integrated new screens into the existing navigation pattern (where applicable).
+
+## [2026-05-07 16:42:57] Update RegisterScreen Step 2 design
+
+### Summary
+Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fidelity Astra design system.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`: Replaced legacy inputs with Astra-themed components and layout.
+
+### Details
+- Implemented `stepHeader` and `stepNum` styling for onboarding clarity.
+- Created custom `astraInput` components with `astraSurface` and `astraBorder` colors.
+- Applied `Instrument Serif` italic styling to the main title (iOS).
+- Updated the "Create Account" button label to "Calculate Natal Chart" for Step 2.
+- Integrated the design patterns from `screens_01-signup-birth.html`.

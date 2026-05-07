@@ -306,127 +306,140 @@ export const RegisterScreen: React.FC = () => {
         style={styles.keyboardView}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.progressContainer}>
-            <View style={[styles.progressDot, step >= 1 && styles.activeDot]} />
-            <View style={[styles.progressLine, step >= 2 && styles.activeLine]} />
-            <View style={[styles.progressDot, step >= 2 && styles.activeDot]} />
-          </View>
-
-          <View style={styles.logoContainer}>
-            <View style={styles.logoRow}>
-              <SignIcon sign="sun" size={36} color={colors.white} />
-              <SignIcon sign="moon" size={30} color={colors.gray400} />
-            </View>
-          </View>
-
           {step === 1 ? (
-            <View style={styles.stepContent}>
-              <CostarText variant="heading3" uppercase style={styles.stepTitle}>
-                Create Account
-              </CostarText>
-              <CostarText variant="bodySmall" color={colors.gray500} style={styles.stepDescription}>
-                Begin your cosmic journey
-              </CostarText>
-
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                  Email
-                </CostarText>
-                <TextInput
-                  style={styles.input}
-                  placeholder="your@email.com"
-                  placeholderTextColor={colors.gray600}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                />
+            <>
+              <View style={styles.progressContainer}>
+                <View style={[styles.progressDot, step >= 1 && styles.activeDot]} />
+                <View style={[styles.progressLine, step >= 2 && styles.activeLine]} />
+                <View style={[styles.progressDot, step >= 2 && styles.activeDot]} />
               </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                  Password
-                </CostarText>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Min 8 characters"
-                  placeholderTextColor={colors.gray600}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                />
+              <View style={styles.logoContainer}>
+                <View style={styles.logoRow}>
+                  <SignIcon sign="sun" size={36} color={colors.white} />
+                  <SignIcon sign="moon" size={30} color={colors.gray400} />
+                </View>
               </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                  Confirm Password
+              <View style={styles.stepContent}>
+                <CostarText variant="heading3" uppercase style={styles.stepTitle}>
+                  Create Account
                 </CostarText>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor={colors.gray600}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry
-                />
+                <CostarText variant="bodySmall" color={colors.gray500} style={styles.stepDescription}>
+                  Begin your cosmic journey
+                </CostarText>
+
+                <View style={styles.inputContainer}>
+                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+                    Email
+                  </CostarText>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="your@email.com"
+                    placeholderTextColor={colors.gray600}
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+                    Password
+                  </CostarText>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Min 8 characters"
+                    placeholderTextColor={colors.gray600}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+                    Confirm Password
+                  </CostarText>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="••••••••"
+                    placeholderTextColor={colors.gray600}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry
+                  />
+                </View>
               </View>
-            </View>
+            </>
           ) : (
             <View style={styles.stepContent}>
-              <CostarText variant="heading3" uppercase style={styles.stepTitle}>
-                Birth Data
-              </CostarText>
-              <CostarText variant="bodySmall" color={colors.gray500} style={styles.stepDescription}>
-                Your unique astrological fingerprint
-              </CostarText>
+              <View style={styles.stepHeader}>
+                <CostarText variant="bodySmall" style={styles.stepNum}>
+                  Step 1 of 2
+                </CostarText>
+                <CostarText variant="heading1" style={styles.stepMainTitle}>
+                  When and where were you born?
+                </CostarText>
+              </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+              <View style={styles.inputGroup}>
+                <CostarText variant="label" style={styles.label}>
                   Birth Date
                 </CostarText>
                 <TouchableOpacity
-                  style={styles.pickerButton}
+                  style={styles.astraInput}
                   onPress={() => setShowDatePicker(true)}
                 >
-                  <Ionicons name="calendar-outline" size={20} color={colors.gray400} />
-                  <CostarText variant="body" style={styles.pickerButtonText}>
+                  <CostarText variant="body" style={styles.astraInputText}>
                     {birthData.date ? formatDate(birthData.date) : 'Select date'}
                   </CostarText>
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                  Birth Time
-                </CostarText>
-                <TouchableOpacity
-                  style={styles.pickerButton}
-                  onPress={() => setShowTimePicker(true)}
-                >
-                  <Ionicons name="time-outline" size={20} color={colors.gray400} />
-                  <CostarText variant="body" style={styles.pickerButtonText}>
-                    {birthData.time ? formatTime(birthData.time) : 'Select time'}
+              <View style={styles.row}>
+                <View style={[styles.inputGroup, { flex: 1 }]}>
+                  <CostarText variant="label" style={styles.label}>
+                    Time
                   </CostarText>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.astraInput}
+                    onPress={() => setShowTimePicker(true)}
+                  >
+                    <CostarText variant="body" style={styles.astraInputText}>
+                      {birthData.time ? formatTime(birthData.time) : 'Select time'}
+                    </CostarText>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.inputGroup, { flex: 1 }]}>
+                  <CostarText variant="label" style={styles.label}>
+                    Gender
+                  </CostarText>
+                  <View style={styles.astraInput}>
+                    <CostarText variant="body" style={styles.astraInputText}>
+                      Female
+                    </CostarText>
+                  </View>
+                </View>
               </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+              <View style={styles.inputGroup}>
+                <CostarText variant="label" style={styles.label}>
                   Birth Location
                 </CostarText>
                 <TouchableOpacity
-                  style={styles.pickerButton}
+                  style={styles.astraInput}
                   onPress={handleOpenLocationModal}
                 >
-                  <Ionicons name="location-outline" size={20} color={colors.gray400} />
-                  <CostarText variant="body" style={styles.pickerButtonText}>
+                  <CostarText variant="body" style={styles.astraInputText}>
                     {birthData.locationName || 'Select location'}
                   </CostarText>
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.inputContainer}>
-                <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
+              <View style={styles.inputGroup}>
+                <CostarText variant="label" style={styles.label}>
                   Timezone
                 </CostarText>
                 <View style={styles.timezoneContainer}>
@@ -463,9 +476,10 @@ export const RegisterScreen: React.FC = () => {
               loading={isLoginPending}
               style={styles.nextButton}
             >
-              {step === 1 ? 'Continue' : 'Create Account'}
+              {step === 1 ? 'Continue' : 'Calculate Natal Chart'}
             </CostarButton>
           </View>
+
 
           <Modal
             visible={showDatePicker}
@@ -700,6 +714,51 @@ const styles = StyleSheet.create({
   },
   stepContent: {
     paddingHorizontal: spacing.lg,
+  },
+  stepHeader: {
+    marginTop: spacing['2xl'],
+    marginBottom: spacing['3xl'],
+  },
+  stepNum: {
+    color: colors.astraViolet,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+    marginBottom: spacing.sm,
+  },
+  stepMainTitle: {
+    color: colors.white,
+    fontFamily: Platform.OS === 'ios' ? 'Instrument Serif' : 'serif',
+    fontStyle: 'italic',
+    fontSize: 32,
+    lineHeight: 36,
+  },
+  inputGroup: {
+    marginBottom: spacing.xl,
+  },
+  label: {
+    color: colors.astraMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    fontSize: 11,
+    marginBottom: spacing.xs,
+  },
+  astraInput: {
+    height: 52,
+    backgroundColor: colors.astraSurface,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    borderRadius: 12,
+    paddingHorizontal: spacing.md,
+    justifyContent: 'center',
+  },
+  astraInputText: {
+    color: colors.white,
+    fontSize: 15,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.xl,
   },
   stepTitle: {
     textAlign: 'center',
