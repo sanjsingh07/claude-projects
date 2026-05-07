@@ -6,17 +6,27 @@ import logger from "../config/logger";
 import { DateTime } from "luxon";
 
 interface HoroscopeJobData {
-  userId: string;
-  date: Date;
+  userId?: string;
+  date?: Date;
   isBulk?: boolean;
 }
 
 export const horoscopeWorker = new Worker<HoroscopeJobData>(
   HOROSCOPE_QUEUE_NAME,
   async (job: Job<HoroscopeJobData>) => {
-    const { userId, date } = job.data;
-    
     try {
+      if (job.name === "enqueue-daily-horoscopes") {
+        logger.info("Running scheduled daily horoscope enqueuer");
+        const result = await enqueueDailyHoroscopes();
+        return { success: true, ...result };
+      }
+
+      const { userId, date } = job.data;
+      
+      if (!userId || !date) {
+        throw new Error(`Missing required job data: userId=${userId}, date=${date}`);
+      }
+
       logger.info(`Starting horoscope generation for user ${userId} on date ${date}`);
       
       // Ensure date is start of day UTC
@@ -26,9 +36,10 @@ export const horoscopeWorker = new Worker<HoroscopeJobData>(
       
       return { success: true, userId, date: targetDate };
     } catch (error: any) {
-      logger.error(`Failed to generate horoscope for user ${userId}`, {
+      logger.error(`Failed to process job ${job.name} (ID: ${job.id})`, {
         error: error.message,
         jobId: job.id,
+        userId: job.data.userId
       });
       throw error;
     }

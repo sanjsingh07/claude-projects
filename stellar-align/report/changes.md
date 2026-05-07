@@ -166,3 +166,17 @@ Refactored the Stellar Align backend to improve astrological precision, database
 
 ### Files Modified
 - `backend/src/utils/chart.ts`
+
+## [2026-05-07 15:19:45] Fix Prisma error in horoscope worker
+
+### Summary
+Fixed a Prisma crash occurring during background horoscope generation. The root cause was the `horoscopeWorker` attempting to process the scheduler job (`enqueue-daily-horoscopes`) as an individual user job, leading to `undefined` userId and date parameters.
+
+### Files Modified
+- `stellar-align/backend/src/jobs/horoscopeWorker.ts`: Updated worker logic to branch based on job name.
+- `stellar-align/backend/src/services/astrology.ts`: Added input validation to `generateDailyHoroscope`.
+
+### Details
+- The worker now explicitly checks for the `enqueue-daily-horoscopes` job name and calls the bulk enqueuer.
+- Individual jobs (which have dynamic names) fall through to the single-user generation logic.
+- Improved error logging and type safety in the worker.

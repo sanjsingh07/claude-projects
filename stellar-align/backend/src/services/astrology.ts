@@ -578,6 +578,13 @@ export async function generateDailyHoroscope(
   userId: string,
   date: Date,
 ): Promise<any> {
+  if (!userId) {
+    throw new Error("userId is required for horoscope generation");
+  }
+  if (!date || isNaN(date.getTime())) {
+    throw new Error("Valid date is required for horoscope generation");
+  }
+
   try {
     const { prisma } = await import("../config/database");
     const { getTransitsForPeriod } = await import("./transits/transitEngine");
