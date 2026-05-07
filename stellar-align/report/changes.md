@@ -213,3 +213,13 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 - Applied `Instrument Serif` italic styling to the main title (iOS).
 - Updated the "Create Account" button label to "Calculate Natal Chart" for Step 2.
 - Integrated the design patterns from `screens_01-signup-birth.html`.
+
+## [2026-05-07 16:59] - Update RegisterScreen Step 2 Design
+- Updated Step 2 of RegisterScreen (Birth Data) to match screens_01-signup-birth.html exactly.
+- Implemented specific styling for headers, labels, inputs, and the "Calculate Natal Chart" button.
+- Added "Island" and "Home Indicator" elements to match the design.
+- Muted the AM/PM part of the time display to match the design.
+- Removed the timezone selector from the UI as per the design, while keeping its logic in the state.
+- Ensured typography (Instrument Serif and DM Sans) and colors (Astra theme) are correctly applied.
+- Files modified:
+  - stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx

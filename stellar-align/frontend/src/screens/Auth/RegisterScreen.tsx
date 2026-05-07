@@ -76,6 +76,8 @@ export const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [gender, setGender] = useState('Female');
   const [birthData, setBirthData] = useState<BirthDataStep>({
     date: '',
     time: '',
@@ -221,8 +223,16 @@ export const RegisterScreen: React.FC = () => {
   };
 
   const validateStep2 = (): boolean => {
+    if (!fullName) {
+      Alert.alert('Error', 'Please enter your full name');
+      return false;
+    }
     if (!birthData.date) {
       Alert.alert('Error', 'Please select your birth date');
+      return false;
+    }
+    if (!birthData.locationName) {
+      Alert.alert('Error', 'Please select your birth location');
       return false;
     }
     return true;
@@ -307,7 +317,7 @@ export const RegisterScreen: React.FC = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {step === 1 ? (
-            <>
+            <View style={styles.step1Container}>
               <View style={styles.progressContainer}>
                 <View style={[styles.progressDot, step >= 1 && styles.activeDot]} />
                 <View style={[styles.progressLine, step >= 2 && styles.activeLine]} />
@@ -372,187 +382,136 @@ export const RegisterScreen: React.FC = () => {
                   />
                 </View>
               </View>
-            </>
+
+              <View style={styles.buttonContainer}>
+                <CostarButton
+                  onPress={handleBack}
+                  variant="outline"
+                  style={styles.backButton}
+                >
+                  Cancel
+                </CostarButton>
+
+                <CostarButton
+                  onPress={handleNext}
+                  loading={isLoginPending}
+                  style={styles.nextButton}
+                >
+                  Continue
+                </CostarButton>
+              </View>
+            </View>
           ) : (
-            <View style={styles.stepContent}>
+            <View style={styles.astraScreen}>
+              <View style={styles.island} />
+              
               <View style={styles.stepHeader}>
                 <CostarText variant="bodySmall" style={styles.stepNum}>
                   Step 1 of 2
                 </CostarText>
-                <CostarText variant="heading1" style={styles.stepMainTitle}>
+                <CostarText variant="heading1" serif italic style={styles.stepMainTitle}>
                   When and where were you born?
                 </CostarText>
               </View>
 
-              <View style={styles.inputGroup}>
-                <CostarText variant="label" style={styles.label}>
-                  Birth Date
-                </CostarText>
-                <TouchableOpacity
-                  style={styles.astraInput}
-                  onPress={() => setShowDatePicker(true)}
-                >
-                  <CostarText variant="body" style={styles.astraInputText}>
-                    {birthData.date ? formatDate(birthData.date) : 'Select date'}
-                  </CostarText>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.row}>
-                <View style={[styles.inputGroup, { flex: 1 }]}>
+              <View style={styles.astraForm}>
+                <View style={styles.inputGroup}>
                   <CostarText variant="label" style={styles.label}>
-                    Time
+                    Full Name
+                  </CostarText>
+                  <TextInput
+                    style={[styles.astraInput, styles.astraInputText]}
+                    placeholder="Eleanor Vance"
+                    placeholderTextColor={colors.astraMuted}
+                    value={fullName}
+                    onChangeText={setFullName}
+                  />
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <CostarText variant="label" style={styles.label}>
+                    Birth Date
                   </CostarText>
                   <TouchableOpacity
                     style={styles.astraInput}
-                    onPress={() => setShowTimePicker(true)}
+                    onPress={() => setShowDatePicker(true)}
                   >
                     <CostarText variant="body" style={styles.astraInputText}>
-                      {birthData.time ? formatTime(birthData.time) : 'Select time'}
+                      {birthData.date ? formatDate(birthData.date) : 'Select date'}
                     </CostarText>
                   </TouchableOpacity>
                 </View>
-                <View style={[styles.inputGroup, { flex: 1 }]}>
-                  <CostarText variant="label" style={styles.label}>
-                    Gender
-                  </CostarText>
-                  <View style={styles.astraInput}>
-                    <CostarText variant="body" style={styles.astraInputText}>
-                      Female
+
+                <View style={styles.row}>
+                  <View style={[styles.inputGroup, { flex: 1 }]}>
+                    <CostarText variant="label" style={styles.label}>
+                      Time
                     </CostarText>
-                  </View>
-                </View>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <CostarText variant="label" style={styles.label}>
-                  Birth Location
-                </CostarText>
-                <TouchableOpacity
-                  style={styles.astraInput}
-                  onPress={handleOpenLocationModal}
-                >
-                  <CostarText variant="body" style={styles.astraInputText}>
-                    {birthData.locationName || 'Select location'}
-                  </CostarText>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <CostarText variant="label" style={styles.label}>
-                  Timezone
-                </CostarText>
-                <View style={styles.timezoneContainer}>
-                  {TIMEZONES.map((tz) => (
                     <TouchableOpacity
-                      key={tz.value}
-                      style={birthData.timezone === tz.value ? styles.timezoneButtonActive : styles.timezoneButton}
-                      onPress={() => setBirthData({ ...birthData, timezone: tz.value })}
+                      style={styles.astraInput}
+                      onPress={() => setShowTimePicker(true)}
                     >
-                      <CostarText
-                        variant="bodySmall"
-                        style={birthData.timezone === tz.value ? styles.timezoneTextActive : styles.timezoneText}
-                      >
-                        {tz.label}
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <CostarText variant="body" style={styles.astraInputText}>
+                          {birthData.time ? formatTime(birthData.time).split(' ')[0] : 'Select time'}
+                        </CostarText>
+                        {birthData.time && (
+                          <CostarText variant="body" style={[styles.astraInputText, { color: colors.astraMuted, marginLeft: 4 }]}>
+                            {formatTime(birthData.time).split(' ')[1]}
+                          </CostarText>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.inputGroup, { flex: 1 }]}>
+                    <CostarText variant="label" style={styles.label}>
+                      Gender
+                    </CostarText>
+                    <TouchableOpacity 
+                      style={styles.astraInput}
+                      onPress={() => {
+                        setGender(gender === 'Female' ? 'Male' : 'Female');
+                      }}
+                    >
+                      <CostarText variant="body" style={styles.astraInputText}>
+                        {gender}
                       </CostarText>
                     </TouchableOpacity>
-                  ))}
+                  </View>
                 </View>
+
+                <View style={styles.inputGroup}>
+                  <CostarText variant="label" style={styles.label}>
+                    Birth Location
+                  </CostarText>
+                  <TouchableOpacity
+                    style={styles.astraInput}
+                    onPress={handleOpenLocationModal}
+                  >
+                    <CostarText variant="body" style={[styles.astraInputText, { flexShrink: 1 }]}>
+                      {birthData.locationName || 'Select location'}
+                    </CostarText>
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  onPress={handleNext}
+                  disabled={isLoginPending}
+                  style={[styles.astraButton, isLoginPending && { opacity: 0.7 }]}
+                >
+                  {isLoginPending ? (
+                    <ActivityIndicator color={colors.astraBg} />
+                  ) : (
+                    <CostarText variant="body" style={styles.astraButtonText}>
+                      Calculate Natal Chart
+                    </CostarText>
+                  )}
+                </TouchableOpacity>
               </View>
+
+              <View style={styles.homeIndicator} />
             </View>
           )}
-
-          <View style={styles.buttonContainer}>
-            <CostarButton
-              onPress={handleBack}
-              variant="outline"
-              style={styles.backButton}
-            >
-              {step === 1 ? 'Cancel' : 'Back'}
-            </CostarButton>
-
-            <CostarButton
-              onPress={handleNext}
-              loading={isLoginPending}
-              style={styles.nextButton}
-            >
-              {step === 1 ? 'Continue' : 'Calculate Natal Chart'}
-            </CostarButton>
-          </View>
-
-
-          <Modal
-            visible={showDatePicker}
-            transparent
-            animationType="slide"
-            onRequestClose={() => setShowDatePicker(false)}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <View style={styles.modalHeader}>
-                  <CostarText variant="heading3" uppercase>
-                    Select Date
-                  </CostarText>
-                  <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                    <Ionicons name="close" size={24} color={colors.white} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.pickerWrapper}>
-                  <DateTimePicker
-                    value={datePickerDate}
-                    mode="date"
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={handleDateChange}
-                    maximumDate={new Date()}
-                  />
-                </View>
-                <TouchableOpacity
-                  style={styles.modalConfirmButton}
-                  onPress={() => setShowDatePicker(false)}
-                >
-                  <CostarText variant="label" style={styles.modalConfirmText}>
-                    Done
-                  </CostarText>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          <Modal
-            visible={showTimePicker}
-            transparent
-            animationType="slide"
-            onRequestClose={() => setShowTimePicker(false)}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <View style={styles.modalHeader}>
-                  <CostarText variant="heading3" uppercase>
-                    Select Time
-                  </CostarText>
-                  <TouchableOpacity onPress={() => setShowTimePicker(false)}>
-                    <Ionicons name="close" size={24} color={colors.white} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.pickerWrapper}>
-                  <DateTimePicker
-                    value={timePickerDate}
-                    mode="time"
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={handleTimeChange}
-                  />
-                </View>
-                <TouchableOpacity
-                  style={styles.modalConfirmButton}
-                  onPress={() => setShowTimePicker(false)}
-                >
-                  <CostarText variant="label" style={styles.modalConfirmText}>
-                    Done
-                  </CostarText>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
 
           {Platform.OS === 'android' && showDatePicker && (
             <DateTimePicker
@@ -573,6 +532,80 @@ export const RegisterScreen: React.FC = () => {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Modals for iOS/Logic */}
+      <Modal
+        visible={showDatePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowDatePicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CostarText variant="heading3" uppercase>
+                Select Date
+              </CostarText>
+              <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                <Ionicons name="close" size={24} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pickerWrapper}>
+              <DateTimePicker
+                value={datePickerDate}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.modalConfirmButton}
+              onPress={() => setShowDatePicker(false)}
+            >
+              <CostarText variant="label" style={styles.modalConfirmText}>
+                Done
+              </CostarText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showTimePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowTimePicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CostarText variant="heading3" uppercase>
+                Select Time
+              </CostarText>
+              <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                <Ionicons name="close" size={24} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pickerWrapper}>
+              <DateTimePicker
+                value={timePickerDate}
+                mode="time"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleTimeChange}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.modalConfirmButton}
+              onPress={() => setShowTimePicker(false)}
+            >
+              <CostarText variant="label" style={styles.modalConfirmText}>
+                Done
+              </CostarText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         visible={showLocationModal}
@@ -715,32 +748,57 @@ const styles = StyleSheet.create({
   stepContent: {
     paddingHorizontal: spacing.lg,
   },
+  step1Container: {
+    flex: 1,
+  },
+  astraScreen: {
+    flex: 1,
+    paddingTop: 80,
+    paddingHorizontal: 32,
+    paddingBottom: 60,
+    backgroundColor: colors.astraBg,
+  },
+  island: {
+    position: 'absolute',
+    top: 12,
+    left: '50%',
+    marginLeft: -63, // Half of 126
+    width: 126,
+    height: 37,
+    backgroundColor: colors.black,
+    borderRadius: 20,
+    zIndex: 10,
+  },
+  astraForm: {
+    flex: 1,
+    gap: 20,
+  },
   stepHeader: {
-    marginTop: spacing['2xl'],
-    marginBottom: spacing['3xl'],
+    marginBottom: 32,
   },
   stepNum: {
     color: colors.astraViolet,
     textTransform: 'uppercase',
     letterSpacing: 2,
-    marginBottom: spacing.sm,
+    fontSize: 10,
+    fontFamily: 'DM Sans',
+    marginBottom: 8,
   },
   stepMainTitle: {
-    color: colors.white,
-    fontFamily: Platform.OS === 'ios' ? 'Instrument Serif' : 'serif',
-    fontStyle: 'italic',
+    color: colors.astraFg,
     fontSize: 32,
     lineHeight: 36,
+    // Note: CostarText handles serif/italic based on props passed
   },
   inputGroup: {
-    marginBottom: spacing.xl,
+    gap: 8,
   },
   label: {
     color: colors.astraMuted,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
     fontSize: 11,
-    marginBottom: spacing.xs,
+    fontFamily: 'DM Sans',
   },
   astraInput: {
     height: 52,
@@ -748,17 +806,46 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.astraBorder,
     borderRadius: 12,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 16,
     justifyContent: 'center',
   },
   astraInputText: {
-    color: colors.white,
+    color: colors.astraFg,
     fontSize: 15,
+    fontFamily: 'DM Sans',
   },
   row: {
     flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.xl,
+    gap: 16,
+  },
+  astraButton: {
+    marginTop: 24,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.astraFg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  astraButtonText: {
+    color: colors.astraBg,
+    fontSize: 15,
+    fontWeight: '500',
+    fontFamily: 'DM Sans',
+  },
+  astraBackButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+  },
+  homeIndicator: {
+    position: 'absolute',
+    bottom: 8,
+    left: '50%',
+    marginLeft: -67, // Half of 134
+    width: 134,
+    height: 5,
+    backgroundColor: colors.astraFg,
+    borderRadius: 3,
+    opacity: 0.3,
   },
   stepTitle: {
     textAlign: 'center',
