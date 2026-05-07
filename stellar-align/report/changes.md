@@ -223,3 +223,12 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 - Ensured typography (Instrument Serif and DM Sans) and colors (Astra theme) are correctly applied.
 - Files modified:
   - stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx
+
+## [2026-05-07 17:15] - UX Refinement for RegisterScreen Step 2
+- Removed the home indicator bar from the bottom of Step 2.
+- Added a "Go Back" button to Step 2 to allow navigation back to Step 1.
+- Implemented background tap dismissal for the keyboard across the entire screen and within modals.
+- Fixed the location search modal being hidden by the keyboard by adding KeyboardAvoidingView and ensuring proper modal sizing.
+- Added keyboardShouldPersistTaps="handled" to ScrollView and FlatList to improve interaction with inputs.
+- Files modified:
+  - stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx

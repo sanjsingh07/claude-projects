@@ -11,6 +11,8 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -309,14 +311,15 @@ export const RegisterScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <CostarBackground />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {step === 1 ? (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <CostarBackground />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+            {step === 1 ? (
             <View style={styles.step1Container}>
               <View style={styles.progressContainer}>
                 <View style={[styles.progressDot, step >= 1 && styles.activeDot]} />
@@ -507,9 +510,16 @@ export const RegisterScreen: React.FC = () => {
                     </CostarText>
                   )}
                 </TouchableOpacity>
-              </View>
 
-              <View style={styles.homeIndicator} />
+                <TouchableOpacity 
+                  onPress={handleBack}
+                  style={styles.astraBackButton}
+                >
+                  <CostarText variant="bodySmall" style={{ textAlign: 'center', color: colors.astraMuted }}>
+                    Go Back
+                  </CostarText>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
 
@@ -613,76 +623,85 @@ export const RegisterScreen: React.FC = () => {
         animationType="slide"
         onRequestClose={() => setShowLocationModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
-                Select Location
-              </CostarText>
-              <TouchableOpacity onPress={() => setShowLocationModal(false)}>
-                <Ionicons name="close" size={24} color={colors.white} />
-              </TouchableOpacity>
-            </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalOverlay}>
+              <View style={[styles.modalContent, { height: '80%', backgroundColor: colors.astraSurface }]}>
+                <View style={styles.modalHeader}>
+                  <CostarText variant="heading3" uppercase>
+                    Select Location
+                  </CostarText>
+                  <TouchableOpacity onPress={() => setShowLocationModal(false)}>
+                    <Ionicons name="close" size={24} color={colors.white} />
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.locationSearchContainer}>
-              <Ionicons name="search" size={20} color={colors.gray500} style={styles.searchIcon} />
-              <TextInput
-                style={styles.locationSearch}
-                placeholder="Search city, state, country..."
-                placeholderTextColor={colors.gray600}
-                value={locationSearchInput}
-                onChangeText={handleLocationSearchChange}
-                autoCapitalize="words"
-              />
-              {isLoadingLocations && (
-                <ActivityIndicator size="small" color={colors.gray500} style={styles.searchLoader} />
-              )}
-            </View>
+                <View style={styles.locationSearchContainer}>
+                  <Ionicons name="search" size={20} color={colors.gray500} style={styles.searchIcon} />
+                  <TextInput
+                    style={styles.locationSearch}
+                    placeholder="Search city, state, country..."
+                    placeholderTextColor={colors.gray600}
+                    value={locationSearchInput}
+                    onChangeText={handleLocationSearchChange}
+                    autoCapitalize="words"
+                  />
+                  {isLoadingLocations && (
+                    <ActivityIndicator size="small" color={colors.gray500} style={styles.searchLoader} />
+                  )}
+                </View>
 
-            {locationError ? (
-              <View style={styles.errorContainer}>
-                <Ionicons name="alert-circle" size={24} color={colors.error} />
-                <CostarText variant="body" color={colors.error} style={styles.errorText}>
-                  {locationError}
-                </CostarText>
+                {locationError ? (
+                  <View style={styles.errorContainer}>
+                    <Ionicons name="alert-circle" size={24} color={colors.error} />
+                    <CostarText variant="body" color={colors.error} style={styles.errorText}>
+                      {locationError}
+                    </CostarText>
+                  </View>
+                ) : null}
+
+                <FlatList
+                  data={locationSuggestions}
+                  keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
+                  keyboardShouldPersistTaps="handled"
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.locationItem}
+                      onPress={() => handleLocationSelect(item)}
+                    >
+                      <Ionicons name="location" size={20} color={colors.gray400} />
+                      <View style={styles.locationTextContainer}>
+                        <CostarText variant="body" style={styles.locationName}>
+                          {item.displayName}
+                        </CostarText>
+                        <CostarText variant="bodySmall" color={colors.gray500}>
+                          {item.name}
+                        </CostarText>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  ListEmptyComponent={
+                    !isLoadingLocations && locationSearchInput.trim().length > 0 ? (
+                      <View style={styles.emptyContainer}>
+                        <Ionicons name="search-outline" size={40} color={colors.gray600} />
+                        <CostarText variant="body" color={colors.gray500} style={styles.emptyText}>
+                          No locations found
+                        </CostarText>
+                      </View>
+                    ) : null
+                  }
+                />
               </View>
-            ) : null}
-
-            <FlatList
-              data={locationSuggestions}
-              keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.locationItem}
-                  onPress={() => handleLocationSelect(item)}
-                >
-                  <Ionicons name="location" size={20} color={colors.gray400} />
-                  <View style={styles.locationTextContainer}>
-                    <CostarText variant="body" style={styles.locationName}>
-                      {item.displayName}
-                    </CostarText>
-                    <CostarText variant="bodySmall" color={colors.gray500}>
-                      {item.name}
-                    </CostarText>
-                  </View>
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                !isLoadingLocations && locationSearchInput.trim().length > 0 ? (
-                  <View style={styles.emptyContainer}>
-                    <Ionicons name="search-outline" size={40} color={colors.gray600} />
-                    <CostarText variant="body" color={colors.gray500} style={styles.emptyText}>
-                      No locations found
-                    </CostarText>
-                  </View>
-                ) : null
-              }
-            />
-          </View>
-        </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
-  );
+  </TouchableWithoutFeedback>
+);
 };
 
 const useDebounce = (value: string, delay: number): string => {
@@ -835,17 +854,6 @@ const styles = StyleSheet.create({
   astraBackButton: {
     marginTop: 16,
     paddingVertical: 12,
-  },
-  homeIndicator: {
-    position: 'absolute',
-    bottom: 8,
-    left: '50%',
-    marginLeft: -67, // Half of 134
-    width: 134,
-    height: 5,
-    backgroundColor: colors.astraFg,
-    borderRadius: 3,
-    opacity: 0.3,
   },
   stepTitle: {
     textAlign: 'center',
