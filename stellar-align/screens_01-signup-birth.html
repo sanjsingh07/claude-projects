@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra — Birth Details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(9% 0.015 265);
+  --surface: oklch(12% 0.018 265);
+  --fg: oklch(98% 0.004 265);
+  --muted: oklch(62% 0.018 265);
+  --border: oklch(20% 0.02 265);
+  --accent-violet: oklch(62% 0.18 290);
+  --accent-pink: oklch(72% 0.22 10);
+  --accent-amber: oklch(82% 0.18 75);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { display: flex; align-items: center; justify-content: center; }
+
+.frame { width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; border-radius: 47px; border: 1.5px solid var(--border); }
+.island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background: #000; border-radius: 20px; z-index: 10; }
+
+.screen { flex: 1; display: flex; flex-direction: column; padding: 80px 32px 60px; }
+
+.step-info { margin-bottom: 32px; }
+.step-num { font-family: var(--font-body); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-violet); margin-bottom: 8px; }
+.step-title { font-family: var(--font-display); font-size: 32px; font-style: italic; color: var(--fg); line-height: 1.1; }
+
+.form { display: flex; flex-direction: column; gap: 20px; flex: 1; }
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.label { font-family: var(--font-body); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.input { 
+  height: 52px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 0 16px; font-family: var(--font-body); font-size: 15px; color: var(--fg);
+  display: flex; align-items: center;
+}
+.input span { color: var(--muted); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.btn { 
+  height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  background: var(--fg); color: var(--bg); margin-top: 24px;
+}
+
+.indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: var(--fg); border-radius: 3px; opacity: 0.3; z-index: 5; }
+
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="island"></div>
+  
+  <div class="screen">
+    <div class="step-info">
+      <div class="step-num">Step 1 of 2</div>
+      <div class="step-title">When and where were you born?</div>
+    </div>
+
+    <div class="form">
+      <div class="input-group">
+        <div class="label">Full Name</div>
+        <div class="input">Eleanor Vance</div>
+      </div>
+
+      <div class="input-group">
+        <div class="label">Birth Date</div>
+        <div class="input">May 14, 1992</div>
+      </div>
+
+      <div class="row">
+        <div class="input-group">
+          <div class="label">Time</div>
+          <div class="input">04:30 <span>AM</span></div>
+        </div>
+        <div class="input-group">
+          <div class="label">Gender</div>
+          <div class="input">Female</div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="label">Birth Location</div>
+        <div class="input">London, United Kingdom</div>
+      </div>
+
+      <div class="btn">Calculate Natal Chart</div>
+    </div>
+  </div>
+  <div class="indicator"></div>
+</div>
+</body>
+</html>

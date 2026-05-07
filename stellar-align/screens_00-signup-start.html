@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra — Welcome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(9% 0.015 265);
+  --surface: oklch(12% 0.018 265);
+  --fg: oklch(98% 0.004 265);
+  --muted: oklch(62% 0.018 265);
+  --border: oklch(20% 0.02 265);
+  --accent-violet: oklch(62% 0.18 290);
+  --accent-pink: oklch(72% 0.22 10);
+  --accent-amber: oklch(82% 0.18 75);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { display: flex; align-items: center; justify-content: center; }
+
+.frame { width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; border-radius: 47px; border: 1.5px solid var(--border); }
+.island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background: #000; border-radius: 20px; z-index: 10; }
+
+.bg-blur { 
+  position: absolute; top: -100px; left: -100px; width: 400px; height: 400px; 
+  background: var(--accent-violet); filter: blur(120px); opacity: 0.15; z-index: 0;
+}
+.bg-blur-2 { 
+  position: absolute; bottom: -100px; right: -100px; width: 400px; height: 400px; 
+  background: var(--accent-pink); filter: blur(120px); opacity: 0.1; z-index: 0;
+}
+
+.screen { position: relative; flex: 1; display: flex; flex-direction: column; padding: 120px 32px 60px; z-index: 1; }
+
+.brand { font-family: var(--font-display); font-size: 64px; font-style: italic; color: var(--fg); text-align: center; margin-bottom: 8px; }
+.tagline { font-family: var(--font-body); font-size: 14px; color: var(--muted); text-align: center; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: auto; }
+
+.cta-wrap { display: flex; flex-direction: column; gap: 12px; }
+.btn { 
+  height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: var(--fg); color: var(--bg); }
+.btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+
+.social-login { display: flex; justify-content: center; gap: 20px; margin-top: 24px; }
+.social-btn { 
+  width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; color: var(--fg); font-size: 20px;
+}
+
+.footer-links { margin-top: 32px; text-align: center; font-family: var(--font-body); font-size: 12px; color: var(--muted); }
+.footer-links span { color: var(--fg); text-decoration: underline; }
+
+.indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: var(--fg); border-radius: 3px; opacity: 0.3; z-index: 5; }
+
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="island"></div>
+  <div class="bg-blur"></div>
+  <div class="bg-blur-2"></div>
+
+  <div class="screen">
+    <div class="brand">Astra</div>
+    <div class="tagline">Aligned with the Cosmos</div>
+
+    <div class="cta-wrap">
+      <div class="btn btn-primary">Begin Journey</div>
+      <div class="btn btn-outline">Restore Account</div>
+
+      <div class="social-login">
+        <div class="social-btn">G</div>
+        <div class="social-btn"></div>
+        <div class="social-btn">f</div>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      By continuing, you agree to our <span>Terms</span> and <span>Privacy Policy</span>
+    </div>
+  </div>
+  <div class="indicator"></div>
+</div>
+</body>
+</html>

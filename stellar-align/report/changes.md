@@ -180,3 +180,21 @@ Fixed a Prisma crash occurring during background horoscope generation. The root 
 - The worker now explicitly checks for the `enqueue-daily-horoscopes` job name and calls the bulk enqueuer.
 - Individual jobs (which have dynamic names) fall through to the single-user generation logic.
 - Improved error logging and type safety in the worker.
+
+## [2026-05-07 15:30:00] Extend frontend with new screens
+
+### Summary
+Created 5 new screens for the Astra frontend prototype, following the established OKLCH design system and mobile-first architecture.
+
+### Files Created
+- `stellar-align/screens_06-chart.html`: Natal Chart visualization and placement details.
+- `stellar-align/screens_07-chat.html`: AI Cosmic Guide chat interface.
+- `stellar-align/screens_00-signup-start.html`: Onboarding start and social login.
+- `stellar-align/screens_01-signup-birth.html`: Birth details entry form.
+- `stellar-align/screens_02-signup-final.html`: Onboarding completion and core chart summary.
+
+### Details
+- Maintained consistency with `Instrument Serif` and `DM Sans` typography.
+- Used standardized `oklch` color variables for all surfaces and accents.
+- Implemented responsive mobile frame with status bar and home indicator.
+- Integrated new screens into the existing navigation pattern (where applicable).
