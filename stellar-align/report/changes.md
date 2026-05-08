@@ -294,3 +294,30 @@ Further refined the birth time picker fix to specifically address the 05:30 (UTC
 - **Changes**:
   - Removed the date synchronization logic from `handleDateChange`. By keeping `timePickerDate` on a neutral past date (e.g., Jan 1, 2000), we prevent the native iOS picker from applying "today" or "future" restrictions that were incorrectly triggering at the UTC day boundary (05:30 IST).
   - Maintained the unique `key` props to ensure fresh component instances and prevent prop leakage.
+
+
+## Finally fixed -- birth time picker
+
+✦ I have applied a more robust fix to resolve the time picker restriction on iOS.
+
+  Investigation Findings
+  The restriction to 00:00 - 05:30 IST corresponds exactly to a 00:00 UTC boundary. It appears that the native iOS picker was internally applying a "today" boundary in UTC, even when in time mode. This can happen if the component inherits a maximumDate from a previous instance
+  or if the value prop's date part is interpreted as "today".
+
+  Robust Fix Implementation
+   1. Explicit Boundaries: I have explicitly set maximumDate and minimumDate on the Time Picker to far-future and far-past dates (2100 and 1900). This forces the native picker to clear any "today" or "now" restrictions that might have been inherited or applied by default.
+   2. Date Normalization: In handleTimeChange, I now explicitly normalize the Date object to January 1, 2000, before saving it to state. This ensures that even if the native picker returns a date object set to "today", we immediately move it to a neutral past date. This
+      prevents the boundary bug from triggering on the next time the picker is opened.
+   3. Memoized Boundaries: I used useMemo for the Date Picker's maximumDate to ensure a consistent object reference, which helps prevent unnecessary re-renders of the native component.
+
+  This combination of clearing boundaries and strict date normalization should ensure the time picker remains unrestricted regardless of the order in which the fields are filled.
+## [2026-05-08 15:38:00] Fix Prisma 'gender' field validation error
+Resolved a `PrismaClientValidationError` where the `gender` field was unknown to the Prisma client despite being in the schema.
+- **Files modified**:
+  - `stellar-align/backend/prisma/schema.prisma` (already had the field, but client was out of sync)
+  - `stellar-align/backend/prisma/migrations/20260508100721_add_gender_to_user/migration.sql` (New migration)
+- **Changes**:
+  - Identified a conflicting `DATABASE_URL` in the environment (SQLite) that was overriding the PostgreSQL URL in `.env`.
+  - Applied the pending schema changes (`Gender` enum and `User.gender` field) to the database using `prisma migrate dev`.
+  - Regenerated the Prisma client to include the new types.
+  - Verified that `AuthService` is correctly mapping and saving the `gender` field.
