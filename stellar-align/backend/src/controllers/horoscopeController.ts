@@ -10,11 +10,10 @@ import { GeneratedBy } from "@prisma/client";
 export class HoroscopeController {
   constructor() {
     this.getToday = this.getToday.bind(this);
-    this.getForDate = this.getForDate.bind(this);
-    this.getWeekly = this.getWeekly.bind(this);
-    this.getMonthly = this.getMonthly.bind(this);
+    this.getByDate = this.getByDate.bind(this);
+    this.getHistory = this.getHistory.bind(this);
     this.toggleBookmark = this.toggleBookmark.bind(this);
-    this.markShared = this.markShared.bind(this);
+    this.shareHoroscope = this.shareHoroscope.bind(this);
     this.getInsights = this.getInsights.bind(this);
   }
 
