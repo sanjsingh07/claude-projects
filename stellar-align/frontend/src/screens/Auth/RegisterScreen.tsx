@@ -172,14 +172,6 @@ export const RegisterScreen: React.FC = () => {
     }
     if (selectedDate) {
       setDatePickerDate(selectedDate);
-      
-      // Update timePickerDate to use the new date but keep its time
-      const newTimeDate = new Date(timePickerDate);
-      newTimeDate.setFullYear(selectedDate.getFullYear());
-      newTimeDate.setMonth(selectedDate.getMonth());
-      newTimeDate.setDate(selectedDate.getDate());
-      setTimePickerDate(newTimeDate);
-      
       setBirthData({ ...birthData, date: selectedDate.toISOString() });
     }
   };

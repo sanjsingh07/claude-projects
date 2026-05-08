@@ -286,3 +286,11 @@ Fixed a bug in RegisterScreen Step 2 where picking a birth date first would rest
 - **Changes**:
   - Added unique `key` props to all `DateTimePicker` instances to prevent native state leakage and ensure fresh instances when switching modes.
   - Updated `handleDateChange` to synchronize the date part of `timePickerDate` with the newly selected date while preserving the user's selected time. This ensures that the time picker always operates on the correct day, avoiding accidental future-date restrictions.
+
+## [2026-05-08 15:18:00] Refine birth time picker fix for iOS/Expo
+Further refined the birth time picker fix to specifically address the 05:30 (UTC boundary) restriction on iOS.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+- **Changes**:
+  - Removed the date synchronization logic from `handleDateChange`. By keeping `timePickerDate` on a neutral past date (e.g., Jan 1, 2000), we prevent the native iOS picker from applying "today" or "future" restrictions that were incorrectly triggering at the UTC day boundary (05:30 IST).
+  - Maintained the unique `key` props to ensure fresh component instances and prevent prop leakage.
