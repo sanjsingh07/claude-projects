@@ -293,3 +293,8 @@ The backend server should be reloaded to pick up the changes.
 ## [2026-05-08] - Automatic Timezone Lookup
 ### Added
 - **Registration Timezone Lookup**: Implemented automatic timezone detection in `RegisterScreen.tsx`. When a user selects a birth location, the app now fetches the correct timezone (e.g., `Europe/London`) using `timeapi.io` based on coordinates. This ensures astrological accuracy by removing the hardcoded `Asia/Kolkata` default.
+
+## [2026-05-08] - Fix Missing Vedic Charts
+### Fixed
+- **Post-Registration Vedic Calculation**: Fixed a bug where Vedic charts were not being calculated upon registration, leaving the Vedic tab empty for new users. Updated `AuthController.ts` to generate both Western and Vedic charts (including D1, D2, D4, D9, D10) immediately after signup.
+- **Logic Sync**: Synchronized `AuthController` calculation logic with the updated `UserController` patterns to ensure high-precision Swiss Ephemeris data is used from the start.

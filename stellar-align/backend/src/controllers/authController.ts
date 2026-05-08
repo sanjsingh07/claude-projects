@@ -5,7 +5,8 @@ import { prisma } from "../config/database";
 import logger from "../config/logger";
 import { ApiError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
-import { HouseSystem } from "@prisma/client";
+import { calculateVedicChart } from "../services/vedicAstrology";
+import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType } from "@prisma/client";
 
 export class AuthController {
   constructor() {
@@ -307,61 +308,108 @@ export class AuthController {
           ? user.birthTime.toISOString().slice(11, 16) // Extract HH:mm from ISO string
           : "12:00";
 
-        // Calculate natal chart data
-        const chartData = await astrologyService.calculateNatalChart(
+        // 1. Calculate Western natal chart data first (Tropical)
+        const westernChart = await astrologyService.calculateNatalChart(
           user.birthDate,
           timeStr,
           user.birthLatitude,
           user.birthLongitude,
           user.birthTimezone || "UTC",
+          HouseSystem.PLACIDUS,
+          ZodiacType.TROPICAL,
         );
 
-        // Save natal chart to database
-        await prisma.natalChart.create({
+        // Save initial natal chart as Western
+        const chart = await prisma.natalChart.create({
           data: {
             userId,
-            sunSign: chartData.sun.sign,
-            moonSign: chartData.moon.sign,
-            risingSign: chartData.ascendant?.sign || null,
-            planetaryPositions: {
-              sun: chartData.sun,
-              moon: chartData.moon,
-              mercury: chartData.mercury,
-              venus: chartData.venus,
-              mars: chartData.mars,
-              jupiter: chartData.jupiter,
-              saturn: chartData.saturn,
-              uranus: chartData.uranus,
-              neptune: chartData.neptune,
-              pluto: chartData.pluto,
-              chiron: chartData.chiron,
-              lilith: chartData.lilith,
-              node: chartData.node,
-              ascendant: chartData.ascendant,
-              midheaven: chartData.midheaven,
-            } as any,
-            houses: chartData.houses as any,
-            aspects: chartData.aspects as any,
+            sunSign: westernChart.sun.sign,
+            moonSign: westernChart.moon.sign,
+            risingSign: westernChart.ascendant?.sign || null,
+            planetaryPositions: westernChart.planetaryPositions as any,
+            houses: westernChart.houses as any,
+            aspects: westernChart.aspects as any,
             chartPattern: undefined,
             houseSystem: HouseSystem.PLACIDUS,
-            calculationMethod: "astronomia",
+            calculationMethod: "swiss_ephemeris",
+            zodiacType: ZodiacType.TROPICAL,
             calculatedAt: new Date(),
           },
         });
 
-        logger.info("Natal chart calculated and saved successfully", {
+        // 2. Calculate Vedic chart with divisional charts
+        const vedicChart = await calculateVedicChart(
+          {
+            date: user.birthDate,
+            time: timeStr,
+            latitude: user.birthLatitude,
+            longitude: user.birthLongitude,
+            timezone: user.birthTimezone || "UTC",
+            ayanamsa: AyanamsaType.LAHIRI,
+          },
+          westernChart,
+        );
+
+        // Get Moon's nakshatra info
+        const moonNakshatra = vedicChart.nakshatras.moon;
+        
+        // Extract D1 positions for the main NatalChart signs
+        const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
+        const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
+
+        // Update natal chart with Vedic data (matching UserController pattern)
+        await prisma.natalChart.update({
+          where: { id: chart.id },
+          data: {
+            sunSign: (d1Sun?.sign as any) || westernChart.sun.sign,
+            moonSign: (d1Moon?.sign as any) || westernChart.moon.sign,
+            risingSign: vedicChart.d1.ascendant,
+            planetaryPositions: vedicChart.d1.planetaryPositions as any,
+            houses: vedicChart.d1.houses as any,
+            aspects: westernChart.aspects as any,
+            houseSystem: HouseSystem.WHOLE_SIGN,
+            calculationMethod: "vedic",
+            zodiacType: ZodiacType.SIDEREAL,
+            ayanamsa: AyanamsaType.LAHIRI,
+            nakshatra: moonNakshatra.name,
+            nakshatraPada: moonNakshatra.pada,
+            nakshatraLord: moonNakshatra.lord,
+            calculatedAt: new Date(),
+          },
+        });
+
+        // Create divisional charts
+        const divisionalChartsData = [
+          { chartType: DivisionalChartType.D1, data: vedicChart.d1 },
+          { chartType: DivisionalChartType.D2, data: vedicChart.d2 },
+          { chartType: DivisionalChartType.D4, data: vedicChart.d4 },
+          { chartType: DivisionalChartType.D9, data: vedicChart.d9 },
+          { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
+        ];
+
+        await prisma.divisionalChart.createMany({
+          data: divisionalChartsData.map((dc) => ({
+            natalChartId: chart.id,
+            chartType: dc.chartType,
+            planetaryPositions: dc.data.planetaryPositions as any,
+            ascendant: dc.data.ascendant,
+            ascendantDegree: dc.data.ascendantDegree,
+            houses: dc.data.houses as any,
+          })),
+        });
+
+        logger.info("Initial Western and Vedic charts calculated and saved successfully", {
           userId,
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant?.sign,
+          sunSign: westernChart.sun.sign,
+          moonSign: westernChart.moon.sign,
         });
       }
     } catch (error) {
-      logger.error("Failed to calculate natal chart for user", {
+      logger.error("Failed to calculate initial charts for user", {
         userId,
         error,
       });
-      throw error;
+      // Don't throw, this is background work
     }
   }
 }

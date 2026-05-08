@@ -341,4 +341,13 @@ Added automatic timezone lookup based on birth location to ensure astrological a
   - **Automatic Lookup**: Updated `handleLocationSelect` to fetch the correct timezone ID (e.g., `America/New_York`) from `timeapi.io` using the selected location's coordinates.
   - **Improved Accuracy**: This replaces the hardcoded `Asia/Kolkata` default, ensuring that natal charts and transits are calculated using the correct UTC offset for the user's actual birth place.
   - **Loading State**: Added an activity indicator while the timezone lookup is in progress to provide user feedback.
-  - **Consistency**: Mirrored the timezone lookup logic used in the `SettingsScreen` for a unified user experience.
+
+## [2026-05-08 17:15:00] Fix missing Vedic charts after registration
+Fixed a bug where the Vedic (divisional) charts were empty for newly registered users.
+- **Files modified**:
+  - `backend/src/controllers/authController.ts`
+- **Changes**:
+  - **Comprehensive Initial Calculation**: Updated the registration flow to calculate both Western and Vedic charts immediately after signup. Previously, only the Western chart was being generated.
+  - **Vedic Data Persistence**: Ensured that the primary `NatalChart` record is updated with Vedic metadata (nakshatras, ayanamsa) and that all five divisional charts (D1, D2, D4, D9, D10) are created and saved to the database.
+  - **Logic Unification**: Mirrored the "perfect condition" calculation logic from `UserController.ts`, including the use of high-precision Swiss Ephemeris for Western data and traditional Vedic formulas for sidereal data.
+  - **Immediate Availability**: New users will now find their complete Vedic profile ready as soon as they navigate to the Chart tab for the first time.
