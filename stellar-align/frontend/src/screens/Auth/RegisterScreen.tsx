@@ -94,6 +94,11 @@ export const RegisterScreen: React.FC = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [timePickerDate, setTimePickerDate] = useState(new Date(2000, 0, 1, 12, 0, 0));
   const [showLocationModal, setShowLocationModal] = useState(false);
+
+  const maxDate = React.useMemo(() => new Date(), []);
+  const farFuture = React.useMemo(() => new Date(2100, 0, 1), []);
+  const farPast = React.useMemo(() => new Date(1900, 0, 1), []);
+
   const [locationSearch, setLocationSearch] = useState('');
   const [locationSuggestions, setLocationSuggestions] = useState<LocationSuggestion[]>([]);
   const [isLoadingLocations, setIsLoadingLocations] = useState(false);
@@ -181,9 +186,13 @@ export const RegisterScreen: React.FC = () => {
       setShowTimePicker(false);
     }
     if (selectedTime) {
-      setTimePickerDate(selectedTime);
-      const hours = selectedTime.getHours().toString().padStart(2, '0');
-      const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
+      // Normalize to Jan 1, 2000 to avoid any boundary issues
+      const normalizedTime = new Date(selectedTime);
+      normalizedTime.setFullYear(2000, 0, 1);
+      setTimePickerDate(normalizedTime);
+      
+      const hours = normalizedTime.getHours().toString().padStart(2, '0');
+      const minutes = normalizedTime.getMinutes().toString().padStart(2, '0');
       setBirthData({ ...birthData, time: `${hours}:${minutes}` });
     }
   };
@@ -536,7 +545,7 @@ export const RegisterScreen: React.FC = () => {
               mode="date"
               display="default"
               onChange={handleDateChange}
-              maximumDate={new Date()}
+              maximumDate={maxDate}
             />
           )}
           {Platform.OS === 'android' && showTimePicker && (
@@ -546,6 +555,8 @@ export const RegisterScreen: React.FC = () => {
               mode="time"
               display="default"
               onChange={handleTimeChange}
+              maximumDate={farFuture}
+              minimumDate={farPast}
             />
           )}
         </ScrollView>
@@ -575,7 +586,7 @@ export const RegisterScreen: React.FC = () => {
                 mode="date"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={handleDateChange}
-                maximumDate={new Date()}
+                maximumDate={maxDate}
               />
             </View>
             <TouchableOpacity
@@ -613,6 +624,8 @@ export const RegisterScreen: React.FC = () => {
                 mode="time"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={handleTimeChange}
+                maximumDate={farFuture}
+                minimumDate={farPast}
               />
             </View>
             <TouchableOpacity
