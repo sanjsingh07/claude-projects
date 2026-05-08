@@ -267,3 +267,14 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 - `stellar-align/frontend/src/services/api.ts`
 - `stellar-align/frontend/src/hooks/useAuth.ts`
 - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-08 14:43] - Finalize Gender Support and DB Migration
+### Added
+- **Expanded Gender Options**: Updated `RegisterScreen.tsx` to support all four gender options (`MALE`, `FEMALE`, `NON_BINARY`, `PREFER_NOT_TO_SAY`) with a cycling selector.
+- **Improved Mapping**: Implemented robust gender string mapping using regex to handle spaces and hyphens correctly for the backend enum.
+- **Database Migration**: Applied the database schema changes using `prisma db push`.
+- **Data Cleanup**: Resolved a migration conflict by removing orphaned `D11` divisional chart records using raw SQL, allowing the `DivisionalChartType` enum to be updated.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+- `stellar-align/report/changes.md`

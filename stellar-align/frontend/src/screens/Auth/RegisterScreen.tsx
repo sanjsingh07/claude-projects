@@ -80,6 +80,8 @@ export const RegisterScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [gender, setGender] = useState('Female');
+  const genderOptions = ['Female', 'Male', 'Non-Binary', 'Prefer not to say'];
+  
   const [birthData, setBirthData] = useState<BirthDataStep>({
     date: '',
     time: '',
@@ -262,7 +264,7 @@ export const RegisterScreen: React.FC = () => {
         email: email.toLowerCase().trim(),
         password,
         displayName: fullName,
-        gender: gender.toUpperCase().replace(' ', '_'),
+        gender: gender.toUpperCase().replace(/[\s-]/g, '_'),
         birthDate: birthData.date,
         birthTime: birthData.time || undefined,
         birthTimezone: birthData.timezone,
@@ -475,7 +477,9 @@ export const RegisterScreen: React.FC = () => {
                     <TouchableOpacity 
                       style={styles.astraInput}
                       onPress={() => {
-                        setGender(gender === 'Female' ? 'Male' : 'Female');
+                        const currentIndex = genderOptions.indexOf(gender);
+                        const nextIndex = (currentIndex + 1) % genderOptions.length;
+                        setGender(genderOptions[nextIndex]);
                       }}
                     >
                       <CostarText variant="body" style={styles.astraInputText}>
