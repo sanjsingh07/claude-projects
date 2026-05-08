@@ -356,3 +356,9 @@ Fixed a bug where the Vedic (divisional) charts were empty for newly registered 
 - Added planetary position transformation for divisional charts in vedicChart routes.
 - Implemented auto-calculation of missing Vedic data in frontend useVedicChart hook.
 
+## New Screen Templates
+- Created screens_00-register-start.html (Register Step-1/Start).
+- Created screens_00-login.html (Login Screen).
+- Created screens_06-chart-new.html (Chart Screen redesign).
+- Created screens_07-chat-new.html (Chat Screen redesign).
+

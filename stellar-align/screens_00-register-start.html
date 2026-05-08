@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astra — Welcome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(9% 0.015 265);
+  --surface: oklch(12% 0.018 265);
+  --fg: oklch(98% 0.004 265);
+  --muted: oklch(62% 0.018 265);
+  --border: oklch(20% 0.02 265);
+  --accent-violet: oklch(62% 0.18 290);
+  --accent-pink: oklch(72% 0.22 10);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { display: flex; align-items: center; justify-content: center; }
+
+.frame { width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; border-radius: 47px; border: 1.5px solid var(--border); }
+.island { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; background: #000; border-radius: 20px; z-index: 10; }
+
+.screen { flex: 1; display: flex; flex-direction: column; padding: 120px 32px 60px; text-align: center; }
+
+.logo-area { margin-bottom: 60px; position: relative; }
+.logo-icon { font-size: 64px; margin-bottom: 24px; display: inline-block; filter: drop-shadow(0 0 20px var(--accent-violet)); }
+.app-name { font-family: var(--font-display); font-size: 52px; font-style: italic; color: var(--fg); line-height: 1; }
+.tagline { font-family: var(--font-body); font-size: 16px; color: var(--muted); margin-top: 12px; letter-spacing: 0.02em; }
+
+.form-actions { margin-top: auto; display: flex; flex-direction: column; gap: 16px; width: 100%; }
+
+.btn { 
+  height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  width: 100%;
+}
+.btn-primary { background: var(--fg); color: var(--bg); border: none; }
+.btn-secondary { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+
+.legal { font-family: var(--font-body); font-size: 11px; color: var(--muted); margin-top: 24px; line-height: 1.5; }
+.legal span { color: var(--accent-violet); }
+
+.indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: var(--fg); border-radius: 3px; opacity: 0.3; z-index: 5; }
+
+/* Subtle background glow */
+.glow { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, var(--accent-violet) 0%, transparent 70%); opacity: 0.1; filter: blur(40px); pointer-events: none; }
+
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="island"></div>
+  <div class="glow"></div>
+  
+  <div class="screen">
+    <div class="logo-area">
+      <div class="logo-icon">✧</div>
+      <h1 class="app-name">Astra</h1>
+      <p class="tagline">The universe, mapped for you.</p>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary">Create Account</button>
+      <button class="btn btn-secondary">Log In</button>
+    </div>
+
+    <p class="legal">
+      By continuing, you agree to our <span>Terms of Service</span> and <span>Privacy Policy</span>.
+    </p>
+  </div>
+  
+  <div class="indicator"></div>
+</div>
+</body>
+</html>
