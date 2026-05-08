@@ -351,3 +351,8 @@ Fixed a bug where the Vedic (divisional) charts were empty for newly registered 
   - **Vedic Data Persistence**: Ensured that the primary `NatalChart` record is updated with Vedic metadata (nakshatras, ayanamsa) and that all five divisional charts (D1, D2, D4, D9, D10) are created and saved to the database.
   - **Logic Unification**: Mirrored the "perfect condition" calculation logic from `UserController.ts`, including the use of high-precision Swiss Ephemeris for Western data and traditional Vedic formulas for sidereal data.
   - **Immediate Availability**: New users will now find their complete Vedic profile ready as soon as they navigate to the Chart tab for the first time.
+## Vedic Chart Fix
+- Fixed planetaryPositions bug in authController.ts which caused signup chart calculation to fail.
+- Added planetary position transformation for divisional charts in vedicChart routes.
+- Implemented auto-calculation of missing Vedic data in frontend useVedicChart hook.
+

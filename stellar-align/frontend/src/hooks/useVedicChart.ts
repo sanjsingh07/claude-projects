@@ -77,6 +77,29 @@ export const useVedicChart = () => {
       const data = result.data || result;
 
       if (data) {
+        // If the chart exists but divisional charts are missing, trigger calculation
+        if (!data.divisionalCharts || data.divisionalCharts.length === 0) {
+          console.log('Vedic divisional charts missing, triggering auto-calculation...');
+          try {
+            const calcResult = await api.calculateVedicChart();
+            const calcData = calcResult.data || calcResult;
+            
+            if (calcData) {
+              setNatalChart(calcData);
+              calcData.divisionalCharts?.forEach((chart: any) => {
+                setDivisionalChart(chart.chartType, chart);
+              });
+              if (calcData.divisionalCharts?.some((chart: any) => chart.chartType === 'D1')) {
+                setSelectedDivisionalChart('D1');
+              }
+              return calcData;
+            }
+          } catch (calcErr) {
+            console.error('Auto-calculation of Vedic chart failed:', calcErr);
+            // Continue with the original data even if calculation fails
+          }
+        }
+
         setNatalChart(data);
 
         // Store divisional charts

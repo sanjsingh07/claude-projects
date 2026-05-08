@@ -34,6 +34,12 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
     const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
 
+    // Transform divisional charts' planetary positions
+    const divisionalCharts = chart.divisionalCharts.map(dc => ({
+      ...dc,
+      planetaryPositions: transformPlanetaryPositions(dc.planetaryPositions)
+    }));
+
     res.json({
       success: true,
       data: {
@@ -54,7 +60,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
         nakshatraPada: chart.nakshatraPada,
         nakshatraLord: chart.nakshatraLord,
         calculatedAt: chart.calculatedAt,
-        divisionalCharts: chart.divisionalCharts,
+        divisionalCharts,
       },
     });
   } catch (error) {
@@ -202,6 +208,12 @@ router.post(
 
       const planetaryPositions = transformPlanetaryPositions(completeChart?.planetaryPositions);
 
+      // Transform divisional charts' planetary positions
+      const divisionalCharts = completeChart?.divisionalCharts.map(dc => ({
+        ...dc,
+        planetaryPositions: transformPlanetaryPositions(dc.planetaryPositions)
+      }));
+
       res.json({
         success: true,
         data: {
@@ -222,7 +234,7 @@ router.post(
           nakshatraPada: completeChart?.nakshatraPada,
           nakshatraLord: completeChart?.nakshatraLord,
           calculatedAt: completeChart?.calculatedAt,
-          divisionalCharts: completeChart?.divisionalCharts,
+          divisionalCharts,
           vedicChart: {
             ayanamsa: vedicChart.ayanamsa,
             ayanamsaType: vedicChart.ayanamsaType,
@@ -285,7 +297,10 @@ router.get(
 
       res.json({
         success: true,
-        data: divisionalChart,
+        data: {
+          ...divisionalChart,
+          planetaryPositions: transformPlanetaryPositions(divisionalChart.planetaryPositions)
+        },
       });
     } catch (error) {
       next(error);
