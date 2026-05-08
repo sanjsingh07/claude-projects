@@ -261,6 +261,7 @@ export const RegisterScreen: React.FC = () => {
       await register({
         email: email.toLowerCase().trim(),
         password,
+        displayName: fullName,
         birthDate: birthData.date,
         birthTime: birthData.time || undefined,
         birthTimezone: birthData.timezone,

@@ -45,6 +45,7 @@ export function useAuth() {
       birthLocationName?: string;
       birthLatitude?: number;
       birthLongitude?: number;
+      displayName?: string;
     }) => {
       const response = await api.register(data);
       console.log('useAuth register response:', response);

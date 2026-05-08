@@ -191,6 +191,7 @@ class ApiService {
     birthLatitude?: number;
     birthLongitude?: number;
     birthLocationName?: string;
+    displayName?: string;
   }) {
     console.log('Registering with:', { email: data.email, birthDate: data.birthDate });
     const response: any = await this.client.post('/auth/register', data);
