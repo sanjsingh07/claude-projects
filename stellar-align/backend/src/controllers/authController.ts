@@ -41,11 +41,19 @@ export class AuthController {
         gender,
       } = req.body;
 
+      let birthTimeDate: Date | undefined;
+      if (birthTime && typeof birthTime === 'string' && birthTime.includes(':')) {
+        const [hours, minutes] = birthTime.split(':').map(Number);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          birthTimeDate = new Date(Date.UTC(2000, 0, 1, hours, minutes));
+        }
+      }
+
       const result = await authService.register({
         email,
         password,
         birthDate: new Date(birthDate),
-        birthTime: birthTime ? new Date(`1970-01-01T${birthTime}`) : undefined,
+        birthTime: birthTimeDate,
         birthTimezone,
         birthLocationName,
         birthLatitude: birthLatitude ? parseFloat(birthLatitude) : undefined,

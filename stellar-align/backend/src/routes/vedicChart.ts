@@ -97,7 +97,7 @@ router.post(
 
       const ayanamsaType = (req.body.ayanamsa?.toUpperCase() as AyanamsaType) || AyanamsaType.LAHIRI;
       const birthTime = user.birthTime
-        ? user.birthTime.toTimeString().slice(0, 5)
+        ? user.birthTime.toISOString().slice(11, 16)
         : "12:00";
 
       // First calculate the base natal chart (tropical positions)

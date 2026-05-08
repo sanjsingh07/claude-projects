@@ -101,7 +101,7 @@ router.post(
 
       const chartData = await astrologyService.calculateNatalChart(
         user.birthDate,
-        user.birthTime?.toTimeString().slice(0, 5) || "12:00",
+        user.birthTime?.toISOString().slice(11, 16) || "12:00",
         user.birthLatitude,
         user.birthLongitude,
         user.birthTimezone,

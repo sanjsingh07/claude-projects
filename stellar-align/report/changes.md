@@ -320,4 +320,16 @@ Resolved a `PrismaClientValidationError` where the `gender` field was unknown to
   - Identified a conflicting `DATABASE_URL` in the environment (SQLite) that was overriding the PostgreSQL URL in `.env`.
   - Applied the pending schema changes (`Gender` enum and `User.gender` field) to the database using `prisma migrate dev`.
   - Regenerated the Prisma client to include the new types.
-  - Verified that `AuthService` is correctly mapping and saving the `gender` field.
+  
+## [2026-05-08 16:35:00] Fix birth time mismatch after registration
+Fixed a bug where the birth time picked during registration (e.g., 06:00 AM) was incorrectly displayed as 12:30 AM in the profile.
+- **Files modified**:
+  - `backend/src/controllers/authController.ts`
+  - `backend/src/controllers/authController.spec.ts`
+  - `backend/src/routes/chart.ts`
+  - `backend/src/routes/vedicChart.ts`
+- **Changes**:
+  - **UTC Parsing**: Updated `AuthController.register` to parse birth time as UTC using `Date.UTC`. Previously, it was parsed as server local time, causing a timezone shift (e.g., 06:00 IST became 00:30 UTC).
+  - **Consistent Time Extraction**: Replaced `toTimeString().slice(0, 5)` (local time) with `toISOString().slice(11, 16)` (UTC time) in `routes/chart.ts` and `routes/vedicChart.ts`. This ensures that astrological calculations always use the correct clock time regardless of the server's local timezone.
+  - **New Unit Test**: Added `AuthController.spec.ts` to verify that birth time is correctly parsed as UTC during the registration flow.
+  - **Standardized Reference Date**: Standardized on `2000-01-01` as the reference date for all time-only `DateTime` fields in the database.

@@ -277,3 +277,15 @@ The backend server should be reloaded to pick up the changes.
 - `backend/src/controllers/userController.ts`
 - `backend/src/utils/chart.ts`
 - `frontend/src/components/VedicChartCard.tsx`
+
+## [2026-05-08] - Fix Birth Time Mismatch
+### Fixed
+- **Birth Time Registration**: Fixed a bug where the birth time picked during registration was parsed as server local time instead of UTC, causing a timezone shift (e.g., 06:00 AM appearing as 12:30 AM).
+- **Time Extraction Consistency**: Replaced `toTimeString()` with `toISOString().slice(11, 16)` in `routes/chart.ts` and `routes/vedicChart.ts` to ensure consistent, timezone-independent time extraction for astrological calculations.
+- **Improved Testing**: Added `AuthController.spec.ts` to verify birth time parsing during registration.
+
+### Files Modified
+- `backend/src/controllers/authController.ts`
+- `backend/src/controllers/authController.spec.ts`
+- `backend/src/routes/chart.ts`
+- `backend/src/routes/vedicChart.ts`
