@@ -819,7 +819,6 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 32,
     paddingBottom: 60,
-    backgroundColor: colors.astraBg,
   },
   island: {
     position: 'absolute',

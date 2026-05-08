@@ -367,3 +367,11 @@ Fixed a bug where the Vedic (divisional) charts were empty for newly registered 
 - Created screens_06-chart-final.html (Consolidated Natal/Vedic Chart with toggle).
 - Re-verified design consistency with existing Astra screens.
 
+
+## [2026-05-08 23:05:00] Align RegisterScreen Step 2 background with Step 1
+Updated RegisterScreen Step 2 to use the same star background as Step 1 for visual consistency.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+- **Changes**:
+  - Removed `backgroundColor: colors.astraBg` from the `astraScreen` style. This allows the `CostarBackground` component (rendered at the root level) to show through in Step 2, matching the star-field background of Step 1.
+  - Maintained all other astra-themed component styles to preserve the design system's interactive elements.
