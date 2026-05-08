@@ -172,6 +172,14 @@ export const RegisterScreen: React.FC = () => {
     }
     if (selectedDate) {
       setDatePickerDate(selectedDate);
+      
+      // Update timePickerDate to use the new date but keep its time
+      const newTimeDate = new Date(timePickerDate);
+      newTimeDate.setFullYear(selectedDate.getFullYear());
+      newTimeDate.setMonth(selectedDate.getMonth());
+      newTimeDate.setDate(selectedDate.getDate());
+      setTimePickerDate(newTimeDate);
+      
       setBirthData({ ...birthData, date: selectedDate.toISOString() });
     }
   };
@@ -531,6 +539,7 @@ export const RegisterScreen: React.FC = () => {
 
           {Platform.OS === 'android' && showDatePicker && (
             <DateTimePicker
+              key="date-picker-android"
               value={datePickerDate}
               mode="date"
               display="default"
@@ -540,6 +549,7 @@ export const RegisterScreen: React.FC = () => {
           )}
           {Platform.OS === 'android' && showTimePicker && (
             <DateTimePicker
+              key="time-picker-android"
               value={timePickerDate}
               mode="time"
               display="default"
@@ -568,6 +578,7 @@ export const RegisterScreen: React.FC = () => {
             </View>
             <View style={styles.pickerWrapper}>
               <DateTimePicker
+                key="date-picker-ios"
                 value={datePickerDate}
                 mode="date"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
@@ -605,6 +616,7 @@ export const RegisterScreen: React.FC = () => {
             </View>
             <View style={styles.pickerWrapper}>
               <DateTimePicker
+                key="time-picker-ios"
                 value={timePickerDate}
                 mode="time"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}

@@ -278,3 +278,11 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 ### Files Modified
 - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
 - `stellar-align/report/changes.md`
+
+## [2026-05-08 15:02:00] Fix birth time picker restriction bug
+Fixed a bug in RegisterScreen Step 2 where picking a birth date first would restrict the birth time picker to a limited range (e.g., 00:00 - 05:30).
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+- **Changes**:
+  - Added unique `key` props to all `DateTimePicker` instances to prevent native state leakage and ensure fresh instances when switching modes.
+  - Updated `handleDateChange` to synchronize the date part of `timePickerDate` with the newly selected date while preserving the user's selected time. This ensures that the time picker always operates on the correct day, avoiding accidental future-date restrictions.
