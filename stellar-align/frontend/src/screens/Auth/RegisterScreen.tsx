@@ -197,16 +197,37 @@ export const RegisterScreen: React.FC = () => {
     }
   };
 
-  const handleLocationSelect = (location: LocationSuggestion) => {
+  const handleLocationSelect = async (location: LocationSuggestion) => {
     setBirthData({
       ...birthData,
       locationName: location.displayName,
       latitude: parseFloat(location.lat),
       longitude: parseFloat(location.lon),
     });
-    setShowLocationModal(false);
-    setLocationSearch('');
-    setLocationSuggestions([]);
+    
+    setIsLoadingLocations(true);
+    try {
+      const response = await axios.get(
+        `https://www.timeapi.io/api/TimeZone/coordinate?latitude=${location.lat}&longitude=${location.lon}`
+      );
+      if (response.data && response.data.timeZone) {
+        setBirthData(prev => ({
+          ...prev,
+          locationName: location.displayName,
+          latitude: parseFloat(location.lat),
+          longitude: parseFloat(location.lon),
+          timezone: response.data.timeZone,
+        }));
+      }
+    } catch (error) {
+      console.error('Timezone lookup error:', error);
+      // Fallback is handled by keeping the previous or default timezone
+    } finally {
+      setIsLoadingLocations(false);
+      setShowLocationModal(false);
+      setLocationSearch('');
+      setLocationSuggestions([]);
+    }
   };
 
   const handleLocationSearchChange = (text: string) => {

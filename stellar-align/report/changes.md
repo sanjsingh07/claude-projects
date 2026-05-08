@@ -332,4 +332,13 @@ Fixed a bug where the birth time picked during registration (e.g., 06:00 AM) was
   - **UTC Parsing**: Updated `AuthController.register` to parse birth time as UTC using `Date.UTC`. Previously, it was parsed as server local time, causing a timezone shift (e.g., 06:00 IST became 00:30 UTC).
   - **Consistent Time Extraction**: Replaced `toTimeString().slice(0, 5)` (local time) with `toISOString().slice(11, 16)` (UTC time) in `routes/chart.ts` and `routes/vedicChart.ts`. This ensures that astrological calculations always use the correct clock time regardless of the server's local timezone.
   - **New Unit Test**: Added `AuthController.spec.ts` to verify that birth time is correctly parsed as UTC during the registration flow.
-  - **Standardized Reference Date**: Standardized on `2000-01-01` as the reference date for all time-only `DateTime` fields in the database.
+
+## [2026-05-08 16:55:00] Implement automatic timezone lookup during registration
+Added automatic timezone lookup based on birth location to ensure astrological accuracy.
+- **Files modified**:
+  - `frontend/src/screens/Auth/RegisterScreen.tsx`
+- **Changes**:
+  - **Automatic Lookup**: Updated `handleLocationSelect` to fetch the correct timezone ID (e.g., `America/New_York`) from `timeapi.io` using the selected location's coordinates.
+  - **Improved Accuracy**: This replaces the hardcoded `Asia/Kolkata` default, ensuring that natal charts and transits are calculated using the correct UTC offset for the user's actual birth place.
+  - **Loading State**: Added an activity indicator while the timezone lookup is in progress to provide user feedback.
+  - **Consistency**: Mirrored the timezone lookup logic used in the `SettingsScreen` for a unified user experience.

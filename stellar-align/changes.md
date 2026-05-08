@@ -289,3 +289,7 @@ The backend server should be reloaded to pick up the changes.
 - `backend/src/controllers/authController.spec.ts`
 - `backend/src/routes/chart.ts`
 - `backend/src/routes/vedicChart.ts`
+
+## [2026-05-08] - Automatic Timezone Lookup
+### Added
+- **Registration Timezone Lookup**: Implemented automatic timezone detection in `RegisterScreen.tsx`. When a user selects a birth location, the app now fetches the correct timezone (e.g., `Europe/London`) using `timeapi.io` based on coordinates. This ensures astrological accuracy by removing the hardcoded `Asia/Kolkata` default.
