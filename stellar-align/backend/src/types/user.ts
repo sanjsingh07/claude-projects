@@ -1,4 +1,4 @@
-import { ZodiacSign } from "./astrology";
+import { ZodiacSign, Gender } from "@prisma/client";
 
 export interface User {
   id: string;
@@ -6,6 +6,7 @@ export interface User {
   emailVerified: boolean;
   authProvider: "email" | "google" | "apple";
   displayName?: string;
+  gender?: Gender;
   bio?: string;
   avatarUrl?: string;
 
@@ -47,6 +48,7 @@ export interface UserCreateInput {
   authProvider?: "email" | "google" | "apple";
   providerId?: string;
   displayName?: string;
+  gender?: Gender;
   birthDate: Date;
   birthTime?: Date;
   birthLocationName?: string;
@@ -58,6 +60,7 @@ export interface UserCreateInput {
 export interface UserUpdateInput {
   email?: string;
   displayName?: string;
+  gender?: Gender;
   bio?: string;
   avatarUrl?: string;
   birthDate?: Date;
@@ -108,5 +111,3 @@ export interface FriendshipRequest {
   fromUser: UserProfile;
   sentAt: Date;
 }
-
-export type Gender = "male" | "female" | "non_binary" | "prefer_not_to_say";

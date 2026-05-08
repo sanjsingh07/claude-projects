@@ -262,6 +262,7 @@ export const RegisterScreen: React.FC = () => {
         email: email.toLowerCase().trim(),
         password,
         displayName: fullName,
+        gender: gender.toUpperCase().replace(' ', '_'),
         birthDate: birthData.date,
         birthTime: birthData.time || undefined,
         birthTimezone: birthData.timezone,

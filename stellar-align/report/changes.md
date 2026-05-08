@@ -242,3 +242,28 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 - `stellar-align/backend/src/controllers/authController.ts`
 - `stellar-align/backend/src/controllers/userController.ts`
 - `stellar-align/backend/src/controllers/horoscopeController.ts`
+
+## [2026-05-08 14:05] - Fix Registration Display Name Saving
+### Fixed
+- **Display Name Saving**: Fixed an issue where the `fullName` entered during registration was not being passed to the backend, causing users to be created with the default name "User".
+- **API and Hooks Update**: Updated `ApiService.register` and `useAuth` hook to correctly include the `displayName` field in the registration payload.
+
+### Files Modified
+- `stellar-align/frontend/src/services/api.ts`
+- `stellar-align/frontend/src/hooks/useAuth.ts`
+- `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-08 14:36] - Add Gender Field to Database
+### Added
+- **Gender Support**: Added a `Gender` enum (`MALE`, `FEMALE`, `NON_BINARY`, `PREFER_NOT_TO_SAY`) and a `gender` field to the `User` model in the Prisma schema.
+- **Registration Flow**: Updated `AuthController`, `AuthService`, and frontend API/hooks to handle and persist the user's gender selection during registration.
+- **Type Safety**: Synchronized backend types with the new Prisma `Gender` enum.
+
+### Files Modified
+- `stellar-align/backend/prisma/schema.prisma`
+- `stellar-align/backend/src/types/user.ts`
+- `stellar-align/backend/src/services/auth.service.ts`
+- `stellar-align/backend/src/controllers/authController.ts`
+- `stellar-align/frontend/src/services/api.ts`
+- `stellar-align/frontend/src/hooks/useAuth.ts`
+- `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`

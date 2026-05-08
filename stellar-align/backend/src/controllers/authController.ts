@@ -38,6 +38,7 @@ export class AuthController {
         birthLatitude,
         birthLongitude,
         displayName,
+        gender,
       } = req.body;
 
       const result = await authService.register({
@@ -50,6 +51,7 @@ export class AuthController {
         birthLatitude: birthLatitude ? parseFloat(birthLatitude) : undefined,
         birthLongitude: birthLongitude ? parseFloat(birthLongitude) : undefined,
         displayName,
+        gender,
       });
 
       // Calculate natal chart in background (non-blocking)
