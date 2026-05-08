@@ -9,6 +9,17 @@ import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipS
 import { buildUserProfile } from "../services/userService";
 
 export class UserController {
+  constructor() {
+    this.getCurrentUser = this.getCurrentUser.bind(this);
+    this.updateCurrentUser = this.updateCurrentUser.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
+    this.registerPushToken = this.registerPushToken.bind(this);
+    this.recalculateNatalChart = this.recalculateNatalChart.bind(this);
+    this.getUserProfile = this.getUserProfile.bind(this);
+    this.getSettings = this.getSettings.bind(this);
+    this.updateSettings = this.updateSettings.bind(this);
+  }
+
   // GET /users/me
   async getCurrentUser(
     req: Request,

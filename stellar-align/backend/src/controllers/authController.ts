@@ -8,6 +8,20 @@ import { astrologyService } from "../services/astrology";
 import { HouseSystem } from "@prisma/client";
 
 export class AuthController {
+  constructor() {
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
+    this.refreshToken = this.refreshToken.bind(this);
+    this.logout = this.logout.bind(this);
+    this.forgotPassword = this.forgotPassword.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);
+    this.changePassword = this.changePassword.bind(this);
+    this.googleAuth = this.googleAuth.bind(this);
+    this.googleCallback = this.googleCallback.bind(this);
+    this.appleAuth = this.appleAuth.bind(this);
+    this.socialLogin = this.socialLogin.bind(this);
+  }
+
   async register(
     req: Request,
     res: Response,

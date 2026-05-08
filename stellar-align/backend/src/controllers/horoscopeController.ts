@@ -8,6 +8,16 @@ import logger from "../config/logger";
 import { GeneratedBy } from "@prisma/client";
 
 export class HoroscopeController {
+  constructor() {
+    this.getToday = this.getToday.bind(this);
+    this.getForDate = this.getForDate.bind(this);
+    this.getWeekly = this.getWeekly.bind(this);
+    this.getMonthly = this.getMonthly.bind(this);
+    this.toggleBookmark = this.toggleBookmark.bind(this);
+    this.markShared = this.markShared.bind(this);
+    this.getInsights = this.getInsights.bind(this);
+  }
+
   // GET /horoscope/today
   async getToday(
     req: Request,

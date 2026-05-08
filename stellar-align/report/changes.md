@@ -232,3 +232,13 @@ Updated the Step 2 (Birth Data) UI of the `RegisterScreen` to match the high-fid
 - Added keyboardShouldPersistTaps="handled" to ScrollView and FlatList to improve interaction with inputs.
 - Files modified:
   - stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx
+
+## [2026-05-08 13:58] - Fix Registration Crash (Express 'this' context)
+### Fixed
+- **Registration Crash**: Fixed `TypeError: Cannot read properties of undefined (reading 'calculateUserChart')` in `AuthController.ts`. The error occurred because the class method was called as a middleware by Express, losing its `this` context.
+- **Controller Reliability**: Bound `this` context to all public methods in `AuthController`, `UserController`, and `HoroscopeController` using class constructors. This prevents similar errors in other endpoints that use `this` (e.g., `recalculateNatalChart`, `getInsights`).
+
+### Files Modified
+- `stellar-align/backend/src/controllers/authController.ts`
+- `stellar-align/backend/src/controllers/userController.ts`
+- `stellar-align/backend/src/controllers/horoscopeController.ts`
