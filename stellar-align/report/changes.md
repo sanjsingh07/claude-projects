@@ -362,3 +362,8 @@ Fixed a bug where the Vedic (divisional) charts were empty for newly registered 
 - Created screens_06-chart-new.html (Chart Screen redesign).
 - Created screens_07-chat-new.html (Chat Screen redesign).
 
+## Refined Screen Templates
+- Created screens_00-signup-email.html (Signup Step-1: Email/Password).
+- Created screens_06-chart-final.html (Consolidated Natal/Vedic Chart with toggle).
+- Re-verified design consistency with existing Astra screens.
+

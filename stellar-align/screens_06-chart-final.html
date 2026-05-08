@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Astra — Your Chart</title>
+<title>Astra — Cosmic Charts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,700&display=swap" rel="stylesheet">
 <style>
@@ -30,44 +30,57 @@ body { display: flex; align-items: center; justify-content: center; }
 
 .screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; padding: 54px 0 34px; overflow: hidden; }
 
-/* Chart Header */
-.chart-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-.chart-title { font-family: var(--font-display); font-size: 24px; font-style: italic; color: var(--fg); }
-.chart-toggle { display: flex; background: var(--surface); border-radius: 20px; padding: 3px; border: 1px solid var(--border); }
-.toggle-item { padding: 6px 12px; font-family: var(--font-body); font-size: 11px; color: var(--muted); cursor: pointer; border-radius: 17px; }
-.toggle-item.active { background: var(--bg); color: var(--fg); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+/* Toggle State Logic */
+#chart-toggle { display: none; }
+.vedic-view { display: none; }
+.natal-view { display: block; }
 
-/* Chart Content */
-.chart-content { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; scrollbar-width: none; }
-.chart-content::-webkit-scrollbar { display: none; }
+#chart-toggle:checked ~ .screen .vedic-view { display: block; }
+#chart-toggle:checked ~ .screen .natal-view { display: none; }
+#chart-toggle:checked ~ .screen .toggle-btn .toggle-text-natal { display: none; }
+#chart-toggle:checked ~ .screen .toggle-btn .toggle-text-vedic { display: inline; }
+#chart-toggle:checked ~ .screen .header-title .title-natal { display: none; }
+#chart-toggle:checked ~ .screen .header-title .title-vedic { display: inline; }
 
-/* Celestial Map Placeholder */
-.celestial-map {
-  width: 100%; aspect-ratio: 1; position: relative;
-  border-radius: 50%; border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(circle at center, oklch(15% 0.02 265) 0%, transparent 70%);
+/* Header */
+.header { padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; border-bottom: 1px solid var(--border); }
+.header-title { font-family: var(--font-display); font-size: 24px; font-style: italic; color: var(--fg); text-transform: uppercase; }
+.title-vedic { display: none; }
+
+.toggle-btn { 
+  display: flex; align-items: center; gap: 8px; 
+  padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); 
+  background: var(--surface); cursor: pointer;
 }
-.map-ring { position: absolute; border-radius: 50%; border: 1px dashed var(--border); }
-.ring-1 { width: 40%; height: 40%; }
-.ring-2 { width: 70%; height: 70%; }
-.ring-3 { width: 100%; height: 100%; border-style: solid; }
-.planet-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--fg); }
-.planet-dot.sun { background: var(--accent-amber); box-shadow: 0 0 10px var(--accent-amber); top: 20%; left: 70%; }
-.planet-dot.moon { background: var(--fg); top: 60%; left: 15%; }
-.planet-dot.venus { background: var(--accent-pink); top: 30%; left: 25%; }
-.map-label { font-family: var(--font-display); font-size: 20px; color: var(--fg); z-index: 2; font-style: italic; }
+.toggle-text { font-family: var(--font-body); font-size: 13px; color: var(--fg); }
+.toggle-text-vedic { display: none; }
+.toggle-icon { font-size: 16px; color: var(--accent-violet); }
 
-/* Positions List */
-.positions-section { display: flex; flex-direction: column; gap: 12px; }
+/* Content Scroll */
+.content { flex: 1; overflow-y: auto; padding: 24px; scrollbar-width: none; }
+.content::-webkit-scrollbar { display: none; }
+
+/* Chart Visualization */
+.chart-viz { 
+  width: 100%; aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--border); 
+  margin-bottom: 24px; position: relative; 
+  background: radial-gradient(circle at center, oklch(15% 0.02 265) 0%, transparent 80%);
+  display: flex; align-items: center; justify-content: center;
+}
+.viz-label { font-family: var(--font-display); font-size: 20px; color: var(--fg); opacity: 0.6; font-style: italic; }
+
+/* Info Section */
+.section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
 .section-label { font-family: var(--font-body); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-violet); }
 
-.position-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 16px; }
-.pos-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px; }
-.pos-info { flex: 1; }
-.pos-planet { font-family: var(--font-body); font-size: 14px; color: var(--fg); font-weight: 500; }
-.pos-details { font-family: var(--font-body); font-size: 11px; color: var(--muted); margin-top: 2px; }
-.pos-sign { font-family: var(--font-display); font-size: 16px; color: var(--accent-pink); font-style: italic; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+.row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: none; }
+.row .key { font-family: var(--font-body); font-size: 14px; color: var(--muted); }
+.row .val { font-family: var(--font-display); font-size: 16px; color: var(--fg); font-style: italic; }
+
+.sign-badge { display: flex; align-items: center; gap: 8px; }
+.sign-ico { font-size: 20px; color: var(--accent-pink); }
 
 /* Tab bar */
 .tab-bar { display: flex; border-top: 1px solid var(--border); flex-shrink: 0; padding-top: 2px; }
@@ -81,6 +94,8 @@ body { display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
+<input type="checkbox" id="chart-toggle">
+
 <div class="frame">
   <div class="island"></div>
   <div class="status-bar">
@@ -92,62 +107,71 @@ body { display: flex; align-items: center; justify-content: center; }
   </div>
 
   <div class="screen">
-    <div class="chart-header">
-      <h2 class="chart-title">Natal Chart</h2>
-      <div class="chart-toggle">
-        <div class="toggle-item active">Western</div>
-        <div class="toggle-item">Vedic</div>
+    <div class="header">
+      <div class="header-title">
+        <span class="title-natal">Your Natal Chart</span>
+        <span class="title-vedic">Vedic Chart</span>
       </div>
+      <label for="chart-toggle" class="toggle-btn">
+        <span class="toggle-text toggle-text-natal">Show Vedic</span>
+        <span class="toggle-text toggle-text-vedic">Show Western</span>
+        <span class="toggle-icon">☇</span>
+      </label>
     </div>
 
-    <div class="chart-content">
-      <div class="celestial-map">
-        <div class="map-ring ring-1"></div>
-        <div class="map-ring ring-2"></div>
-        <div class="map-ring ring-3"></div>
-        <div class="planet-dot sun"></div>
-        <div class="planet-dot moon"></div>
-        <div class="planet-dot venus"></div>
-        <div class="map-label">Pisces Sun</div>
+    <div class="content">
+      <!-- Natal View -->
+      <div class="natal-view">
+        <div class="chart-viz">
+          <div class="viz-label">Western Wheel</div>
+        </div>
+        
+        <div class="section">
+          <div class="section-label">Core Positions</div>
+          <div class="card">
+            <div class="row">
+              <span class="key">Sun</span>
+              <div class="sign-badge">
+                <span class="sign-ico">♈</span>
+                <span class="val">Aries 15°</span>
+              </div>
+            </div>
+            <div class="row">
+              <span class="key">Moon</span>
+              <div class="sign-badge">
+                <span class="sign-ico">♋</span>
+                <span class="val">Cancer 2°</span>
+              </div>
+            </div>
+            <div class="row">
+              <span class="key">Rising</span>
+              <div class="sign-badge">
+                <span class="sign-ico">♏</span>
+                <span class="val">Scorpio 22°</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="positions-section">
-        <div class="section-label">Planetary Positions</div>
-        
-        <div class="position-row">
-          <div class="pos-icon">☉</div>
-          <div class="pos-info">
-            <div class="pos-planet">Sun</div>
-            <div class="pos-details">14° 22' · Direct</div>
-          </div>
-          <div class="pos-sign">Pisces</div>
+      <!-- Vedic View -->
+      <div class="vedic-view">
+        <div class="chart-viz" style="border-radius: 12px; border-style: solid;">
+          <div class="viz-label">Vedic Square (South)</div>
         </div>
 
-        <div class="position-row">
-          <div class="pos-icon">☽</div>
-          <div class="pos-info">
-            <div class="pos-planet">Moon</div>
-            <div class="pos-details">28° 05' · Direct</div>
+        <div class="section">
+          <div class="section-label">Sidereal Positions</div>
+          <div class="card">
+            <div class="row">
+              <span class="key">Nakshatra</span>
+              <span class="val">Ashwini (Pada 3)</span>
+            </div>
+            <div class="row">
+              <span class="key">Ayanamsa</span>
+              <span class="val">Lahiri (24.1°)</span>
+            </div>
           </div>
-          <div class="pos-sign">Cancer</div>
-        </div>
-
-        <div class="position-row">
-          <div class="pos-icon">↑</div>
-          <div class="pos-info">
-            <div class="pos-planet">Ascendant</div>
-            <div class="pos-details">22° 41' · First House</div>
-          </div>
-          <div class="pos-sign">Scorpio</div>
-        </div>
-
-        <div class="position-row">
-          <div class="pos-icon">☿</div>
-          <div class="pos-info">
-            <div class="pos-planet">Mercury</div>
-            <div class="pos-details">3° 12' · Retrograde</div>
-          </div>
-          <div class="pos-sign">Aquarius</div>
         </div>
       </div>
     </div>
