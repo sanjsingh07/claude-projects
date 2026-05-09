@@ -127,32 +127,32 @@ export const LoginScreen: React.FC = () => {
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          {/* Logo Section */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoRow}>
-              <SignIcon sign="sun" size={48} color={colors.white} />
-              <SignIcon sign="moon" size={40} color={colors.gray400} />
-              <SignIcon sign="rising" size={36} color={colors.gray600} />
-            </View>
-            <CostarText variant="heading1" uppercase style={styles.title}>
-              Stellar Align
+          <TouchableOpacity 
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <CostarText style={styles.backBtnText}>←</CostarText>
+          </TouchableOpacity>
+
+          <View style={styles.header}>
+            <CostarText variant="heading1" serif italic style={styles.title}>
+              Welcome back
             </CostarText>
-            <CostarText variant="bodySmall" color={colors.gray500} style={styles.subtitle}>
-              Daily cosmic guidance
+            <CostarText style={styles.subtitle}>
+              Please enter your details to sign in.
             </CostarText>
           </View>
 
           {/* Login Form */}
           <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                Email
-              </CostarText>
+            <View style={styles.inputGroup}>
+              <CostarText style={styles.label}>Email Address</CostarText>
               <TextInput
                 style={styles.input}
-                placeholder="your@email.com"
-                placeholderTextColor={colors.gray600}
+                placeholder="alex.kim@example.com"
+                placeholderTextColor={colors.astraMuted}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -160,84 +160,63 @@ export const LoginScreen: React.FC = () => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                Password
-              </CostarText>
+            <View style={styles.inputGroup}>
+              <CostarText style={styles.label}>Password</CostarText>
               <TextInput
                 style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor={colors.gray600}
+                placeholder="••••••••••••"
+                placeholderTextColor={colors.astraMuted}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
               />
             </View>
 
-            <CostarButton
+            <TouchableOpacity style={styles.forgotPw}>
+              <CostarText style={styles.forgotPwText}>Forgot password?</CostarText>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.btn, isLoginPending && { opacity: 0.7 }]}
               onPress={handleLogin}
-              loading={isLoginPending}
-              fullWidth
-              size="large"
-              style={styles.loginButton}
+              disabled={isLoginPending}
             >
-              Sign In
-            </CostarButton>
-
-            {/* Divider */}
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <CostarText variant="caption" color={colors.gray600}>
-                OR
-              </CostarText>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Social Login */}
-            <CostarButton
-              onPress={handleGoogleLogin}
-              variant="outline"
-              fullWidth
-              disabled={isLoginPending || !request}
-              style={styles.socialButton}
-            >
-              Continue with Google{!GOOGLE_CLIENT_ID ? ' (Coming Soon)' : ''}
-            </CostarButton>
-
-            {Platform.OS === 'ios' ? (
-              <AppleAuthentication.AppleAuthenticationButton
-                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-                cornerRadius={12}
-                style={styles.appleButton}
-                onPress={handleAppleLogin}
-              />
-            ) : (
-              <CostarButton
-                onPress={handleAppleLogin}
-                variant="outline"
-                fullWidth
-                disabled
-                style={styles.socialButton}
-              >
-                Continue with Apple (iOS only)
-              </CostarButton>
-            )}
+              {isLoginPending ? (
+                <ActivityIndicator color={colors.astraBg} />
+              ) : (
+                <CostarText style={styles.btnText}>Sign In</CostarText>
+              )}
+            </TouchableOpacity>
           </View>
 
-          {/* Footer */}
-          <View style={styles.footer}>
-            <CostarText variant="bodySmall" color={colors.gray500}>
-              New to Stellar Align?
-            </CostarText>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <CostarText variant="label" color={colors.white} uppercase>
-                Create Account
-              </CostarText>
-            </TouchableOpacity>
+          <View style={styles.altLogin}>
+            <View style={styles.altLoginTextContainer}>
+              <View style={styles.altLine} />
+              <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+              <View style={styles.altLine} />
+            </View>
+            
+            <View style={styles.socialBtns}>
+              {Platform.OS === 'ios' && (
+                <TouchableOpacity 
+                  style={styles.socialBtn}
+                  onPress={handleAppleLogin}
+                >
+                  <CostarText style={styles.socialIcon}></CostarText>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity 
+                style={styles.socialBtn}
+                onPress={handleGoogleLogin}
+                disabled={!request}
+              >
+                <CostarText style={styles.socialIcon}>G</CostarText>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={styles.indicator} />
     </View>
   );
 };
@@ -245,81 +224,148 @@ export const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: colors.astraBg,
   },
   keyboardView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    padding: spacing.xl,
+    paddingHorizontal: 32,
+    paddingTop: 80,
+    paddingBottom: 60,
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: spacing['3xl'],
+  island: {
+    position: 'absolute',
+    top: 12,
+    left: '50%',
+    marginLeft: -63,
+    width: 126,
+    height: 37,
+    backgroundColor: colors.black,
+    borderRadius: 20,
+    zIndex: 10,
   },
-  logoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.xl,
+  backBtn: {
+    width: 40,
+    marginBottom: 32,
+  },
+  backBtnText: {
+    fontSize: 24,
+    color: colors.astraFg,
+  },
+  header: {
+    marginBottom: 40,
   },
   title: {
-    marginBottom: spacing.sm,
+    fontSize: 36,
+    color: colors.astraFg,
+    lineHeight: 40,
+    marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
+    fontFamily: 'DM Sans',
+    fontSize: 15,
+    color: colors.astraMuted,
   },
   form: {
-    width: '100%',
+    gap: 24,
   },
-  inputContainer: {
-    marginBottom: spacing.lg,
+  inputGroup: {
+    gap: 8,
   },
-  inputLabel: {
-    marginBottom: spacing.sm,
+  label: {
+    fontFamily: 'DM Sans',
+    fontSize: 11,
+    color: colors.astraMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 1.1,
   },
   input: {
-    backgroundColor: colors.gray900,
-    borderRadius: 8,
-    padding: spacing.lg,
-    color: colors.white,
-    fontSize: 16,
+    height: 52,
+    backgroundColor: colors.astraSurface,
     borderWidth: 1,
-    borderColor: colors.gray800,
+    borderColor: colors.astraBorder,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    color: colors.astraFg,
+    fontSize: 15,
+    fontFamily: 'DM Sans',
   },
-  loginButton: {
-    marginTop: spacing.lg,
+  forgotPw: {
+    alignSelf: 'flex-end',
+    marginTop: -12,
   },
-  divider: {
+  forgotPwText: {
+    fontFamily: 'DM Sans',
+    fontSize: 13,
+    color: colors.astraViolet,
+  },
+  btn: {
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.astraFg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+  },
+  btnText: {
+    color: colors.astraBg,
+    fontSize: 15,
+    fontWeight: '500',
+    fontFamily: 'DM Sans',
+  },
+  altLogin: {
+    marginTop: 'auto',
+    alignItems: 'center',
+    paddingTop: 40,
+  },
+  altLoginTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: spacing.xl,
-    gap: spacing.md,
+    marginBottom: 20,
+    width: '100%',
   },
-  dividerLine: {
+  altLine: {
     flex: 1,
     height: 1,
-    backgroundColor: colors.gray800,
+    backgroundColor: colors.astraBorder,
   },
-  socialButtons: {
-    gap: spacing.md,
+  altLoginText: {
+    fontFamily: 'DM Sans',
+    fontSize: 13,
+    color: colors.astraMuted,
+    marginHorizontal: 16,
   },
-  socialButton: {
-    marginTop: spacing.sm,
-  },
-  appleButton: {
-    width: '100%',
-    height: 50,
-    marginTop: spacing.sm,
-  },
-  footer: {
+  socialBtns: {
     flexDirection: 'row',
+    gap: 16,
     justifyContent: 'center',
+  },
+  socialBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    backgroundColor: colors.astraSurface,
     alignItems: 'center',
-    marginTop: spacing['3xl'],
-    gap: spacing.sm,
+    justifyContent: 'center',
+  },
+  socialIcon: {
+    fontSize: 20,
+    color: colors.astraFg,
+  },
+  indicator: {
+    position: 'absolute',
+    bottom: 8,
+    left: '50%',
+    marginLeft: -67,
+    width: 134,
+    height: 5,
+    backgroundColor: colors.astraFg,
+    borderRadius: 3,
+    opacity: 0.3,
   },
 });
 

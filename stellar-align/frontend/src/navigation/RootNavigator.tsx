@@ -3,10 +3,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuthStore } from '@store/authStore';
 import { LoginScreen } from '@screens/Auth/LoginScreen';
 import { RegisterScreen } from '@screens/Auth/RegisterScreen';
+import { RegisterStartScreen } from '@screens/Auth/RegisterStartScreen';
 import { MainNavigator } from './MainNavigator';
 import { SettingsScreen } from '@screens/SettingsScreen';
 
 export type RootStackParamList = {
+  RegisterStart: undefined;
   Login: undefined;
   Register: undefined;
   Main: undefined;
@@ -33,6 +35,7 @@ export const RootNavigator: React.FC = () => {
         </>
       ) : (
         <>
+          <Stack.Screen name="RegisterStart" component={RegisterStartScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
         </>

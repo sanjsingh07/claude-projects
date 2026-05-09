@@ -375,3 +375,18 @@ Updated RegisterScreen Step 2 to use the same star background as Step 1 for visu
 - **Changes**:
   - Removed `backgroundColor: colors.astraBg` from the `astraScreen` style. This allows the `CostarBackground` component (rendered at the root level) to show through in Step 2, matching the star-field background of Step 1.
   - Maintained all other astra-themed component styles to preserve the design system's interactive elements.
+
+## [2026-05-09 12:20:43] Refactor Signup/Login Flow
+- **What was changed and why**: Updated the signup and login flow to match new design templates. Created a new starting screen and refactored existing screens for a better user experience.
+- **Summary of changes**:
+    - Created `RegisterStartScreen.tsx` as the new entry point.
+    - Updated `RootNavigator.tsx` to set `RegisterStartScreen` as the initial screen.
+    - Redesigned `LoginScreen.tsx` based on `screens_00-login.html`.
+    - Redesigned `RegisterScreen.tsx` Step 1 based on `screens_00-signup-email.html`.
+    - Added design elements like "island" and "indicator" across auth screens.
+    - Preserved existing authentication and registration business logic.
+- **Files modified**:
+    - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx` (New)
+    - `stellar-align/frontend/src/navigation/RootNavigator.tsx`
+    - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+    - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`

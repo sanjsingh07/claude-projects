@@ -356,34 +356,31 @@ export const RegisterScreen: React.FC = () => {
             {step === 1 ? (
             <View style={styles.step1Container}>
               <View style={styles.progressContainer}>
-                <View style={[styles.progressDot, step >= 1 && styles.activeDot]} />
-                <View style={[styles.progressLine, step >= 2 && styles.activeLine]} />
-                <View style={[styles.progressDot, step >= 2 && styles.activeDot]} />
+                <View style={[styles.dot, styles.activeDot]} />
+                <View style={styles.line} />
+                <View style={styles.dot} />
               </View>
 
-              <View style={styles.logoContainer}>
+              <View style={styles.header}>
                 <View style={styles.logoRow}>
-                  <SignIcon sign="sun" size={36} color={colors.white} />
-                  <SignIcon sign="moon" size={30} color={colors.gray400} />
+                  <CostarText style={styles.logoSym}>☉</CostarText>
+                  <CostarText style={[styles.logoSym, { opacity: 0.4 }]}>☽</CostarText>
                 </View>
-              </View>
-
-              <View style={styles.stepContent}>
-                <CostarText variant="heading3" uppercase style={styles.stepTitle}>
+                <CostarText variant="heading1" serif italic style={styles.title}>
                   Create Account
                 </CostarText>
-                <CostarText variant="bodySmall" color={colors.gray500} style={styles.stepDescription}>
+                <CostarText style={styles.subtitle}>
                   Begin your cosmic journey
                 </CostarText>
+              </View>
 
-                <View style={styles.inputContainer}>
-                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                    Email
-                  </CostarText>
+              <View style={styles.form}>
+                <View style={styles.inputGroup}>
+                  <CostarText style={styles.label}>Email</CostarText>
                   <TextInput
                     style={styles.input}
                     placeholder="your@email.com"
-                    placeholderTextColor={colors.gray600}
+                    placeholderTextColor={colors.astraMuted}
                     value={email}
                     onChangeText={setEmail}
                     autoCapitalize="none"
@@ -391,51 +388,50 @@ export const RegisterScreen: React.FC = () => {
                   />
                 </View>
 
-                <View style={styles.inputContainer}>
-                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                    Password
-                  </CostarText>
+                <View style={styles.inputGroup}>
+                  <CostarText style={styles.label}>Password</CostarText>
                   <TextInput
                     style={styles.input}
                     placeholder="Min 8 characters"
-                    placeholderTextColor={colors.gray600}
+                    placeholderTextColor={colors.astraMuted}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
                   />
                 </View>
 
-                <View style={styles.inputContainer}>
-                  <CostarText variant="label" color={colors.gray400} style={styles.inputLabel}>
-                    Confirm Password
-                  </CostarText>
+                <View style={styles.inputGroup}>
+                  <CostarText style={styles.label}>Confirm Password</CostarText>
                   <TextInput
                     style={styles.input}
-                    placeholder="••••••••"
-                    placeholderTextColor={colors.gray600}
+                    placeholder="Repeat password"
+                    placeholderTextColor={colors.astraMuted}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry
                   />
                 </View>
+
+                <TouchableOpacity 
+                  style={[styles.btn, isLoginPending && { opacity: 0.7 }]}
+                  onPress={handleNext}
+                  disabled={isLoginPending}
+                >
+                  {isLoginPending ? (
+                    <ActivityIndicator color={colors.astraBg} />
+                  ) : (
+                    <CostarText style={styles.btnText}>Continue</CostarText>
+                  )}
+                </TouchableOpacity>
               </View>
 
-              <View style={styles.buttonContainer}>
-                <CostarButton
-                  onPress={handleBack}
-                  variant="outline"
-                  style={styles.backButton}
-                >
-                  Cancel
-                </CostarButton>
-
-                <CostarButton
-                  onPress={handleNext}
-                  loading={isLoginPending}
-                  style={styles.nextButton}
-                >
-                  Continue
-                </CostarButton>
+              <View style={styles.footer}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                  <CostarText style={styles.footerText}>Already have an account? </CostarText>
+                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <CostarText style={[styles.footerText, styles.footerLink]}>Log In</CostarText>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           ) : (
@@ -582,6 +578,7 @@ export const RegisterScreen: React.FC = () => {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={styles.indicator} />
 
       {/* Modals for iOS/Logic */}
       <Modal
@@ -767,7 +764,7 @@ const useDebounce = (value: string, delay: number): string => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: colors.astraBg,
   },
   keyboardView: {
     flex: 1,
@@ -775,44 +772,115 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
+  step1Container: {
+    flex: 1,
+    paddingHorizontal: 32,
+    paddingTop: 80,
+    paddingBottom: 60,
+  },
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    gap: 8,
+    marginBottom: 48,
   },
-  progressDot: {
+  dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.gray600,
+    backgroundColor: colors.astraBorder,
   },
   activeDot: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.astraViolet,
+    shadowColor: colors.astraViolet,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  progressLine: {
+  line: {
     width: 40,
-    height: 2,
-    backgroundColor: colors.gray800,
-    marginHorizontal: spacing.sm,
+    height: 1,
+    backgroundColor: colors.astraBorder,
   },
-  activeLine: {
-    backgroundColor: colors.white,
-  },
-  logoContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing['3xl'],
+  header: {
+    marginBottom: 40,
   },
   logoRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
+    marginBottom: 24,
   },
-  stepContent: {
-    paddingHorizontal: spacing.lg,
+  logoSym: {
+    fontSize: 32,
+    color: colors.astraFg,
   },
-  step1Container: {
+  title: {
+    fontSize: 36,
+    color: colors.astraFg,
+    lineHeight: 40,
+    marginBottom: 8,
+    textTransform: 'uppercase',
+  },
+  subtitle: {
+    fontFamily: 'DM Sans',
+    fontSize: 15,
+    color: colors.astraMuted,
+  },
+  form: {
     flex: 1,
+    gap: 24,
+  },
+  inputGroup: {
+    gap: 8,
+  },
+  label: {
+    fontFamily: 'DM Sans',
+    fontSize: 11,
+    color: colors.astraMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 1.1,
+  },
+  input: {
+    height: 52,
+    backgroundColor: colors.astraSurface,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    color: colors.astraFg,
+    fontSize: 15,
+    fontFamily: 'DM Sans',
+    justifyContent: 'center',
+  },
+  btn: {
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.astraFg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 'auto',
+  },
+  btnText: {
+    color: colors.astraBg,
+    fontSize: 15,
+    fontWeight: '500',
+    fontFamily: 'DM Sans',
+  },
+  footer: {
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontFamily: 'DM Sans',
+    fontSize: 14,
+    color: colors.astraMuted,
+  },
+  footerLink: {
+    color: colors.astraViolet,
+    fontWeight: '500',
   },
   astraScreen: {
     flex: 1,
@@ -824,7 +892,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     left: '50%',
-    marginLeft: -63, // Half of 126
+    marginLeft: -63,
     width: 126,
     height: 37,
     backgroundColor: colors.black,
@@ -850,17 +918,6 @@ const styles = StyleSheet.create({
     color: colors.astraFg,
     fontSize: 32,
     lineHeight: 36,
-    // Note: CostarText handles serif/italic based on props passed
-  },
-  inputGroup: {
-    gap: 8,
-  },
-  label: {
-    color: colors.astraMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    fontSize: 11,
-    fontFamily: 'DM Sans',
   },
   astraInput: {
     height: 52,
@@ -897,80 +954,6 @@ const styles = StyleSheet.create({
   astraBackButton: {
     marginTop: 16,
     paddingVertical: 12,
-  },
-  stepTitle: {
-    textAlign: 'center',
-    marginBottom: spacing.sm,
-  },
-  stepDescription: {
-    textAlign: 'center',
-    marginBottom: spacing['2xl'],
-  },
-  inputContainer: {
-    marginBottom: spacing.lg,
-  },
-  inputLabel: {
-    marginBottom: spacing.sm,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.gray700,
-    borderRadius: 8,
-    padding: spacing.md,
-    color: colors.white,
-    fontSize: 16,
-  },
-  pickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.gray700,
-    borderRadius: 8,
-    padding: spacing.md,
-    backgroundColor: colors.gray900,
-    gap: spacing.sm,
-  },
-  pickerButtonText: {
-    color: colors.white,
-    flex: 1,
-  },
-  timezoneContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  timezoneButton: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.gray700,
-  },
-  timezoneButtonActive: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.white,
-    backgroundColor: colors.white + '20',
-  },
-  timezoneText: {
-    color: colors.gray400,
-  },
-  timezoneTextActive: {
-    color: colors.white,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    gap: spacing.md,
-  },
-  backButton: {
-    flex: 1,
-  },
-  nextButton: {
-    flex: 2,
   },
   modalOverlay: {
     flex: 1,
@@ -1066,3 +1049,4 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
+een;
