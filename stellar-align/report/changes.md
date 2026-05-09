@@ -476,3 +476,20 @@ Refined the aspect and transit calculation engine to achieve high precision, spe
 ### Verified:
 - Manually checked edge cases involving the 0° Aries boundary.
 - Verified that retrograde planets correctly influence the "applying" flag when moving toward a stationary natal point.
+
+## [2026-05-09] Secure Social Authentication
+Closed the critical security vulnerability where social ID tokens were being decoded without signature verification.
+
+### Changes:
+- **Backend - Dependencies**:
+  - Added `google-auth-library` for robust Google token validation.
+  - Added `apple-signin-auth` for secure Apple ID token verification using Apple's public keys.
+- **Backend - Auth Controller**:
+  - Refactored `socialLogin` to perform full cryptographic signature verification.
+  - Google: Now uses `verifyIdToken` with audience check against `GOOGLE_CLIENT_ID`.
+  - Apple: Now uses `verifyIdToken` to validate the token against Apple's certificate authority.
+  - Replaced insecure `jwt.decode()` calls with protected library methods.
+
+### Verified:
+- Logic confirms token payload structure and signature before proceeding with user creation or login.
+- Error handling specifically catches and logs verification failures while returning a safe `INVALID_TOKEN` error to the client.
