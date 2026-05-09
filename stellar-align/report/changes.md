@@ -512,3 +512,24 @@ Successfully refactored the astrological data structure to move from unstructure
 ### Verified:
 - Upsert logic handles both creation and updates correctly within SQL transactions.
 - API endpoints correctly fetch and return nested astrological data using Prisma's `include` directives.
+
+## [2026-05-09] Timezone Dependency Resolution
+Eliminated the critical dependency on `timeapi.io` by implementing a robust backend timezone resolution and validation system.
+
+### Changes:
+- **Backend - Dependencies**:
+  - Integrated `geo-tz` for offline, high-performance coordinate-to-timezone lookups.
+- **Backend - Utilities**:
+  - Created `timezone.ts` utility to resolve and validate timezones from latitude/longitude.
+  - Implemented `validateTimezone` which acts as a "source of truth" to ensure astrological calculations use the correct local time offset.
+- **Backend - API**:
+  - Added a new `GET /api/utils/timezone` endpoint, allowing the frontend to resolve timezones through the trusted backend instead of third-party services.
+- **Backend - Logic**:
+  - Updated `AuthService.register` and `UserController.updateCurrentUser` to automatically validate/resolve timezones whenever coordinates are provided or updated.
+- **Frontend**:
+  - Refactored `RegisterScreen` and `SettingsScreen` to use the new backend `/utils/timezone` endpoint.
+  - Standardized timezone handling through the `api.ts` service.
+
+### Verified:
+- System now correctly identifies timezones without internet access to external timezone APIs.
+- Backend automatically corrects mismatched timezones during profile updates, ensuring higher astrological accuracy.
