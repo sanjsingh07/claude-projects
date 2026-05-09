@@ -575,3 +575,27 @@ Addressed the "Birth Time Fallback" issue by implementing explicit tracking for 
 - Toggle state persists correctly to the backend.
 - UI warnings are prominent and explain the impact on astrological accuracy.
 - Backend calculations continue to function with the 12:00 fallback but are now context-aware.
+
+## [2026-05-09] Push Notification Delivery Logic
+Implemented the full delivery logic for push notifications, completing the architecturally defined system.
+
+### Changes:
+- **Backend - Dependencies**:
+  - Integrated `expo-server-sdk` for reliable push delivery to iOS and Android.
+- **Backend - Services**:
+  - Created `NotificationService` to manage token registration, delivery, and automatic cleanup of invalid tokens.
+- **Backend - Controllers & Routes**:
+  - Implemented `NotificationController` with endpoints for token management and notification history.
+  - Registered `POST /notifications/tokens` and related routes.
+- **Backend - Integration**:
+  - Added real-time notifications for **Friend Requests** and **Friend Acceptance**.
+  - Added automatic notifications when **Daily Horoscopes** are generated.
+- **Frontend - Utilities**:
+  - Created `notifications.ts` for managing device permissions and retrieving Expo push tokens.
+- **Frontend - Integration**:
+  - Updated `App.tsx` to configure foreground notifications and register the device token upon authentication.
+
+### Verified:
+- System correctly handles token lifecycle (registration, deactivation on error).
+- Notifications are persisted in the database for history tracking.
+- Critical user events now trigger immediate push alerts.
