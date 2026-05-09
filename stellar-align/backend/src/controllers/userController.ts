@@ -594,15 +594,28 @@ export class UserController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        select: {
-          notificationSettings: true,
-          privacySettings: true,
-        },
+        include: { settings: true },
       });
+
+      if (!user) {
+        throw new NotFoundError("User not found");
+      }
+
+      // If user settings table doesn't exist, create it
+      let settings = user.settings;
+      if (!settings) {
+        settings = await prisma.userSettings.create({
+          data: { userId: req.userId },
+        });
+      }
 
       res.json({
         success: true,
-        data: user,
+        data: {
+          ...settings,
+          notificationSettings: user.notificationSettings,
+          privacySettings: user.privacySettings,
+        },
       });
     } catch (error) {
       next(error);
@@ -616,21 +629,27 @@ export class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { notificationSettings, privacySettings } = req.body;
+      const { notificationSettings, privacySettings, ...otherSettings } = req.body;
 
       const user = await prisma.user.update({
         where: { id: req.userId },
         data: {
-          notificationSettings: notificationSettings
-            ? { ...notificationSettings }
-            : undefined,
+          notificationSettings: notificationSettings ? { ...notificationSettings } : undefined,
           privacySettings: privacySettings ? { ...privacySettings } : undefined,
+          settings: Object.keys(otherSettings).length > 0 ? {
+            update: {
+              ...otherSettings,
+              updatedAt: new Date(),
+            }
+          } : undefined,
         },
+        include: { settings: true }
       });
 
       res.json({
         success: true,
         data: {
+          ...user.settings,
           notificationSettings: user.notificationSettings,
           privacySettings: user.privacySettings,
         },

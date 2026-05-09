@@ -13,6 +13,47 @@ export interface User {
   birthLatitude?: number;
   birthLongitude?: number;
   birthUtcOffset?: number;
+  notificationSettings: NotificationSettings;
+  privacySettings: PrivacySettings;
+}
+
+export interface NotificationSettings {
+  pushTime: string;
+  marketing: boolean;
+  transitAlerts: boolean;
+  dailyHoroscope: boolean;
+  friendActivity: boolean;
+}
+
+export interface PrivacySettings {
+  chartVisible: 'public' | 'friends' | 'private';
+  profileVisible: boolean;
+  allowCompatibility: boolean;
+}
+
+export interface UserSettings {
+  id: string;
+  userId: string;
+  chartStyle: string;
+  defaultDivisionalChart: DivisionalChartType;
+  darkMode: boolean;
+  accentColor: string;
+  
+  // Notification flags
+  dailyReadingEnabled: boolean;
+  dailyReadingTime: string;
+  transitAlertsEnabled: boolean;
+  transitAlertsLevel: 'major' | 'all' | string;
+  compatibilityEnabled: boolean;
+  compatibilityFreq: 'daily' | 'weekly' | 'monthly' | string;
+  birthdayRemindersEnabled: boolean;
+  
+  // Privacy flags
+  shareBirthData: boolean;
+  analyticsEnabled: boolean;
+  
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserProfile {
