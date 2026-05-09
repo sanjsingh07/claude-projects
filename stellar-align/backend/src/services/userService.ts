@@ -71,7 +71,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
 
     if (sunPos) {
       astrology.sun = {
-        sign: sunPos.sign,
+        sign: sunPos.sign.toLowerCase(),
         degree: sunPos.degree,
         label: formatPlacement(sunPos.sign, sunPos.degree)
       };
@@ -79,7 +79,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
     
     if (moonPos) {
       astrology.moon = {
-        sign: moonPos.sign,
+        sign: moonPos.sign.toLowerCase(),
         degree: moonPos.degree,
         label: formatPlacement(moonPos.sign, moonPos.degree)
       };
@@ -87,7 +87,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
     
     if (risingSign) {
       astrology.rising = {
-        sign: risingSign,
+        sign: risingSign.toLowerCase(),
         degree: ascPos?.degree || 0,
         label: formatPlacement(risingSign, ascPos?.degree || 0)
       };
@@ -97,7 +97,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
       const pos = findPos(p);
       if (pos) {
         astrology[p.toLowerCase()] = {
-          sign: pos.sign,
+          sign: pos.sign.toLowerCase(),
           degree: pos.degree,
           label: formatPlacement(pos.sign, pos.degree)
         };
@@ -108,20 +108,20 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
   const badges: any[] = [];
   if (astrology.sun) {
     badges.push({
-      label: `${astrology.sun.sign.charAt(0) + astrology.sun.sign.slice(1).toLowerCase()} Sun`,
-      type: getSignBadgeType(astrology.sun.sign)
+      label: `${astrology.sun.sign.charAt(0).toUpperCase() + astrology.sun.sign.slice(1)} Sun`,
+      type: getSignBadgeType(astrology.sun.sign.toUpperCase() as any)
     });
   }
   if (astrology.moon) {
     badges.push({
-      label: `${astrology.moon.sign.charAt(0) + astrology.moon.sign.slice(1).toLowerCase()} Moon`,
-      type: getSignBadgeType(astrology.moon.sign)
+      label: `${astrology.moon.sign.charAt(0).toUpperCase() + astrology.moon.sign.slice(1)} Moon`,
+      type: getSignBadgeType(astrology.moon.sign.toUpperCase() as any)
     });
   }
   if (astrology.rising) {
     badges.push({
-      label: `${astrology.rising.sign.charAt(0) + astrology.rising.sign.slice(1).toLowerCase()} Rising`,
-      type: getSignBadgeType(astrology.rising.sign)
+      label: `${astrology.rising.sign.charAt(0).toUpperCase() + astrology.rising.sign.slice(1)} Rising`,
+      type: getSignBadgeType(astrology.rising.sign.toUpperCase() as any)
     });
   }
 

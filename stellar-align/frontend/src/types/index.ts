@@ -38,12 +38,12 @@ export interface UserProfile {
     };
   };
   astrology: {
-    sun: { sign: string; degree: number; label: string };
-    moon: { sign: string; degree: number; label: string };
-    rising: { sign: string; degree: number; label: string };
-    mercury?: { sign: string; degree: number; label: string };
-    venus?: { sign: string; degree: number; label: string };
-    mars?: { sign: string; degree: number; label: string };
+    sun: { sign: ZodiacSign; degree: number; label: string };
+    moon: { sign: ZodiacSign; degree: number; label: string };
+    rising: { sign: ZodiacSign; degree: number; label: string };
+    mercury?: { sign: ZodiacSign; degree: number; label: string };
+    venus?: { sign: ZodiacSign; degree: number; label: string };
+    mars?: { sign: ZodiacSign; degree: number; label: string };
   };
   badges: Array<{ label: string; type: 'accent' | 'pink' | 'default' }>;
 }
