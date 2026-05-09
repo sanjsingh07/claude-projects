@@ -493,3 +493,22 @@ Closed the critical security vulnerability where social ID tokens were being dec
 ### Verified:
 - Logic confirms token payload structure and signature before proceeding with user creation or login.
 - Error handling specifically catches and logs verification failures while returning a safe `INVALID_TOKEN` error to the client.
+
+## [2026-05-09] Database Schema Normalization
+Successfully refactored the astrological data structure to move from unstructured `Json` blobs to a fully normalized, column-based relational model.
+
+### Changes:
+- **Prisma Schema Refactor**:
+  - Replaced `Json` fields in `NatalChart` and `DivisionalChart` with explicit relations.
+  - Added new models: `NatalPlanetPosition`, `NatalHouseCusp`, `NatalAspect`, `DivisionalPlanetPosition`, and `DivisionalHouseCusp`.
+  - Added explicit fields for `degree`, `minute`, `sign`, `retrograde`, and `speed` for each celestial body.
+- **Backend - Logic Updates**:
+  - Updated `AuthController.calculateUserChart` to handle relational data creation during the initial Western and Vedic calculations.
+  - Updated `vedicChart.ts` routes to correctly upsert relational data using transactions, ensuring data integrity by deleting old positions before inserting new ones.
+  - Standardized the API responses to return the full nested relational structure, removing the need for manual `Json` transformations.
+- **Performance & Queryability**:
+  - The new structure allows for efficient indexing and complex SQL queries (e.g., finding all users with a specific Sun/Moon combination) which was previously impossible with `Json`.
+
+### Verified:
+- Upsert logic handles both creation and updates correctly within SQL transactions.
+- API endpoints correctly fetch and return nested astrological data using Prisma's `include` directives.
