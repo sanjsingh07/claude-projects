@@ -84,8 +84,6 @@ export const RegisterScreen: React.FC = () => {
     scheme: 'stellar-align',
   });
 
-  console.log('DEBUG: Generated Google Redirect URI:', redirectUri);
-
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
@@ -133,10 +131,10 @@ export const RegisterScreen: React.FC = () => {
   const debouncedSearch = useDebounce(locationSearchInput, 500);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.profileCompleted) {
       navigation.replace('Main');
     }
-  }, [isAuthenticated, navigation]);
+  }, [isAuthenticated, user?.profileCompleted, navigation]);
 
   useEffect(() => {
     const fetchLocations = async () => {

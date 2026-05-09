@@ -37,8 +37,6 @@ export const RegisterStartScreen: React.FC = () => {
     scheme: 'stellar-align',
   });
 
-  console.log('DEBUG: Generated Google Redirect URI:', redirectUri);
-
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,

@@ -43,8 +43,6 @@ export const LoginScreen: React.FC = () => {
     scheme: 'stellar-align',
   });
 
-  console.log('DEBUG: Generated Google Redirect URI:', redirectUri);
-
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
@@ -56,12 +54,18 @@ export const LoginScreen: React.FC = () => {
   console.log('LoginScreen - isAuthenticated:', isAuthenticated);
 
   useEffect(() => {
-    console.log('useEffect - isAuthenticated changed to:', isAuthenticated);
+    console.log('useEffect - auth check:', { isAuthenticated, profileCompleted: user?.profileCompleted });
     if (isAuthenticated) {
-      console.log('Navigating to Main...');
-      navigation.replace('Main');
+      if (user?.profileCompleted) {
+        console.log('Navigating to Main...');
+        navigation.replace('Main');
+      } else {
+        console.log('Navigating to Register (Incomplete Profile)...');
+        // @ts-ignore
+        navigation.replace('Register', { step: 2, socialUser: user });
+      }
     }
-  }, [isAuthenticated, navigation]);
+  }, [isAuthenticated, user?.profileCompleted, navigation, user]);
 
   useEffect(() => {
     if (response?.type === 'success' && response.params?.id_token) {
