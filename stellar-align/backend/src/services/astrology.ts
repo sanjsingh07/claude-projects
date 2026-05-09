@@ -618,6 +618,9 @@ export async function generateDailyHoroscope(
       include: { 
         natalChart: {
           include: {
+            planetaryPositions: true,
+            houses: true,
+            aspects: true,
             divisionalCharts: true
           }
         } 
@@ -825,15 +828,21 @@ export async function calculateCurrentTransits(): Promise<PlanetPosition[]> {
 // ────────────────────────────────────────────
 
 export function calculateUserTransits(
-  natalPositions: Record<string, any>,
+  natalPositions: any[] | Record<string, any>,
   transitPositions: Record<string, PlanetPosition>,
 ): Aspect[] {
   const transits: Aspect[] = [];
   const transitPlanets = Object.values(transitPositions);
-  const natalPlanets = Object.values(natalPositions).filter(p => p.longitude !== undefined);
+  
+  // Robustly handle both legacy object and new relation array formats
+  const natalPlanets = Array.isArray(natalPositions) 
+    ? natalPositions 
+    : Object.values(natalPositions);
+    
+  const filteredNatalPlanets = natalPlanets.filter(p => p && p.longitude !== undefined);
 
   for (const tPos of transitPlanets) {
-    for (const nPos of natalPlanets) {
+    for (const nPos of filteredNatalPlanets) {
       let diff = Math.abs(tPos.longitude - nPos.longitude);
       if (diff > 180) diff = 360 - diff;
 

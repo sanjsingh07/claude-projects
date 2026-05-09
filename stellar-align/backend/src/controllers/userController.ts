@@ -8,6 +8,7 @@ import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
 import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipStatus } from "@prisma/client";
 import { buildUserProfile } from "../services/userService";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 export class UserController {
   constructor() {
@@ -30,7 +31,7 @@ export class UserController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {
@@ -214,7 +215,7 @@ export class UserController {
   private async calculateNatalChartForUserInternal(userId: string, forceRecalculate: boolean = false): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { natalChart: true },
+      include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
     });
 
     // Skip if user not found or already has a natal chart (unless forcing recalculate)
@@ -337,7 +338,7 @@ export class UserController {
   private async calculateVedicChartForUserInternal(userId: string, ayanamsaType: AyanamsaType = AyanamsaType.LAHIRI): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { natalChart: true },
+      include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
     });
 
     // Skip if user not found or doesn't have birth data
@@ -575,7 +576,7 @@ export class UserController {
 
       const user = await prisma.user.findUnique({
         where: { id: userId, isDeleted: false },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {

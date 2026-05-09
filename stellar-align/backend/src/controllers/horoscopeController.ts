@@ -6,6 +6,7 @@ import { NotFoundError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
 import logger from "../config/logger";
 import { GeneratedBy } from "@prisma/client";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 export class HoroscopeController {
   constructor() {
@@ -28,7 +29,7 @@ export class HoroscopeController {
       
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {
@@ -69,7 +70,7 @@ export class HoroscopeController {
         // First check if user has a natal chart
         const user = await prisma.user.findUnique({
           where: { id: userId },
-          include: { natalChart: true },
+          include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
         });
 
         if (!user) {
@@ -165,7 +166,7 @@ export class HoroscopeController {
       
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {

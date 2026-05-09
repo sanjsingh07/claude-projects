@@ -10,6 +10,7 @@ import { ApiError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType } from "@prisma/client";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 export class AuthController {
   constructor() {
@@ -314,7 +315,7 @@ export class AuthController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       // Skip if user not found or already has a natal chart

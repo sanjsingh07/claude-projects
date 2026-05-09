@@ -5,6 +5,7 @@ import { astrologyService } from "../services/astrology";
 import { cache } from "../config/redis";
 import logger from "../config/logger";
 import { FriendshipStatus } from "@prisma/client";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 const router = Router();
 
@@ -70,11 +71,11 @@ router.get("/:userId", async (req: Request, res: Response, next: NextFunction) =
       const [user1, user2] = await Promise.all([
         prisma.user.findUnique({
           where: { id: userId1 },
-          include: { natalChart: true },
+          include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
         }),
         prisma.user.findUnique({
           where: { id: userId2 },
-          include: { natalChart: true },
+          include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
         }),
       ]);
 

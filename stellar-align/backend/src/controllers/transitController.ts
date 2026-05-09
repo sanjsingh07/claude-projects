@@ -4,6 +4,7 @@ import { prisma } from "../config/database";
 import { getTransitsForPeriod } from "../services/transits/transitEngine";
 import { NotFoundError } from "../utils/errors";
 import { cache } from "../config/redis";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 export class TransitController {
   // GET /transits?period=week|month|year
@@ -17,7 +18,7 @@ export class TransitController {
       
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user?.profileCompleted || !user?.natalChart) {

@@ -5,6 +5,7 @@ import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
 import { HouseSystem } from "@prisma/client";
 import { transformPlanetaryPositions } from "../utils/chart";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 const router = Router();
 
@@ -68,7 +69,7 @@ router.post(
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {

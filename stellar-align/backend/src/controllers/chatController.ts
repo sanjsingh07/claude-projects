@@ -3,6 +3,7 @@ import { prisma } from "../config/database";
 import { ApiError } from "../utils/errors";
 import logger from "../config/logger";
 import { ChatRole } from "@prisma/client";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
 // System prompt for the astrology chatbot
 const ASTROLOGY_SYSTEM_PROMPT = `You are an expert astrologer and spiritual guide. You have deep knowledge of:
@@ -33,7 +34,7 @@ export class ChatController {
       // Get user's natal chart info for context
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {
@@ -102,7 +103,7 @@ export class ChatController {
       // Get user's natal chart for context
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: true },
+        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
       });
 
       if (!user) {
