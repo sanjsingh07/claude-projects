@@ -5,6 +5,7 @@ import { prisma } from "../config/database";
 import { validateRequest } from "../middleware/validator";
 import { ApiError } from "../utils/errors";
 import { FriendshipStatus } from "@prisma/client";
+import { notificationService } from "../services/notification.service";
 
 const router = Router();
 
@@ -128,6 +129,25 @@ router.post(
         },
       });
 
+      // Send notification to addressee in background
+      (async () => {
+        try {
+          const requester = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: { displayName: true },
+          });
+
+          await notificationService.sendToUser(userId, {
+            title: "New Friend Request",
+            body: `${requester?.displayName || "Someone"} sent you a friend request`,
+            type: "friend_request",
+            data: { friendshipId: friendship.id },
+          });
+        } catch (err) {
+          console.error("Failed to send friend request notification", err);
+        }
+      })();
+
       res.status(201).json({
         success: true,
         data: { requestId: friendship.id, status: FriendshipStatus.PENDING },
@@ -157,6 +177,25 @@ router.post(
           acceptedAt: new Date(),
         },
       });
+
+      // Send notification to requester in background
+      (async () => {
+        try {
+          const accepter = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: { displayName: true },
+          });
+
+          await notificationService.sendToUser(friendship.requesterId, {
+            title: "Friend Request Accepted",
+            body: `${accepter?.displayName || "Someone"} accepted your friend request`,
+            type: "friend_accept",
+            data: { friendshipId: friendship.id },
+          });
+        } catch (err) {
+          console.error("Failed to send friend acceptance notification", err);
+        }
+      })();
 
       // Generate compatibility report in background
       // compatibilityService.calculateBetweenUsers(friendship.requesterId, req.userId!);

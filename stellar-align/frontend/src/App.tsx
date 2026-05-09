@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from '@navigation/RootNavigator';
 import { useAuthStore } from '@store/authStore';
+import { configureForegroundNotifications, registerForPushNotificationsAsync } from '@utils/notifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,12 +18,19 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
-  const { setLoading } = useAuthStore();
+  const { isAuthenticated, user, setLoading } = useAuthStore();
 
   useEffect(() => {
     // App startup logic
+    configureForegroundNotifications();
     setLoading(false);
-  }, []);
+  }, [setLoading]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      registerForPushNotificationsAsync(user.id);
+    }
+  }, [isAuthenticated, user?.id]);
 
   return (
     <SafeAreaProvider>

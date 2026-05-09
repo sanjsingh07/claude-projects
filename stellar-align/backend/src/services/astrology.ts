@@ -3,6 +3,7 @@ import logger from "../config/logger";
 import { aiContentService } from "./aiContent";
 import { llmProvider } from "./llmProvider";
 import { ZodiacSign, HouseSystem, AyanamsaType, ZodiacType } from "@prisma/client";
+import { notificationService } from "./notification.service";
 import * as sweph from "sweph";
 import path from "path";
 import fs from "fs";
@@ -690,6 +691,20 @@ export async function generateDailyHoroscope(
         generationVersion: 2,
       },
     });
+
+    // Notify user in background
+    (async () => {
+      try {
+        await notificationService.sendToUser(userId, {
+          title: "Your Daily Insight is Ready",
+          body: `Discover what the stars have in store for you today, ${user.displayName || "traveler"}.`,
+          type: "daily_horoscope",
+          data: { horoscopeId: horoscope.id },
+        });
+      } catch (err) {
+        logger.error("Failed to send horoscope notification", { err, userId });
+      }
+    })();
 
     return horoscope;
   } catch (error) {

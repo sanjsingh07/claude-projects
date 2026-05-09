@@ -357,6 +357,20 @@ class ApiService {
   async getTimezone(lat: string | number, lon: string | number) {
     return this.client.get('/utils/timezone', { params: { lat, lon } });
   }
+
+  // ==================== NOTIFICATIONS ====================
+
+  async registerPushToken(token: string, platform: string, deviceId?: string) {
+    return this.client.post('/notifications/tokens', { token, platform, deviceId });
+  }
+
+  async getNotificationHistory(page = 1, limit = 20) {
+    return this.client.get('/notifications', { params: { page, limit } });
+  }
+
+  async markNotificationAsRead(id: string) {
+    return this.client.patch(`/notifications/${id}/read`);
+  }
 }
 
 export const api = new ApiService();
