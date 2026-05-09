@@ -4,13 +4,15 @@ import { useAuthStore } from '@store/authStore';
 import { LoginScreen } from '@screens/Auth/LoginScreen';
 import { RegisterScreen } from '@screens/Auth/RegisterScreen';
 import { RegisterStartScreen } from '@screens/Auth/RegisterStartScreen';
+import { ResetPasswordScreen } from '@screens/Auth/ResetPasswordScreen';
 import { MainNavigator } from './MainNavigator';
 import { SettingsScreen } from '@screens/SettingsScreen';
 
 export type RootStackParamList = {
   RegisterStart: undefined;
   Login: undefined;
-  Register: undefined;
+  Register: { step?: number; socialUser?: any } | undefined;
+  ResetPassword: { token?: string } | undefined;
   Main: undefined;
   Settings: undefined;
 };
@@ -52,6 +54,7 @@ export const RootNavigator: React.FC = () => {
             component={RegisterScreen} 
             initialParams={isAuthenticated && !isProfileComplete ? { step: 2, socialUser: user } : undefined}
           />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         </>
       )}
     </Stack.Navigator>

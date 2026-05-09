@@ -1,9 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { prisma } from "../config/database";
 import { env } from "../config/env";
 import { cache } from "../config/redis";
 import logger from "../config/logger";
+import { emailService } from "./email.service";
 import { ApiError } from "../utils/errors";
 import { User, UserCreateInput } from "../types/user";
 import { AuthTokens, JwtPayload, RefreshTokenPayload } from "../types/api";
@@ -230,14 +232,15 @@ export class AuthService {
 
     if (!user) {
       // Don't reveal if email exists
+      logger.info("Password reset requested for non-existent email", { email });
       return;
     }
 
-    const token = crypto.randomUUID();
+    const token = crypto.randomBytes(32).toString("hex");
     await cache.set(`password_reset:${token}`, user.id, 3600); // 1 hour
 
-    // TODO: Send email with reset link
-    logger.info("Password reset requested", { email, token });
+    await emailService.sendPasswordResetEmail(email, token);
+    logger.info("Password reset requested", { email, userId: user.id });
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {

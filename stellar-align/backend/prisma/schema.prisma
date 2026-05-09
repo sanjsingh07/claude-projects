@@ -112,6 +112,7 @@ model User {
   requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
   addresseeCompat       CompatibilityReport[] @relation("AddresseeCompat")
   horoscopes            DailyHoroscope[]
+  passwordResetTokens   PasswordResetToken[]
   receivedFriendships   Friendship[] @relation("Addressee")
   sentFriendships       Friendship[] @relation("Requester")
   natalChart            NatalChart?
@@ -343,6 +344,18 @@ model AnalyticsEvent {
 
   @@index([userId, createdAt])
   @@index([eventType, createdAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
 }
 
 model ChatSession {

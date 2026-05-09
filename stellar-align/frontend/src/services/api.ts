@@ -224,6 +224,18 @@ class ApiService {
     return response;
   }
 
+  async forgotPassword(email: string) {
+    return this.client.post('/auth/forgot-password', { email });
+  }
+
+  async resetPassword(token: string, password: string) {
+    return this.client.post('/auth/reset-password', { token, password });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    return this.client.post('/auth/change-password', { currentPassword, newPassword });
+  }
+
   // ==================== USER ====================
 
   async getCurrentUser() {

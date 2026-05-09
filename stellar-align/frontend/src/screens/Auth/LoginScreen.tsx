@@ -100,6 +100,20 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address first.');
+      return;
+    }
+
+    try {
+      await api.forgotPassword(email.toLowerCase().trim());
+      Alert.alert('Success', 'If an account exists, a reset link has been sent to your email.');
+    } catch (e: any) {
+      Alert.alert('Error', e.message || 'Failed to request password reset');
+    }
+  };
+
   const handleGoogleLogin = async () => {
     if (!GOOGLE_CLIENT_ID && !GOOGLE_IOS_CLIENT_ID && !GOOGLE_ANDROID_CLIENT_ID && !GOOGLE_WEB_CLIENT_ID) {
       Alert.alert('Coming Soon', 'Google Sign-In requires configuration. Please use email/password for now.');
@@ -193,7 +207,10 @@ export const LoginScreen: React.FC = () => {
               />
             </View>
 
-            <TouchableOpacity style={styles.forgotPw}>
+            <TouchableOpacity 
+              style={styles.forgotPw}
+              onPress={handleForgotPassword}
+            >
               <CostarText style={styles.forgotPwText}>Forgot password?</CostarText>
             </TouchableOpacity>
 
