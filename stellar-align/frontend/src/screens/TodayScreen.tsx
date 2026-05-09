@@ -20,17 +20,19 @@ import {
 } from '@components';
 import { useHoroscope } from '@hooks/useHoroscope';
 import { colors } from '@theme/theme';
+import { DailyHoroscope } from '@types';
 
 export const TodayScreen: React.FC = () => {
   const { todayHoroscope, refresh, isLoading } = useHoroscope();
+  const horoscope = todayHoroscope as DailyHoroscope | null;
 
-  const headerDate = todayHoroscope?.forDate
-    ? DateTime.fromISO(todayHoroscope.forDate)
+  const headerDate = horoscope?.forDate
+    ? DateTime.fromISO(horoscope.forDate)
     : DateTime.now();
   const dayName = headerDate.toFormat('cccc').toUpperCase();
   const fullDate = headerDate.toFormat('MMMM d, yyyy');
 
-  if (isLoading && !todayHoroscope) {
+  if (isLoading && !horoscope) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <StatusBar barStyle="light-content" />
@@ -49,7 +51,7 @@ export const TodayScreen: React.FC = () => {
   }
 
   // Default data for when horoscope is loading or missing fields
-  const moodAspects = todayHoroscope?.moodAspects || {
+  const moodAspects = horoscope?.moodAspects || {
     emotion: '...',
     career: '...',
     love: '...',
@@ -63,15 +65,15 @@ export const TodayScreen: React.FC = () => {
     { key: 'Health', val: moodAspects.health, highlight: moodAspects.health === 'intense' || moodAspects.health === 'rising' },
   ];
 
-  const primaryTransit = todayHoroscope?.primaryTransit || {
+  const primaryTransit = horoscope?.primaryTransit || {
     title: 'Calculating transits...',
-    badge: 'minor',
+    badge: 'minor' as const,
     planets: '...',
     body: 'Please wait while we align with the stars.',
     source: '1 of ? active transits',
   };
 
-  const aspects = todayHoroscope?.aspects || [];
+  const aspects = horoscope?.aspects || [];
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -103,7 +105,7 @@ export const TodayScreen: React.FC = () => {
       >
         {/* Mood Section */}
         <MoodRing
-          score={todayHoroscope?.energyScore || 0}
+          score={horoscope?.energyScore || 0}
           label="Your day at a glance"
           aspects={moodAspectsList}
         />

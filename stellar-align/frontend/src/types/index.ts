@@ -5,13 +5,47 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
   profileCompleted: boolean;
-  birthDate?: string;
+  birthDate: string;
   birthTime?: string;
   birthTimeUnknown: boolean;
-  birthTimezone?: string;
+  birthTimezone: string;
   birthLocationName?: string;
   birthLatitude?: number;
   birthLongitude?: number;
+  birthUtcOffset?: number;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  avatarInitial: string;
+  bio?: string;
+  birthData: {
+    date: string;
+    formattedDate: string;
+    time: string;
+    isTimeApproximate: boolean;
+    place: {
+      city: string;
+      region: string;
+      country: string;
+      latitude: number;
+      longitude: number;
+    };
+    timezone: {
+      label: string;
+      offset: number;
+    };
+  };
+  astrology: {
+    sun: { sign: string; degree: number; label: string };
+    moon: { sign: string; degree: number; label: string };
+    rising: { sign: string; degree: number; label: string };
+    mercury?: { sign: string; degree: number; label: string };
+    venus?: { sign: string; degree: number; label: string };
+    mars?: { sign: string; degree: number; label: string };
+  };
+  badges: Array<{ label: string; type: 'accent' | 'pink' | 'default' }>;
 }
 
 export interface NatalChart {

@@ -13,6 +13,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { colors } from '@theme/theme';
 import { useAuthStore } from '@store/authStore';
+import { UserProfile } from '@types';
+import { getSignEmoji } from '@utils/astrology';
 import {
   ProfileHero,
   BirthDataGrid,
@@ -34,7 +36,7 @@ export const ProfileScreen: React.FC = () => {
     queryKey: ['profile'],
     queryFn: async () => {
       const response = await api.getCurrentUser();
-      return (response as any).data;
+      return response.data as UserProfile;
     },
   });
 
@@ -42,14 +44,14 @@ export const ProfileScreen: React.FC = () => {
     queryKey: ['settings'],
     queryFn: async () => {
       const response = await api.getSettings();
-      return (response as any).data;
+      return response.data;
     },
   });
 
   const updateSettingsMutation = useMutation({
     mutationFn: async (patch: any) => {
       const response = await api.updateSettings(patch);
-      return (response as any).data;
+      return response.data;
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['settings'], data);
@@ -69,8 +71,11 @@ export const ProfileScreen: React.FC = () => {
 
   if (!profile || !settings) return null;
 
+  const sunSign = profile.astrology.sun?.sign || '';
+  const sunEmoji = getSignEmoji(sunSign);
+
   const birthDataItems = [
-    { key: 'Date', val: profile.birthData.formattedDate, sub: `${profile.astrology.sun?.sign || ''} · ♓` },
+    { key: 'Date', val: profile.birthData.formattedDate, sub: `${sunSign} · ${sunEmoji}` },
     { key: 'Time', val: profile.birthData.time, sub: profile.birthData.isTimeApproximate ? 'approx' : 'known' },
     { key: 'Place', val: profile.birthData.place.city, sub: `${profile.birthData.place.region} · ${profile.birthData.place.latitude.toFixed(2)}°N` },
     { key: 'Timezone', val: profile.birthData.timezone.label, sub: `UTC ${profile.birthData.timezone.offset >= 0 ? '+' : ''}${profile.birthData.timezone.offset}` },

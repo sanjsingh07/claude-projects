@@ -1,0 +1,83 @@
+# Comprehensive Project Scan Report: stellar-align
+
+**Date:** Saturday, May 9, 2026
+**Status:** Completed
+**Scope:** Backend, Frontend, Database, Architectural Integrity
+
+---
+
+## 1. Executive Summary
+The `stellar-align` project is a feature-rich astrology application built with a modern stack (React Native/Expo, Node.js/TypeScript, Prisma/PostgreSQL). While the core architecture is sound and follows best practices (Zustand for state, React Query for server state, Swiss Ephemeris for calculations), several issues were identified regarding UI consistency, type safety, and pending features.
+
+---
+
+## 2. Identified Bugs
+
+### 2.1 Hardcoded Pisces Emoji in Profile
+*   **Location:** `frontend/src/screens/ProfileScreen.tsx` (Line 76)
+*   **Issue:** The birth date grid item hardcodes the Pisces emoji (`♓`) regardless of the user's actual sun sign.
+*   **Impact:** Poor user experience; incorrect astrological information displayed on the profile.
+*   **Fix:** Use a helper function (like `getSignEmoji`) to map the `profile.astrology.sun.sign` to the correct emoji.
+
+### 2.2 User Type Mismatch (Backend vs. Frontend)
+*   **Location:** `frontend/src/types/index.ts` vs. `backend/src/services/userService.ts`
+*   **Issue:** The frontend `User` interface does not match the `UserProfileResponse` structure returned by the backend's `/users/me` endpoint. The frontend uses `any` casting in `ProfileScreen.tsx` and `TodayScreen.tsx` to bypass this.
+*   **Impact:** Reduced type safety; potential for runtime errors if backend structure changes.
+*   **Fix:** Synchronize types and create a dedicated `UserProfile` interface in the frontend that matches the backend's `UserProfileResponse`.
+
+### 2.3 Zodiac Sign Casing Inconsistency
+*   **Issue:** Backend (Prisma/PostgreSQL) uses UPPERCASE enums (`ARIES`, `TAURUS`), while frontend types expect lowercase string literals (`'aries'`, `'taurus'`). 
+*   **Impact:** Logic errors in comparisons or lookup tables if not normalized.
+*   **Fix:** Standardize on one casing or ensure normalization during API serialization/deserialization.
+
+---
+
+## 3. Hardcoded Values & Environment Issues
+
+### 3.1 Localhost API URL
+*   **Location:** `frontend/src/services/api.ts`
+*   **Issue:** `DEFAULT_API_URL` defaults to `http://localhost:3000/api`.
+*   **Impact:** App will fail on physical devices unless an environment variable or local IP is provided.
+
+### 3.2 Hardcoded Timezones List
+*   **Location:** `frontend/src/screens/Auth/RegisterScreen.tsx`
+*   **Issue:** A short list of `TIMEZONES` is hardcoded for selection.
+*   **Impact:** Limited options for users not in those zones, although the app does have a timezone lookup utility via `api.getTimezone`.
+
+---
+
+## 4. Discrepancies (Backend / Frontend / DB)
+
+### 4.1 Missing Database Fields in Frontend
+*   **Issue:** The database contains detailed `notificationSettings` and `privacySettings` (as JSON), as well as a `UserSettings` table. Most of these are not fully exposed or typed in the frontend.
+*   **Impact:** Features like "Compatibility Visibility" or "Transit Alert Levels" may be in the database but unreachable from the UI.
+
+### 4.2 Mood Aspects Structure
+*   **Issue:** Frontend expects `moodAspects` to have keys `emotion`, `career`, `love`, `health`. Backend stores this as `Json`. If the AI generation fails to provide these exact keys, the `TodayScreen` fallback uses `...` which is not ideal.
+
+---
+
+## 5. Placeholders & Pending Features
+
+### 5.1 Apple Authentication
+*   **Location:** `backend/src/controllers/authController.ts`
+*   **Status:** The `appleAuth` method is currently a placeholder (empty).
+*   **Requirement:** Implement Apple ID token verification to enable social login for iOS users.
+
+### 5.2 Social Login Birth Data
+*   **Location:** `backend/src/services/auth.service.ts`
+*   **Status:** New social users are created with `birthDate: new Date()`.
+*   **Risk:** If a user abandons the app after social login but before the "Complete Profile" step, they will have a permanent, incorrect natal chart based on their signup date.
+
+---
+
+## 6. Suggested Improvements
+
+1.  **Shared Types Package:** Implement a shared types library or use a tool to sync Prisma types to the frontend to ensure structural integrity.
+2.  **Astrology Utility Sync:** Move sign mapping logic (emojis, elements, badge types) to a shared utility or ensure the backend returns all necessary display metadata (already partially done via `UserProfileResponse`).
+3.  **Onboarding Validation:** Ensure the "Complete Profile" step is mandatory and validated before allowing any astrological content generation for social users.
+4.  **Notification Engine:** Fully integrate the `notificationSettings` from the DB into the `SettingsScreen.tsx` to give users granular control.
+5.  **Error States:** Improve the "Chart Pending" state in the UI to explain *why* it's pending (e.g., "Calculating high-precision transits...").
+
+---
+**Report generated by Gemini CLI Agent.**
