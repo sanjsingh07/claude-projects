@@ -264,6 +264,38 @@ function assignHouses(positions: PlanetPosition[], houses: HouseCusp[], system: 
 }
 
 // ────────────────────────────────────────────
+// Aspect calculation helpers
+// ────────────────────────────────────────────
+
+export function getOrb(lon1: number, lon2: number, targetAngle: number): number {
+  let diff = Math.abs(lon1 - lon2);
+  if (diff > 180) diff = 360 - diff;
+  return Math.abs(diff - targetAngle);
+}
+
+/**
+ * Determines if an aspect is applying (getting closer to exact) or separating.
+ * Uses a small time-step (1 minute) to compare the current orb with the future orb.
+ */
+export function isAspectApplying(
+  p1: { longitude: number; speed: number },
+  p2: { longitude: number; speed: number },
+  targetAngle: number,
+): boolean {
+  const dt = 1 / 1440; // 1 minute in days (assuming speed is degrees/day)
+  
+  const currentOrb = getOrb(p1.longitude, p2.longitude, targetAngle);
+  const futureOrb = getOrb(
+    normalizeAngle(p1.longitude + p1.speed * dt),
+    normalizeAngle(p2.longitude + p2.speed * dt),
+    targetAngle,
+  );
+
+  // Return true if the distance to the exact aspect is decreasing
+  return futureOrb < currentOrb;
+}
+
+// ────────────────────────────────────────────
 // Aspect calculation
 // ────────────────────────────────────────────
 
@@ -282,15 +314,6 @@ function calculateAspects(planets: PlanetPosition[]): Aspect[] {
       for (const [aspectName, aspectData] of Object.entries(ASPECTS)) {
         const orb = Math.abs(diff - aspectData.angle);
         if (orb <= aspectData.orb) {
-          // Simplified applying/separating: if faster planet is behind slower planet, it's applying
-          const p1Speed = p1.speed;
-          const p2Speed = p2.speed;
-          
-          let applying = false;
-          // This is a simplified check; full calculation requires checking if relative distance is decreasing
-          if (p1.longitude < p2.longitude && p1Speed > p2Speed) applying = true;
-          if (p2.longitude < p1.longitude && p2Speed > p1Speed) applying = true;
-
           aspects.push({
             planet1: p1.planet,
             planet2: p2.planet,
@@ -298,7 +321,7 @@ function calculateAspects(planets: PlanetPosition[]): Aspect[] {
             angle: aspectData.angle,
             orb,
             exact: orb < 1,
-            applying,
+            applying: isAspectApplying(p1, p2, aspectData.angle),
           });
           break;
         }
@@ -809,7 +832,7 @@ export function calculateUserTransits(
             angle: aspectData.angle,
             orb,
             exact: orb < 1,
-            applying: tPos.speed > 0, // Simplified
+            applying: isAspectApplying(tPos, { ...nPos, speed: 0 }, aspectData.angle),
           });
           break;
         }

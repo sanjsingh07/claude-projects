@@ -1,7 +1,8 @@
 import { DateTime } from "luxon";
 import { 
   getPlanetaryPositions, 
-  calculateUserTransits
+  calculateUserTransits,
+  isAspectApplying
 } from "../astrology";
 import { classifyTransitType, determineImpactLevel } from "./transitClassifier";
 import { computeTransitProgress } from "./progressCalculator";
@@ -215,6 +216,7 @@ function calculateSkyAspects(transitPositions: Record<string, any>) {
             orb,
             pos1,
             pos2,
+            applying: isAspectApplying(pos1, pos2, data.angle),
           });
           break;
         }
