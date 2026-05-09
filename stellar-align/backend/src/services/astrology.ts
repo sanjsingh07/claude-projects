@@ -893,6 +893,16 @@ export async function calculateForecast(
         const sym2 = PLANET_SYMBOLS[transit.planet2 as PlanetName] || transit.planet2;
         const aspSym = ASPECT_SYMBOLS[transit.type as AspectType] || transit.type;
 
+        // Calculate accurate progress
+        const maxOrb = ASPECTS[transit.type as AspectType]?.orb || 8;
+        const intensity = Math.max(0, Math.min(1, 1 - transit.orb / maxOrb));
+        let progress: number;
+        if (transit.applying) {
+          progress = intensity * 50;
+        } else {
+          progress = 50 + (1 - intensity) * 50;
+        }
+
         transitsFound.set(key, {
           date: currentDate.toJSDate(),
           title: `${capitalize(transit.planet1)} ${transit.type.toLowerCase()} ${capitalize(transit.planet2)}`,
@@ -900,7 +910,7 @@ export async function calculateForecast(
           symbolic: `${sym1} ${aspSym} ${sym2}`,
           orb: `${Math.floor(transit.orb)}°${Math.round((transit.orb % 1) * 60)}'`,
           impact: `· ${impact}`,
-          progress: transit.exact ? 100 : (10 - transit.orb) * 10, // Placeholder calculation
+          progress: transit.exact ? 100 : Math.round(progress),
           description: `A ${transit.type.toLowerCase()} aspect from transit ${transit.planet1} to your natal ${transit.planet2}.`,
         });
       }

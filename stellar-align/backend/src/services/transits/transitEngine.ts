@@ -68,7 +68,19 @@ export async function getTransitsForPeriod(
       const key = `natal-aspect-${transit.planet1}-${transit.type}-${transit.planet2}`;
       const type = classifyTransitType(transit.planet1, transit.type, false, false, transit.orb);
       const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
-      const progress = computeTransitProgress(DateTime.now().setZone(timezone).toJSDate(), currentDate.toJSDate(), type, transit.orb);
+      
+      const aspectData = FORECAST_ASPECTS[transit.type as keyof typeof FORECAST_ASPECTS];
+      const maxOrb = aspectData?.orb || 2.5;
+      
+      const progress = computeTransitProgress(
+        DateTime.now().setZone(timezone).toJSDate(), 
+        currentDate.toJSDate(), 
+        type, 
+        transit.orb,
+        maxOrb,
+        transit.applying
+      );
+      
       const sym1 = PLANET_SYMBOLS[transit.planet1.toUpperCase()] || transit.planet1;
       const sym2 = PLANET_SYMBOLS[transit.planet2.toUpperCase()] || transit.planet2;
       const aspSym = ASPECT_SYMBOLS[transit.type.toUpperCase()] || transit.type;
@@ -98,7 +110,18 @@ export async function getTransitsForPeriod(
       const key = `sky-aspect-${aspect.planet1}-${aspect.type}-${aspect.planet2}`;
       const eventType = classifyTransitType(aspect.planet1, aspect.type, false, false, aspect.orb);
       const impact = determineImpactLevel(aspect.planet1, aspect.type, false, aspect.orb);
-      const progress = computeTransitProgress(DateTime.now().setZone(timezone).toJSDate(), currentDate.toJSDate(), eventType, aspect.orb);
+
+      const aspectData = FORECAST_ASPECTS[aspect.type as keyof typeof FORECAST_ASPECTS];
+      const maxOrb = aspectData?.orb || 2.5;
+
+      const progress = computeTransitProgress(
+        DateTime.now().setZone(timezone).toJSDate(), 
+        currentDate.toJSDate(), 
+        eventType, 
+        aspect.orb,
+        maxOrb,
+        aspect.applying
+      );
       const event = {
         id: key,
         eventKind: "sky_aspect",
