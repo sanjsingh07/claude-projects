@@ -553,3 +553,25 @@ Replaced the placeholder transit progress math with a scientifically accurate ca
 ### Verified:
 - Logic correctly handles the transition from "upcoming" to "active" to "completed".
 - Aspects with tight orbs (e.g., Quintiles) now report progress relative to their specific limits rather than a generic 10-degree window.
+
+## [2026-05-09] Birth Time Accuracy Handling
+Addressed the "Birth Time Fallback" issue by implementing explicit tracking for users who don't know their exact birth time, with corresponding UI warnings.
+
+### Changes:
+- **Database**: Added `birthTimeUnknown` (Boolean, default: false) to the `User` model in `schema.prisma`.
+- **Backend - Logic**:
+  - Updated all astrological calculation entry points (`AuthController`, `UserController`, `VedicChart`, `NatalChart`) to explicitly check the `birthTimeUnknown` flag.
+  - While maintaining 12:00 PM as the mathematical midpoint fallback, the system now stores whether this was a user-provided time or a system estimate.
+- **Frontend - UI**:
+  - **Register Screen**: Added a toggle for "I don't know my birth time" with an immediate accuracy warning: "Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise."
+  - **Settings Screen**: 
+    - Updated the "Birth Data" modal to include the same toggle and warning.
+    - Updated the main settings list to display "(Time Unknown)" for clarity.
+- **Frontend - Logic**:
+  - Updated `User` type and registration/update payloads to include the new flag.
+  - Disabled time picker when the "unknown" toggle is active to prevent conflicting data entry.
+
+### Verified:
+- Toggle state persists correctly to the backend.
+- UI warnings are prominent and explain the impact on astrological accuracy.
+- Backend calculations continue to function with the 12:00 fallback but are now context-aware.
