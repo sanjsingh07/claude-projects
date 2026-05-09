@@ -408,3 +408,29 @@ Updated RegisterScreen Step 2 to use the same star background as Step 1 for visu
     - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
     - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
     - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-09] Onboarding State Management
+Implemented a robust onboarding state management system to prevent incorrect astrological calculations for incomplete user profiles.
+
+### Changes:
+- **Database**: Added `profileCompleted` (Boolean, default: false) to the `User` model in `schema.prisma`.
+- **Backend - Auth**: 
+  - Updated `AuthService.register` to set `profileCompleted: true`.
+  - Updated `AuthService.socialLogin` to explicitly set `profileCompleted: false` for new users.
+  - Updated `AuthService.mapDbUserToUser` to include the new flag.
+- **Backend - User**:
+  - Updated `UserController.updateCurrentUser` to recalculate and set `profileCompleted: true` when all required birth data (date, lat, lon, timezone) is provided.
+- **Backend - Features**:
+  - `HoroscopeController`: Now prevents AI horoscope generation for incomplete profiles, returning a "Chart Pending" placeholder instead.
+  - `TransitController`: Prevents transit calculation for incomplete profiles.
+  - `VedicChart`: Prevents Vedic chart calculation and retrieval for incomplete profiles.
+  - `ChatController`: AI assistant now detects incomplete profiles and advises users to complete their birth data in Settings.
+- **Frontend**:
+  - Updated `User` type definition to include `profileCompleted`.
+  - Updated `RootNavigator` to automatically redirect authenticated users with incomplete profiles to the onboarding flow (`Register` screen).
+  - Updated `useAuth` hook to allow social login to trigger the onboarding redirection.
+
+### Verified:
+- Code reviewed for consistency across layers.
+- Navigation logic handles both fresh signups and social logins with missing data.
+- API endpoints are protected against premature calculations.

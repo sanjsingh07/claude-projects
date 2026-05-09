@@ -14,6 +14,11 @@ router.use(authMiddleware);
 // GET /vedic/chart - Get user's Vedic chart with all divisional charts
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { profileCompleted: true }
+    });
+
     const chart = await prisma.natalChart.findUnique({
       where: { userId: req.userId },
       include: {
@@ -21,12 +26,12 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    if (!chart) {
+    if (!user?.profileCompleted || !chart) {
       res.status(404).json({
         success: false,
         error: {
           code: "NOT_FOUND",
-          message: "Natal chart not found",
+          message: "Natal chart or complete profile not found",
         },
       });
       return;
@@ -90,12 +95,12 @@ router.post(
         return;
       }
 
-      if (!user.birthLatitude || !user.birthLongitude) {
+      if (!user.profileCompleted || !user.birthLatitude || !user.birthLongitude) {
         res.status(400).json({
           success: false,
           error: {
-            code: "INVALID_BIRTH_DATA",
-            message: "Birth location required",
+            code: "PROFILE_INCOMPLETE",
+            message: "Birth location and profile completion required",
           },
         });
         return;

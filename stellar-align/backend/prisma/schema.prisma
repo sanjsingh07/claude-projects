@@ -107,6 +107,7 @@ model User {
   lastActiveAt          DateTime  @default(now())
   isActive              Boolean   @default(true)
   isDeleted             Boolean   @default(false)
+  profileCompleted      Boolean   @default(false)
   deletedAt             DateTime?
   requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
   addresseeCompat       CompatibilityReport[] @relation("AddresseeCompat")

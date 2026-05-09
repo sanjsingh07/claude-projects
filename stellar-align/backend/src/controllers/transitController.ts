@@ -20,8 +20,8 @@ export class TransitController {
         include: { natalChart: true },
       });
 
-      if (!user?.natalChart) {
-        throw new NotFoundError("Natal chart not found. Please calculate your chart first.");
+      if (!user?.profileCompleted || !user?.natalChart) {
+        throw new NotFoundError("Birth profile or natal chart not found. Please complete your profile first.");
       }
 
       const userTimezone = user.birthTimezone || "UTC";

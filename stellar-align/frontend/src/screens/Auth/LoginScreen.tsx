@@ -39,14 +39,18 @@ export const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const redirectUri = AuthSession.makeRedirectUri({
+    scheme: 'stellar-align',
+  });
+
+  console.log('DEBUG: Generated Google Redirect URI:', redirectUri);
+
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
-    redirectUri: AuthSession.makeRedirectUri({
-      scheme: 'stellaralign',
-    }),
+    redirectUri,
   });
 
   console.log('LoginScreen - isAuthenticated:', isAuthenticated);

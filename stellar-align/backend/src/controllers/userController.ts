@@ -55,21 +55,24 @@ export class UserController {
   ): Promise<void> {
     try {
       const updateData: any = req.body;
+      const currentUser = await prisma.user.findUnique({ where: { id: req.userId } });
+      
+      if (!currentUser) {
+        throw new NotFoundError("User not found");
+      }
 
       logger.info("Profile update received", {
         userId: req.userId,
         birthLatitude: updateData.birthLatitude,
         birthLongitude: updateData.birthLongitude,
-        hasAllFields: !!(updateData.birthLatitude && updateData.birthLongitude),
       });
 
       // Validate birth data if provided
       if (
         updateData.birthDate ||
-        updateData.birthLatitude ||
-        updateData.birthLongitude
+        updateData.birthLatitude !== undefined ||
+        updateData.birthLongitude !== undefined
       ) {
-        // Inline validation to avoid 'this' binding issues
         if (updateData.birthLatitude !== undefined) {
           if (updateData.birthLatitude < -90 || updateData.birthLatitude > 90) {
             throw new ApiError(400, "Invalid latitude", "INVALID_COORDINATES");
@@ -92,63 +95,41 @@ export class UserController {
 
       const processedData: any = { updatedAt: new Date() };
 
-      // Convert birthDate ISO string to Date object if provided
-      // The date string already contains the correct calendar date
       if (updateData.birthDate) {
-        // Parse the ISO date string and create a Date that preserves the local date
-        // We use the date parts directly to avoid timezone conversion issues
         const birthDate = new Date(updateData.birthDate);
         const year = birthDate.getUTCFullYear();
         const month = birthDate.getUTCMonth();
         const day = birthDate.getUTCDate();
-        // Create date at UTC midnight to avoid timezone shifts
         processedData.birthDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
       }
 
-      // Convert birthTime string (HH:mm) to Date object if provided
-      // Use a fixed reference date (2000-01-01) to store only the time
       if (updateData.birthTime) {
         if (typeof updateData.birthTime !== 'string' || !updateData.birthTime.includes(':')) {
            throw new ApiError(400, "Invalid birth time format. Expected HH:mm", "INVALID_TIME");
         }
-        
         const parts = updateData.birthTime.split(":");
         const hours = parseInt(parts[0], 10);
         const minutes = parseInt(parts[1], 10);
-        
-        if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-          throw new ApiError(400, "Invalid birth time value. Expected valid hours and minutes.", "INVALID_TIME");
-        }
-        
-        // Create date in UTC to avoid timezone issues
         const timeDate = new Date(Date.UTC(2000, 0, 1, hours, minutes, 0, 0));
-        
-        if (isNaN(timeDate.getTime())) {
-          throw new ApiError(400, "Invalid birth time resulting in invalid date", "INVALID_TIME");
-        }
-        
         processedData.birthTime = timeDate;
       }
 
-      // Copy other fields directly
-      if (updateData.displayName) {
-        processedData.displayName = updateData.displayName;
-      }
-      if (updateData.bio !== undefined) {
-        processedData.bio = updateData.bio;
-      }
-      if (updateData.birthLocationName) {
-        processedData.birthLocationName = updateData.birthLocationName;
-      }
-      if (updateData.birthTimezone) {
-        processedData.birthTimezone = updateData.birthTimezone;
-      }
-      if (updateData.birthLatitude !== undefined) {
-        processedData.birthLatitude = updateData.birthLatitude;
-      }
-      if (updateData.birthLongitude !== undefined) {
-        processedData.birthLongitude = updateData.birthLongitude;
-      }
+      // Copy other fields
+      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude"].forEach(field => {
+        if (updateData[field] !== undefined) {
+          processedData[field] = updateData[field];
+        }
+      });
+
+      // Determine if profile is now complete
+      const isComplete = !!(
+        (processedData.birthDate || currentUser.birthDate) &&
+        (processedData.birthLatitude !== undefined ? processedData.birthLatitude !== null : currentUser.birthLatitude !== null) &&
+        (processedData.birthLongitude !== undefined ? processedData.birthLongitude !== null : currentUser.birthLongitude !== null) &&
+        (processedData.birthTimezone || currentUser.birthTimezone)
+      );
+      
+      processedData.profileCompleted = isComplete;
 
       const user = await prisma.user.update({
         where: { id: req.userId },

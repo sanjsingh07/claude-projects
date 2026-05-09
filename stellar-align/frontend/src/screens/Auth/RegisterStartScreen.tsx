@@ -33,14 +33,18 @@ export const RegisterStartScreen: React.FC = () => {
   const { socialLogin } = useAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
+  const redirectUri = AuthSession.makeRedirectUri({
+    scheme: 'stellar-align',
+  });
+
+  console.log('DEBUG: Generated Google Redirect URI:', redirectUri);
+
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
-    redirectUri: AuthSession.makeRedirectUri({
-      scheme: 'stellaralign',
-    }),
+    redirectUri,
   });
 
   useEffect(() => {

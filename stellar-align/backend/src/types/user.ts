@@ -9,6 +9,7 @@ export interface User {
   gender?: Gender;
   bio?: string;
   avatarUrl?: string;
+  profileCompleted: boolean;
 
   // Birth data
   birthDate: Date;

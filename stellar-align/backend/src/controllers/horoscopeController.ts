@@ -76,8 +76,8 @@ export class HoroscopeController {
           throw new NotFoundError("User not found");
         }
 
-        if (!user.natalChart) {
-          // User doesn't have a natal chart yet - create placeholder
+        if (!user.profileCompleted || !user.natalChart) {
+          // User doesn't have a natal chart yet or hasn't completed profile - create placeholder
           // Don't cache placeholder - allow retry on next request
           horoscope = await prisma.dailyHoroscope.create({
             data: {
@@ -217,6 +217,9 @@ export class HoroscopeController {
         // Generate if within allowed range
         if (daysDiff <= 7 && daysDiff >= -30) {
           try {
+            if (!user.profileCompleted) {
+              throw new Error("Profile not completed");
+            }
             const generated = await astrologyService.generateDailyHoroscope(
               userId,
               date,
@@ -224,7 +227,7 @@ export class HoroscopeController {
             res.json({ success: true, data: generated });
             return;
           } catch (error: any) {
-            if (error.message?.includes("Natal chart not found")) {
+            if (error.message?.includes("Natal chart not found") || error.message?.includes("Profile not completed")) {
               const generated = await prisma.dailyHoroscope.create({
                 data: {
                   userId,

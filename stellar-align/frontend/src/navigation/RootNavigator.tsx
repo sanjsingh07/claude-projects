@@ -19,7 +19,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator: React.FC = () => {
   // Use selector to properly subscribe to store changes
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isAuthenticated, user } = useAuthStore((state) => ({
+    isAuthenticated: state.isAuthenticated,
+    user: state.user,
+  }));
+
+  const isProfileComplete = user?.profileCompleted;
 
   return (
     <Stack.Navigator
@@ -27,17 +32,26 @@ export const RootNavigator: React.FC = () => {
         headerShown: false,
         animation: 'slide_from_right',
       }}
+      initialRouteName={isAuthenticated && !isProfileComplete ? 'Register' : undefined}
     >
-      {isAuthenticated ? (
+      {isAuthenticated && isProfileComplete ? (
         <>
           <Stack.Screen name="Main" component={MainNavigator} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
         </>
       ) : (
         <>
-          <Stack.Screen name="RegisterStart" component={RegisterStartScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          {!isAuthenticated && (
+            <Stack.Screen name="RegisterStart" component={RegisterStartScreen} />
+          )}
+          {!isAuthenticated && (
+            <Stack.Screen name="Login" component={LoginScreen} />
+          )}
+          <Stack.Screen 
+            name="Register" 
+            component={RegisterScreen} 
+            initialParams={isAuthenticated && !isProfileComplete ? { step: 2, socialUser: user } : undefined}
+          />
         </>
       )}
     </Stack.Navigator>

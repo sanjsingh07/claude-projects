@@ -4,6 +4,7 @@ export interface User {
   displayName?: string;
   bio?: string;
   avatarUrl?: string;
+  profileCompleted: boolean;
   birthDate?: string;
   birthTime?: string;
   birthTimezone?: string;

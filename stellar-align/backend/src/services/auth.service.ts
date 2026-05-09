@@ -41,6 +41,7 @@ export class AuthService {
         birthLatitude: input.birthLatitude,
         birthLongitude: input.birthLongitude,
         birthTimezone: input.birthTimezone,
+        profileCompleted: true,
       },
     });
 
@@ -119,6 +120,7 @@ export class AuthService {
             avatarUrl: profile.avatarUrl,
             birthDate: new Date(), // Placeholder - should require this on signup
             birthTimezone: "UTC",
+            profileCompleted: false,
           },
         });
       }
@@ -319,6 +321,7 @@ export class AuthService {
       gender: dbUser.gender || undefined,
       bio: dbUser.bio || undefined,
       avatarUrl: dbUser.avatarUrl || undefined,
+      profileCompleted: dbUser.profileCompleted || false,
       birthDate: dbUser.birthDate,
       birthTime: dbUser.birthTime || undefined,
       birthLocationName: dbUser.birthLocationName || undefined,

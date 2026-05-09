@@ -87,14 +87,11 @@ export function useAuth() {
       return { user: userData, isNewUser: response.data.isNewUser };
     },
     onSuccess: (data) => {
-      // If it's a new user, we don't call setUser yet because we want to complete onboarding first
-      if (!data.isNewUser) {
-        setUser(data.user);
-        queryClient.invalidateQueries({ queryKey: ['user'] });
-        queryClient.invalidateQueries({ queryKey: ['horoscope'] });
-        queryClient.invalidateQueries({ queryKey: ['chart'] });
-        queryClient.invalidateQueries({ queryKey: ['friends'] });
-      }
+      setUser(data.user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+      queryClient.invalidateQueries({ queryKey: ['horoscope'] });
+      queryClient.invalidateQueries({ queryKey: ['chart'] });
+      queryClient.invalidateQueries({ queryKey: ['friends'] });
     },
   });
 

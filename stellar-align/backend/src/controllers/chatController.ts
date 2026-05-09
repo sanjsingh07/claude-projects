@@ -135,13 +135,15 @@ export class ChatController {
 
       // Build context from natal chart
       let chartContext = '';
-      if (user.natalChart) {
+      if (user.profileCompleted && user.natalChart) {
         chartContext = `
 User's Natal Chart Context:
 - Sun Sign: ${user.natalChart.sunSign}
 - Moon Sign: ${user.natalChart.moonSign}
 - Rising Sign: ${user.natalChart.risingSign}
 `;
+      } else if (!user.profileCompleted) {
+        chartContext = "\nNOTE: The user has not completed their birth profile. Advise them to provide their birth date, time, and location in Settings for a personalized reading.";
       }
 
       // Call LLM API (using the existing llmProvider)
