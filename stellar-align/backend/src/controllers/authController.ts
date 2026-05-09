@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+import appleSignin from "apple-signin-auth";
 import { authService } from "../services/auth.service";
 import { prisma } from "../config/database";
+import { env } from "../config/env";
 import logger from "../config/logger";
 import { ApiError } from "../utils/errors";
 import { astrologyService } from "../services/astrology";
@@ -244,25 +247,45 @@ export class AuthController {
       let avatarUrl: string | undefined;
 
       if (provider === "google") {
-        // Verify Google ID token by decoding it (Google tokens are JWTs)
-        // In production, you should verify the signature using Google's public keys
-        const decoded = jwt.decode(idToken) as any;
-        if (!decoded || !decoded.email) {
-          throw new ApiError(401, "Invalid Google token", "INVALID_TOKEN");
+        const client = new OAuth2Client(env.GOOGLE_CLIENT_ID);
+        try {
+          const ticket = await client.verifyIdToken({
+            idToken,
+            audience: [
+              env.GOOGLE_CLIENT_ID || "",
+              // Add other client IDs if necessary (e.g., for different platforms)
+            ].filter(Boolean),
+          });
+          const payload = ticket.getPayload();
+          if (!payload || !payload.email) {
+            throw new ApiError(401, "Invalid Google token payload", "INVALID_TOKEN");
+          }
+          email = payload.email;
+          providerId = payload.sub;
+          displayName = payload.name;
+          avatarUrl = payload.picture;
+        } catch (error: any) {
+          logger.error("Google token verification failed", { error: error.message });
+          throw new ApiError(401, `Google token verification failed: ${error.message}`, "INVALID_TOKEN");
         }
-        email = decoded.email;
-        providerId = decoded.sub;
-        displayName = decoded.name;
-        avatarUrl = decoded.picture;
       } else if (provider === "apple") {
-        // Verify Apple ID token
-        const decoded = jwt.decode(idToken) as any;
-        if (!decoded || !decoded.email) {
-          throw new ApiError(401, "Invalid Apple token", "INVALID_TOKEN");
+        try {
+          const { sub, email: appleEmail } = await appleSignin.verifyIdToken(idToken, {
+            audience: env.APPLE_CLIENT_ID,
+            // ignoreExpiration: false, // default is false
+          });
+          
+          if (!appleEmail) {
+            throw new ApiError(401, "Apple token missing email", "INVALID_TOKEN");
+          }
+          
+          email = appleEmail;
+          providerId = sub;
+          displayName = email.split("@")[0]; // Apple doesn't provide name in ID token reliably
+        } catch (error: any) {
+          logger.error("Apple token verification failed", { error: error.message });
+          throw new ApiError(401, `Apple token verification failed: ${error.message}`, "INVALID_TOKEN");
         }
-        email = decoded.email;
-        providerId = decoded.sub;
-        displayName = decoded.email.split("@")[0]; // Apple doesn't always provide name
       } else {
         throw new ApiError(400, "Unsupported provider", "INVALID_PROVIDER");
       }
