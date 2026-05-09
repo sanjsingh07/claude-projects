@@ -533,3 +533,23 @@ Eliminated the critical dependency on `timeapi.io` by implementing a robust back
 ### Verified:
 - System now correctly identifies timezones without internet access to external timezone APIs.
 - Backend automatically corrects mismatched timezones during profile updates, ensuring higher astrological accuracy.
+
+## [2026-05-09] Transit Progress Refinement
+Replaced the placeholder transit progress math with a scientifically accurate calculation that reflects the actual phase of the celestial event.
+
+### Changes:
+- **Backend - Progress Calculator**:
+  - Refactored `computeTransitProgress` to take `maxOrb` and `isApplying` as parameters.
+  - Implemented a phase-aware percentage logic:
+    - **Applying Phase (0% - 50%)**: Percentage increases as the planet approaches the exact aspect degree.
+    - **Peak (50%)**: The moment the aspect is exactly at its target angle.
+    - **Separating Phase (50% - 100%)**: Percentage continues to increase as the planet moves away, reaching 100% when it exits the allowed orb.
+- **Backend - Transit Engine**:
+  - Updated both natal and sky transit calculations to pass the correct `maxOrb` (retrieved from aspect definitions) and the `applying` status.
+  - Standardized progress reporting across all forecast periods (week, month, year).
+- **Backend - Astrology Service**:
+  - Updated the legacy `calculateForecast` function to use the same high-precision logic, removing the hardcoded `(10 - orb) * 10` formula.
+
+### Verified:
+- Logic correctly handles the transition from "upcoming" to "active" to "completed".
+- Aspects with tight orbs (e.g., Quintiles) now report progress relative to their specific limits rather than a generic 10-degree window.
