@@ -390,3 +390,9 @@ Updated RegisterScreen Step 2 to use the same star background as Step 1 for visu
     - `stellar-align/frontend/src/navigation/RootNavigator.tsx`
     - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
     - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-09 12:56:03] Fix ReferenceError in RegisterScreen
+- **What was changed and why**: Removed a syntax error (accidental text "een;") at the end of `RegisterScreen.tsx`.
+- **Summary of changes**: Fixed a regression introduced during the UI refactor.
+- **Files modified**:
+    - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
