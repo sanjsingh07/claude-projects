@@ -84,14 +84,17 @@ export function useAuth() {
       if (!userData) {
         throw new Error('No user data in response');
       }
-      return userData;
+      return { user: userData, isNewUser: response.data.isNewUser };
     },
-    onSuccess: (userData) => {
-      setUser(userData);
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-      queryClient.invalidateQueries({ queryKey: ['horoscope'] });
-      queryClient.invalidateQueries({ queryKey: ['chart'] });
-      queryClient.invalidateQueries({ queryKey: ['friends'] });
+    onSuccess: (data) => {
+      // If it's a new user, we don't call setUser yet because we want to complete onboarding first
+      if (!data.isNewUser) {
+        setUser(data.user);
+        queryClient.invalidateQueries({ queryKey: ['user'] });
+        queryClient.invalidateQueries({ queryKey: ['horoscope'] });
+        queryClient.invalidateQueries({ queryKey: ['chart'] });
+        queryClient.invalidateQueries({ queryKey: ['friends'] });
+      }
     },
   });
 

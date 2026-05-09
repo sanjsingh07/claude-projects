@@ -61,9 +61,19 @@ export const LoginScreen: React.FC = () => {
 
   useEffect(() => {
     if (response?.type === 'success' && response.params?.id_token) {
-      socialLogin({ provider: 'google', idToken: response.params.id_token }).catch(() => {
-        Alert.alert('Google Sign-In Failed', 'Please try again');
-      });
+      socialLogin({ provider: 'google', idToken: response.params.id_token })
+        .then((data) => {
+          if (data.isNewUser) {
+            // @ts-ignore
+            navigation.navigate('Register', { 
+              step: 2, 
+              socialUser: data.user 
+            });
+          }
+        })
+        .catch(() => {
+          Alert.alert('Google Sign-In Failed', 'Please try again');
+        });
     } else if (response?.type === 'error') {
       Alert.alert('Google Sign-In Failed', 'An error occurred');
     }
@@ -109,7 +119,14 @@ export const LoginScreen: React.FC = () => {
       });
 
       if (credential.identityToken) {
-        await socialLogin({ provider: 'apple', idToken: credential.identityToken });
+        const data = await socialLogin({ provider: 'apple', idToken: credential.identityToken });
+        if (data.isNewUser) {
+          // @ts-ignore
+          navigation.navigate('Register', { 
+            step: 2, 
+            socialUser: data.user 
+          });
+        }
       }
     } catch (e: any) {
       if (e.code === 'ERR_CANCELED') return;

@@ -14,11 +14,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as WebBrowser from 'expo-web-browser';
+import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google';
+import * as AuthSession from 'expo-auth-session';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
 import { CostarText } from '@components/CostarCard';
@@ -26,6 +30,13 @@ import { CostarButton } from '@components/CostarButton';
 import { CostarBackground } from '@components/CostarBackground';
 import { SignIcon } from '@components/SignIcon';
 import { colors, spacing } from '@theme/theme';
+
+WebBrowser.maybeCompleteAuthSession();
+
+const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '';
+const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || '';
+const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || '';
+const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '';
 
 interface BirthDataStep {
   date: string;
@@ -71,14 +82,28 @@ const commonLocations = [
 
 export const RegisterScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any, any>>();
-  const { register, isLoginPending } = useAuth();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { register, socialLogin, isLoginPending, updateProfile } = useAuth();
+  const { setUser, isAuthenticated } = useAuthStore();
+  const route = useRoute<any>();
 
-  const [step, setStep] = useState(1);
-  const [email, setEmail] = useState('');
+  const [request, response, promptAsync] = useIdTokenAuthRequest({
+    clientId: GOOGLE_CLIENT_ID,
+    iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
+    webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
+    redirectUri: AuthSession.makeRedirectUri({
+      scheme: 'stellaralign',
+    }),
+  });
+
+  const initialStep = route.params?.step || 1;
+  const socialUser = route.params?.socialUser || null;
+
+  const [step, setStep] = useState(initialStep);
+  const [email, setEmail] = useState(socialUser?.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [fullName, setFullName] = useState(socialUser?.displayName || '');
   const [gender, setGender] = useState('Female');
   const genderOptions = ['Female', 'Male', 'Non-Binary', 'Prefer not to say'];
   
@@ -170,6 +195,47 @@ export const RegisterScreen: React.FC = () => {
       setLocationSuggestions([]);
     }
   }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (response?.type === 'success' && response.params?.id_token) {
+      socialLogin({ provider: 'google', idToken: response.params.id_token }).catch(() => {
+        Alert.alert('Google Sign-In Failed', 'Please try again');
+      });
+    } else if (response?.type === 'error') {
+      Alert.alert('Google Sign-In Failed', 'An error occurred');
+    }
+  }, [response]);
+
+  const handleGoogleLogin = async () => {
+    if (!GOOGLE_CLIENT_ID && !GOOGLE_IOS_CLIENT_ID && !GOOGLE_ANDROID_CLIENT_ID && !GOOGLE_WEB_CLIENT_ID) {
+      Alert.alert('Coming Soon', 'Google Sign-In requires configuration. Please use email/password for now.');
+      return;
+    }
+    await promptAsync();
+  };
+
+  const handleAppleLogin = async () => {
+    try {
+      if (Platform.OS !== 'ios') {
+        Alert.alert('Not Available', 'Apple Sign-In is only available on iOS devices.');
+        return;
+      }
+
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      if (credential.identityToken) {
+        await socialLogin({ provider: 'apple', idToken: credential.identityToken });
+      }
+    } catch (e: any) {
+      if (e.code === 'ERR_CANCELED') return;
+      Alert.alert('Apple Sign-In Failed', 'An error occurred. Please try again.');
+    }
+  };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
@@ -281,7 +347,9 @@ export const RegisterScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    if (step > 1) {
+    if (socialUser && step === initialStep) {
+      navigation.goBack();
+    } else if (step > 1) {
       setStep(step - 1);
     } else {
       navigation.goBack();
@@ -290,9 +358,7 @@ export const RegisterScreen: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      await register({
-        email: email.toLowerCase().trim(),
-        password,
+      const data = {
         displayName: fullName,
         gender: gender.toUpperCase().replace(/[\s-]/g, '_'),
         birthDate: birthData.date,
@@ -301,7 +367,17 @@ export const RegisterScreen: React.FC = () => {
         ...(birthData.locationName && { birthLocationName: birthData.locationName }),
         ...(birthData.latitude && { birthLatitude: birthData.latitude }),
         ...(birthData.longitude && { birthLongitude: birthData.longitude }),
-      });
+      };
+
+      if (socialUser) {
+        await updateProfile(data as any);
+      } else {
+        await register({
+          ...data,
+          email: email.toLowerCase().trim(),
+          password,
+        });
+      }
     } catch (e: any) {
       Alert.alert('Registration Failed', e.message || 'Please try again');
     }
@@ -423,6 +499,32 @@ export const RegisterScreen: React.FC = () => {
                     <CostarText style={styles.btnText}>Continue</CostarText>
                   )}
                 </TouchableOpacity>
+
+                <View style={styles.altLogin}>
+                  <View style={styles.altLoginTextContainer}>
+                    <View style={styles.altLine} />
+                    <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+                    <View style={styles.altLine} />
+                  </View>
+                  
+                  <View style={styles.socialBtns}>
+                    {Platform.OS === 'ios' && (
+                      <TouchableOpacity 
+                        style={styles.socialBtn}
+                        onPress={handleAppleLogin}
+                      >
+                        <CostarText style={styles.socialIcon}></CostarText>
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity 
+                      style={styles.socialBtn}
+                      onPress={handleGoogleLogin}
+                      disabled={!request}
+                    >
+                      <CostarText style={styles.socialIcon}>G</CostarText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
 
               <View style={styles.footer}>
@@ -868,6 +970,46 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     fontFamily: 'DM Sans',
+  },
+  altLogin: {
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  altLoginTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    width: '100%',
+  },
+  altLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.astraBorder,
+  },
+  altLoginText: {
+    fontFamily: 'DM Sans',
+    fontSize: 13,
+    color: colors.astraMuted,
+    marginHorizontal: 16,
+  },
+  socialBtns: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+  },
+  socialBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    backgroundColor: colors.astraSurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialIcon: {
+    fontSize: 20,
+    color: colors.astraFg,
   },
   footer: {
     marginTop: 24,

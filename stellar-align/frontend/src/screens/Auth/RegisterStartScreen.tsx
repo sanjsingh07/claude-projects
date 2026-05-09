@@ -1,25 +1,117 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Platform,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as WebBrowser from 'expo-web-browser';
+import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google';
+import * as AuthSession from 'expo-auth-session';
 import { RootStackParamList } from '@navigation/RootNavigator';
+import { useAuth } from '@hooks/useAuth';
+import { useAuthStore } from '@store/authStore';
 import { CostarText } from '@components/CostarCard';
 import { CostarBackground } from '@components/CostarBackground';
 import { colors, spacing } from '@theme/theme';
 
+WebBrowser.maybeCompleteAuthSession();
+
+const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '';
+const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || '';
+const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || '';
+const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '';
+
 export const RegisterStartScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { socialLogin } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const [request, response, promptAsync] = useIdTokenAuthRequest({
+    clientId: GOOGLE_CLIENT_ID,
+    iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
+    webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
+    redirectUri: AuthSession.makeRedirectUri({
+      scheme: 'stellaralign',
+    }),
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.replace('Main');
+    }
+  }, [isAuthenticated, navigation]);
+
+  useEffect(() => {
+    if (response?.type === 'success' && response.params?.id_token) {
+      socialLogin({ provider: 'google', idToken: response.params.id_token })
+        .then((data) => {
+          if (data.isNewUser) {
+            // @ts-ignore
+            navigation.navigate('Register', { 
+              step: 2, 
+              socialUser: data.user 
+            });
+          }
+        })
+        .catch(() => {
+          Alert.alert('Google Sign-In Failed', 'Please try again');
+        });
+    } else if (response?.type === 'error') {
+      Alert.alert('Google Sign-In Failed', 'An error occurred');
+    }
+  }, [response]);
+
+  const handleGoogleLogin = async () => {
+    if (!GOOGLE_CLIENT_ID && !GOOGLE_IOS_CLIENT_ID && !GOOGLE_ANDROID_CLIENT_ID && !GOOGLE_WEB_CLIENT_ID) {
+      Alert.alert('Coming Soon', 'Google Sign-In requires configuration. Please use email/password for now.');
+      return;
+    }
+    await promptAsync();
+  };
+
+  const handleAppleLogin = async () => {
+    try {
+      if (Platform.OS !== 'ios') {
+        Alert.alert('Not Available', 'Apple Sign-In is only available on iOS devices.');
+        return;
+      }
+
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      if (credential.identityToken) {
+        const data = await socialLogin({ provider: 'apple', idToken: credential.identityToken });
+        if (data.isNewUser) {
+          // @ts-ignore
+          navigation.navigate('Register', { 
+            step: 2, 
+            socialUser: data.user 
+          });
+        }
+      }
+    } catch (e: any) {
+      if (e.code === 'ERR_CANCELED') return;
+      Alert.alert('Apple Sign-In Failed', 'An error occurred. Please try again.');
+    }
+  };
 
   return (
     <View style={styles.container}>
       <CostarBackground />
       <StatusBar barStyle="light-content" />
+      <View style={styles.island} />
       
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
@@ -47,6 +139,32 @@ export const RegisterStartScreen: React.FC = () => {
             >
               <CostarText style={styles.btnSecondaryText}>Log In</CostarText>
             </TouchableOpacity>
+
+            <View style={styles.altLogin}>
+              <View style={styles.altLoginTextContainer}>
+                <View style={styles.altLine} />
+                <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+                <View style={styles.altLine} />
+              </View>
+              
+              <View style={styles.socialBtns}>
+                {Platform.OS === 'ios' && (
+                  <TouchableOpacity 
+                    style={styles.socialBtn}
+                    onPress={handleAppleLogin}
+                  >
+                    <CostarText style={styles.socialIcon}></CostarText>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity 
+                  style={styles.socialBtn}
+                  onPress={handleGoogleLogin}
+                  disabled={!request}
+                >
+                  <CostarText style={styles.socialIcon}>G</CostarText>
+                </TouchableOpacity>
+              </View>
+            </View>
 
             <CostarText style={styles.legal}>
               By continuing, you agree to our{' '}
@@ -147,6 +265,46 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: 'DM Sans',
   },
+  altLogin: {
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  altLoginTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    width: '100%',
+  },
+  altLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.astraBorder,
+  },
+  altLoginText: {
+    fontFamily: 'DM Sans',
+    fontSize: 13,
+    color: colors.astraMuted,
+    marginHorizontal: 16,
+  },
+  socialBtns: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+  },
+  socialBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    backgroundColor: colors.astraSurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialIcon: {
+    fontSize: 20,
+    color: colors.astraFg,
+  },
   legal: {
     fontFamily: 'DM Sans',
     fontSize: 11,
@@ -168,9 +326,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.astraViolet,
     opacity: 0.05,
     borderRadius: 150,
-    // Note: React Native doesn't have CSS radial-gradient/blur directly on View easily without extra libs, 
-    // but we can approximate with shadow or just leave as a subtle circle for now.
-    // If react-native-svg or similar is available, we could do more.
   },
   indicator: {
     position: 'absolute',

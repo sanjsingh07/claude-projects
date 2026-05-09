@@ -396,3 +396,15 @@ Updated RegisterScreen Step 2 to use the same star background as Step 1 for visu
 - **Summary of changes**: Fixed a regression introduced during the UI refactor.
 - **Files modified**:
     - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-09 13:32:29] Redirect Social Signup to Birth Data Step
+- **What was changed and why**: Changed social login flow to ensure new users provide birth data instead of using placeholders.
+- **Summary of changes**:
+    - Updated `useAuth` hook to detect new social users and delay full authentication.
+    - Updated `LoginScreen` and `RegisterStartScreen` to redirect new social users to registration Step 2.
+    - Updated `RegisterScreen` to handle initial state from social providers and update profiles on completion.
+- **Files modified**:
+    - `stellar-align/frontend/src/hooks/useAuth.ts`
+    - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+    - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+    - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
