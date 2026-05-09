@@ -176,10 +176,8 @@ export const SettingsScreen: React.FC = () => {
   const handleLocationSelect = async (location: LocationSuggestion) => {
     setIsLookupLoading(true);
     try {
-      const response = await axios.get(
-        `https://www.timeapi.io/api/TimeZone/coordinate?latitude=${location.lat}&longitude=${location.lon}`
-      );
-      const timezone = response.data.timeZone;
+      const response = await api.getTimezone(location.lat, location.lon);
+      const timezone = response.data?.timezone;
       
       updateProfileMutation.mutate({
         birthLocationName: location.displayName,

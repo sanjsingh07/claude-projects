@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/database";
 import { cache } from "../config/redis";
 import { ApiError, NotFoundError } from "../utils/errors";
+import { validateTimezone } from "../utils/timezone";
 import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
@@ -120,6 +121,15 @@ export class UserController {
           processedData[field] = updateData[field];
         }
       });
+
+      // Resolve/Validate timezone from coordinates if present
+      if (processedData.birthLatitude != null && processedData.birthLongitude != null) {
+        processedData.birthTimezone = validateTimezone(
+          processedData.birthLatitude,
+          processedData.birthLongitude,
+          processedData.birthTimezone || currentUser.birthTimezone
+        );
+      }
 
       // Determine if profile is now complete
       const isComplete = !!(

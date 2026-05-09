@@ -351,6 +351,12 @@ class ApiService {
   async getCompatibility(userId: string) {
     return this.client.get(`/compatibility/${userId}`);
   }
+
+  // ==================== UTILS ====================
+
+  async getTimezone(lat: string | number, lon: string | number) {
+    return this.client.get('/utils/timezone', { params: { lat, lon } });
+  }
 }
 
 export const api = new ApiService();

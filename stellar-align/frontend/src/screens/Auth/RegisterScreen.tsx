@@ -277,16 +277,14 @@ export const RegisterScreen: React.FC = () => {
     
     setIsLoadingLocations(true);
     try {
-      const response = await axios.get(
-        `https://www.timeapi.io/api/TimeZone/coordinate?latitude=${location.lat}&longitude=${location.lon}`
-      );
-      if (response.data && response.data.timeZone) {
+      const response = await api.getTimezone(location.lat, location.lon);
+      if (response.success && response.data?.timezone) {
         setBirthData(prev => ({
           ...prev,
           locationName: location.displayName,
           latitude: parseFloat(location.lat),
           longitude: parseFloat(location.lon),
-          timezone: response.data.timeZone,
+          timezone: response.data.timezone,
         }));
       }
     } catch (error) {
