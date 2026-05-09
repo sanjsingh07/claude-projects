@@ -77,7 +77,7 @@ const commonLocations = [
 
 export const RegisterScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any, any>>();
-  const { register, socialLogin, isLoginPending, updateProfile } = useAuth();
+  const { register, socialLogin, isLoginPending, updateProfile, logout } = useAuth();
   const { setUser, isAuthenticated, user } = useAuthStore();
   const route = useRoute<any>();
 
@@ -541,14 +541,16 @@ export const RegisterScreen: React.FC = () => {
                 </View>
               </View>
 
-              <View style={styles.footer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                  <CostarText style={styles.footerText}>Already have an account? </CostarText>
-                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                    <CostarText style={[styles.footerText, styles.footerLink]}>Log In</CostarText>
-                  </TouchableOpacity>
+              {!isAuthenticated && (
+                <View style={styles.footer}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <CostarText style={styles.footerText}>Already have an account? </CostarText>
+                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                      <CostarText style={[styles.footerText, styles.footerLink]}>Log In</CostarText>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           ) : (
             <View style={styles.astraScreen}>
