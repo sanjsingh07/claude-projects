@@ -457,3 +457,22 @@ Resolved the "Broken Password Reset" issue by implementing a full end-to-end flo
 - End-to-end flow from request to password update.
 - Token security (32-byte hex) and expiry (1 hour).
 - User-friendly UI for both requesting and performing the reset.
+
+## [2026-05-09] Astrological Precision Improvements
+Refined the aspect and transit calculation engine to achieve high precision, specifically addressing the "applying vs separating" logic.
+
+### Changes:
+- **Backend - Astrology Service**:
+  - Implemented `isAspectApplying` and `getOrb` helper functions in `astrology.ts`.
+  - Used a time-step comparison (current vs. future state) to determine if an aspect is approaching or receding.
+  - Correctly handles:
+    - **Retrograde motion**: Aspects now correctly identify as applying even when a planet is moving "backwards".
+    - **360/0 Boundary**: Normalized all calculations to ensure smooth transition across the Aries point.
+    - **All Aspect Angles**: Logic works universally for Conjunctions (0°), Squares (90°), Oppositions (180°), etc.
+- **Backend - Transit Engine**:
+  - Updated `calculateSkyAspects` to include accurate `applying` status for planetary movements in the current sky.
+  - Standardized the use of `calculateUserTransits` which now benefits from the improved precision.
+
+### Verified:
+- Manually checked edge cases involving the 0° Aries boundary.
+- Verified that retrograde planets correctly influence the "applying" flag when moving toward a stationary natal point.
