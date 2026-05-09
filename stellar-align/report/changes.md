@@ -434,3 +434,26 @@ Implemented a robust onboarding state management system to prevent incorrect ast
 - Code reviewed for consistency across layers.
 - Navigation logic handles both fresh signups and social logins with missing data.
 - API endpoints are protected against premature calculations.
+
+## [2026-05-09] Password Reset Flow Implementation
+Resolved the "Broken Password Reset" issue by implementing a full end-to-end flow.
+
+### Changes:
+- **Backend - Services**:
+  - Created `EmailService` (`email.service.ts`) to handle sending system emails.
+  - Implemented `sendPasswordResetEmail` with a professional HTML template.
+- **Backend - Auth**:
+  - Refactored `AuthService.requestPasswordReset` to generate secure 32-byte hex tokens.
+  - Connected password reset requests to the `EmailService`.
+  - Added `PasswordResetToken` model to `schema.prisma` for future persistence (currently using Redis for active tokens).
+- **Frontend - Services**:
+  - Added `forgotPassword`, `resetPassword`, and `changePassword` methods to `api.ts`.
+- **Frontend - UI**:
+  - Implemented `handleForgotPassword` in `LoginScreen` to trigger the reset flow.
+  - Created a new `ResetPasswordScreen` for users to securely set their new password using the token received via email.
+  - Registered `ResetPasswordScreen` in the `RootNavigator`.
+
+### Verified:
+- End-to-end flow from request to password update.
+- Token security (32-byte hex) and expiry (1 hour).
+- User-friendly UI for both requesting and performing the reset.
