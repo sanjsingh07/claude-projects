@@ -19,6 +19,24 @@ export function getTimezoneFromCoords(lat: number, lon: number): string {
 }
 
 /**
+ * Returns a list of all IANA timezones supported by the system.
+ */
+export function getAllTimezones(): string[] {
+  try {
+    // In Node.js, we can use Intl.supportedValuesOf if available (Node 18+)
+    if (typeof (Intl as any).supportedValuesOf === "function") {
+      return (Intl as any).supportedValuesOf("timeZone");
+    }
+    
+    // Fallback for older environments: this is a subset or you might need a library
+    // But since we are on modern Node, Intl should work.
+    return ["UTC"]; 
+  } catch (error) {
+    return ["UTC"];
+  }
+}
+
+/**
  * Validates and potentially corrects a timezone string based on coordinates.
  */
 export function validateTimezone(lat?: number, lon?: number, providedTz?: string): string {

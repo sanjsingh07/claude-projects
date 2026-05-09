@@ -358,6 +358,10 @@ class ApiService {
     return this.client.get('/utils/timezone', { params: { lat, lon } });
   }
 
+  async getTimezones() {
+    return this.client.get('/utils/timezones');
+  }
+
   // ==================== NOTIFICATIONS ====================
 
   async registerPushToken(token: string, platform: string, deviceId?: string) {

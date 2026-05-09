@@ -25,10 +25,13 @@ import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
-import { CostarText } from '@components/CostarCard';
-import { CostarButton } from '@components/CostarButton';
-import { CostarBackground } from '@components/CostarBackground';
-import { SignIcon } from '@components/SignIcon';
+import { 
+  CostarText, 
+  CostarButton, 
+  CostarBackground, 
+  SignIcon,
+  TimezoneSelectionModal
+} from '@components';
 import { colors, spacing } from '@theme/theme';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -54,16 +57,6 @@ interface LocationSuggestion {
   lat: string;
   lon: string;
 }
-
-const TIMEZONES = [
-  { label: 'IST (UTC+5:30)', value: 'Asia/Kolkata' },
-  { label: 'EST (UTC-5:00)', value: 'America/New_York' },
-  { label: 'PST (UTC-8:00)', value: 'America/Los_Angeles' },
-  { label: 'GMT (UTC+0:00)', value: 'Europe/London' },
-  { label: 'CET (UTC+1:00)', value: 'Europe/Paris' },
-  { label: 'JST (UTC+9:00)', value: 'Asia/Tokyo' },
-  { label: 'AEST (UTC+10:00)', value: 'Australia/Sydney' },
-];
 
 const commonLocations = [
   'New York, USA',
@@ -116,7 +109,7 @@ export const RegisterScreen: React.FC = () => {
     date: '',
     time: '',
     birthTimeUnknown: false,
-    timezone: 'Asia/Kolkata',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
     locationName: '',
   });
 
@@ -125,6 +118,7 @@ export const RegisterScreen: React.FC = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [timePickerDate, setTimePickerDate] = useState(new Date(2000, 0, 1, 12, 0, 0));
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showTimezoneModal, setShowTimezoneModal] = useState(false);
 
   const maxDate = React.useMemo(() => new Date(), []);
   const farFuture = React.useMemo(() => new Date(2100, 0, 1), []);
@@ -658,6 +652,20 @@ export const RegisterScreen: React.FC = () => {
                   </TouchableOpacity>
                 </View>
 
+                <View style={styles.inputGroup}>
+                  <CostarText variant="label" style={styles.label}>
+                    Timezone
+                  </CostarText>
+                  <TouchableOpacity
+                    style={styles.astraInput}
+                    onPress={() => setShowTimezoneModal(true)}
+                  >
+                    <CostarText variant="body" style={[styles.astraInputText, { flexShrink: 1 }]}>
+                      {birthData.timezone}
+                    </CostarText>
+                  </TouchableOpacity>
+                </View>
+
                 <TouchableOpacity
                   onPress={handleNext}
                   disabled={isLoginPending}
@@ -708,6 +716,13 @@ export const RegisterScreen: React.FC = () => {
         </ScrollView>
       </KeyboardAvoidingView>
       <View style={styles.indicator} />
+
+      <TimezoneSelectionModal
+        visible={showTimezoneModal}
+        selectedTimezone={birthData.timezone}
+        onSelect={(tz) => setBirthData({ ...birthData, timezone: tz })}
+        onClose={() => setShowTimezoneModal(false)}
+      />
 
       {/* Modals for iOS/Logic */}
       <Modal

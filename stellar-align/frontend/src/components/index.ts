@@ -13,5 +13,8 @@ export { MoodRing } from './MoodRing';
 export { AspectList } from './AspectList';
 export { TransitCard } from './TransitCard';
 
+// Settings
+export * from './SettingsComponents';
+
 // Legacy
 export { Card } from './Card';

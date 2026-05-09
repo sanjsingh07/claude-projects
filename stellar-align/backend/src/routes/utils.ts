@@ -1,13 +1,24 @@
 import { Router, Request, Response } from "express";
-import { getTimezoneFromCoords } from "../utils/timezone";
+import { getTimezoneFromCoords, getAllTimezones } from "../utils/timezone";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
 /**
+ * GET /utils/timezones
+ * Returns a list of all supported IANA timezones.
+ */
+router.get("/timezones", (_req: Request, res: Response) => {
+  const timezones = getAllTimezones();
+  res.json({
+    success: true,
+    data: { timezones },
+  });
+});
+
+/**
  * GET /utils/timezone?lat=...&lon=...
  * Resolves a timezone from coordinates.
- * This can be used by the frontend as a fallback or replacement for third-party APIs.
  */
 router.get("/timezone", (req: Request, res: Response) => {
   const { lat, lon } = req.query;
