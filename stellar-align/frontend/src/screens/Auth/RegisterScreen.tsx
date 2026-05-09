@@ -344,12 +344,24 @@ export const RegisterScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    if (socialUser && step === initialStep) {
-      navigation.goBack();
-    } else if (step > 1) {
+    if (step > 1) {
       setStep(step - 1);
-    } else {
+    } else if (navigation.canGoBack()) {
       navigation.goBack();
+    } else if (isAuthenticated) {
+      // If we're authenticated but at the root of the Register stack, 
+      // "Back" should probably log out to let the user restart or change accounts
+      Alert.alert(
+        'Exit Registration?',
+        'Going back will log you out. You can complete your profile later.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Log Out', style: 'destructive', onPress: () => logout() },
+        ]
+      );
+    } else {
+      // Fallback for non-authenticated root
+      navigation.navigate('RegisterStart' as any);
     }
   };
 
