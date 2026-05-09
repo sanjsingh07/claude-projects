@@ -253,11 +253,16 @@ export const BirthDataEditModal: React.FC<{
   date: string;
   time: string;
   timezone: string;
+  birthTimeUnknown: boolean;
   onEditDate: () => void;
   onEditTime: () => void;
   onEditTimezone: () => void;
+  onToggleUnknownTime: () => void;
   onClose: () => void;
-}> = ({ visible, date, time, timezone, onEditDate, onEditTime, onEditTimezone, onClose }) => {
+}> = ({ 
+  visible, date, time, timezone, birthTimeUnknown, 
+  onEditDate, onEditTime, onEditTimezone, onToggleUnknownTime, onClose 
+}) => {
   if (!visible) return null;
 
   return (
@@ -279,13 +284,45 @@ export const BirthDataEditModal: React.FC<{
                 </View>
                 <Text style={styles.arrow}>›</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.optionItem} onPress={onEditTime}>
+
+              <TouchableOpacity 
+                style={[styles.optionItem, birthTimeUnknown && { opacity: 0.5 }]} 
+                onPress={() => !birthTimeUnknown && onEditTime()}
+                disabled={birthTimeUnknown}
+              >
                 <View>
                   <Text style={styles.rowSub}>BIRTH TIME</Text>
-                  <Text style={[styles.optionLabel, { marginTop: 4 }]}>{time}</Text>
+                  <Text style={[styles.optionLabel, { marginTop: 4 }]}>
+                    {birthTimeUnknown ? '--:--' : time}
+                  </Text>
                 </View>
-                <Text style={styles.arrow}>›</Text>
+                {!birthTimeUnknown && <Text style={styles.arrow}>›</Text>}
               </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.optionItem} 
+                onPress={onToggleUnknownTime}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+                  <View>
+                    <Text style={styles.optionLabel}>I don't know my birth time</Text>
+                    <Text style={[styles.rowSub, { marginTop: 4 }]}>Estimates Rising sign & houses</Text>
+                  </View>
+                  <View style={[styles.checkbox, birthTimeUnknown && styles.checkboxChecked]}>
+                    {birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.astraBg} />}
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              {birthTimeUnknown && (
+                <View style={styles.warningBox}>
+                  <Ionicons name="information-circle-outline" size={16} color={colors.astraViolet} />
+                  <Text style={styles.warningText}>
+                    Note: Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise.
+                  </Text>
+                </View>
+              )}
+
               <TouchableOpacity style={styles.optionItem} onPress={onEditTimezone}>
                 <View>
                   <Text style={styles.rowSub}>TIMEZONE</Text>
@@ -687,5 +724,35 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Medium',
     fontSize: 16,
     color: colors.white,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: colors.astraViolet,
+    borderColor: colors.astraViolet,
+  },
+  warningBox: {
+    flexDirection: 'row',
+    backgroundColor: colors.astraViolet + '10',
+    padding: 12,
+    borderRadius: 8,
+    marginHorizontal: 24,
+    marginVertical: 12,
+    gap: 10,
+    alignItems: 'flex-start',
+  },
+  warningText: {
+    flex: 1,
+    color: colors.astraMuted,
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: 'DMSans-Regular',
   },
 });

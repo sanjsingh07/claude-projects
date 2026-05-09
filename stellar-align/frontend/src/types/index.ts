@@ -7,6 +7,7 @@ export interface User {
   profileCompleted: boolean;
   birthDate?: string;
   birthTime?: string;
+  birthTimeUnknown: boolean;
   birthTimezone?: string;
   birthLocationName?: string;
   birthLatitude?: number;

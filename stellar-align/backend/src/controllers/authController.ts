@@ -326,8 +326,8 @@ export class AuthController {
         user.birthLatitude != null &&
         user.birthLongitude != null
       ) {
-        // Use default time of 12:00 if not provided
-        const timeStr = user.birthTime
+        // Use default time of 12:00 if unknown or not provided
+        const timeStr = (user.birthTime && !user.birthTimeUnknown)
           ? user.birthTime.toISOString().slice(11, 16) // Extract HH:mm from ISO string
           : "12:00";
 

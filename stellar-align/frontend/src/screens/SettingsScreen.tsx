@@ -215,7 +215,7 @@ export const SettingsScreen: React.FC = () => {
           />
           <SettingsRow
             label="Birth Data"
-            sub={`${profile.birthData.formattedDate} at ${profile.birthData.time}`}
+            sub={`${profile.birthData.formattedDate}${profile.birthTimeUnknown ? '' : ' at ' + profile.birthData.time}${profile.birthTimeUnknown ? ' (Time Unknown)' : ''}`}
             onPress={() => setActiveModal('birthData')}
           />
           <SettingsRow
@@ -412,6 +412,7 @@ export const SettingsScreen: React.FC = () => {
         date={profile.birthData.formattedDate}
         time={profile.birthData.time}
         timezone={profile.birthData.timezone?.label || profile.birthTimezone}
+        birthTimeUnknown={profile.birthTimeUnknown || false}
         onEditDate={() => {
           setPickerInitialValue(getBirthDate());
           setActiveModal(null);
@@ -424,6 +425,14 @@ export const SettingsScreen: React.FC = () => {
         }}
         onEditTimezone={() => {
           setActiveModal('timezone');
+        }}
+        onToggleUnknownTime={() => {
+          const isUnknown = !profile.birthTimeUnknown;
+          updateProfileMutation.mutate({ 
+            birthTimeUnknown: isUnknown,
+            // If switching to unknown, default to 12:00 internally
+            ...(isUnknown && { birthTime: '12:00' })
+          });
         }}
         onClose={() => setActiveModal(null)}
       />

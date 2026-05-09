@@ -14,6 +14,7 @@ export interface User {
   // Birth data
   birthDate: Date;
   birthTime?: Date;
+  birthTimeUnknown: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
   birthLongitude?: number;
@@ -52,6 +53,7 @@ export interface UserCreateInput {
   gender?: Gender;
   birthDate: Date;
   birthTime?: Date;
+  birthTimeUnknown?: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
   birthLongitude?: number;
@@ -66,6 +68,7 @@ export interface UserUpdateInput {
   avatarUrl?: string;
   birthDate?: Date;
   birthTime?: Date;
+  birthTimeUnknown?: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
   birthLongitude?: number;

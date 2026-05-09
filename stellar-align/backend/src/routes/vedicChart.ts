@@ -87,7 +87,7 @@ router.post(
       }
 
       const ayanamsaType = (req.body.ayanamsa?.toUpperCase() as AyanamsaType) || AyanamsaType.LAHIRI;
-      const birthTime = user.birthTime
+      const timeStr = (user.birthTime && !user.birthTimeUnknown)
         ? user.birthTime.toISOString().slice(11, 16)
         : "12:00";
 

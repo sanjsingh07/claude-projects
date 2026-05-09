@@ -94,6 +94,7 @@ model User {
   avatarUrl             String?
   birthDate             DateTime
   birthTime             DateTime?
+  birthTimeUnknown      Boolean   @default(false)
   birthLocationName     String?
   birthLatitude         Float?
   birthLongitude        Float?

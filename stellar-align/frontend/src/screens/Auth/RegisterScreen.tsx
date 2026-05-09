@@ -41,6 +41,7 @@ const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '';
 interface BirthDataStep {
   date: string;
   time: string;
+  birthTimeUnknown: boolean;
   timezone: string;
   locationName: string;
   latitude?: number;
@@ -114,6 +115,7 @@ export const RegisterScreen: React.FC = () => {
   const [birthData, setBirthData] = useState<BirthDataStep>({
     date: '',
     time: '',
+    birthTimeUnknown: false,
     timezone: 'Asia/Kolkata',
     locationName: '',
   });
@@ -364,7 +366,8 @@ export const RegisterScreen: React.FC = () => {
         displayName: fullName,
         gender: gender.toUpperCase().replace(/[\s-]/g, '_'),
         birthDate: birthData.date,
-        birthTime: birthData.time || undefined,
+        birthTime: birthData.birthTimeUnknown ? '12:00' : (birthData.time || undefined),
+        birthTimeUnknown: birthData.birthTimeUnknown,
         birthTimezone: birthData.timezone,
         ...(birthData.locationName && { birthLocationName: birthData.locationName }),
         ...(birthData.latitude && { birthLatitude: birthData.latitude }),
@@ -585,14 +588,15 @@ export const RegisterScreen: React.FC = () => {
                       Time
                     </CostarText>
                     <TouchableOpacity
-                      style={styles.astraInput}
-                      onPress={() => setShowTimePicker(true)}
+                      style={[styles.astraInput, birthData.birthTimeUnknown && { opacity: 0.5 }]}
+                      onPress={() => !birthData.birthTimeUnknown && setShowTimePicker(true)}
+                      disabled={birthData.birthTimeUnknown}
                     >
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <CostarText variant="body" style={styles.astraInputText}>
-                          {birthData.time ? formatTime(birthData.time).split(' ')[0] : 'Select time'}
+                          {birthData.birthTimeUnknown ? '--:--' : (birthData.time ? formatTime(birthData.time).split(' ')[0] : 'Select time')}
                         </CostarText>
-                        {birthData.time && (
+                        {!birthData.birthTimeUnknown && birthData.time && (
                           <CostarText variant="body" style={[styles.astraInputText, { color: colors.astraMuted, marginLeft: 4 }]}>
                             {formatTime(birthData.time).split(' ')[1]}
                           </CostarText>
@@ -618,6 +622,27 @@ export const RegisterScreen: React.FC = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
+
+                <TouchableOpacity 
+                  style={styles.unknownTimeRow}
+                  onPress={() => setBirthData({ ...birthData, birthTimeUnknown: !birthData.birthTimeUnknown })}
+                >
+                  <View style={[styles.checkbox, birthData.birthTimeUnknown && styles.checkboxChecked]}>
+                    {birthData.birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.astraBg} />}
+                  </View>
+                  <CostarText variant="bodySmall" style={styles.unknownTimeText}>
+                    I don't know my birth time
+                  </CostarText>
+                </TouchableOpacity>
+
+                {birthData.birthTimeUnknown && (
+                  <View style={styles.warningBox}>
+                    <Ionicons name="information-circle-outline" size={16} color={colors.astraViolet} />
+                    <CostarText variant="bodySmall" style={styles.warningText}>
+                      Note: Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise.
+                    </CostarText>
+                  </View>
+                )}
 
                 <View style={styles.inputGroup}>
                   <CostarText variant="label" style={styles.label}>
@@ -1098,6 +1123,44 @@ const styles = StyleSheet.create({
   astraBackButton: {
     marginTop: 16,
     paddingVertical: 12,
+  },
+  unknownTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.astraBorder,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: colors.astraViolet,
+    borderColor: colors.astraViolet,
+  },
+  unknownTimeText: {
+    color: colors.astraMuted,
+  },
+  warningBox: {
+    flexDirection: 'row',
+    backgroundColor: colors.astraViolet + '10',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 16,
+    gap: 10,
+    alignItems: 'flex-start',
+  },
+  warningText: {
+    flex: 1,
+    color: colors.astraMuted,
+    lineHeight: 18,
   },
   modalOverlay: {
     flex: 1,

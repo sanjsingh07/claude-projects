@@ -116,7 +116,7 @@ export class UserController {
       }
 
       // Copy other fields
-      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude"].forEach(field => {
+      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude", "birthTimeUnknown"].forEach(field => {
         if (updateData[field] !== undefined) {
           processedData[field] = updateData[field];
         }
@@ -227,7 +227,7 @@ export class UserController {
       user.birthLatitude != null &&
       user.birthLongitude != null
     ) {
-      const timeStr = user.birthTime
+      const timeStr = (user.birthTime && !user.birthTimeUnknown)
         ? user.birthTime.toISOString().slice(11, 16)
         : "12:00";
 
@@ -333,7 +333,7 @@ export class UserController {
     }
 
     try {
-      const timeStr = user.birthTime
+      const timeStr = (user.birthTime && !user.birthTimeUnknown)
         ? user.birthTime.toISOString().slice(11, 16)
         : "12:00";
 
