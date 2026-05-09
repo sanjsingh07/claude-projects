@@ -132,10 +132,14 @@ export const RegisterScreen: React.FC = () => {
   const debouncedSearch = useDebounce(locationSearchInput, 500);
 
   useEffect(() => {
-    if (isAuthenticated && user?.profileCompleted) {
-      navigation.replace('Main');
+    if (isAuthenticated) {
+      if (user?.profileCompleted) {
+        navigation.replace('Main');
+      } else if (step === 1) {
+        setStep(2);
+      }
     }
-  }, [isAuthenticated, user?.profileCompleted, navigation]);
+  }, [isAuthenticated, user?.profileCompleted, navigation, step]);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -344,7 +348,7 @@ export const RegisterScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    if (step > 1) {
+    if (step > 1 && !isAuthenticated) {
       setStep(step - 1);
     } else if (navigation.canGoBack()) {
       navigation.goBack();
