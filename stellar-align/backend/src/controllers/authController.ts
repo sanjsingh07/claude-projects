@@ -349,30 +349,44 @@ export class AuthController {
             sunSign: westernChart.sun.sign,
             moonSign: westernChart.moon.sign,
             risingSign: westernChart.ascendant?.sign || null,
-            planetaryPositions: {
-              sun: westernChart.sun,
-              moon: westernChart.moon,
-              mercury: westernChart.mercury,
-              venus: westernChart.venus,
-              mars: westernChart.mars,
-              jupiter: westernChart.jupiter,
-              saturn: westernChart.saturn,
-              uranus: westernChart.uranus,
-              neptune: westernChart.neptune,
-              pluto: westernChart.pluto,
-              chiron: westernChart.chiron,
-              lilith: westernChart.lilith,
-              node: westernChart.node,
-              ascendant: westernChart.ascendant,
-              midheaven: westernChart.midheaven,
-            } as any,
-            houses: westernChart.houses as any,
-            aspects: westernChart.aspects as any,
             chartPattern: undefined,
             houseSystem: HouseSystem.PLACIDUS,
             calculationMethod: "swiss_ephemeris",
             zodiacType: ZodiacType.TROPICAL,
             calculatedAt: new Date(),
+            planetaryPositions: {
+              create: Object.entries(westernChart).filter(([k]) => planetsToCalc.includes(k.toUpperCase() as any) || k === "ascendant" || k === "midheaven").map(([k, v]: [string, any]) => ({
+                planet: k.toUpperCase(),
+                sign: v.sign,
+                longitude: v.longitude,
+                latitude: v.latitude,
+                distance: v.distance,
+                speed: v.speed || 0,
+                degree: v.degree,
+                minute: v.minute,
+                house: v.house,
+                retrograde: v.retrograde || false,
+              })),
+            },
+            houses: {
+              create: westernChart.houses.map((h, i) => ({
+                house: i + 1,
+                sign: h.sign,
+                longitude: h.longitude,
+                degree: h.degree,
+                minute: h.minute,
+              })),
+            },
+            aspects: {
+              create: westernChart.aspects.map(a => ({
+                planet1: a.planet1,
+                planet2: a.planet2,
+                type: a.type,
+                angle: a.angle,
+                orb: a.orb,
+                applying: a.applying,
+              })),
+            },
           },
         });
 
@@ -397,25 +411,50 @@ export class AuthController {
         const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
 
         // Update natal chart with Vedic data (matching UserController pattern)
-        await prisma.natalChart.update({
-          where: { id: chart.id },
-          data: {
-            sunSign: (d1Sun?.sign as any) || westernChart.sun.sign,
-            moonSign: (d1Moon?.sign as any) || westernChart.moon.sign,
-            risingSign: vedicChart.d1.ascendant,
-            planetaryPositions: vedicChart.d1.planetaryPositions as any,
-            houses: vedicChart.d1.houses as any,
-            aspects: westernChart.aspects as any,
-            houseSystem: HouseSystem.WHOLE_SIGN,
-            calculationMethod: "vedic",
-            zodiacType: ZodiacType.SIDEREAL,
-            ayanamsa: AyanamsaType.LAHIRI,
-            nakshatra: moonNakshatra.name,
-            nakshatraPada: moonNakshatra.pada,
-            nakshatraLord: moonNakshatra.lord,
-            calculatedAt: new Date(),
-          },
-        });
+        await prisma.$transaction([
+          prisma.natalPlanetPosition.deleteMany({ where: { natalChartId: chart.id } }),
+          prisma.natalHouseCusp.deleteMany({ where: { natalChartId: chart.id } }),
+          prisma.divisionalChart.deleteMany({ where: { natalChartId: chart.id } }),
+          prisma.natalChart.update({
+            where: { id: chart.id },
+            data: {
+              sunSign: (d1Sun?.sign as any) || westernChart.sun.sign,
+              moonSign: (d1Moon?.sign as any) || westernChart.moon.sign,
+              risingSign: vedicChart.d1.ascendant,
+              houseSystem: HouseSystem.WHOLE_SIGN,
+              calculationMethod: "vedic",
+              zodiacType: ZodiacType.SIDEREAL,
+              ayanamsa: AyanamsaType.LAHIRI,
+              nakshatra: moonNakshatra.name,
+              nakshatraPada: moonNakshatra.pada,
+              nakshatraLord: moonNakshatra.lord,
+              calculatedAt: new Date(),
+              planetaryPositions: {
+                create: vedicChart.d1.planetaryPositions.map(p => ({
+                  planet: p.planet.toUpperCase(),
+                  sign: p.sign,
+                  longitude: 0, // Should be calculated or passed if needed
+                  latitude: 0,
+                  distance: 0,
+                  speed: 0,
+                  degree: Math.floor(p.degree),
+                  minute: Math.round((p.degree % 1) * 60),
+                  house: p.house,
+                  retrograde: p.retrograde || false,
+                })),
+              },
+              houses: {
+                create: vedicChart.d1.houses.map(h => ({
+                  house: h.house,
+                  sign: h.sign,
+                  longitude: 0,
+                  degree: 0,
+                  minute: 0,
+                })),
+              },
+            },
+          }),
+        ]);
 
         // Create divisional charts
         const divisionalChartsData = [
@@ -426,16 +465,33 @@ export class AuthController {
           { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
         ];
 
-        await prisma.divisionalChart.createMany({
-          data: divisionalChartsData.map((dc) => ({
-            natalChartId: chart.id,
-            chartType: dc.chartType,
-            planetaryPositions: dc.data.planetaryPositions as any,
-            ascendant: dc.data.ascendant,
-            ascendantDegree: dc.data.ascendantDegree,
-            houses: dc.data.houses as any,
-          })),
-        });
+        for (const dc of divisionalChartsData) {
+          await prisma.divisionalChart.create({
+            data: {
+              natalChartId: chart.id,
+              chartType: dc.chartType,
+              ascendant: dc.data.ascendant,
+              ascendantDegree: dc.data.ascendantDegree,
+              planetaryPositions: {
+                create: dc.data.planetaryPositions.map(p => ({
+                  planet: p.planet.toUpperCase(),
+                  sign: p.sign,
+                  degree: p.degree,
+                  house: p.house,
+                  retrograde: p.retrograde || false,
+                  combust: p.combust || false,
+                })),
+              },
+              houses: {
+                create: dc.data.houses.map(h => ({
+                  house: h.house,
+                  sign: h.sign,
+                  degree: h.degree,
+                })),
+              },
+            },
+          });
+        }
 
         logger.info("Initial Western and Vedic charts calculated and saved successfully", {
           userId,

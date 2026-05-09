@@ -157,9 +157,6 @@ model NatalChart {
   sunSign               ZodiacSign
   moonSign              ZodiacSign
   risingSign            ZodiacSign?
-  planetaryPositions    Json
-  houses                Json
-  aspects               Json
   chartPattern          String?
   calculationMethod     String    @default("swiss_ephemeris")
   houseSystem           HouseSystem @default(PLACIDUS)
@@ -170,25 +167,106 @@ model NatalChart {
   nakshatraLord         String?
   calculatedAt          DateTime  @default(now())
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  planetaryPositions    NatalPlanetPosition[]
   divisionalCharts      DivisionalChart[]
+  houses                NatalHouseCusp[]
+  aspects               NatalAspect[]
 
   @@index([userId])
   @@index([sunSign, moonSign, risingSign])
+}
+
+model NatalPlanetPosition {
+  id           String     @id @default(uuid())
+  natalChartId String
+  planet       String     // e.g., "SUN", "MOON"
+  sign         ZodiacSign
+  longitude    Float
+  latitude     Float
+  distance     Float
+  speed        Float
+  degree       Int
+  minute       Int
+  house        Int?
+  retrograde   Boolean    @default(false)
+  
+  natalChart   NatalChart @relation(fields: [natalChartId], references: [id], onDelete: Cascade)
+
+  @@unique([natalChartId, planet])
+  @@index([planet, sign])
+}
+
+model NatalHouseCusp {
+  id           String     @id @default(uuid())
+  natalChartId String
+  house        Int        // 1-12
+  sign         ZodiacSign
+  longitude    Float
+  degree       Int
+  minute       Int
+  
+  natalChart   NatalChart @relation(fields: [natalChartId], references: [id], onDelete: Cascade)
+
+  @@unique([natalChartId, house])
+}
+
+model NatalAspect {
+  id           String     @id @default(uuid())
+  natalChartId String
+  planet1      String
+  planet2      String
+  type         String
+  angle        Float
+  orb          Float
+  applying     Boolean
+  
+  natalChart   NatalChart @relation(fields: [natalChartId], references: [id], onDelete: Cascade)
+
+  @@index([natalChartId])
 }
 
 model DivisionalChart {
   id                  String   @id @default(uuid())
   natalChartId        String
   chartType           DivisionalChartType
-  planetaryPositions  Json     // { sun: { sign: "ARIES", degree: 15 }, ... }
   ascendant           ZodiacSign
   ascendantDegree     Float
-  houses              Json
   createdAt           DateTime @default(now())
+  
   natalChart          NatalChart @relation(fields: [natalChartId], references: [id], onDelete: Cascade)
+  planetaryPositions  DivisionalPlanetPosition[]
+  houses              DivisionalHouseCusp[]
 
   @@index([natalChartId])
   @@index([chartType])
+}
+
+model DivisionalPlanetPosition {
+  id                String          @id @default(uuid())
+  divisionalChartId String
+  planet            String
+  sign              ZodiacSign
+  degree            Float
+  house             Int
+  retrograde        Boolean         @default(false)
+  combust           Boolean         @default(false)
+  
+  divisionalChart   DivisionalChart @relation(fields: [divisionalChartId], references: [id], onDelete: Cascade)
+
+  @@unique([divisionalChartId, planet])
+}
+
+model DivisionalHouseCusp {
+  id                String          @id @default(uuid())
+  divisionalChartId String
+  house             Int
+  sign              ZodiacSign
+  degree            Float
+  
+  divisionalChart   DivisionalChart @relation(fields: [divisionalChartId], references: [id], onDelete: Cascade)
+
+  @@unique([divisionalChartId, house])
 }
 
 model DailyHoroscope {
