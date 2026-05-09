@@ -72,7 +72,12 @@ class ApiService {
       async (error: AxiosError<ApiError>) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Don't try to refresh for auth endpoints or if it's already a retry
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') || 
+                              originalRequest.url?.includes('/auth/register') ||
+                              originalRequest.url?.includes('/auth/social');
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
           originalRequest._retry = true;
 
           try {
@@ -123,7 +128,17 @@ class ApiService {
 
         const result = await response.json();
         // Backend returns: { success: true, data: { tokens: { accessToken, refreshToken } } }
-        const tokens = result.data?.tokens || result.tokens;
+        // or { success: true, data: { accessToken, refreshToken } }
+        let tokens = result.data?.tokens;
+        
+        if (!tokens && result.data?.accessToken) {
+          tokens = result.data;
+        }
+
+        if (!tokens && result.tokens) {
+          tokens = result.tokens;
+        }
+
         if (!tokens) {
           throw new Error('No tokens in refresh response');
         }
