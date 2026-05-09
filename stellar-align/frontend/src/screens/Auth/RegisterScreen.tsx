@@ -25,6 +25,7 @@ import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
+import { api } from '@services/api';
 import { 
   CostarText, 
   CostarButton, 

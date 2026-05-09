@@ -19,6 +19,7 @@ import * as AuthSession from 'expo-auth-session';
 import { RootStackParamList } from '@navigation/RootNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
+import { api } from '@services/api';
 import { CostarText } from '@components/CostarCard';
 import { CostarButton } from '@components/CostarButton';
 import { CostarBackground } from '@components/CostarBackground';
