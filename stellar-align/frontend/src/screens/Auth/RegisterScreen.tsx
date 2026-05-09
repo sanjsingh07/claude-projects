@@ -77,7 +77,7 @@ const commonLocations = [
 export const RegisterScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any, any>>();
   const { register, socialLogin, isLoginPending, updateProfile } = useAuth();
-  const { setUser, isAuthenticated } = useAuthStore();
+  const { setUser, isAuthenticated, user } = useAuthStore();
   const route = useRoute<any>();
 
   const redirectUri = AuthSession.makeRedirectUri({
