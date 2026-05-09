@@ -107,6 +107,8 @@ export function useAuth() {
       birthLocationName?: string;
       birthLatitude?: number;
       birthLongitude?: number;
+      displayName?: string;
+      gender?: string;
     }) => {
       const response = await api.updateUser(data);
       // Backend returns { success: true, data: user }

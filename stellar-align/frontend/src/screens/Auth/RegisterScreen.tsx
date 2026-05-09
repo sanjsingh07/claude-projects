@@ -370,7 +370,7 @@ export const RegisterScreen: React.FC = () => {
       };
 
       if (socialUser) {
-        await updateProfile(data as any);
+        await updateProfile(data);
       } else {
         await register({
           ...data,
