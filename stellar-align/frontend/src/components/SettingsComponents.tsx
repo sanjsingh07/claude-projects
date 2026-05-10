@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/theme';
 
 export interface LocationSuggestion {
@@ -301,15 +301,30 @@ export const BirthDataEditModal: React.FC<{
 
               <TouchableOpacity 
                 style={styles.optionItem} 
-                onPress={onToggleUnknownTime}
+                onPress={() => {
+                  const action = birthTimeUnknown ? 'disable' : 'enable';
+                  Alert.alert(
+                    'Birth Time Unknown',
+                    `Are you sure you want to ${action} 'Unknown Birth Time'? This will recalculate your Rising sign and house placements.`,
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      { 
+                        text: birthTimeUnknown ? 'Show Time' : 'Set Unknown', 
+                        onPress: onToggleUnknownTime 
+                      },
+                    ]
+                  );
+                }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                   <View>
-                    <Text style={styles.optionLabel}>I don't know my birth time</Text>
-                    <Text style={[styles.rowSub, { marginTop: 4 }]}>Estimates Rising sign & houses</Text>
+                    <Text style={[styles.optionLabel, birthTimeUnknown && { color: colors.astraViolet }]}>I don't know my birth time</Text>
+                    <Text style={[styles.rowSub, { marginTop: 4 }]}>
+                      {birthTimeUnknown ? 'Currently estimating placements' : 'Estimates Rising sign & houses'}
+                    </Text>
                   </View>
                   <View style={[styles.checkbox, birthTimeUnknown && styles.checkboxChecked]}>
-                    {birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.astraBg} />}
+                    {birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.white} />}
                   </View>
                 </View>
               </TouchableOpacity>

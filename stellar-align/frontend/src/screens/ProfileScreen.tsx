@@ -14,7 +14,7 @@ import { api } from '@services/api';
 import { colors } from '@theme/theme';
 import { useAuthStore } from '@store/authStore';
 import { UserProfile } from '@types';
-import { getSignEmoji } from '@utils/astrology';
+import { getSignEmoji, formatSignName } from '@utils/astrology';
 import {
   ProfileHero,
   BirthDataGrid,
@@ -72,13 +72,38 @@ export const ProfileScreen: React.FC = () => {
   if (!profile || !settings) return null;
 
   const sunSign = profile.astrology.sun?.sign || '';
+  const moonSign = profile.astrology.moon?.sign || '';
+  const risingSign = profile.astrology.rising?.sign || '';
+  
   const sunEmoji = getSignEmoji(sunSign);
+  const moonEmoji = getSignEmoji(moonSign);
+  const risingEmoji = getSignEmoji(risingSign);
+
+  const big3 = [
+    sunSign ? `${formatSignName(sunSign)} Sun` : '',
+    moonSign ? `${formatSignName(moonSign)} Moon` : '',
+    risingSign ? `${formatSignName(risingSign)} Rising` : '',
+  ].filter(Boolean).join(' · ');
 
   const birthDataItems = [
-    { key: 'Date', val: profile.birthData.formattedDate, sub: `${sunSign} · ${sunEmoji}` },
+    { 
+      key: 'Date', 
+      val: profile.birthData.formattedDate, 
+      sub: sunSign && risingSign 
+        ? `${formatSignName(sunSign)} ${sunEmoji} · ${formatSignName(risingSign)} ${risingEmoji}` 
+        : sunSign ? `${formatSignName(sunSign)} ${sunEmoji}` : ''
+    },
     { key: 'Time', val: profile.birthData.time, sub: profile.birthData.isTimeApproximate ? 'approx' : 'known' },
-    { key: 'Place', val: profile.birthData.place.city, sub: `${profile.birthData.place.region} · ${profile.birthData.place.latitude.toFixed(2)}°N` },
-    { key: 'Timezone', val: profile.birthData.timezone.label, sub: `UTC ${profile.birthData.timezone.offset >= 0 ? '+' : ''}${profile.birthData.timezone.offset}` },
+    { 
+      key: 'Place', 
+      val: profile.birthData.place.city, 
+      sub: `${profile.birthData.place.region || profile.birthData.place.country} · ${Math.abs(profile.birthData.place.latitude).toFixed(2)}°${profile.birthData.place.latitude >= 0 ? 'N' : 'S'}` 
+    },
+    { 
+      key: 'Timezone', 
+      val: profile.birthData.timezone.label, 
+      sub: `GMT ${profile.birthData.timezone.offset >= 0 ? '+' : ''}${profile.birthData.timezone.offset}` 
+    },
   ];
 
   const notificationItems = [
@@ -121,7 +146,7 @@ export const ProfileScreen: React.FC = () => {
       <ProfileHero
         name={profile.name}
         avatarInitial={profile.avatarInitial}
-        subtitle={`Born ${profile.birthData.formattedDate} · ${profile.birthData.time} · ${profile.birthData.place.city}, ${profile.birthData.place.region}`}
+        subtitle={big3 || `Born ${profile.birthData.formattedDate}`}
         badges={profile.badges}
         onSettingsPress={() => navigation.navigate('Settings')}
       />

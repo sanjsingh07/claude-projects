@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/database";
 import { cache } from "../config/redis";
 import { ApiError, NotFoundError } from "../utils/errors";
-import { validateTimezone } from "../utils/timezone";
+import { validateTimezone, getTimezoneOffset } from "../utils/timezone";
 import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
@@ -98,11 +98,9 @@ export class UserController {
       const processedData: any = { updatedAt: new Date() };
 
       if (updateData.birthDate) {
-        const birthDate = new Date(updateData.birthDate);
-        const year = birthDate.getUTCFullYear();
-        const month = birthDate.getUTCMonth();
-        const day = birthDate.getUTCDate();
-        processedData.birthDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+        const dateStr = updateData.birthDate.split("T")[0];
+        const [year, month, day] = dateStr.split("-").map(Number);
+        processedData.birthDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
       }
 
       if (updateData.birthTime) {
@@ -129,6 +127,14 @@ export class UserController {
           processedData.birthLatitude,
           processedData.birthLongitude,
           processedData.birthTimezone || currentUser.birthTimezone
+        );
+      }
+
+      // Update UTC offset if timezone or date changed
+      if (processedData.birthTimezone || processedData.birthDate) {
+        processedData.birthUtcOffset = getTimezoneOffset(
+          processedData.birthTimezone || currentUser.birthTimezone,
+          processedData.birthDate || currentUser.birthDate
         );
       }
 

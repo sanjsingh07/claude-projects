@@ -36,7 +36,7 @@ export class AuthController {
       const {
         email,
         password,
-        birthDate,
+        birthDate: birthDateStr,
         birthTime,
         birthTimezone,
         birthLocationName,
@@ -45,6 +45,9 @@ export class AuthController {
         displayName,
         gender,
       } = req.body;
+
+      const dateParts = birthDateStr.split("T")[0].split("-").map(Number);
+      const normalizedBirthDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2], 0, 0, 0));
 
       let birthTimeDate: Date | undefined;
       if (birthTime && typeof birthTime === 'string' && birthTime.includes(':')) {
@@ -57,7 +60,7 @@ export class AuthController {
       const result = await authService.register({
         email,
         password,
-        birthDate: new Date(birthDate),
+        birthDate: normalizedBirthDate,
         birthTime: birthTimeDate,
         birthTimezone,
         birthLocationName,

@@ -1,4 +1,5 @@
 import { find } from "geo-tz";
+import { DateTime } from "luxon";
 import logger from "../config/logger";
 
 /**
@@ -61,3 +62,16 @@ export function validateTimezone(lat?: number, lon?: number, providedTz?: string
 
   return providedTz || "UTC";
 }
+
+/**
+ * Returns the UTC offset in hours for a given timezone and date.
+ */
+export function getTimezoneOffset(timezone: string, date: Date = new Date()): number {
+  try {
+    const dt = DateTime.fromJSDate(date).setZone(timezone);
+    return dt.offset / 60;
+  } catch (error) {
+    return 0;
+  }
+}
+

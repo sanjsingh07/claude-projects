@@ -7,7 +7,7 @@ import { cache } from "../config/redis";
 import logger from "../config/logger";
 import { emailService } from "./email.service";
 import { ApiError } from "../utils/errors";
-import { validateTimezone } from "../utils/timezone";
+import { validateTimezone, getTimezoneOffset } from "../utils/timezone";
 import { User, UserCreateInput } from "../types/user";
 import { AuthTokens, JwtPayload, RefreshTokenPayload } from "../types/api";
 import { AuthProvider } from "@prisma/client";
@@ -45,6 +45,7 @@ export class AuthService {
         birthLatitude: input.birthLatitude,
         birthLongitude: input.birthLongitude,
         birthTimezone: validateTimezone(input.birthLatitude, input.birthLongitude, input.birthTimezone),
+        birthUtcOffset: getTimezoneOffset(input.birthTimezone, input.birthDate),
         profileCompleted: true,
       },
     });
