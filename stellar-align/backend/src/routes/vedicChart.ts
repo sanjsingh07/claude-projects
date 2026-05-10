@@ -89,7 +89,6 @@ router.post(
       const ayanamsaType = (req.body.ayanamsa?.toUpperCase() as AyanamsaType) || AyanamsaType.LAHIRI;
       
       const birthDateTime = user.birthDateTime;
-      const dateStr = birthDateTime.toISOString().split("T")[0];
       const timeStr = user.birthTimeUnknown
         ? "12:00"
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -121,92 +120,17 @@ router.post(
       // Get Moon's nakshatra info
       const moonNakshatra = vedicChart.nakshatras.moon;
 
-      // Extract D1 positions for the main NatalChart signs
-      const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
-      const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
-
-      // Prepare D1 planetary positions array for the main NatalChart
-      const planetaryPositionsData = vedicChart.d1.planetaryPositions.map(p => ({
-        planet: p.planet.toUpperCase(),
-        sign: p.sign,
-        longitude: p.degree,
-        latitude: 0,
-        distance: 0,
-        speed: 0,
-        degree: Math.floor(p.degree),
-        minute: Math.round((p.degree % 1) * 60),
-        house: p.house,
-        retrograde: p.retrograde || false,
-      }));
-
-      const housesData = vedicChart.d1.houses.map(h => ({
-        house: h.house,
-        sign: h.sign,
-        longitude: h.degree,
-        degree: Math.floor(h.degree),
-        minute: Math.round((h.degree % 1) * 60),
-      }));
-
-      const aspectsData = baseTropicalChart.aspects.map(a => ({
-        planet1: a.planet1,
-        planet2: a.planet2,
-        type: a.type,
-        angle: a.angle,
-        orb: a.orb,
-        applying: a.applying,
-      }));
-
-      // Upsert natal chart with Vedic data
+      // Update natal chart metadata ONLY (don't overwrite Western signs/positions)
       const userId = req.userId!;
       
-      const chart = await prisma.natalChart.upsert({
+      const chart = await prisma.natalChart.update({
         where: { userId },
-        create: {
-          userId,
-          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign || ZodiacSign.ARIES,
-          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign || ZodiacSign.ARIES,
-          risingSign: vedicChart.d1.ascendant,
-          houseSystem: HouseSystem.WHOLE_SIGN,
-          calculationMethod: "vedic",
-          zodiacType: ZodiacType.SIDEREAL,
-          ayanamsa: ayanamsaType,
-          nakshatra: moonNakshatra.name,
-          nakshatraPada: moonNakshatra.pada,
-          nakshatraLord: moonNakshatra.lord,
-          planetaryPositions: {
-            create: planetaryPositionsData,
-          },
-          houses: {
-            create: housesData,
-          },
-          aspects: {
-            create: aspectsData,
-          },
-        },
-        update: {
-          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign || ZodiacSign.ARIES,
-          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign || ZodiacSign.ARIES,
-          risingSign: vedicChart.d1.ascendant,
-          houseSystem: HouseSystem.WHOLE_SIGN,
-          calculationMethod: "vedic",
-          zodiacType: ZodiacType.SIDEREAL,
+        data: {
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
           nakshatraLord: moonNakshatra.lord,
           calculatedAt: new Date(),
-          planetaryPositions: {
-            deleteMany: {},
-            create: planetaryPositionsData,
-          },
-          houses: {
-            deleteMany: {},
-            create: housesData,
-          },
-          aspects: {
-            deleteMany: {},
-            create: aspectsData,
-          },
         },
       });
 

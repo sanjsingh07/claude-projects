@@ -87,8 +87,8 @@ export function getAyanamsa(jd: number, type: AyanamsaType = AyanamsaType.LAHIRI
   const result = sweph.get_ayanamsa_ut(jd);
   
   // Handle result object if present (some versions return {data, error})
-  if (result && typeof result === 'object' && 'data' in result) {
-    return sanitizeNumber(result.data);
+  if (result && typeof result === 'object' && 'data' in (result as any)) {
+    return sanitizeNumber((result as any).data);
   }
   
   return sanitizeNumber(result);

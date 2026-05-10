@@ -37,6 +37,7 @@ export interface UserProfileResponse {
 
 export const buildUserProfile = (user: any): UserProfileResponse => {
   const natalChart = user.natalChart;
+  const chartStyle = user.settings?.chartStyle || "western";
   
   // Extract city/region/country from birthLocationName (assuming format: "City, Region, Country")
   const locationParts = user.birthLocationName?.split(",") || [];
@@ -51,7 +52,22 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
 
   const astrology: any = {};
   if (natalChart) {
-    const positions = natalChart.planetaryPositions as any;
+    let positions: any[] = [];
+    let sunSign: ZodiacSign = natalChart.sunSign;
+    let moonSign: ZodiacSign = natalChart.moonSign;
+    let risingSign: ZodiacSign = natalChart.risingSign;
+
+    if (chartStyle === "vedic" && natalChart.divisionalCharts) {
+      const d1 = natalChart.divisionalCharts.find((dc: any) => dc.chartType === "D1");
+      if (d1) {
+        positions = d1.planetaryPositions;
+        sunSign = d1.planetaryPositions.find((p: any) => p.planet === "SUN")?.sign || sunSign;
+        moonSign = d1.planetaryPositions.find((p: any) => p.planet === "MOON")?.sign || moonSign;
+        risingSign = d1.ascendant || risingSign;
+      }
+    } else {
+      positions = natalChart.planetaryPositions as any;
+    }
     
     const findPos = (planet: string) => {
       if (!positions) return null;
@@ -59,12 +75,11 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
         return positions.find((p: any) => p.planet?.toUpperCase() === planet.toUpperCase());
       }
       // If it's an object, try lowercase and uppercase keys
-      return positions[planet.toLowerCase()] || positions[planet.toUpperCase()];
+      return (positions as any)[planet.toLowerCase()] || (positions as any)[planet.toUpperCase()];
     };
     
     const sunPos = findPos("SUN");
     const moonPos = findPos("MOON");
-    const risingSign = natalChart.risingSign;
     const ascPos = findPos("ASCENDANT");
 
     if (sunPos) {
@@ -73,6 +88,12 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
         degree: sunPos.degree,
         label: formatPlacement(sunPos.sign, sunPos.degree)
       };
+    } else if (sunSign) {
+        astrology.sun = {
+            sign: sunSign.toLowerCase(),
+            degree: 0,
+            label: sunSign.charAt(0).toUpperCase() + sunSign.slice(1).toLowerCase()
+        };
     }
     
     if (moonPos) {
@@ -81,6 +102,12 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
         degree: moonPos.degree,
         label: formatPlacement(moonPos.sign, moonPos.degree)
       };
+    } else if (moonSign) {
+        astrology.moon = {
+            sign: moonSign.toLowerCase(),
+            degree: 0,
+            label: moonSign.charAt(0).toUpperCase() + moonSign.slice(1).toLowerCase()
+        };
     }
     
     if (risingSign) {

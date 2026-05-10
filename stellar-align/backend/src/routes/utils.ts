@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { getTimezoneFromCoords, getAllTimezones } from "../utils/timezone";
-import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 

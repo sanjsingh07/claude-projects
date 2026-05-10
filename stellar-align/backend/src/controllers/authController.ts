@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import appleSignin from "apple-signin-auth";
 import { authService } from "../services/auth.service";
@@ -335,8 +334,8 @@ export class AuthController {
         user.birthLongitude != null
       ) {
         // Use default time of 12:00 if unknown or not provided
-        const timeStr = (user.birthTime && !user.birthTimeUnknown)
-          ? user.birthTime.toISOString().slice(11, 16) // Extract HH:mm from ISO string
+        const timeStr = (user.birthDateTime && !user.birthTimeUnknown)
+          ? user.birthDateTime.toISOString().slice(11, 16) // Extract HH:mm from ISO string
           : "12:00";
 
         // 1. Calculate Western natal chart data first (Tropical)
@@ -366,46 +365,49 @@ export class AuthController {
         // Get Moon's nakshatra info
         const moonNakshatra = vedicChart.nakshatras.moon;
         
-        // Extract D1 positions for the main NatalChart signs
-        const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
-        const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
-
         // 3. Save everything in a single transaction
         await prisma.natalChart.create({
           data: {
             userId,
-            sunSign: (d1Sun?.sign as any) || westernChart.sun.sign,
-            moonSign: (d1Moon?.sign as any) || westernChart.moon.sign,
-            risingSign: vedicChart.d1.ascendant,
-            houseSystem: HouseSystem.WHOLE_SIGN,
-            calculationMethod: "vedic",
-            zodiacType: ZodiacType.SIDEREAL,
+            sunSign: westernChart.sun.sign,
+            moonSign: westernChart.moon.sign,
+            risingSign: westernChart.ascendant?.sign || null,
+            houseSystem: HouseSystem.PLACIDUS,
+            calculationMethod: "swiss_ephemeris",
+            zodiacType: ZodiacType.TROPICAL,
             ayanamsa: AyanamsaType.LAHIRI,
             nakshatra: moonNakshatra.name,
             nakshatraPada: moonNakshatra.pada,
             nakshatraLord: moonNakshatra.lord,
             calculatedAt: new Date(),
             planetaryPositions: {
-              create: vedicChart.d1.planetaryPositions.map(p => ({
-                planet: p.planet.toUpperCase(),
-                sign: p.sign,
-                longitude: 0, // Not provided by d1 positions
-                latitude: 0,
-                distance: 0,
-                speed: 0,
-                degree: Math.floor(p.degree),
-                minute: Math.round((p.degree % 1) * 60),
-                house: p.house,
-                retrograde: p.retrograde || false,
-              })),
+              create: [
+                "sun", "moon", "mercury", "venus", "mars", "jupiter", 
+                "saturn", "uranus", "neptune", "pluto", "chiron", 
+                "lilith", "node", "ascendant", "midheaven"
+              ].map(p => {
+                const pos = (westernChart as any)[p];
+                return {
+                  planet: p.toUpperCase(),
+                  sign: pos.sign,
+                  longitude: pos.longitude,
+                  latitude: pos.latitude,
+                  distance: pos.distance,
+                  speed: pos.speed || 0,
+                  degree: pos.degree,
+                  minute: pos.minute,
+                  house: pos.house,
+                  retrograde: pos.retrograde || false,
+                };
+              }),
             },
             houses: {
-              create: vedicChart.d1.houses.map(h => ({
+              create: westernChart.houses.map(h => ({
                 house: h.house,
                 sign: h.sign,
-                longitude: 0,
-                degree: 0,
-                minute: 0,
+                longitude: h.longitude,
+                degree: h.degree,
+                minute: h.minute,
               })),
             },
             aspects: {

@@ -6,7 +6,7 @@ import { validateTimezone, getTimezoneOffset } from "../utils/timezone";
 import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import logger from "../config/logger";
-import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipStatus } from "@prisma/client";
+import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipStatus, ZodiacSign } from "@prisma/client";
 import { buildUserProfile } from "../services/userService";
 import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
@@ -31,7 +31,10 @@ export class UserController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
+        include: { 
+          natalChart: { include: FULL_NATAL_CHART_INCLUDE },
+          settings: true
+        },
       });
 
       if (!user) {
@@ -242,7 +245,6 @@ export class UserController {
       user.birthLongitude != null
     ) {
       const birthDateTime = user.birthDateTime;
-      const dateStr = birthDateTime.toISOString().split("T")[0];
       const timeStr = user.birthTimeUnknown
         ? "12:00"
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -304,6 +306,7 @@ export class UserController {
           moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem: HouseSystem.PLACIDUS,
+          zodiacType: ZodiacType.TROPICAL,
           calculationMethod: "swiss_ephemeris",
           calculatedAt: new Date(),
           planetaryPositions: {
@@ -320,6 +323,8 @@ export class UserController {
           sunSign: chartData.sun.sign || ZodiacSign.ARIES,
           moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
+          houseSystem: HouseSystem.PLACIDUS,
+          zodiacType: ZodiacType.TROPICAL,
           calculatedAt: new Date(),
           planetaryPositions: {
             deleteMany: {},
@@ -369,7 +374,6 @@ export class UserController {
 
     try {
       const birthDateTime = user.birthDateTime;
-      const dateStr = birthDateTime.toISOString().split("T")[0];
       const timeStr = user.birthTimeUnknown
         ? "12:00"
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -401,90 +405,15 @@ export class UserController {
       // Get Moon's nakshatra info
       const moonNakshatra = vedicChart.nakshatras.moon;
       
-      // Extract D1 positions for the main NatalChart signs
-      const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
-      const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
-
-      // Prepare D1 planetary positions array for the main NatalChart
-      const planetaryPositionsData = vedicChart.d1.planetaryPositions.map(p => ({
-        planet: p.planet.toUpperCase(),
-        sign: p.sign,
-        longitude: p.degree, // Vedic already uses sign-relative degree, but we'll store it as longitude for compatibility
-        latitude: 0,
-        distance: 0,
-        speed: 0,
-        degree: Math.floor(p.degree),
-        minute: Math.round((p.degree % 1) * 60),
-        house: p.house,
-        retrograde: p.retrograde || false,
-      }));
-
-      const housesData = vedicChart.d1.houses.map(h => ({
-        house: h.house,
-        sign: h.sign,
-        longitude: h.degree,
-        degree: Math.floor(h.degree),
-        minute: Math.round((h.degree % 1) * 60),
-      }));
-
-      const aspectsData = baseTropicalChart.aspects.map(a => ({
-        planet1: a.planet1,
-        planet2: a.planet2,
-        type: a.type,
-        angle: a.angle,
-        orb: a.orb,
-        applying: a.applying,
-      }));
-
-      // Upsert natal chart with Vedic data
-      const chart = await prisma.natalChart.upsert({
+      // Update natal chart metadata ONLY (don't overwrite Western signs/positions)
+      const chart = await prisma.natalChart.update({
         where: { userId },
-        create: {
-          userId,
-          sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
-          moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
-          risingSign: vedicChart.d1.ascendant,
-          houseSystem: HouseSystem.WHOLE_SIGN,
-          calculationMethod: "vedic",
-          zodiacType: ZodiacType.SIDEREAL,
-          ayanamsa: ayanamsaType,
-          nakshatra: moonNakshatra.name,
-          nakshatraPada: moonNakshatra.pada,
-          nakshatraLord: moonNakshatra.lord,
-          planetaryPositions: {
-            create: planetaryPositionsData,
-          },
-          houses: {
-            create: housesData,
-          },
-          aspects: {
-            create: aspectsData,
-          },
-        },
-        update: {
-          sunSign: d1Sun?.sign || baseTropicalChart.sun.sign,
-          moonSign: d1Moon?.sign || baseTropicalChart.moon.sign,
-          risingSign: vedicChart.d1.ascendant,
-          houseSystem: HouseSystem.WHOLE_SIGN,
-          calculationMethod: "vedic",
-          zodiacType: ZodiacType.SIDEREAL,
+        data: {
           ayanamsa: ayanamsaType,
           nakshatra: moonNakshatra.name,
           nakshatraPada: moonNakshatra.pada,
           nakshatraLord: moonNakshatra.lord,
           calculatedAt: new Date(),
-          planetaryPositions: {
-            deleteMany: {},
-            create: planetaryPositionsData,
-          },
-          houses: {
-            deleteMany: {},
-            create: housesData,
-          },
-          aspects: {
-            deleteMany: {},
-            create: aspectsData,
-          },
         },
       });
 
@@ -497,12 +426,11 @@ export class UserController {
         DivisionalChartType.D10,
       ];
 
-      // Delete existing divisional charts
+      // Delete existing divisional charts and recreate them with full positional data
       await prisma.divisionalChart.deleteMany({
         where: { natalChartId: chart.id },
       });
 
-      // Create new divisional charts with nested positions and houses
       for (const chartType of divisionalChartsTypes) {
         const dcData = (vedicChart as any)[chartType.toLowerCase()];
         if (!dcData) continue;
@@ -533,7 +461,6 @@ export class UserController {
           },
         });
       }
-
       logger.info("Vedic chart calculated and saved successfully", {
         userId,
         ayanamsa: vedicChart.ayanamsa,
@@ -593,7 +520,10 @@ export class UserController {
 
       const user = await prisma.user.findUnique({
         where: { id: userId, isDeleted: false },
-        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
+        include: { 
+          natalChart: { include: FULL_NATAL_CHART_INCLUDE },
+          settings: true
+        },
       });
 
       if (!user) {
@@ -707,7 +637,7 @@ export class UserController {
       let settings = user.settings;
       if (!settings) {
         settings = await prisma.userSettings.create({
-          data: { userId: req.userId },
+          data: { userId: req.userId as string },
         });
       }
 

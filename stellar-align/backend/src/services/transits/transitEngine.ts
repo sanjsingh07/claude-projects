@@ -220,6 +220,7 @@ function calculateSkyAspects(transitPositions: Record<string, any>) {
     orb: number;
     pos1: any;
     pos2: any;
+    applying: boolean;
   }> = [];
 
   for (let i = 0; i < positions.length; i += 1) {

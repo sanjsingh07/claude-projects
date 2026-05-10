@@ -3,7 +3,7 @@ import { body } from "express-validator";
 import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
-import { HouseSystem, ZodiacType, AyanamsaType } from "@prisma/client";
+import { HouseSystem, ZodiacType, AyanamsaType, ZodiacSign } from "@prisma/client";
 import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 import logger from "../config/logger";
 
@@ -83,7 +83,6 @@ router.post(
       const houseSystem = houseSystemMap[req.body.houseSystem || "placidus"];
 
       const birthDateTime = user.birthDateTime;
-      const dateStr = birthDateTime.toISOString().split("T")[0];
       const timeStr = user.birthTimeUnknown
         ? "12:00"
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -149,6 +148,7 @@ router.post(
           moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem,
+          zodiacType: ZodiacType.TROPICAL,
           calculationMethod: "swiss_ephemeris",
           calculatedAt: new Date(),
           planetaryPositions: {
@@ -166,6 +166,7 @@ router.post(
           moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem,
+          zodiacType: ZodiacType.TROPICAL,
           calculatedAt: new Date(),
           planetaryPositions: {
             deleteMany: {},
