@@ -340,6 +340,10 @@ export async function calculateVedicChart(
     .set({ hour: timeParts[0] || 0, minute: timeParts[1] || 0, second: 0 })
     .toUTC();
 
+  if (!dateTime.isValid) {
+    throw new Error(`Invalid birth date or timezone for Vedic calculation: ${date}, ${timezone}`);
+  }
+
   const jd = sweph.julday(
     dateTime.year, dateTime.month, dateTime.day,
     dateTime.hour + dateTime.minute / 60 + dateTime.second / 3600,

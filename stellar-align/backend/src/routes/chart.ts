@@ -89,7 +89,7 @@ router.post(
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
       const chartData = await astrologyService.calculateNatalChart(
-        dateStr,
+        user.birthDateTime,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,

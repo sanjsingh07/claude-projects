@@ -96,7 +96,7 @@ router.post(
 
       // First calculate the base natal chart (tropical positions)
       const baseTropicalChart = await astrologyService.calculateNatalChart(
-        dateStr,
+        user.birthDateTime,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
@@ -108,7 +108,7 @@ router.post(
       // Calculate Vedic chart with divisional charts
       const vedicChart = await calculateVedicChart(
         {
-          date: dateStr,
+          date: user.birthDateTime,
           time: timeStr,
           latitude: user.birthLatitude,
           longitude: user.birthLongitude,

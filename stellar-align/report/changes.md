@@ -620,3 +620,17 @@ Fixed a critical issue where both Western and Vedic charts would default all pla
 - Manually verified Swiss Ephemeris and Ayanamsa calculations using a standalone test script.
 - Confirmed that correctly named ephemeris files and valid date data result in accurate planetary positions (e.g., Sun in Taurus/Aries depending on system) rather than 0° Aries.
 - Verified that the system now correctly falls back to Moshier when files are missing but uses high-precision Swiss Ephemeris when they are available.
+
+## [2026-05-10] Fix: Corrected Date Object Passing in Controller/Routes
+
+Resolved the persistent 0° Aries issue by ensuring all calls to astrological services pass valid `Date` objects instead of ISO strings.
+
+### Changes:
+- **Backend - UserController**: Updated `calculateAllChartsForUserInternal` and `calculateVedicChartForUserInternal` to pass `user.birthDateTime` (Date object) instead of a derived string.
+- **Backend - Routes**: Updated `chart.ts` and `vedicChart.ts` routes to pass the original `Date` object for more reliable Julian Day calculations.
+- **Backend - Services**: Added `dateTime.isValid` validation in `astrology.ts` and `vedicAstrology.ts` to catch and report invalid inputs before they reach the Swiss Ephemeris engine.
+- **Backend - Scripts**: Fixed `manual_chart_full.ts` to use correct date object passing.
+
+### Verified:
+- Traced the "0° Aries" and "Ephemeris file wrong" errors to an invalid Julian Day caused by `NaN` inputs from string-to-date conversion failures.
+- Verified that passing a valid `Date` object resolves these errors and results in accurate planetary placements.

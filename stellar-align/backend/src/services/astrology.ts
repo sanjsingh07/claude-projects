@@ -395,6 +395,10 @@ export async function calculateNatalChart(
       .set({ hour: timeParts[0] || 0, minute: timeParts[1] || 0, second: 0 })
       .toUTC();
 
+    if (!dateTime.isValid) {
+      throw new Error(`Invalid birth date or timezone: ${birthDate}, ${timezone}`);
+    }
+
     // Convert to Julian Day
     const jd = sweph.julday(
       dateTime.year,

@@ -28,7 +28,7 @@ async function calculateChart() {
     console.log('Date:', dateStr, 'Time:', timeStr);
 
     const chartData = await astrologyService.calculateNatalChart(
-      dateStr,
+      user.birthDateTime,
       timeStr,
       user.birthLatitude,
       user.birthLongitude,

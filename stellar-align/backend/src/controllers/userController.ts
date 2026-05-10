@@ -248,7 +248,7 @@ export class UserController {
         : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
       const chartData = await astrologyService.calculateNatalChart(
-        dateStr,
+        user.birthDateTime,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
@@ -376,7 +376,7 @@ export class UserController {
 
       // Vedic calculations ALWAYS need Tropical as the base to correctly apply Ayanamsa
       const baseTropicalChart = await astrologyService.calculateNatalChart(
-        dateStr,
+        user.birthDateTime,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
@@ -388,7 +388,7 @@ export class UserController {
       // Calculate Vedic chart with divisional charts
       const vedicChart = await calculateVedicChart(
         {
-          date: dateStr,
+          date: user.birthDateTime,
           time: timeStr,
           latitude: user.birthLatitude,
           longitude: user.birthLongitude,
