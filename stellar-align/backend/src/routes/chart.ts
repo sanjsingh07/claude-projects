@@ -3,9 +3,9 @@ import { body } from "express-validator";
 import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
 import { astrologyService } from "../services/astrology";
-import { HouseSystem } from "@prisma/client";
-import { transformPlanetaryPositions } from "../utils/chart";
+import { HouseSystem, ZodiacType, AyanamsaType } from "@prisma/client";
 import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
+import logger from "../config/logger";
 
 const router = Router();
 
@@ -16,6 +16,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const chart = await prisma.natalChart.findUnique({
       where: { userId: req.userId },
+      include: FULL_NATAL_CHART_INCLUDE,
     });
 
     if (!chart) {
@@ -29,28 +30,9 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
-
     res.json({
       success: true,
-      data: {
-        id: chart.id,
-        userId: chart.userId,
-        sunSign: chart.sunSign,
-        moonSign: chart.moonSign,
-        risingSign: chart.risingSign,
-        planetaryPositions,
-        houses: chart.houses,
-        aspects: chart.aspects,
-        chartPattern: chart.chartPattern,
-        houseSystem: chart.houseSystem,
-        zodiacType: chart.zodiacType,
-        ayanamsa: chart.ayanamsa,
-        nakshatra: chart.nakshatra,
-        nakshatraPada: chart.nakshatraPada,
-        nakshatraLord: chart.nakshatraLord,
-        calculatedAt: chart.calculatedAt,
-      },
+      data: chart,
     });
   } catch (error) {
     next(error);
@@ -80,12 +62,12 @@ router.post(
         return;
       }
 
-      if (!user.birthLatitude || !user.birthLongitude) {
+      if (!user.birthDateTime || user.birthLatitude == null || user.birthLongitude == null) {
         res.status(400).json({
           success: false,
           error: {
             code: "INVALID_BIRTH_DATA",
-            message: "Birth location required",
+            message: "Birth location and date/time required",
           },
         });
         return;
@@ -100,16 +82,62 @@ router.post(
       };
       const houseSystem = houseSystemMap[req.body.houseSystem || "placidus"];
 
+      const birthDateTime = user.birthDateTime;
+      const dateStr = birthDateTime.toISOString().split("T")[0];
+      const timeStr = user.birthTimeUnknown
+        ? "12:00"
+        : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
+
       const chartData = await astrologyService.calculateNatalChart(
-        user.birthDate,
-        (user.birthTime && !user.birthTimeUnknown) ? user.birthTime.toISOString().slice(11, 16) : "12:00",
+        dateStr,
+        timeStr,
         user.birthLatitude,
         user.birthLongitude,
-        user.birthTimezone,
+        user.birthTimezone || "UTC",
         houseSystem,
-        user.natalChart?.zodiacType || "SIDEREAL",
-        user.natalChart?.ayanamsa || "LAHIRI"
+        user.natalChart?.zodiacType || ZodiacType.TROPICAL,
+        user.natalChart?.ayanamsa || AyanamsaType.LAHIRI
       );
+
+      // Prepare planetary positions array
+      const planets = [
+        "sun", "moon", "mercury", "venus", "mars", "jupiter", 
+        "saturn", "uranus", "neptune", "pluto", "chiron", 
+        "lilith", "node", "ascendant", "midheaven"
+      ];
+
+      const planetaryPositionsData = planets.map(p => {
+        const pos = (chartData as any)[p];
+        return {
+          planet: p.toUpperCase(),
+          sign: pos.sign,
+          longitude: pos.longitude,
+          latitude: pos.latitude,
+          distance: pos.distance,
+          speed: pos.speed || 0,
+          degree: pos.degree,
+          minute: pos.minute,
+          house: pos.house,
+          retrograde: pos.retrograde || false,
+        };
+      });
+
+      const housesData = chartData.houses.map(h => ({
+        house: h.house,
+        sign: h.sign,
+        longitude: h.longitude,
+        degree: h.degree,
+        minute: h.minute,
+      }));
+
+      const aspectsData = chartData.aspects.map(a => ({
+        planet1: a.planet1,
+        planet2: a.planet2,
+        type: a.type,
+        angle: a.angle,
+        orb: a.orb,
+        applying: a.applying,
+      }));
 
       // Upsert natal chart
       const userId = req.userId!;
@@ -119,85 +147,48 @@ router.post(
           userId,
           sunSign: chartData.sun.sign,
           moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
-          aspects: chartData.aspects as any,
-          chartPattern: undefined,
+          risingSign: chartData.ascendant?.sign || null,
           houseSystem,
-          calculationMethod: "astronomia",
+          calculationMethod: "swiss_ephemeris",
+          calculatedAt: new Date(),
+          planetaryPositions: {
+            create: planetaryPositionsData,
+          },
+          houses: {
+            create: housesData,
+          },
+          aspects: {
+            create: aspectsData,
+          },
         },
         update: {
           sunSign: chartData.sun.sign,
           moonSign: chartData.moon.sign,
-          risingSign: chartData.ascendant.sign,
-          planetaryPositions: {
-            sun: chartData.sun,
-            moon: chartData.moon,
-            mercury: chartData.mercury,
-            venus: chartData.venus,
-            mars: chartData.mars,
-            jupiter: chartData.jupiter,
-            saturn: chartData.saturn,
-            uranus: chartData.uranus,
-            neptune: chartData.neptune,
-            pluto: chartData.pluto,
-            chiron: chartData.chiron,
-            lilith: chartData.lilith,
-            node: chartData.node,
-            ascendant: chartData.ascendant,
-            midheaven: chartData.midheaven,
-          } as any,
-          houses: chartData.houses as any,
-          aspects: chartData.aspects as any,
-          chartPattern: undefined,
+          risingSign: chartData.ascendant?.sign || null,
           houseSystem,
-          calculationMethod: "astronomia",
           calculatedAt: new Date(),
+          planetaryPositions: {
+            deleteMany: {},
+            create: planetaryPositionsData,
+          },
+          houses: {
+            deleteMany: {},
+            create: housesData,
+          },
+          aspects: {
+            deleteMany: {},
+            create: aspectsData,
+          },
         },
+        include: FULL_NATAL_CHART_INCLUDE
       });
-
-      const planetaryPositions = transformPlanetaryPositions(chart.planetaryPositions);
 
       res.json({
         success: true,
-        data: {
-          id: chart.id,
-          userId: chart.userId,
-          sunSign: chart.sunSign,
-          moonSign: chart.moonSign,
-          risingSign: chart.risingSign,
-          planetaryPositions,
-          houses: chart.houses,
-          aspects: chart.aspects,
-          chartPattern: chart.chartPattern,
-          houseSystem: chart.houseSystem,
-          calculationMethod: chart.calculationMethod,
-          zodiacType: chart.zodiacType,
-          ayanamsa: chart.ayanamsa,
-          nakshatra: chart.nakshatra,
-          nakshatraPada: chart.nakshatraPada,
-          nakshatraLord: chart.nakshatraLord,
-          calculatedAt: chart.calculatedAt,
-        },
+        data: chart,
       });
     } catch (error) {
+      logger.error("Recalculate chart route failed", { error });
       next(error);
     }
   },

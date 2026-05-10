@@ -2,9 +2,11 @@ import { Router, Request, Response, NextFunction } from "express";
 import { body } from "express-validator";
 import { authMiddleware } from "../middleware/auth";
 import { prisma } from "../config/database";
-import { calculateNatalChart } from "../services/astrology";
+import { astrologyService } from "../services/astrology";
 import { calculateVedicChart } from "../services/vedicAstrology";
 import { AyanamsaType, HouseSystem, ZodiacType, DivisionalChartType } from "@prisma/client";
+import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
+import logger from "../config/logger";
 
 const router = Router();
 
@@ -21,15 +23,13 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     const chart = await prisma.natalChart.findUnique({
       where: { userId: req.userId },
       include: {
+        ...FULL_NATAL_CHART_INCLUDE,
         divisionalCharts: {
           include: {
             planetaryPositions: true,
             houses: true,
           }
         },
-        planetaryPositions: true,
-        houses: true,
-        aspects: true,
       },
     });
 
@@ -75,42 +75,47 @@ router.post(
         return;
       }
 
-      if (!user.profileCompleted || !user.birthLatitude || !user.birthLongitude) {
+      if (!user.profileCompleted || !user.birthLatitude || !user.birthLongitude || !user.birthDateTime) {
         res.status(400).json({
           success: false,
           error: {
             code: "PROFILE_INCOMPLETE",
-            message: "Birth location and profile completion required",
+            message: "Birth location and date/time required",
           },
         });
         return;
       }
 
       const ayanamsaType = (req.body.ayanamsa?.toUpperCase() as AyanamsaType) || AyanamsaType.LAHIRI;
-      const timeStr = (user.birthTime && !user.birthTimeUnknown)
-        ? user.birthTime.toISOString().slice(11, 16)
-        : "12:00";
+      
+      const birthDateTime = user.birthDateTime;
+      const dateStr = birthDateTime.toISOString().split("T")[0];
+      const timeStr = user.birthTimeUnknown
+        ? "12:00"
+        : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
       // First calculate the base natal chart (tropical positions)
-      const chartData = await calculateNatalChart(
-        user.birthDate,
-        birthTime,
+      const baseTropicalChart = await astrologyService.calculateNatalChart(
+        dateStr,
+        timeStr,
         user.birthLatitude,
         user.birthLongitude,
-        user.birthTimezone
+        user.birthTimezone || "UTC",
+        HouseSystem.PLACIDUS,
+        ZodiacType.TROPICAL,
       );
 
       // Calculate Vedic chart with divisional charts
       const vedicChart = await calculateVedicChart(
         {
-          date: user.birthDate,
-          time: birthTime,
+          date: dateStr,
+          time: timeStr,
           latitude: user.birthLatitude,
           longitude: user.birthLongitude,
-          timezone: user.birthTimezone,
+          timezone: user.birthTimezone || "UTC",
           ayanamsa: ayanamsaType,
         },
-        chartData
+        baseTropicalChart
       );
 
       // Get Moon's nakshatra info
@@ -120,117 +125,118 @@ router.post(
       const d1Sun = vedicChart.d1.planetaryPositions.find(p => p.planet === "sun");
       const d1Moon = vedicChart.d1.planetaryPositions.find(p => p.planet === "moon");
 
+      // Prepare D1 planetary positions array for the main NatalChart
+      const planetaryPositionsData = vedicChart.d1.planetaryPositions.map(p => ({
+        planet: p.planet.toUpperCase(),
+        sign: p.sign,
+        longitude: p.degree,
+        latitude: 0,
+        distance: 0,
+        speed: 0,
+        degree: Math.floor(p.degree),
+        minute: Math.round((p.degree % 1) * 60),
+        house: p.house,
+        retrograde: p.retrograde || false,
+      }));
+
+      const housesData = vedicChart.d1.houses.map(h => ({
+        house: h.house,
+        sign: h.sign,
+        longitude: h.degree,
+        degree: Math.floor(h.degree),
+        minute: Math.round((h.degree % 1) * 60),
+      }));
+
+      const aspectsData = baseTropicalChart.aspects.map(a => ({
+        planet1: a.planet1,
+        planet2: a.planet2,
+        type: a.type,
+        angle: a.angle,
+        orb: a.orb,
+        applying: a.applying,
+      }));
+
       // Upsert natal chart with Vedic data
       const userId = req.userId!;
       
-      // We need to handle the relations manually since Prisma upsert doesn't support nested deletes
-      let natalChart = await prisma.natalChart.findUnique({ where: { userId } });
-      
-      if (natalChart) {
-        await prisma.$transaction([
-          prisma.natalPlanetPosition.deleteMany({ where: { natalChartId: natalChart.id } }),
-          prisma.natalHouseCusp.deleteMany({ where: { natalChartId: natalChart.id } }),
-          prisma.natalAspect.deleteMany({ where: { natalChartId: natalChart.id } }),
-          prisma.divisionalChart.deleteMany({ where: { natalChartId: natalChart.id } }),
-          prisma.natalChart.update({
-            where: { id: natalChart.id },
-            data: {
-              sunSign: (d1Sun?.sign as any) || chartData.sun.sign,
-              moonSign: (d1Moon?.sign as any) || chartData.moon.sign,
-              risingSign: vedicChart.d1.ascendant,
-              houseSystem: HouseSystem.WHOLE_SIGN,
-              calculationMethod: "vedic",
-              zodiacType: ZodiacType.SIDEREAL,
-              ayanamsa: ayanamsaType,
-              nakshatra: moonNakshatra.name,
-              nakshatraPada: moonNakshatra.pada,
-              nakshatraLord: moonNakshatra.lord,
-              calculatedAt: new Date(),
-              planetaryPositions: {
-                create: vedicChart.d1.planetaryPositions.map(p => ({
-                  planet: p.planet.toUpperCase(),
-                  sign: p.sign,
-                  longitude: 0,
-                  latitude: 0,
-                  distance: 0,
-                  speed: 0,
-                  degree: Math.floor(p.degree),
-                  minute: Math.round((p.degree % 1) * 60),
-                  house: p.house,
-                  retrograde: p.retrograde || false,
-                })),
-              },
-              houses: {
-                create: vedicChart.d1.houses.map(h => ({
-                  house: h.house,
-                  sign: h.sign,
-                  longitude: 0,
-                  degree: 0,
-                  minute: 0,
-                })),
-              },
-            },
-          }),
-        ]);
-      } else {
-        natalChart = await prisma.natalChart.create({
-          data: {
-            userId,
-            sunSign: (d1Sun?.sign as any) || chartData.sun.sign,
-            moonSign: (d1Moon?.sign as any) || chartData.moon.sign,
-            risingSign: vedicChart.d1.ascendant,
-            houseSystem: HouseSystem.WHOLE_SIGN,
-            calculationMethod: "vedic",
-            zodiacType: ZodiacType.SIDEREAL,
-            ayanamsa: ayanamsaType,
-            nakshatra: moonNakshatra.name,
-            nakshatraPada: moonNakshatra.pada,
-            nakshatraLord: moonNakshatra.lord,
-            planetaryPositions: {
-              create: vedicChart.d1.planetaryPositions.map(p => ({
-                planet: p.planet.toUpperCase(),
-                sign: p.sign,
-                longitude: 0,
-                latitude: 0,
-                distance: 0,
-                speed: 0,
-                degree: Math.floor(p.degree),
-                minute: Math.round((p.degree % 1) * 60),
-                house: p.house,
-                retrograde: p.retrograde || false,
-              })),
-            },
-            houses: {
-              create: vedicChart.d1.houses.map(h => ({
-                house: h.house,
-                sign: h.sign,
-                longitude: 0,
-                degree: 0,
-                minute: 0,
-              })),
-            },
+      const chart = await prisma.natalChart.upsert({
+        where: { userId },
+        create: {
+          userId,
+          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign,
+          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          houseSystem: HouseSystem.WHOLE_SIGN,
+          calculationMethod: "vedic",
+          zodiacType: ZodiacType.SIDEREAL,
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+          planetaryPositions: {
+            create: planetaryPositionsData,
           },
-        });
-      }
+          houses: {
+            create: housesData,
+          },
+          aspects: {
+            create: aspectsData,
+          },
+        },
+        update: {
+          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign,
+          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign,
+          risingSign: vedicChart.d1.ascendant,
+          houseSystem: HouseSystem.WHOLE_SIGN,
+          calculationMethod: "vedic",
+          zodiacType: ZodiacType.SIDEREAL,
+          ayanamsa: ayanamsaType,
+          nakshatra: moonNakshatra.name,
+          nakshatraPada: moonNakshatra.pada,
+          nakshatraLord: moonNakshatra.lord,
+          calculatedAt: new Date(),
+          planetaryPositions: {
+            deleteMany: {},
+            create: planetaryPositionsData,
+          },
+          houses: {
+            deleteMany: {},
+            create: housesData,
+          },
+          aspects: {
+            deleteMany: {},
+            create: aspectsData,
+          },
+        },
+      });
 
-      // Create divisional charts
-      const divisionalChartsData = [
-        { chartType: DivisionalChartType.D1, data: vedicChart.d1 },
-        { chartType: DivisionalChartType.D2, data: vedicChart.d2 },
-        { chartType: DivisionalChartType.D4, data: vedicChart.d4 },
-        { chartType: DivisionalChartType.D9, data: vedicChart.d9 },
-        { chartType: DivisionalChartType.D10, data: vedicChart.d10 },
+      // Create or update divisional charts
+      const divisionalChartsTypes = [
+        DivisionalChartType.D1,
+        DivisionalChartType.D2,
+        DivisionalChartType.D4,
+        DivisionalChartType.D9,
+        DivisionalChartType.D10,
       ];
 
-      for (const dc of divisionalChartsData) {
+      // Delete existing divisional charts
+      await prisma.divisionalChart.deleteMany({
+        where: { natalChartId: chart.id },
+      });
+
+      // Create new divisional charts with nested positions and houses
+      for (const chartType of divisionalChartsTypes) {
+        const dcData = (vedicChart as any)[chartType.toLowerCase()];
+        if (!dcData) continue;
+
         await prisma.divisionalChart.create({
           data: {
-            natalChartId: natalChart.id,
-            chartType: dc.chartType,
-            ascendant: dc.data.ascendant,
-            ascendantDegree: dc.data.ascendantDegree,
+            natalChartId: chart.id,
+            chartType,
+            ascendant: dcData.ascendant,
+            ascendantDegree: dcData.ascendantDegree,
             planetaryPositions: {
-              create: dc.data.planetaryPositions.map(p => ({
+              create: dcData.planetaryPositions.map((p: any) => ({
                 planet: p.planet.toUpperCase(),
                 sign: p.sign,
                 degree: p.degree,
@@ -240,7 +246,7 @@ router.post(
               })),
             },
             houses: {
-              create: dc.data.houses.map(h => ({
+              create: dcData.houses.map((h: any) => ({
                 house: h.house,
                 sign: h.sign,
                 degree: h.degree,
@@ -254,15 +260,13 @@ router.post(
       const completeChart = await prisma.natalChart.findUnique({
         where: { userId },
         include: { 
+          ...FULL_NATAL_CHART_INCLUDE,
           divisionalCharts: {
             include: {
               planetaryPositions: true,
               houses: true,
             }
           },
-          planetaryPositions: true,
-          houses: true,
-          aspects: true,
         },
       });
 
@@ -271,6 +275,7 @@ router.post(
         data: completeChart,
       });
     } catch (error) {
+      logger.error("Vedic chart calculation failed", { error });
       next(error);
     }
   }
@@ -282,7 +287,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { chartType } = req.params;
-      const validTypes = ["D1", "D2", "D4", "D9", "D10"]; // Removed D11
+      const validTypes = ["D1", "D2", "D4", "D9", "D10"];
 
       if (!validTypes.includes(chartType.toUpperCase())) {
         res.status(400).json({
