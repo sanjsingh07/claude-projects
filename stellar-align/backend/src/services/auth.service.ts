@@ -123,7 +123,7 @@ export class AuthService {
             providerId,
             displayName: profile.displayName,
             avatarUrl: profile.avatarUrl,
-            birthDate: new Date(), // Placeholder - should require this on signup
+            birthDate: new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())), 
             birthTimezone: "UTC",
             profileCompleted: false,
           },

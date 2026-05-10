@@ -44,7 +44,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
   const region = locationParts[1]?.trim() || "";
   const country = locationParts[2]?.trim() || "";
 
-  const birthDateTime = DateTime.fromJSDate(user.birthDate);
+  const birthDateTime = DateTime.fromJSDate(user.birthDate, { zone: "utc" });
   const formattedDate = birthDateTime.toFormat("LLL d, yyyy");
   
   // Important: We use { zone: 'utc' } because the database stores the clock time in a UTC field.
