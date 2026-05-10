@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@services/api';
+import { useTransitStore } from '@store/transitStore';
 import { 
   CostarText, 
   CostarBackground 
@@ -20,6 +21,7 @@ import { TransitForecast } from '@types';
 
 export const TransitsScreen: React.FC = () => {
   const [period, setPeriod] = useState<'week' | 'month' | 'year'>('week');
+  const { filters } = useTransitStore();
 
   const { data, isLoading, refetch, isFetching } = useQuery<TransitForecast>({
     queryKey: ['transits', period],
@@ -27,6 +29,22 @@ export const TransitsScreen: React.FC = () => {
       const response = await api.getTransits(period);
       return response.data as TransitForecast;
     },
+  });
+
+  const filteredTransits = (data?.transits || []).filter(item => {
+    if (item.type === 'major' && !filters.showMajor) return false;
+    if (item.type === 'minor' && !filters.showMinor) return false;
+    if (item.type === 'shadow' && !filters.showShadow) return false;
+    
+    // Check for 'real-time' and 'personal' flags
+    // assuming they are present in the item or inferred
+    const isRealTime = (item as any).isRealTime || item.type === 'real-time';
+    const isPersonal = (item as any).isPersonal || item.type === 'personal';
+    
+    if (isRealTime && !filters.showRealTime) return false;
+    if (isPersonal && !filters.showPersonal) return false;
+    
+    return true;
   });
 
   const renderPeriodButton = (p: 'week' | 'month' | 'year', label: string) => (
@@ -95,9 +113,9 @@ export const TransitsScreen: React.FC = () => {
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.astraViolet} />
           </View>
-        ) : data?.transits && data.transits.length > 0 ? (
-          data.transits.map((item, index) => (
-            <View key={item.id || index} style={[styles.transitItem, index === data.transits.length - 1 && styles.transitItemLast]}>
+        ) : filteredTransits.length > 0 ? (
+          filteredTransits.map((item, index) => (
+            <View key={item.id || index} style={[styles.transitItem, index === filteredTransits.length - 1 && styles.transitItemLast]}>
               <View style={styles.tiLeft}>
                 <View style={styles.tiDate}>
                   <CostarText style={styles.tiMonth}>{item.date.month}</CostarText>
@@ -138,7 +156,7 @@ export const TransitsScreen: React.FC = () => {
           ))
         ) : (
           <View style={styles.emptyContainer}>
-            <CostarText style={styles.emptyText}>No major transits this period.</CostarText>
+            <CostarText style={styles.emptyText}>No transits match your filters.</CostarText>
           </View>
         )}
         <View style={styles.bottomSpacing} />

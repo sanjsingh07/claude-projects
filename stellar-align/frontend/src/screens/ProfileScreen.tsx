@@ -13,13 +13,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { colors } from '@theme/theme';
 import { useAuthStore } from '@store/authStore';
+import { useTransitStore } from '@store/transitStore';
 import { UserProfile } from '@types';
 import { getSignEmoji, formatSignName } from '@utils/astrology';
 import {
   ProfileHero,
   BirthDataGrid,
-  NotificationSection,
-  SignOutButton,
+  ToggleSection,
 } from '../components/ProfileComponents';
 
 type RootStackParamList = {
@@ -30,7 +30,7 @@ type RootStackParamList = {
 export const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const queryClient = useQueryClient();
-  const logout = useAuthStore((state) => state.logout);
+  const { filters, toggleFilter } = useTransitStore();
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['profile'],
@@ -141,6 +141,39 @@ export const ProfileScreen: React.FC = () => {
     },
   ];
 
+  const transitItems = [
+    {
+      k: 'Major events',
+      sub: 'Conjunctions, squares, oppositions, etc.',
+      on: filters.showMajor,
+      onToggle: () => toggleFilter('showMajor')
+    },
+    {
+      k: 'Minor events',
+      sub: 'Sextiles, trines, and subtle aspects',
+      on: filters.showMinor,
+      onToggle: () => toggleFilter('showMinor')
+    },
+    {
+      k: 'Shadow events',
+      sub: 'Pre-retrograde and post-retrograde periods',
+      on: filters.showShadow,
+      onToggle: () => toggleFilter('showShadow')
+    },
+    {
+      k: 'Real-time events',
+      sub: 'Current astronomical alignments',
+      on: filters.showRealTime,
+      onToggle: () => toggleFilter('showRealTime')
+    },
+    {
+      k: 'Personal events',
+      sub: 'Transits specifically affecting your chart',
+      on: filters.showPersonal,
+      onToggle: () => toggleFilter('showPersonal')
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <ProfileHero
@@ -155,10 +188,10 @@ export const ProfileScreen: React.FC = () => {
           <BirthDataGrid items={birthDataItems} />
         </View>
         <View style={styles.section}>
-          <NotificationSection items={notificationItems} />
+          <ToggleSection title="Notifications" items={notificationItems} />
         </View>
         <View style={styles.section}>
-          <SignOutButton onPress={() => logout()} />
+          <ToggleSection title="Transit Settings" items={transitItems} />
         </View>
         <View style={{ height: 40 }} />
       </ScrollView>

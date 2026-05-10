@@ -653,3 +653,22 @@ Fixed a bug where the birthdate entered during signup was stored as the previous
 - stellar-align/backend/src/controllers/userController.ts
 - stellar-align/backend/src/controllers/authController.spec.ts
 
+
+## [2026-05-10 23:13] Refactor: Profile screen and Transit filtering
+
+**What was changed and why:**
+Refactored the Profile screen to improve UX and add transit filtering capabilities as requested. The sign-out button was removed (as it exists in Settings) and a new persistent filtering section for transits was added.
+
+**Summary of changes:**
+- Removed `SignOutButton` from `ProfileScreen.tsx`.
+- Created `transitStore.ts` using `zustand` and `AsyncStorage` to persist 5 transit filter toggles (Major, Minor, Shadow, Real-time, Personal).
+- Refactored `NotificationSection` into a generic `ToggleSection` in `ProfileComponents.tsx` to support multiple settings sections.
+- Added "Transit Settings" section to `ProfileScreen.tsx` with 5 toggle options.
+- Updated `TransitsScreen.tsx` to respect these filters when rendering the transit forecast.
+
+**Files modified:**
+- stellar-align/frontend/src/store/transitStore.ts (new)
+- stellar-align/frontend/src/components/ProfileComponents.tsx
+- stellar-align/frontend/src/screens/ProfileScreen.tsx
+- stellar-align/frontend/src/screens/TransitsScreen.tsx
+

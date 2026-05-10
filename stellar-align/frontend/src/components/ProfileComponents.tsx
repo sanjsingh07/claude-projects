@@ -61,12 +61,13 @@ export const BirthDataGrid: React.FC<{
   );
 };
 
-export const NotificationSection: React.FC<{
+export const ToggleSection: React.FC<{
+  title: string;
   items: Array<{ k: string; sub: string; on: boolean; onToggle: () => void }>;
-}> = ({ items }) => {
+}> = ({ title, items }) => {
   return (
     <View style={styles.notifSection}>
-      <Text style={styles.sectionLabel}>Notifications</Text>
+      <Text style={styles.sectionLabel}>{title}</Text>
       {items.map((item, i) => (
         <View key={i} style={[styles.notifRow, i === items.length - 1 && styles.lastRow]}>
           <View>
@@ -84,6 +85,8 @@ export const NotificationSection: React.FC<{
     </View>
   );
 };
+
+export const NotificationSection = ToggleSection;
 
 export const SignOutButton: React.FC<{ onPress: () => void }> = ({ onPress }) => {
   return (
