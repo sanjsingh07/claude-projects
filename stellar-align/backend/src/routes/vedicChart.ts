@@ -163,8 +163,8 @@ router.post(
         where: { userId },
         create: {
           userId,
-          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign,
-          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign,
+          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign || ZodiacSign.ARIES,
+          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign || ZodiacSign.ARIES,
           risingSign: vedicChart.d1.ascendant,
           houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",
@@ -184,8 +184,8 @@ router.post(
           },
         },
         update: {
-          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign,
-          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign,
+          sunSign: (d1Sun?.sign as any) || baseTropicalChart.sun.sign || ZodiacSign.ARIES,
+          moonSign: (d1Moon?.sign as any) || baseTropicalChart.moon.sign || ZodiacSign.ARIES,
           risingSign: vedicChart.d1.ascendant,
           houseSystem: HouseSystem.WHOLE_SIGN,
           calculationMethod: "vedic",

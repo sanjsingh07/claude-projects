@@ -130,21 +130,39 @@ const PLANET_MAP: Record<string, number> = {
 // Utility functions
 // ────────────────────────────────────────────
 
+// ────────────────────────────────────────────
+// Helpers
+// ────────────────────────────────────────────
+
+function sanitizeNumber(val: any, fallback: number = 0): number {
+  if (val === null || val === undefined || isNaN(Number(val)) || !isFinite(Number(val))) {
+    return fallback;
+  }
+  return Number(val);
+}
+
 function getSignFromLongitude(longitude: number): ZodiacSign {
-  const normalized = ((longitude % 360) + 360) % 360;
-  return ZODIAC_SIGNS[Math.floor(normalized / 30) % 12];
+  const lon = sanitizeNumber(longitude);
+  const normalized = ((lon % 360) + 360) % 360;
+  const index = Math.floor(normalized / 30) % 12;
+  return ZODIAC_SIGNS[index] || ZodiacSign.ARIES;
 }
 
 function getSignDegree(longitude: number): { degree: number; minute: number } {
-  const normalized = ((longitude % 360) + 360) % 360;
+  const lon = sanitizeNumber(longitude);
+  const normalized = ((lon % 360) + 360) % 360;
   const withinSign = normalized % 30;
   const degree = Math.floor(withinSign);
   const minute = Math.round((withinSign - degree) * 60);
-  return { degree, minute: minute === 60 ? 0 : minute };
+  return { 
+    degree: sanitizeNumber(degree), 
+    minute: minute === 60 ? 0 : sanitizeNumber(minute) 
+  };
 }
 
 function normalizeAngle(angle: number): number {
-  return ((angle % 360) + 360) % 360;
+  const a = sanitizeNumber(angle);
+  return ((a % 360) + 360) % 360;
 }
 
 // ────────────────────────────────────────────
@@ -171,27 +189,30 @@ function calcPlanetPosition(
 
   if (result.error) {
     logger.error(`sweph.calc_ut critical error for ${planet}`, { error: result.error });
-    // If still error, we might have a serious problem, but let's at least return valid numbers if possible
   }
   
   const [longitude, latitude, distance, lonSpeed] = result.data || [0, 0, 0, 0];
-  const speed = lonSpeed || 0;
+  
+  const safeLon = sanitizeNumber(longitude);
+  const safeLat = sanitizeNumber(latitude);
+  const safeDist = sanitizeNumber(distance);
+  const safeSpeed = sanitizeNumber(lonSpeed);
 
-  const sign = getSignFromLongitude(longitude || 0);
-  const deg = getSignDegree(longitude || 0);
+  const sign = getSignFromLongitude(safeLon);
+  const deg = getSignDegree(safeLon);
 
   return {
     planet,
-    longitude,
-    latitude,
-    distance,
+    longitude: safeLon,
+    latitude: safeLat,
+    distance: safeDist,
     sign,
     signDegree: deg.degree,
     degree: deg.degree,
     minute: deg.minute,
-    retrograde: speed < 0,
+    retrograde: safeSpeed < 0,
     house: null,
-    speed,
+    speed: safeSpeed,
   };
 }
 
@@ -217,12 +238,16 @@ function calcHouses(
   const seSystem = systemMap[system] || "P";
   const result = sweph.houses(jd, latitude, longitude, seSystem);
 
-  const houses: HouseCusp[] = result.data.houses.map((cuspLon: number, idx: number) => {
-    const sign = getSignFromLongitude(cuspLon);
-    const deg = getSignDegree(cuspLon);
+  const rawHouses = result.data?.houses || Array(12).fill(0);
+  const rawPoints = result.data?.points || [0, 0];
+
+  const houses: HouseCusp[] = rawHouses.map((cuspLon: number, idx: number) => {
+    const safeLon = sanitizeNumber(cuspLon);
+    const sign = getSignFromLongitude(safeLon);
+    const deg = getSignDegree(safeLon);
     return {
       house: idx + 1,
-      longitude: cuspLon,
+      longitude: safeLon,
       sign,
       degree: deg.degree,
       minute: deg.minute,
@@ -231,8 +256,8 @@ function calcHouses(
 
   return {
     houses,
-    ascendant: result.data.points[0], // Ascendant is first point
-    midheaven: result.data.points[1], // MC is second point
+    ascendant: sanitizeNumber(rawPoints[0]), 
+    midheaven: sanitizeNumber(rawPoints[1]),
   };
 }
 

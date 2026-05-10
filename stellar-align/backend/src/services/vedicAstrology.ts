@@ -36,21 +36,33 @@ const NAKSHATRA_LORDS: Record<string, string> = {
 const MOVABLE_SIGNS: ZodiacSign[] = [ZodiacSign.ARIES, ZodiacSign.CANCER, ZodiacSign.LIBRA, ZodiacSign.CAPRICORN];
 const FIXED_SIGNS: ZodiacSign[] = [ZodiacSign.TAURUS, ZodiacSign.LEO, ZodiacSign.SCORPIO, ZodiacSign.AQUARIUS];
 
+function sanitizeNumber(val: any, fallback: number = 0): number {
+  if (val === null || val === undefined || isNaN(Number(val)) || !isFinite(Number(val))) {
+    return fallback;
+  }
+  return Number(val);
+}
+
 function normalizeAngle(angle: number): number {
-  return ((angle % 360) + 360) % 360;
+  const a = sanitizeNumber(angle);
+  return ((a % 360) + 360) % 360;
 }
 
 function getSignFromLongitude(longitude: number): ZodiacSign {
-  const normalized = ((longitude % 360) + 360) % 360;
-  return ZODIAC_SIGNS[Math.floor(normalized / 30) % 12];
+  const lon = sanitizeNumber(longitude);
+  const normalized = ((lon % 360) + 360) % 360;
+  const index = Math.floor(normalized / 30) % 12;
+  return ZODIAC_SIGNS[index] || ZodiacSign.ARIES;
 }
 
 function getSignIndex(sign: ZodiacSign): number {
-  return ZODIAC_SIGNS.indexOf(sign);
+  const idx = ZODIAC_SIGNS.indexOf(sign);
+  return idx === -1 ? 0 : idx;
 }
 
 function getDegreeInSign(longitude: number): number {
-  return ((longitude % 360) + 360) % 360 % 30;
+  const lon = sanitizeNumber(longitude);
+  return ((lon % 360) + 360) % 360 % 30;
 }
 
 function getAngularDistance(a: number, b: number): number {
@@ -72,26 +84,29 @@ export function getAyanamsa(jd: number, type: AyanamsaType = AyanamsaType.LAHIRI
 
   const sidMode = ayanamsaMap[type] || sweph.constants.SE_SIDM_LAHIRI;
   sweph.set_sid_mode(sidMode, 0, 0);
-  return sweph.get_ayanamsa_ut(jd);
+  const result = sweph.get_ayanamsa_ut(jd);
+  return sanitizeNumber(result);
 }
 
 export function toSiderealLongitude(tropicalLon: number, ayanamsa: number): number {
-  return normalizeAngle(tropicalLon - ayanamsa);
+  return normalizeAngle(sanitizeNumber(tropicalLon) - sanitizeNumber(ayanamsa));
 }
 
 export function calculateNakshatra(moonLongitude: number): Nakshatra {
-  const normalized = normalizeAngle(moonLongitude);
+  const normalized = normalizeAngle(sanitizeNumber(moonLongitude));
   const nakshatraSpan = 13 + 1/3; // 13° 20'
   const nakshatraIndex = Math.floor(normalized / nakshatraSpan);
   const padaIndex = Math.floor((normalized % nakshatraSpan) / (nakshatraSpan / 4));
   const nakshatraName = NAKSHATRAS[nakshatraIndex % 27] as NakshatraName;
-  const pada = ((padaIndex % 4) + 1) as 1 | 2 | 3 | 4;
+  const pada = (((padaIndex % 4) + 1) as 1 | 2 | 3 | 4) || 1;
   const lord = NAKSHATRA_LORDS[nakshatraName] || "Moon";
 
   return {
-    name: nakshatraName, pada, lord: lord as any,
-    degree: nakshatraIndex * nakshatraSpan,
-    padaDegree: normalized % nakshatraSpan,
+    name: nakshatraName || "Ashwini", 
+    pada: pada as any, 
+    lord: lord as any,
+    degree: sanitizeNumber(nakshatraIndex * nakshatraSpan),
+    padaDegree: sanitizeNumber(normalized % nakshatraSpan),
   };
 }
 

@@ -145,8 +145,8 @@ router.post(
         where: { userId },
         create: {
           userId,
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
+          sunSign: chartData.sun.sign || ZodiacSign.ARIES,
+          moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem,
           calculationMethod: "swiss_ephemeris",
@@ -162,8 +162,8 @@ router.post(
           },
         },
         update: {
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
+          sunSign: chartData.sun.sign || ZodiacSign.ARIES,
+          moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem,
           calculatedAt: new Date(),

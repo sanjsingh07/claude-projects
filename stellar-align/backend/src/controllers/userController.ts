@@ -300,8 +300,8 @@ export class UserController {
         where: { userId },
         create: {
           userId,
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
+          sunSign: chartData.sun.sign || ZodiacSign.ARIES,
+          moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           houseSystem: HouseSystem.PLACIDUS,
           calculationMethod: "swiss_ephemeris",
@@ -317,8 +317,8 @@ export class UserController {
           },
         },
         update: {
-          sunSign: chartData.sun.sign,
-          moonSign: chartData.moon.sign,
+          sunSign: chartData.sun.sign || ZodiacSign.ARIES,
+          moonSign: chartData.moon.sign || ZodiacSign.ARIES,
           risingSign: chartData.ascendant?.sign || null,
           calculatedAt: new Date(),
           planetaryPositions: {
