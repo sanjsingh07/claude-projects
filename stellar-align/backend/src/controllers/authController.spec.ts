@@ -37,7 +37,7 @@ describe('AuthController.register', () => {
     vi.clearAllMocks();
   });
 
-  it('should parse birthTime as UTC during registration', async () => {
+  it('should parse birthTime into birthDateTime during registration', async () => {
     const req = {
       body: {
         email: 'test@example.com',
@@ -66,15 +66,47 @@ describe('AuthController.register', () => {
 
     expect(authService.register).toHaveBeenCalled();
     const callArgs = (authService.register as any).mock.calls[0][0];
-    const birthTime = callArgs.birthTime;
+    const birthDateTime = callArgs.birthDateTime;
 
-    expect(birthTime).toBeDefined();
-    expect(birthTime instanceof Date).toBe(true);
-    // 06:00 UTC
-    expect(birthTime.getUTCHours()).toBe(6);
-    expect(birthTime.getUTCMinutes()).toBe(0);
-    // Verify it's not affected by local timezone if we check UTC parts
-    expect(birthTime.toISOString()).toContain('T06:00:00.000Z');
+    expect(birthDateTime).toBeDefined();
+    expect(birthDateTime instanceof Date).toBe(true);
+    // 06:00
+    expect(birthDateTime.getUTCHours()).toBe(6);
+    expect(birthDateTime.getUTCMinutes()).toBe(0);
+    // Verify it's correctly formatted as UTC date
+    expect(birthDateTime.toISOString()).toContain('1990-01-01T06:00:00.000Z');
+  });
+
+  it('should correctly handle ISO birthDate with timezone shifts', async () => {
+    const req = {
+      body: {
+        email: 'test@example.com',
+        password: 'password123',
+        // 1997-08-23 00:00 IST (+5:30) is 1997-08-22 18:30 UTC
+        birthDate: '1997-08-22T18:30:00.000Z',
+        birthTime: '11:30',
+        birthTimezone: 'Asia/Kolkata',
+      },
+    } as any;
+
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    } as any;
+
+    (authService.register as any).mockResolvedValue({ user: { id: '1' }, tokens: {} });
+
+    await authController.register(req, res, vi.fn());
+
+    const callArgs = (authService.register as any).mock.calls[0][0];
+    const birthDateTime = callArgs.birthDateTime;
+
+    // Should be Aug 23, 1997 at 11:30
+    expect(birthDateTime.getUTCFullYear()).toBe(1997);
+    expect(birthDateTime.getUTCMonth()).toBe(7); // August
+    expect(birthDateTime.getUTCDate()).toBe(23);
+    expect(birthDateTime.getUTCHours()).toBe(11);
+    expect(birthDateTime.getUTCMinutes()).toBe(30);
   });
 
   it('should handle missing birthTime', async () => {

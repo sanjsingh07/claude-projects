@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { OAuth2Client } from "google-auth-library";
 import appleSignin from "apple-signin-auth";
+import { DateTime } from "luxon";
 import { authService } from "../services/auth.service";
 import { prisma } from "../config/database";
 import { env } from "../config/env";
@@ -45,7 +46,23 @@ export class AuthController {
         gender,
       } = req.body;
 
-      const dateParts = birthDateStr.split("T")[0].split("-").map(Number);
+      let year, month, day;
+      
+      if (birthDateStr.includes("T")) {
+        // If it's an ISO string (likely from an older frontend version), 
+        // use luxon to parse it in the target birthTimezone to get the correct local date
+        const dt = DateTime.fromISO(birthDateStr, { zone: birthTimezone });
+        year = dt.year;
+        month = dt.month;
+        day = dt.day;
+      } else {
+        // Assume YYYY-MM-DD format
+        const dateParts = birthDateStr.split("-").map(Number);
+        year = dateParts[0];
+        month = dateParts[1];
+        day = dateParts[2];
+      }
+
       let hours = 12;
       let minutes = 0;
       
@@ -57,7 +74,7 @@ export class AuthController {
         }
       }
 
-      const normalizedBirthDateTime = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2], hours, minutes, 0));
+      const normalizedBirthDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes, 0));
 
       const result = await authService.register({
         email,

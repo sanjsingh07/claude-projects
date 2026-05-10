@@ -634,3 +634,22 @@ Resolved the persistent 0° Aries issue by ensuring all calls to astrological se
 ### Verified:
 - Traced the "0° Aries" and "Ephemeris file wrong" errors to an invalid Julian Day caused by `NaN` inputs from string-to-date conversion failures.
 - Verified that passing a valid `Date` object resolves these errors and results in accurate planetary placements.
+
+## [2026-05-10 22:25] Fix: Birthdate discrepancy in signup and settings
+
+**What was changed and why:**
+Fixed a bug where the birthdate entered during signup was stored as the previous day for users in positive timezone offsets (like IST). This was caused by the frontend sending a UTC ISO string which shifted the calendar date when parsed naively by the backend.
+
+**Summary of changes:**
+- Updated frontend `RegisterScreen.tsx` and `SettingsScreen.tsx` to send birthdates in local `YYYY-MM-DD` format.
+- Hardened backend `AuthController.ts` and `userController.ts` to robustly parse birthdates. It now correctly handles both `YYYY-MM-DD` and ISO strings by using the provided `birthTimezone` to extract the intended local calendar date.
+- Updated and expanded backend tests in `authController.spec.ts` to verify the fix and prevent regressions.
+- Fixed `formatDate` on the frontend to correctly display `YYYY-MM-DD` as a local date.
+
+**Files modified:**
+- stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx
+- stellar-align/frontend/src/screens/SettingsScreen.tsx
+- stellar-align/backend/src/controllers/authController.ts
+- stellar-align/backend/src/controllers/userController.ts
+- stellar-align/backend/src/controllers/authController.spec.ts
+

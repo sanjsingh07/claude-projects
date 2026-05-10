@@ -246,7 +246,12 @@ export const RegisterScreen: React.FC = () => {
     }
     if (selectedDate) {
       setDatePickerDate(selectedDate);
-      setBirthData({ ...birthData, date: selectedDate.toISOString() });
+      // Use local date parts to avoid timezone shifts with toISOString()
+      const year = selectedDate.getFullYear();
+      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = selectedDate.getDate().toString().padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+      setBirthData({ ...birthData, date: dateStr });
     }
   };
 
@@ -399,7 +404,16 @@ export const RegisterScreen: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
-    const date = new Date(dateString);
+    
+    let date: Date;
+    // If it's in YYYY-MM-DD format
+    if (dateString.length === 10 && dateString.includes('-')) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      date = new Date(dateString);
+    }
+
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',

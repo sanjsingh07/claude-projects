@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { DateTime } from "luxon";
 import { prisma } from "../config/database";
 import { cache } from "../config/redis";
 import { ApiError, NotFoundError } from "../utils/errors";
@@ -109,10 +110,21 @@ export class UserController {
         let minutes = currentBirthDateTime.getUTCMinutes();
 
         if (updateData.birthDate) {
-          const dateParts = updateData.birthDate.split("T")[0].split("-").map(Number);
-          year = dateParts[0];
-          month = dateParts[1] - 1;
-          day = dateParts[2];
+          if (updateData.birthDate.includes("T")) {
+            // ISO string handling
+            const dt = DateTime.fromISO(updateData.birthDate, { 
+              zone: updateData.birthTimezone || currentUser.birthTimezone 
+            });
+            year = dt.year;
+            month = dt.month - 1;
+            day = dt.day;
+          } else {
+            // YYYY-MM-DD handling
+            const dateParts = updateData.birthDate.split("-").map(Number);
+            year = dateParts[0];
+            month = dateParts[1] - 1;
+            day = dateParts[2];
+          }
         }
 
         if (updateData.birthTime) {

@@ -133,7 +133,14 @@ export const SettingsScreen: React.FC = () => {
   ];
 
   const getBirthDate = () => {
-    return profile?.birthData?.date ? new Date(profile.birthData.date) : new Date();
+    if (!profile?.birthData?.date) return new Date();
+    
+    const dateStr = profile.birthData.date;
+    if (dateStr.length === 10 && dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    return new Date(dateStr);
   };
 
   const getBirthTimeDate = () => {
@@ -508,14 +515,15 @@ export const SettingsScreen: React.FC = () => {
             value={pickerInitialValue || getBirthDate()}
             title="Select Birth Date"
             onSave={(d) => {
-              const newDateISO = d.toISOString();
+              // Use local date parts to avoid timezone shifts with toISOString()
+              const year = d.getFullYear();
+              const month = (d.getMonth() + 1).toString().padStart(2, '0');
+              const day = d.getDate().toString().padStart(2, '0');
+              const newDateISO = `${year}-${month}-${day}`;
+              
               const currentDateISO = profile?.birthData?.date;
               
-              if (currentDateISO) {
-                const d1 = new Date(newDateISO).setHours(0,0,0,0);
-                const d2 = new Date(currentDateISO).setHours(0,0,0,0);
-                if (d1 === d2) return;
-              }
+              if (currentDateISO === newDateISO) return;
               
               updateProfileMutation.mutate({ birthDate: newDateISO });
             }}
