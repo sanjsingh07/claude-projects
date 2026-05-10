@@ -44,12 +44,10 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
   const region = locationParts[1]?.trim() || "";
   const country = locationParts[2]?.trim() || "";
 
-  const birthDateTime = DateTime.fromJSDate(user.birthDate, { zone: "utc" });
+  const birthDateTime = DateTime.fromJSDate(user.birthDateTime, { zone: "utc" });
   const formattedDate = birthDateTime.toFormat("LLL d, yyyy");
   
-  // Important: We use { zone: 'utc' } because the database stores the clock time in a UTC field.
-  // This prevents the server's local timezone (e.g. IST) from shifting the displayed time.
-  const birthTime = user.birthTime ? DateTime.fromJSDate(user.birthTime, { zone: 'utc' }).toFormat("h:mm a") : "12:00 PM";
+  const birthTime = user.birthTimeUnknown ? "Unknown" : birthDateTime.toFormat("h:mm a");
 
   const astrology: any = {};
   if (natalChart) {
@@ -131,10 +129,10 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
     avatarInitial: (user.displayName || "U").charAt(0).toUpperCase(),
     bio: user.bio,
     birthData: {
-      date: user.birthDate.toISOString(),
+      date: user.birthDateTime.toISOString(),
       formattedDate,
       time: birthTime,
-      isTimeApproximate: false,
+      isTimeApproximate: user.birthTimeUnknown,
       place: {
         city,
         region,

@@ -47,21 +47,23 @@ export class AuthController {
       } = req.body;
 
       const dateParts = birthDateStr.split("T")[0].split("-").map(Number);
-      const normalizedBirthDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2], 0, 0, 0));
-
-      let birthTimeDate: Date | undefined;
+      let hours = 12;
+      let minutes = 0;
+      
       if (birthTime && typeof birthTime === 'string' && birthTime.includes(':')) {
-        const [hours, minutes] = birthTime.split(':').map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          birthTimeDate = new Date(Date.UTC(2000, 0, 1, hours, minutes));
+        const parts = birthTime.split(':').map(Number);
+        if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+          hours = parts[0];
+          minutes = parts[1];
         }
       }
+
+      const normalizedBirthDateTime = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2], hours, minutes, 0));
 
       const result = await authService.register({
         email,
         password,
-        birthDate: normalizedBirthDate,
-        birthTime: birthTimeDate,
+        birthDateTime: normalizedBirthDateTime,
         birthTimezone,
         birthLocationName,
         birthLatitude: birthLatitude ? parseFloat(birthLatitude) : undefined,

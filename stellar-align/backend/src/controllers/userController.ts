@@ -97,21 +97,28 @@ export class UserController {
 
       const processedData: any = { updatedAt: new Date() };
 
-      if (updateData.birthDate) {
-        const dateStr = updateData.birthDate.split("T")[0];
-        const [year, month, day] = dateStr.split("-").map(Number);
-        processedData.birthDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
-      }
+      if (updateData.birthDate || updateData.birthTime) {
+        const currentBirthDateTime = currentUser.birthDateTime;
+        let year = currentBirthDateTime.getUTCFullYear();
+        let month = currentBirthDateTime.getUTCMonth();
+        let day = currentBirthDateTime.getUTCDate();
+        let hours = currentBirthDateTime.getUTCHours();
+        let minutes = currentBirthDateTime.getUTCMinutes();
 
-      if (updateData.birthTime) {
-        if (typeof updateData.birthTime !== 'string' || !updateData.birthTime.includes(':')) {
-           throw new ApiError(400, "Invalid birth time format. Expected HH:mm", "INVALID_TIME");
+        if (updateData.birthDate) {
+          const dateParts = updateData.birthDate.split("T")[0].split("-").map(Number);
+          year = dateParts[0];
+          month = dateParts[1] - 1;
+          day = dateParts[2];
         }
-        const parts = updateData.birthTime.split(":");
-        const hours = parseInt(parts[0], 10);
-        const minutes = parseInt(parts[1], 10);
-        const timeDate = new Date(Date.UTC(2000, 0, 1, hours, minutes, 0, 0));
-        processedData.birthTime = timeDate;
+
+        if (updateData.birthTime) {
+          const parts = updateData.birthTime.split(":");
+          hours = parseInt(parts[0], 10);
+          minutes = parseInt(parts[1], 10);
+        }
+
+        processedData.birthDateTime = new Date(Date.UTC(year, month, day, hours, minutes, 0, 0));
       }
 
       // Copy other fields
@@ -130,17 +137,17 @@ export class UserController {
         );
       }
 
-      // Update UTC offset if timezone or date changed
-      if (processedData.birthTimezone || processedData.birthDate) {
+      // Update UTC offset if timezone or birth data changed
+      if (processedData.birthTimezone || processedData.birthDateTime) {
         processedData.birthUtcOffset = getTimezoneOffset(
           processedData.birthTimezone || currentUser.birthTimezone,
-          processedData.birthDate || currentUser.birthDate
+          processedData.birthDateTime || currentUser.birthDateTime
         );
       }
 
       // Determine if profile is now complete
       const isComplete = !!(
-        (processedData.birthDate || currentUser.birthDate) &&
+        (processedData.birthDateTime || currentUser.birthDateTime) &&
         (processedData.birthLatitude !== undefined ? processedData.birthLatitude !== null : currentUser.birthLatitude !== null) &&
         (processedData.birthLongitude !== undefined ? processedData.birthLongitude !== null : currentUser.birthLongitude !== null) &&
         (processedData.birthTimezone || currentUser.birthTimezone)
@@ -158,7 +165,7 @@ export class UserController {
 
       // If birth data was updated, trigger recalculation of both Western and Vedic charts
       const birthDataUpdated = !!(updateData.birthDate || updateData.birthTime || updateData.birthLatitude !== undefined || updateData.birthLongitude !== undefined);
-      const hasAllBirthData = user.birthLatitude != null && user.birthLongitude != null && user.birthDate != null;
+      const hasAllBirthData = user.birthLatitude != null && user.birthLongitude != null && user.birthDateTime != null;
 
       if (birthDataUpdated && hasAllBirthData) {
         logger.info("Birth data updated, triggering chart recalculation", {
@@ -230,16 +237,18 @@ export class UserController {
     }
 
     if (
-      user.birthDate &&
+      user.birthDateTime &&
       user.birthLatitude != null &&
       user.birthLongitude != null
     ) {
-      const timeStr = (user.birthTime && !user.birthTimeUnknown)
-        ? user.birthTime.toISOString().slice(11, 16)
-        : "12:00";
+      const birthDateTime = user.birthDateTime;
+      const dateStr = birthDateTime.toISOString().split("T")[0];
+      const timeStr = user.birthTimeUnknown
+        ? "12:00"
+        : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
       const chartData = await astrologyService.calculateNatalChart(
-        user.birthDate,
+        dateStr,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
@@ -348,7 +357,7 @@ export class UserController {
     });
 
     // Skip if user not found or doesn't have birth data
-    if (!user || !user.birthDate || user.birthLatitude == null || user.birthLongitude == null) {
+    if (!user || !user.birthDateTime || user.birthLatitude == null || user.birthLongitude == null) {
       return;
     }
 
@@ -359,13 +368,15 @@ export class UserController {
     }
 
     try {
-      const timeStr = (user.birthTime && !user.birthTimeUnknown)
-        ? user.birthTime.toISOString().slice(11, 16)
-        : "12:00";
+      const birthDateTime = user.birthDateTime;
+      const dateStr = birthDateTime.toISOString().split("T")[0];
+      const timeStr = user.birthTimeUnknown
+        ? "12:00"
+        : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
       // Vedic calculations ALWAYS need Tropical as the base to correctly apply Ayanamsa
       const baseTropicalChart = await astrologyService.calculateNatalChart(
-        user.birthDate,
+        dateStr,
         timeStr,
         user.birthLatitude,
         user.birthLongitude,
@@ -377,7 +388,7 @@ export class UserController {
       // Calculate Vedic chart with divisional charts
       const vedicChart = await calculateVedicChart(
         {
-          date: user.birthDate,
+          date: dateStr,
           time: timeStr,
           latitude: user.birthLatitude,
           longitude: user.birthLongitude,
@@ -621,7 +632,7 @@ export class UserController {
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
         bio: user.bio,
-        birthDate: user.birthDate,
+        birthDateTime: user.birthDateTime,
         sunSign: user.natalChart?.sunSign,
         moonSign: user.natalChart?.moonSign,
         risingSign: user.natalChart?.risingSign,

@@ -13,21 +13,22 @@ async function calculateChart() {
     }
 
     console.log('Calculating chart for:', user.email, {
-      birthDate: user.birthDate,
-      birthTime: user.birthTime,
+      birthDateTime: user.birthDateTime,
       birthLatitude: user.birthLatitude,
       birthLongitude: user.birthLongitude,
       birthTimezone: user.birthTimezone,
     });
 
-    const timeStr = user.birthTime 
-      ? user.birthTime.toISOString().slice(11, 16)
-      : "12:00";
+    const birthDateTime = user.birthDateTime;
+    const dateStr = birthDateTime.toISOString().split("T")[0];
+    const timeStr = user.birthTimeUnknown
+      ? "12:00"
+      : `${birthDateTime.getUTCHours().toString().padStart(2, '0')}:${birthDateTime.getUTCMinutes().toString().padStart(2, '0')}`;
 
-    console.log('Time string:', timeStr);
+    console.log('Date:', dateStr, 'Time:', timeStr);
 
     const chartData = await astrologyService.calculateNatalChart(
-      user.birthDate,
+      dateStr,
       timeStr,
       user.birthLatitude,
       user.birthLongitude,

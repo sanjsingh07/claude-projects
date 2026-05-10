@@ -5,8 +5,7 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
   profileCompleted: boolean;
-  birthDate: string;
-  birthTime?: string;
+  birthDateTime: string;
   birthTimeUnknown: boolean;
   birthTimezone: string;
   birthLocationName?: string;

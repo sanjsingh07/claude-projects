@@ -12,8 +12,7 @@ export interface User {
   profileCompleted: boolean;
 
   // Birth data
-  birthDate: Date;
-  birthTime?: Date;
+  birthDateTime: Date;
   birthTimeUnknown: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
@@ -51,8 +50,7 @@ export interface UserCreateInput {
   providerId?: string;
   displayName?: string;
   gender?: Gender;
-  birthDate: Date;
-  birthTime?: Date;
+  birthDateTime: Date;
   birthTimeUnknown?: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
@@ -66,8 +64,7 @@ export interface UserUpdateInput {
   gender?: Gender;
   bio?: string;
   avatarUrl?: string;
-  birthDate?: Date;
-  birthTime?: Date;
+  birthDateTime?: Date;
   birthTimeUnknown?: boolean;
   birthLocationName?: string;
   birthLatitude?: number;
