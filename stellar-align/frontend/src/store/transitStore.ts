@@ -3,10 +3,15 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface TransitFilters {
+  /** item.type === 'shadow' */
   showShadow: boolean;
+  /** item.type === 'major' */
   showMajor: boolean;
+  /** item.type === 'minor' */
   showMinor: boolean;
+  /** item.eventKind in ['sky_aspect', 'ingress', 'station_retrograde', 'station_direct'] */
   showRealTime: boolean;
+  /** item.eventKind === 'natal_aspect' */
   showPersonal: boolean;
 }
 

@@ -174,6 +174,7 @@ export interface TransitForecast {
 
 export interface TransitForecastEvent {
   id: string;
+  eventKind: 'natal_aspect' | 'sky_aspect' | 'ingress' | 'station_retrograde' | 'station_direct' | string;
   date: {
     iso: string;
     month: string;

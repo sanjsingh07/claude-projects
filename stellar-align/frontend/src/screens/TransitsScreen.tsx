@@ -32,17 +32,17 @@ export const TransitsScreen: React.FC = () => {
   });
 
   const filteredTransits = (data?.transits || []).filter(item => {
+    // 1. Quality/Type filters
     if (item.type === 'major' && !filters.showMajor) return false;
     if (item.type === 'minor' && !filters.showMinor) return false;
     if (item.type === 'shadow' && !filters.showShadow) return false;
     
-    // Check for 'real-time' and 'personal' flags
-    // assuming they are present in the item or inferred
-    const isRealTime = (item as any).isRealTime || item.type === 'real-time';
-    const isPersonal = (item as any).isPersonal || item.type === 'personal';
+    // 2. Source/Kind filters
+    const isPersonal = item.eventKind === 'natal_aspect';
+    const isRealTime = ['sky_aspect', 'ingress', 'station_retrograde', 'station_direct'].includes(item.eventKind);
     
-    if (isRealTime && !filters.showRealTime) return false;
     if (isPersonal && !filters.showPersonal) return false;
+    if (isRealTime && !filters.showRealTime) return false;
     
     return true;
   });

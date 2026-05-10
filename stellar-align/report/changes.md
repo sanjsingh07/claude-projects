@@ -672,3 +672,19 @@ Refactored the Profile screen to improve UX and add transit filtering capabiliti
 - stellar-align/frontend/src/screens/ProfileScreen.tsx
 - stellar-align/frontend/src/screens/TransitsScreen.tsx
 
+
+## [2026-05-10 23:19] Fix: Corrected transit filter mapping for Personal and Real-time events
+
+**What was changed and why:**
+Fixed the filtering logic in the Transits screen where "Personal" and "Real-time" toggles were not working. This was because they were looking for non-existent properties on the transit items.
+
+**Summary of changes:**
+- Updated `TransitForecastEvent` type in `frontend/src/types/index.ts` to include `eventKind`.
+- Corrected the filtering logic in `TransitsScreen.tsx` to map "Personal" to `natal_aspect` and "Real-time" to sky aspects, ingresses, and planetary stations.
+- Added documentation to `transitStore.ts` explaining the mapping between frontend toggles and backend data.
+
+**Files modified:**
+- stellar-align/frontend/src/types/index.ts
+- stellar-align/frontend/src/screens/TransitsScreen.tsx
+- stellar-align/frontend/src/store/transitStore.ts
+
