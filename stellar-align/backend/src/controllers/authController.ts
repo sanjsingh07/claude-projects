@@ -330,7 +330,7 @@ export class AuthController {
 
       // Check if we have the required birth data
       if (
-        user.birthDate &&
+        user.birthDateTime &&
         user.birthLatitude != null &&
         user.birthLongitude != null
       ) {
@@ -341,7 +341,7 @@ export class AuthController {
 
         // 1. Calculate Western natal chart data first (Tropical)
         const westernChart = await astrologyService.calculateNatalChart(
-          user.birthDate,
+          user.birthDateTime,
           timeStr,
           user.birthLatitude,
           user.birthLongitude,
@@ -353,7 +353,7 @@ export class AuthController {
         // 2. Calculate Vedic chart with divisional charts (using Western as base)
         const vedicChart = await calculateVedicChart(
           {
-            date: user.birthDate,
+            date: user.birthDateTime,
             time: timeStr,
             latitude: user.birthLatitude,
             longitude: user.birthLongitude,

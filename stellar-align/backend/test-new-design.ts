@@ -25,7 +25,7 @@ async function setupAndTest() {
 
   // 2. Create Natal Chart
   const chartData = await astrologyService.calculateNatalChart(
-    user.birthDate!,
+    user.birthDateTime!,
     '12:00',
     user.birthLatitude!,
     user.birthLongitude!,

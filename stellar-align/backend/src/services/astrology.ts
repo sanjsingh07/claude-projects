@@ -182,13 +182,22 @@ function calcPlanetPosition(
   let result = sweph.calc_ut(jd, seId, flags);
   
   // If Swiss Ephemeris fails (usually missing files), fallback to Moshier
-  if (result.error && !flags.toString().includes(String(sweph.constants.SEFLG_MOSEPH))) {
-    logger.warn(`SwissEph failed for ${planet}, falling back to Moshier`, { error: result.error });
+  if (result.error && !(flags & sweph.constants.SEFLG_MOSEPH)) {
+    logger.warn(`SwissEph failed for ${planet}, falling back to Moshier`, { 
+      error: result.error,
+      jd,
+      planet 
+    });
     result = sweph.calc_ut(jd, seId, sweph.constants.SEFLG_MOSEPH | sweph.constants.SEFLG_SPEED);
   }
 
   if (result.error) {
-    logger.error(`sweph.calc_ut critical error for ${planet}`, { error: result.error });
+    logger.error(`sweph.calc_ut critical error for ${planet} after fallback`, { 
+      error: result.error,
+      jd,
+      planet,
+      flags: flags | sweph.constants.SEFLG_MOSEPH
+    });
   }
   
   const [longitude, latitude, distance, lonSpeed] = result.data || [0, 0, 0, 0];

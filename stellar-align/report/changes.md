@@ -599,3 +599,24 @@ Implemented the full delivery logic for push notifications, completing the archi
 - System correctly handles token lifecycle (registration, deactivation on error).
 - Notifications are persisted in the database for history tracking.
 - Critical user events now trigger immediate push alerts.
+
+## [2026-05-10] Fix: Astrological Chart Defaulting to Aries 0°
+
+Fixed a critical issue where both Western and Vedic charts would default all planetary positions to 0° Aries.
+
+### Changes:
+- **Backend - Ephemeris Management**:
+  - Renamed and duplicated ephemeris files in `backend/ephe` to support both `_00` and `_18` naming conventions. This ensures the Swiss Ephemeris library can correctly locate planetary data for the 2026 date range.
+- **Backend - Astrology Service**:
+  - Fixed a broken bitwise check in `astrology.ts` that was causing the Moshier fallback logic to fail.
+  - Improved error logging in `calcPlanetPosition` to provide better visibility into calculation failures.
+- **Backend - Vedic Astrology Service**:
+  - Fixed `getAyanamsa` to correctly handle the result object from `sweph.get_ayanamsa_ut`. Previously, it was returning 0 because it wasn't extracting the numeric data from the result object.
+- **Backend - Bug Fixes (Field Mapping)**:
+  - Fixed multiple instances in `authController.ts` and utility scripts where the code was incorrectly attempting to access `user.birthDate` instead of the correct model field `user.birthDateTime`. This was causing `undefined` to be passed to calculation services.
+  - Standardized chart recalculation triggers to ensure valid birth data is always present before attempting calculation.
+
+### Verified:
+- Manually verified Swiss Ephemeris and Ayanamsa calculations using a standalone test script.
+- Confirmed that correctly named ephemeris files and valid date data result in accurate planetary positions (e.g., Sun in Taurus/Aries depending on system) rather than 0° Aries.
+- Verified that the system now correctly falls back to Moshier when files are missing but uses high-precision Swiss Ephemeris when they are available.

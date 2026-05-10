@@ -85,6 +85,12 @@ export function getAyanamsa(jd: number, type: AyanamsaType = AyanamsaType.LAHIRI
   const sidMode = ayanamsaMap[type] || sweph.constants.SE_SIDM_LAHIRI;
   sweph.set_sid_mode(sidMode, 0, 0);
   const result = sweph.get_ayanamsa_ut(jd);
+  
+  // Handle result object if present (some versions return {data, error})
+  if (result && typeof result === 'object' && 'data' in result) {
+    return sanitizeNumber(result.data);
+  }
+  
   return sanitizeNumber(result);
 }
 
