@@ -32,19 +32,27 @@ export const TransitsScreen: React.FC = () => {
   });
 
   const filteredTransits = (data?.transits || []).filter(item => {
-    // 1. Quality/Type filters
-    if (item.type === 'major' && !filters.showMajor) return false;
-    if (item.type === 'minor' && !filters.showMinor) return false;
-    if (item.type === 'shadow' && !filters.showShadow) return false;
-    
-    // 2. Source/Kind filters
+    // 1. Determine Source
     const isPersonal = item.eventKind === 'natal_aspect';
     const isRealTime = ['sky_aspect', 'ingress', 'station_retrograde', 'station_direct'].includes(item.eventKind);
     
+    // 2. Source Filtering (Primary)
     if (isPersonal && !filters.showPersonal) return false;
     if (isRealTime && !filters.showRealTime) return false;
+    if (!isPersonal && !isRealTime) return false;
+
+    // 3. Quality Filtering (Secondary Narrowing)
+    const anyQualityActive = filters.showMajor || filters.showMinor || filters.showShadow;
     
-    return true;
+    // If no quality filters are active, show everything for the active sources
+    if (!anyQualityActive) return true;
+    
+    // If quality filters are active, treat them as a whitelist
+    if (item.type === 'major' && filters.showMajor) return true;
+    if (item.type === 'minor' && filters.showMinor) return true;
+    if (item.type === 'shadow' && filters.showShadow) return true;
+    
+    return false;
   });
 
   const renderPeriodButton = (p: 'week' | 'month' | 'year', label: string) => (

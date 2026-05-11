@@ -33,7 +33,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.137.139:3000/api",
+      "apiUrl": "http://192.168.137.86:3000/api",
       "eas": {
         "projectId": "225aeb82-3b52-4134-bcff-729b3ab00c5b"
       }
