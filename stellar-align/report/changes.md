@@ -705,3 +705,20 @@ Created a new, high-fidelity Chart Screen template to replace the basic version.
 **Files modified:**
 - stellar-align/screens_09-chart-v2.html (new)
 - stellar-align/report/changes.md
+
+## [2026-05-11 23:59] Redesign: Celestial Map (Chart Screen v3)
+
+**What was changed and why:**
+Redesigned the Chart Screen template for the second time to meet higher aesthetic standards. The new design features a high-end 3D "Flip" interface to showcase the dual-system nature (Tropical vs. Divisional) of the app.
+
+**Summary of changes:**
+- Created `screens_09-chart-v3.html` with a 3D flippable celestial card.
+- **Front Side:** Western Tropical Wheel with ethereal glows and aspect webs.
+- **Back Side:** Vedic Divisional Chart (North Indian style) with custom "Gold" accents and traditional house numbering.
+- Integrated a "Flip" interaction that updates the system label and theme colors dynamically.
+- Refined the placement list with larger typography and improved iconography.
+- Preserved existing project design tokens (oklch, Instrument Serif).
+
+**Files modified:**
+- stellar-align/screens_09-chart-v3.html (new)
+- stellar-align/report/changes.md
