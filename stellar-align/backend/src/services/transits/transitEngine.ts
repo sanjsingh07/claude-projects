@@ -45,6 +45,7 @@ export async function getTransitsForPeriod(
   startDate: Date = new Date(),
   timezone = "UTC",
 ) {
+  const now = DateTime.now().setZone(timezone);
   const start = DateTime.fromJSDate(startDate, { zone: timezone }).startOf("day");
   const end = start.plus({ 
     days: period === "week" ? 7 : period === "month" ? 30 : 365 
@@ -66,14 +67,30 @@ export async function getTransitsForPeriod(
     const dayTransits = calculateUserTransits(natalPositions, transitPositions as any);
     for (const transit of dayTransits) {
       const key = `natal-aspect-${transit.planet1}-${transit.type}-${transit.planet2}`;
-      const type = classifyTransitType(transit.planet1, transit.type, false, false, transit.orb);
-      const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
       
       const aspectData = FORECAST_ASPECTS[transit.type as keyof typeof FORECAST_ASPECTS];
       const maxOrb = aspectData?.orb || 2.5;
+
+      // Find boundaries for this transit
+      const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
+        currentDate,
+        transit.planet1,
+        transit.type,
+        transit.planet2,
+        maxOrb,
+        ayanamsaToUse,
+        natalPositions
+      );
+
+      // Determine display date: Today if active now, else the start of the transit
+      const isCurrentlyActive = now >= eventStart && now <= eventEnd;
+      const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
+
+      const type = classifyTransitType(transit.planet1, transit.type, false, false, transit.orb);
+      const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
       
       const progress = computeTransitProgress(
-        DateTime.now().setZone(timezone).toJSDate(), 
+        now.toJSDate(), 
         currentDate.toJSDate(), 
         type, 
         transit.orb,
@@ -85,12 +102,18 @@ export async function getTransitsForPeriod(
       const sym2 = PLANET_SYMBOLS[transit.planet2.toUpperCase()] || transit.planet2;
       const aspSym = ASPECT_SYMBOLS[transit.type.toUpperCase()] || transit.type;
       const natalPlanetName = natalPlanetLabel(transit.planet2);
+      
       const event = {
         id: key,
         eventKind: "natal_aspect",
         aspectType: transit.type,
         quality: transit.type.toLowerCase(),
-        date: formatEventDate(currentDate),
+        date: formatEventDate(displayDate),
+        duration: {
+          start: eventStart.toISO(),
+          end: eventEnd.toISO(),
+          label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
+        },
         orb: {
           value: transit.orb,
           formatted: formatOrb(transit.orb)
@@ -102,20 +125,33 @@ export async function getTransitsForPeriod(
         impact,
         progress
       };
-      upsertClosestEvent(transitsFound, key, event);
+      upsertPersistentEvent(transitsFound, key, event);
     }
 
-    // 2. Detect current-sky planet-to-planet aspects like Mercury ⟂ Saturn.
+    // 2. Detect current-sky planet-to-planet aspects
     for (const aspect of calculateSkyAspects(transitPositions as Record<string, any>)) {
       const key = `sky-aspect-${aspect.planet1}-${aspect.type}-${aspect.planet2}`;
-      const eventType = classifyTransitType(aspect.planet1, aspect.type, false, false, aspect.orb);
-      const impact = determineImpactLevel(aspect.planet1, aspect.type, false, aspect.orb);
-
+      
       const aspectData = FORECAST_ASPECTS[aspect.type as keyof typeof FORECAST_ASPECTS];
       const maxOrb = aspectData?.orb || 2.5;
 
+      const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
+        currentDate,
+        aspect.planet1,
+        aspect.type,
+        aspect.planet2,
+        maxOrb,
+        ayanamsaToUse
+      );
+
+      const isCurrentlyActive = now >= eventStart && now <= eventEnd;
+      const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
+
+      const eventType = classifyTransitType(aspect.planet1, aspect.type, false, false, aspect.orb);
+      const impact = determineImpactLevel(aspect.planet1, aspect.type, false, aspect.orb);
+
       const progress = computeTransitProgress(
-        DateTime.now().setZone(timezone).toJSDate(), 
+        now.toJSDate(), 
         currentDate.toJSDate(), 
         eventType, 
         aspect.orb,
@@ -127,7 +163,12 @@ export async function getTransitsForPeriod(
         eventKind: "sky_aspect",
         aspectType: aspect.type,
         quality: aspect.type.toLowerCase(),
-        date: formatEventDate(currentDate),
+        date: formatEventDate(displayDate),
+        duration: {
+          start: eventStart.toISO(),
+          end: eventEnd.toISO(),
+          label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
+        },
         orb: {
           value: aspect.orb,
           formatted: formatOrb(aspect.orb),
@@ -139,7 +180,7 @@ export async function getTransitsForPeriod(
         impact,
         progress,
       };
-      upsertClosestEvent(transitsFound, key, event);
+      upsertPersistentEvent(transitsFound, key, event);
     }
 
     // 3. Detect Sign Ingresses
@@ -249,6 +290,77 @@ function calculateSkyAspects(transitPositions: Record<string, any>) {
   }
 
   return aspects.sort((a, b) => a.orb - b.orb);
+}
+
+/**
+ * Steps backward and forward from a given date to find when an aspect enters/exits the orb.
+ */
+async function findTransitBoundaries(
+  referenceDate: DateTime,
+  planet1: string,
+  aspectType: string,
+  planet2: string,
+  maxOrb: number,
+  ayanamsaType?: any,
+  natalPositions?: any[]
+) {
+  const targetAngle = FORECAST_ASPECTS[aspectType as keyof typeof FORECAST_ASPECTS].angle;
+  
+  const getOrbAtDate = async (date: DateTime) => {
+    const transitPositions = await getPlanetaryPositions(date.toJSDate(), ayanamsaType) as any;
+    const pos1 = transitPositions[planet1.toLowerCase()];
+    
+    let pos2: any;
+    if (natalPositions) {
+      pos2 = natalPositions.find(p => p.planet.toLowerCase() === planet2.toLowerCase());
+    } else {
+      pos2 = transitPositions[planet2.toLowerCase()];
+    }
+
+    if (!pos1 || !pos2) return 999;
+    
+    let diff = Math.abs(pos1.longitude - pos2.longitude);
+    if (diff > 180) diff = 360 - diff;
+    return Math.abs(diff - targetAngle);
+  };
+
+  // 1. Find Start (Step back up to 15 days)
+  let startDate = referenceDate;
+  for (let i = 1; i <= 15; i++) {
+    const prev = referenceDate.minus({ days: i });
+    const orb = await getOrbAtDate(prev);
+    if (orb <= maxOrb) startDate = prev;
+    else break;
+  }
+
+  // 2. Find End (Step forward up to 15 days)
+  let endDate = referenceDate;
+  for (let i = 1; i <= 15; i++) {
+    const next = referenceDate.plus({ days: i });
+    const orb = await getOrbAtDate(next);
+    if (orb <= maxOrb) endDate = next;
+    else break;
+  }
+
+  return { startDate, endDate };
+}
+
+function upsertPersistentEvent(events: Map<string, any>, key: string, event: any) {
+  const existing = events.get(key);
+  // In the new model, we favor the "display date" being as close to 'now' as possible
+  // and we keep the one that was found first in the loop (which is the earliest occurrence in the period)
+  if (!existing) {
+    events.set(key, event);
+  } else {
+    // If the new event's date is closer to 'now', we swap it to ensure "Today-First" visibility
+    const now = DateTime.now();
+    const existingDiff = Math.abs(DateTime.fromISO(existing.date.iso).diff(now).as("milliseconds"));
+    const newDiff = Math.abs(DateTime.fromISO(event.date.iso).diff(now).as("milliseconds"));
+    
+    if (newDiff < existingDiff) {
+      events.set(key, event);
+    }
+  }
 }
 
 function upsertClosestEvent(events: Map<string, any>, key: string, event: any) {
