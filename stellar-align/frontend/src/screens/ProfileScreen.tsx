@@ -183,7 +183,11 @@ export const ProfileScreen: React.FC = () => {
         badges={profile.badges}
         onSettingsPress={() => navigation.navigate('Settings')}
       />
-      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.body} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.section}>
           <BirthDataGrid items={birthDataItems} />
         </View>
@@ -193,7 +197,6 @@ export const ProfileScreen: React.FC = () => {
         <View style={styles.section}>
           <ToggleSection title="Transit Settings" items={transitItems} />
         </View>
-        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -212,9 +215,12 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+  },
+  scrollContent: {
     paddingVertical: 16,
+    paddingBottom: 100, // Extra padding to avoid footer/tabbar overlap
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
 });

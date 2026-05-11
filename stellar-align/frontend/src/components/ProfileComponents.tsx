@@ -234,6 +234,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.astraBorder,
   },
+  lastRow: {
+    borderBottomWidth: 0,
+  },
   notifK: {
     fontFamily: 'DMSans-Regular',
     fontSize: 13,
