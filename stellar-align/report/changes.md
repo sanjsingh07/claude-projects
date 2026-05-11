@@ -688,3 +688,20 @@ Fixed the filtering logic in the Transits screen where "Personal" and "Real-time
 - stellar-align/frontend/src/screens/TransitsScreen.tsx
 - stellar-align/frontend/src/store/transitStore.ts
 
+
+## [2026-05-11 23:59] New Screen: Celestial Map (Improved Chart Screen)
+
+**What was changed and why:**
+Created a new, high-fidelity Chart Screen template to replace the basic version. The new design supports both Tropical (Western) and Divisional (Vedic) astrology systems with an interactive, dual-mode interface.
+
+**Summary of changes:**
+- Created `screens_09-chart-v2.html` featuring a sophisticated "Celestial Map" design.
+- Implemented a dual-system toggle for switching between Western and Vedic views.
+- Added a high-detail Tropical Wheel using SVGs with zodiac segments and aspect lines.
+- Designed an authentic North Indian style square chart for Vedic Divisional views.
+- Included Varga selectors (D1, D9, D10) and a refined placements grid.
+- Ensured design consistency with the Astra premium aesthetic (oklch colors, Instrument Serif).
+
+**Files modified:**
+- stellar-align/screens_09-chart-v2.html (new)
+- stellar-align/report/changes.md
