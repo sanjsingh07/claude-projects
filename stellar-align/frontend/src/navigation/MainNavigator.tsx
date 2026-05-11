@@ -23,7 +23,7 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 export const MainNavigator: React.FC = () => {
   const renderTabIcon = (icon: string, color: string) => (
     <View style={{ alignItems: 'center' }}>
-      <View style={[styles.tabRule, { opacity: color === colors.astraFg ? 1 : 0 }]} />
+      <View style={[styles.tabRule, { opacity: color === colors.stellarFg ? 1 : 0 }]} />
       <CostarText style={{ fontSize: 20, color, marginTop: 2 }}>{icon}</CostarText>
     </View>
   );
@@ -33,8 +33,8 @@ export const MainNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: colors.astraFg,
-        tabBarInactiveTintColor: colors.astraMuted,
+        tabBarActiveTintColor: colors.stellarFg,
+        tabBarInactiveTintColor: colors.stellarMuted,
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
@@ -84,8 +84,8 @@ export const MainNavigator: React.FC = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.astraBg,
-    borderTopColor: colors.astraBorder,
+    backgroundColor: colors.stellarBg,
+    borderTopColor: colors.stellarBorder,
     borderTopWidth: 1,
     height: 70,
     paddingBottom: 10,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   tabRule: {
     width: 16,
     height: 2,
-    backgroundColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
     borderRadius: 1,
     position: 'absolute',
     top: -10,

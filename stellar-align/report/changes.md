@@ -758,3 +758,21 @@ Created a new Chart Screen template (`screens_09-chart-v5.html`) that directly m
 **Files modified:**
 - stellar-align/screens_09-chart-v5.html (new)
 - stellar-align/report/changes.md
+
+## [2026-05-12 01:10] Project-Wide Rebranding: Stellar Align
+
+**What was changed and why:**
+Performed a comprehensive rebranding of the project from "Astra" to "Stellar Align" across all layers (HTML templates, React Native source code, and documentation) to align with the company's official identity.
+
+**Summary of changes:**
+- Renamed all HTML document titles and headers from "Astra" to "Stellar Align".
+- Updated internal theme color keys from `astraBg`, `astraViolet`, etc. to `stellarBg`, `stellarViolet`, etc.
+- Performed a global search-and-replace in the `frontend/src` directory to update all component references to the new color keys and project name.
+- Updated `README.md` and `changes.md` to reflect the new branding.
+- Ensured the new Chart Screen template (`screens_09-chart-v5.html`) is fully rebranded.
+
+**Files modified:**
+- All `.html` files in `stellar-align/`
+- `stellar-align/frontend/src/**/*`
+- `stellar-align/README.md`
+- `stellar-align/report/changes.md`

@@ -239,12 +239,12 @@ const styles = StyleSheet.create({
     zIndex: 3000,
   },
   modalContent: {
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderTopColor: colors.astraBorder,
+    borderTopColor: colors.stellarBorder,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -253,17 +253,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   modalTitle: {
     fontFamily: 'InstrumentSerif-Italic',
     fontSize: 20,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   modalDone: {
     fontFamily: 'DMSans-Medium',
     fontSize: 16,
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
   },
   pickersContainer: {
     paddingVertical: 20,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     backgroundColor: 'rgba(157, 141, 241, 0.1)',
   },
   item: {
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontFamily: 'DMSans-Regular',
     fontSize: 16,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   itemTextSelected: {
     color: colors.white,

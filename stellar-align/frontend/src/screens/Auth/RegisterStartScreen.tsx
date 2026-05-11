@@ -120,7 +120,7 @@ export const RegisterStartScreen: React.FC = () => {
           <View style={styles.logoArea}>
             <CostarText style={styles.logoIcon}>✧</CostarText>
             <CostarText variant="heading1" serif italic style={styles.appName}>
-              Astra
+              Stellar Align
             </CostarText>
             <CostarText style={styles.tagline}>
               The universe, mapped for you.
@@ -188,7 +188,7 @@ export const RegisterStartScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   safeArea: {
     flex: 1,
@@ -218,21 +218,21 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     fontSize: 64,
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     marginBottom: 16,
-    textShadowColor: colors.astraViolet,
+    textShadowColor: colors.stellarViolet,
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 20,
   },
   appName: {
     fontSize: 52,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     lineHeight: 60,
   },
   tagline: {
     fontFamily: 'DM Sans',
     fontSize: 16,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 12,
     letterSpacing: 0.32,
   },
@@ -248,10 +248,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btnPrimary: {
-    backgroundColor: colors.astraFg,
+    backgroundColor: colors.stellarFg,
   },
   btnPrimaryText: {
-    color: colors.astraBg,
+    color: colors.stellarBg,
     fontSize: 15,
     fontWeight: '500',
     fontFamily: 'DM Sans',
@@ -259,10 +259,10 @@ const styles = StyleSheet.create({
   btnSecondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
   },
   btnSecondaryText: {
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontSize: 15,
     fontWeight: '500',
     fontFamily: 'DM Sans',
@@ -280,12 +280,12 @@ const styles = StyleSheet.create({
   altLine: {
     flex: 1,
     height: 1,
-    backgroundColor: colors.astraBorder,
+    backgroundColor: colors.stellarBorder,
   },
   altLoginText: {
     fontFamily: 'DM Sans',
     fontSize: 13,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginHorizontal: 16,
   },
   socialBtns: {
@@ -298,25 +298,25 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
-    backgroundColor: colors.astraSurface,
+    borderColor: colors.stellarBorder,
+    backgroundColor: colors.stellarSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   socialIcon: {
     fontSize: 20,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   legal: {
     fontFamily: 'DM Sans',
     fontSize: 11,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     textAlign: 'center',
     marginTop: 8,
     lineHeight: 16,
   },
   legalHighlight: {
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
   },
   glow: {
     position: 'absolute',
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     marginLeft: -150,
     width: 300,
     height: 300,
-    backgroundColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
     opacity: 0.05,
     borderRadius: 150,
   },
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     marginLeft: -67,
     width: 134,
     height: 5,
-    backgroundColor: colors.astraFg,
+    backgroundColor: colors.stellarFg,
     borderRadius: 3,
     opacity: 0.3,
   },

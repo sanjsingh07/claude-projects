@@ -64,7 +64,7 @@ export const ProfileScreen: React.FC = () => {
   if (isProfileLoading || isSettingsLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator color={colors.astraViolet} />
+        <ActivityIndicator color={colors.stellarViolet} />
       </View>
     );
   }
@@ -78,12 +78,6 @@ export const ProfileScreen: React.FC = () => {
   const sunEmoji = getSignEmoji(sunSign);
   const moonEmoji = getSignEmoji(moonSign);
   const risingEmoji = getSignEmoji(risingSign);
-
-  const big3 = [
-    sunSign ? `${formatSignName(sunSign)} Sun` : '',
-    moonSign ? `${formatSignName(moonSign)} Moon` : '',
-    risingSign ? `${formatSignName(risingSign)} Rising` : '',
-  ].filter(Boolean).join(' · ');
 
   const birthDataItems = [
     { 
@@ -179,7 +173,7 @@ export const ProfileScreen: React.FC = () => {
       <ProfileHero
         name={profile.name}
         avatarInitial={profile.avatarInitial}
-        subtitle={big3 || `Born ${profile.birthData.formattedDate}`}
+        subtitle=""
         badges={profile.badges}
         onSettingsPress={() => navigation.navigate('Settings')}
       />
@@ -205,13 +199,13 @@ export const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   body: {
     flex: 1,

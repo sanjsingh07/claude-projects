@@ -93,7 +93,7 @@ export const ResetPasswordScreen: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter token from email"
-                  placeholderTextColor={colors.astraMuted}
+                  placeholderTextColor={colors.stellarMuted}
                   value={token}
                   onChangeText={setToken}
                   autoCapitalize="none"
@@ -106,7 +106,7 @@ export const ResetPasswordScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="••••••••••••"
-                placeholderTextColor={colors.astraMuted}
+                placeholderTextColor={colors.stellarMuted}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -118,7 +118,7 @@ export const ResetPasswordScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="••••••••••••"
-                placeholderTextColor={colors.astraMuted}
+                placeholderTextColor={colors.stellarMuted}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
@@ -131,7 +131,7 @@ export const ResetPasswordScreen: React.FC = () => {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.astraBg} />
+                <ActivityIndicator color={colors.stellarBg} />
               ) : (
                 <CostarText style={styles.btnText}>Reset Password</CostarText>
               )}
@@ -146,7 +146,7 @@ export const ResetPasswordScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   keyboardView: {
     flex: 1,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   backBtnText: {
     fontSize: 24,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   header: {
     marginTop: 20,
@@ -172,12 +172,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     lineHeight: 22,
   },
   form: {
@@ -190,20 +190,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 1,
     textTransform: 'uppercase',
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginBottom: 8,
     fontFamily: 'DM Sans',
   },
   input: {
     height: 50,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
-    color: colors.astraFg,
+    borderBottomColor: colors.stellarBorder,
+    color: colors.stellarFg,
     fontSize: 16,
     paddingVertical: 8,
   },
   btn: {
-    backgroundColor: colors.astraFg,
+    backgroundColor: colors.stellarFg,
     height: 54,
     borderRadius: 27,
     justifyContent: 'center',
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnText: {
-    color: colors.astraBg,
+    color: colors.stellarBg,
     fontSize: 16,
     fontWeight: '600',
   },

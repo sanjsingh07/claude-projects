@@ -41,20 +41,20 @@ export const AspectList: React.FC<AspectListProps> = ({ label, aspects }) => {
 
 function getQualityStyle(quality: string) {
   const q = quality.toLowerCase();
-  if (q.includes('opp')) return { backgroundColor: 'rgba(255, 141, 161, 0.15)' }; // astraPink with alpha
-  if (q.includes('sq')) return { backgroundColor: 'rgba(157, 141, 241, 0.2)' }; // astraViolet with alpha
+  if (q.includes('opp')) return { backgroundColor: 'rgba(255, 141, 161, 0.15)' }; // stellarPink with alpha
+  if (q.includes('sq')) return { backgroundColor: 'rgba(157, 141, 241, 0.2)' }; // stellarViolet with alpha
   if (q.includes('tr')) return { backgroundColor: 'rgba(92, 184, 92, 0.15)' }; // green fallback
-  if (q.includes('sext') || q.includes('quin')) return { backgroundColor: 'rgba(255, 193, 94, 0.15)' }; // astraAmber with alpha
-  return { backgroundColor: colors.astraBorder };
+  if (q.includes('sext') || q.includes('quin')) return { backgroundColor: 'rgba(255, 193, 94, 0.15)' }; // stellarAmber with alpha
+  return { backgroundColor: colors.stellarBorder };
 }
 
 function getQualityTextStyle(quality: string) {
   const q = quality.toLowerCase();
-  if (q.includes('opp')) return { color: colors.astraPink };
-  if (q.includes('sq')) return { color: colors.astraViolet };
+  if (q.includes('opp')) return { color: colors.stellarPink };
+  if (q.includes('sq')) return { color: colors.stellarViolet };
   if (q.includes('tr')) return { color: '#5cb85c' };
-  if (q.includes('sext') || q.includes('quin')) return { color: colors.astraAmber };
-  return { color: colors.astraMuted };
+  if (q.includes('sext') || q.includes('quin')) return { color: colors.stellarAmber };
+  return { color: colors.stellarMuted };
 }
 
 const styles = StyleSheet.create({
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     marginBottom: 8,
     fontFamily: 'DM Sans',
   },
@@ -77,14 +77,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   lastItem: {
     borderBottomWidth: 0,
   },
   symbol: {
     fontSize: 18,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     width: 30,
     textAlign: 'center',
     marginRight: 12,
@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 13,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontFamily: 'DM Sans',
   },
   description: {
     fontSize: 11,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 2,
     fontFamily: 'DM Sans',
   },

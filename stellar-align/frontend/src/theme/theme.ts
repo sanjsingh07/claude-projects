@@ -23,15 +23,15 @@ export const colors = {
   success: '#00C851',
   warning: '#FFBB33',
 
-  // Astra design colors (mapped from oklch)
-  astraBg: '#0a0b14',
-  astraSurface: '#0e101b',
-  astraFg: '#f8f8f8',
-  astraMuted: '#9697a0',
-  astraBorder: '#1e202e',
-  astraViolet: '#9d8df1',
-  astraPink: '#ff8da1',
-  astraAmber: '#ffc15e',
+  // Stellar Align design colors (mapped from oklch)
+  stellarBg: '#0a0b14',
+  stellarSurface: '#0e101b',
+  stellarFg: '#f8f8f8',
+  stellarMuted: '#9697a0',
+  stellarBorder: '#1e202e',
+  stellarViolet: '#9d8df1',
+  stellarPink: '#ff8da1',
+  stellarAmber: '#ffc15e',
 
   // Transparent overlays
   overlay: 'rgba(0, 0, 0, 0.8)',

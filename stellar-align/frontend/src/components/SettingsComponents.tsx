@@ -206,14 +206,14 @@ export const LocationSelectionModal: React.FC<{
               <TextInput
                 style={styles.searchInput}
                 placeholder="Search city, state, country..."
-                placeholderTextColor={colors.astraMuted}
+                placeholderTextColor={colors.stellarMuted}
                 value={search}
                 onChangeText={setSearch}
                 autoFocus
                 keyboardAppearance="dark"
                 returnKeyType="search"
               />
-              {activeLoading && <ActivityIndicator size="small" color={colors.astraViolet} style={styles.searchLoader} />}
+              {activeLoading && <ActivityIndicator size="small" color={colors.stellarViolet} style={styles.searchLoader} />}
             </View>
             <FlatList
               data={suggestions}
@@ -319,7 +319,7 @@ export const BirthDataEditModal: React.FC<{
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
                   <View>
-                    <Text style={[styles.optionLabel, birthTimeUnknown && { color: colors.astraViolet }]}>I don't know my birth time</Text>
+                    <Text style={[styles.optionLabel, birthTimeUnknown && { color: colors.stellarViolet }]}>I don't know my birth time</Text>
                     <Text style={[styles.rowSub, { marginTop: 4 }]}>
                       {birthTimeUnknown ? 'Currently estimating placements' : 'Estimates Rising sign & houses'}
                     </Text>
@@ -332,7 +332,7 @@ export const BirthDataEditModal: React.FC<{
 
               {birthTimeUnknown && (
                 <View style={styles.warningBox}>
-                  <Ionicons name="information-circle-outline" size={16} color={colors.astraViolet} />
+                  <Ionicons name="information-circle-outline" size={16} color={colors.stellarViolet} />
                   <Text style={styles.warningText}>
                     Note: Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise.
                   </Text>
@@ -420,7 +420,7 @@ export const TimezoneSelectionModal: React.FC<{
               <TextInput
                 style={styles.searchInput}
                 placeholder="Search timezone (e.g. London, Kolkata)..."
-                placeholderTextColor={colors.astraMuted}
+                placeholderTextColor={colors.stellarMuted}
                 value={search}
                 onChangeText={setSearch}
                 autoFocus
@@ -496,10 +496,10 @@ export const TextInputModal: React.FC<{
                   value={text}
                   onChangeText={setText}
                   placeholder={placeholder}
-                  placeholderTextColor={colors.astraMuted}
+                  placeholderTextColor={colors.stellarMuted}
                   autoFocus
                   keyboardAppearance="dark"
-                  selectionColor={colors.astraViolet}
+                  selectionColor={colors.stellarViolet}
                   multiline={title.toLowerCase().includes('bio')}
                 />
               </View>
@@ -527,14 +527,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   backBtn: {
     width: 36,
     height: 36,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
@@ -542,12 +542,12 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     fontSize: 18,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   title: {
     fontFamily: 'InstrumentSerif-Italic',
     fontSize: 22,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   section: {
     paddingHorizontal: 24,
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
     fontSize: 9,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     paddingVertical: 14,
   },
   row: {
@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 13,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   lastRow: {
     borderBottomWidth: 0,
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
   rowLabel: {
     fontFamily: 'DMSans-Regular',
     fontSize: 14,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   rowLabelDanger: {
     color: '#FF4444',
@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
   rowSub: {
     fontFamily: 'DMSans-Regular',
     fontSize: 11,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 2,
   },
   rowRight: {
@@ -595,22 +595,22 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 14,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginLeft: 6,
   },
   toggle: {
     width: 48,
     height: 28,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 14,
     position: 'relative',
     justifyContent: 'center',
   },
   toggleOn: {
-    backgroundColor: colors.astraViolet,
-    borderColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
+    borderColor: colors.stellarViolet,
   },
   toggleCircle: {
     width: 20,
@@ -629,7 +629,7 @@ const styles = StyleSheet.create({
   valText: {
     fontFamily: 'DMSans-Regular',
     fontSize: 12,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     letterSpacing: 0.5,
   },
   modalOverlay: {
@@ -643,12 +643,12 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   modalContent: {
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderTopColor: colors.astraBorder,
+    borderTopColor: colors.stellarBorder,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -657,16 +657,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   modalTitle: {
     fontFamily: 'InstrumentSerif-Italic',
     fontSize: 20,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   modalClose: {
     fontSize: 18,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   optionsList: {
     paddingVertical: 8,
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   optionSelected: {
     backgroundColor: 'rgba(157, 141, 241, 0.05)',
@@ -686,20 +686,20 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontFamily: 'DMSans-Regular',
     fontSize: 15,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   optionLabelSelected: {
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
   },
   checkIcon: {
     fontSize: 16,
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
   },
   searchContainer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans-Regular',
     fontSize: 15,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     paddingVertical: 8,
   },
   searchLoader: {
@@ -724,14 +724,14 @@ const styles = StyleSheet.create({
   textInput: {
     fontFamily: 'DMSans-Regular',
     fontSize: 24,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraViolet,
+    borderBottomColor: colors.stellarViolet,
     paddingBottom: 8,
   },
   saveBtn: {
     marginHorizontal: 24,
-    backgroundColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -746,17 +746,17 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: colors.astraViolet,
-    borderColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
+    borderColor: colors.stellarViolet,
   },
   warningBox: {
     flexDirection: 'row',
-    backgroundColor: colors.astraViolet + '10',
+    backgroundColor: colors.stellarViolet + '10',
     padding: 12,
     borderRadius: 8,
     marginHorizontal: 24,
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
   },
   warningText: {
     flex: 1,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     fontSize: 12,
     lineHeight: 18,
     fontFamily: 'DMSans-Regular',

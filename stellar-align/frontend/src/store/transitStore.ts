@@ -13,6 +13,10 @@ interface TransitFilters {
   showRealTime: boolean;
   /** item.eventKind === 'natal_aspect' */
   showPersonal: boolean;
+  /** item.zodiacSystem === 'SIDEREAL' */
+  showVedic: boolean;
+  /** item.zodiacSystem === 'TROPICAL' */
+  showWestern: boolean;
 }
 
 interface TransitState {
@@ -30,6 +34,8 @@ export const useTransitStore = create<TransitState>()(
         showMinor: true,
         showRealTime: true,
         showPersonal: true,
+        showVedic: true,
+        showWestern: true,
       },
       setFilter: (key, value) =>
         set((state) => ({

@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
     overflow: 'hidden',
   },
   star: {

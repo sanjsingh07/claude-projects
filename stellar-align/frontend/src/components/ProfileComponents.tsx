@@ -103,20 +103,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   avatar: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.astraViolet, // Simplified from gradient for now
+    backgroundColor: colors.stellarViolet, // Simplified from gradient for now
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     fontFamily: 'InstrumentSerif-Italic',
     fontSize: 26,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   info: {
     flex: 1,
@@ -125,13 +125,13 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: 'InstrumentSerif-Italic',
     fontSize: 24,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     lineHeight: 28,
   },
   subtitle: {
     fontFamily: 'DMSans-Regular',
     fontSize: 12,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 4,
   },
   badges: {
@@ -144,42 +144,42 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     marginRight: 6,
     marginBottom: 4,
   },
   badgeAccent: {
-    borderColor: colors.astraViolet,
+    borderColor: colors.stellarViolet,
   },
   badgePink: {
-    borderColor: colors.astraPink,
+    borderColor: colors.stellarPink,
   },
   badgeText: {
     fontFamily: 'DMSans-Regular',
     fontSize: 9,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   badgeTextAccent: {
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
   },
   badgeTextPink: {
-    color: colors.astraPink,
+    color: colors.stellarPink,
   },
   settingsBtn: {
     width: 36,
     height: 36,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
   settingsIcon: {
     fontSize: 16,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   grid: {
     flexDirection: 'row',
@@ -189,9 +189,9 @@ const styles = StyleSheet.create({
   },
   dataItem: {
     width: '48.5%',
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 10,
     padding: 12,
   },
@@ -200,18 +200,18 @@ const styles = StyleSheet.create({
     fontSize: 9,
     letterSpacing: 1.8,
     textTransform: 'uppercase',
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   dataVal: {
     fontFamily: 'InstrumentSerif-Regular',
     fontSize: 16,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     marginTop: 4,
   },
   dataSub: {
     fontFamily: 'DMSans-Regular',
     fontSize: 10,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 2,
   },
   notifSection: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     marginBottom: 10,
   },
   notifRow: {
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   lastRow: {
     borderBottomWidth: 0,
@@ -240,27 +240,27 @@ const styles = StyleSheet.create({
   notifK: {
     fontFamily: 'DMSans-Regular',
     fontSize: 13,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   notifSub: {
     fontFamily: 'DMSans-Regular',
     fontSize: 10,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginTop: 2,
   },
   toggle: {
     width: 48,
     height: 28,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 14,
     position: 'relative',
     justifyContent: 'center',
   },
   toggleOn: {
-    backgroundColor: colors.astraViolet,
-    borderColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
+    borderColor: colors.stellarViolet,
   },
   toggleCircle: {
     width: 20,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   signoutText: {
     fontFamily: 'DMSans-Regular',
     fontSize: 14,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     letterSpacing: 0.5,
   },
 });

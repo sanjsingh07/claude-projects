@@ -484,7 +484,7 @@ export const RegisterScreen: React.FC = () => {
                   <TextInput
                     style={styles.input}
                     placeholder="your@email.com"
-                    placeholderTextColor={colors.astraMuted}
+                    placeholderTextColor={colors.stellarMuted}
                     value={email}
                     onChangeText={setEmail}
                     autoCapitalize="none"
@@ -497,7 +497,7 @@ export const RegisterScreen: React.FC = () => {
                   <TextInput
                     style={styles.input}
                     placeholder="Min 8 characters"
-                    placeholderTextColor={colors.astraMuted}
+                    placeholderTextColor={colors.stellarMuted}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
@@ -509,7 +509,7 @@ export const RegisterScreen: React.FC = () => {
                   <TextInput
                     style={styles.input}
                     placeholder="Repeat password"
-                    placeholderTextColor={colors.astraMuted}
+                    placeholderTextColor={colors.stellarMuted}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry
@@ -522,7 +522,7 @@ export const RegisterScreen: React.FC = () => {
                   disabled={isLoginPending}
                 >
                   {isLoginPending ? (
-                    <ActivityIndicator color={colors.astraBg} />
+                    <ActivityIndicator color={colors.stellarBg} />
                   ) : (
                     <CostarText style={styles.btnText}>Continue</CostarText>
                   )}
@@ -567,7 +567,7 @@ export const RegisterScreen: React.FC = () => {
               )}
             </View>
           ) : (
-            <View style={styles.astraScreen}>
+            <View style={styles.stellarScreen}>
               <View style={styles.island} />
               
               <View style={styles.stepHeader}>
@@ -579,15 +579,15 @@ export const RegisterScreen: React.FC = () => {
                 </CostarText>
               </View>
 
-              <View style={styles.astraForm}>
+              <View style={styles.stellarForm}>
                 <View style={styles.inputGroup}>
                   <CostarText variant="label" style={styles.label}>
                     Full Name
                   </CostarText>
                   <TextInput
-                    style={[styles.astraInput, styles.astraInputText]}
+                    style={[styles.stellarInput, styles.stellarInputText]}
                     placeholder="Eleanor Vance"
-                    placeholderTextColor={colors.astraMuted}
+                    placeholderTextColor={colors.stellarMuted}
                     value={fullName}
                     onChangeText={setFullName}
                   />
@@ -598,10 +598,10 @@ export const RegisterScreen: React.FC = () => {
                     Birth Date
                   </CostarText>
                   <TouchableOpacity
-                    style={styles.astraInput}
+                    style={styles.stellarInput}
                     onPress={() => setShowDatePicker(true)}
                   >
-                    <CostarText variant="body" style={styles.astraInputText}>
+                    <CostarText variant="body" style={styles.stellarInputText}>
                       {birthData.date ? formatDate(birthData.date) : 'Select date'}
                     </CostarText>
                   </TouchableOpacity>
@@ -613,16 +613,16 @@ export const RegisterScreen: React.FC = () => {
                       Time
                     </CostarText>
                     <TouchableOpacity
-                      style={[styles.astraInput, birthData.birthTimeUnknown && { opacity: 0.5 }]}
+                      style={[styles.stellarInput, birthData.birthTimeUnknown && { opacity: 0.5 }]}
                       onPress={() => !birthData.birthTimeUnknown && setShowTimePicker(true)}
                       disabled={birthData.birthTimeUnknown}
                     >
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <CostarText variant="body" style={styles.astraInputText}>
+                        <CostarText variant="body" style={styles.stellarInputText}>
                           {birthData.birthTimeUnknown ? '--:--' : (birthData.time ? formatTime(birthData.time).split(' ')[0] : 'Select time')}
                         </CostarText>
                         {!birthData.birthTimeUnknown && birthData.time && (
-                          <CostarText variant="body" style={[styles.astraInputText, { color: colors.astraMuted, marginLeft: 4 }]}>
+                          <CostarText variant="body" style={[styles.stellarInputText, { color: colors.stellarMuted, marginLeft: 4 }]}>
                             {formatTime(birthData.time).split(' ')[1]}
                           </CostarText>
                         )}
@@ -634,14 +634,14 @@ export const RegisterScreen: React.FC = () => {
                       Gender
                     </CostarText>
                     <TouchableOpacity 
-                      style={styles.astraInput}
+                      style={styles.stellarInput}
                       onPress={() => {
                         const currentIndex = genderOptions.indexOf(gender);
                         const nextIndex = (currentIndex + 1) % genderOptions.length;
                         setGender(genderOptions[nextIndex]);
                       }}
                     >
-                      <CostarText variant="body" style={styles.astraInputText}>
+                      <CostarText variant="body" style={styles.stellarInputText}>
                         {gender}
                       </CostarText>
                     </TouchableOpacity>
@@ -653,7 +653,7 @@ export const RegisterScreen: React.FC = () => {
                   onPress={() => setBirthData({ ...birthData, birthTimeUnknown: !birthData.birthTimeUnknown })}
                 >
                   <View style={[styles.checkbox, birthData.birthTimeUnknown && styles.checkboxChecked]}>
-                    {birthData.birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.astraBg} />}
+                    {birthData.birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.stellarBg} />}
                   </View>
                   <CostarText variant="bodySmall" style={styles.unknownTimeText}>
                     I don't know my birth time
@@ -662,7 +662,7 @@ export const RegisterScreen: React.FC = () => {
 
                 {birthData.birthTimeUnknown && (
                   <View style={styles.warningBox}>
-                    <Ionicons name="information-circle-outline" size={16} color={colors.astraViolet} />
+                    <Ionicons name="information-circle-outline" size={16} color={colors.stellarViolet} />
                     <CostarText variant="bodySmall" style={styles.warningText}>
                       Note: Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise.
                     </CostarText>
@@ -674,10 +674,10 @@ export const RegisterScreen: React.FC = () => {
                     Birth Location
                   </CostarText>
                   <TouchableOpacity
-                    style={styles.astraInput}
+                    style={styles.stellarInput}
                     onPress={handleOpenLocationModal}
                   >
-                    <CostarText variant="body" style={[styles.astraInputText, { flexShrink: 1 }]}>
+                    <CostarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
                       {birthData.locationName || 'Select location'}
                     </CostarText>
                   </TouchableOpacity>
@@ -688,10 +688,10 @@ export const RegisterScreen: React.FC = () => {
                     Timezone
                   </CostarText>
                   <TouchableOpacity
-                    style={styles.astraInput}
+                    style={styles.stellarInput}
                     onPress={() => setShowTimezoneModal(true)}
                   >
-                    <CostarText variant="body" style={[styles.astraInputText, { flexShrink: 1 }]}>
+                    <CostarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
                       {birthData.timezone}
                     </CostarText>
                   </TouchableOpacity>
@@ -700,12 +700,12 @@ export const RegisterScreen: React.FC = () => {
                 <TouchableOpacity
                   onPress={handleNext}
                   disabled={isLoginPending}
-                  style={[styles.astraButton, isLoginPending && { opacity: 0.7 }]}
+                  style={[styles.stellarButton, isLoginPending && { opacity: 0.7 }]}
                 >
                   {isLoginPending ? (
-                    <ActivityIndicator color={colors.astraBg} />
+                    <ActivityIndicator color={colors.stellarBg} />
                   ) : (
-                    <CostarText variant="body" style={styles.astraButtonText}>
+                    <CostarText variant="body" style={styles.stellarButtonText}>
                       Calculate Natal Chart
                     </CostarText>
                   )}
@@ -713,9 +713,9 @@ export const RegisterScreen: React.FC = () => {
 
                 <TouchableOpacity 
                   onPress={handleBack}
-                  style={styles.astraBackButton}
+                  style={styles.stellarBackButton}
                 >
-                  <CostarText variant="bodySmall" style={{ textAlign: 'center', color: colors.astraMuted }}>
+                  <CostarText variant="bodySmall" style={{ textAlign: 'center', color: colors.stellarMuted }}>
                     Go Back
                   </CostarText>
                 </TouchableOpacity>
@@ -845,7 +845,7 @@ export const RegisterScreen: React.FC = () => {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.modalOverlay}>
-              <View style={[styles.modalContent, { height: '80%', backgroundColor: colors.astraSurface }]}>
+              <View style={[styles.modalContent, { height: '80%', backgroundColor: colors.stellarSurface }]}>
                 <View style={styles.modalHeader}>
                   <CostarText variant="heading3" uppercase>
                     Select Location
@@ -939,7 +939,7 @@ const useDebounce = (value: string, delay: number): string => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   keyboardView: {
     flex: 1,
@@ -964,11 +964,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.astraBorder,
+    backgroundColor: colors.stellarBorder,
   },
   activeDot: {
-    backgroundColor: colors.astraViolet,
-    shadowColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
+    shadowColor: colors.stellarViolet,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 8,
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
   line: {
     width: 40,
     height: 1,
-    backgroundColor: colors.astraBorder,
+    backgroundColor: colors.stellarBorder,
   },
   header: {
     marginBottom: 40,
@@ -990,11 +990,11 @@ const styles = StyleSheet.create({
   },
   logoSym: {
     fontSize: 32,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   title: {
     fontSize: 36,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     lineHeight: 40,
     marginBottom: 8,
     textTransform: 'uppercase',
@@ -1002,7 +1002,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'DM Sans',
     fontSize: 15,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   form: {
     flex: 1,
@@ -1014,18 +1014,18 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'DM Sans',
     fontSize: 11,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     textTransform: 'uppercase',
     letterSpacing: 1.1,
   },
   input: {
     height: 52,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 12,
     paddingHorizontal: 16,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontSize: 15,
     fontFamily: 'DM Sans',
     justifyContent: 'center',
@@ -1033,13 +1033,13 @@ const styles = StyleSheet.create({
   btn: {
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.astraFg,
+    backgroundColor: colors.stellarFg,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 'auto',
   },
   btnText: {
-    color: colors.astraBg,
+    color: colors.stellarBg,
     fontSize: 15,
     fontWeight: '500',
     fontFamily: 'DM Sans',
@@ -1057,12 +1057,12 @@ const styles = StyleSheet.create({
   altLine: {
     flex: 1,
     height: 1,
-    backgroundColor: colors.astraBorder,
+    backgroundColor: colors.stellarBorder,
   },
   altLoginText: {
     fontFamily: 'DM Sans',
     fontSize: 13,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginHorizontal: 16,
   },
   socialBtns: {
@@ -1075,14 +1075,14 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
-    backgroundColor: colors.astraSurface,
+    borderColor: colors.stellarBorder,
+    backgroundColor: colors.stellarSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   socialIcon: {
     fontSize: 20,
-    color: colors.astraFg,
+    color: colors.stellarFg,
   },
   footer: {
     marginTop: 24,
@@ -1091,13 +1091,13 @@ const styles = StyleSheet.create({
   footerText: {
     fontFamily: 'DM Sans',
     fontSize: 14,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   footerLink: {
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     fontWeight: '500',
   },
-  astraScreen: {
+  stellarScreen: {
     flex: 1,
     paddingTop: 80,
     paddingHorizontal: 32,
@@ -1114,7 +1114,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     zIndex: 10,
   },
-  astraForm: {
+  stellarForm: {
     flex: 1,
     gap: 20,
   },
@@ -1122,7 +1122,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   stepNum: {
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     textTransform: 'uppercase',
     letterSpacing: 2,
     fontSize: 10,
@@ -1130,21 +1130,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   stepMainTitle: {
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontSize: 32,
     lineHeight: 36,
   },
-  astraInput: {
+  stellarInput: {
     height: 52,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 12,
     paddingHorizontal: 16,
     justifyContent: 'center',
   },
-  astraInputText: {
-    color: colors.astraFg,
+  stellarInputText: {
+    color: colors.stellarFg,
     fontSize: 15,
     fontFamily: 'DM Sans',
   },
@@ -1152,21 +1152,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
   },
-  astraButton: {
+  stellarButton: {
     marginTop: 24,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.astraFg,
+    backgroundColor: colors.stellarFg,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  astraButtonText: {
-    color: colors.astraBg,
+  stellarButtonText: {
+    color: colors.stellarBg,
     fontSize: 15,
     fontWeight: '500',
     fontFamily: 'DM Sans',
   },
-  astraBackButton: {
+  stellarBackButton: {
     marginTop: 16,
     paddingVertical: 12,
   },
@@ -1181,21 +1181,21 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: colors.astraViolet,
-    borderColor: colors.astraViolet,
+    backgroundColor: colors.stellarViolet,
+    borderColor: colors.stellarViolet,
   },
   unknownTimeText: {
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
   },
   warningBox: {
     flexDirection: 'row',
-    backgroundColor: colors.astraViolet + '10',
+    backgroundColor: colors.stellarViolet + '10',
     padding: 12,
     borderRadius: 8,
     marginTop: 8,
@@ -1205,7 +1205,7 @@ const styles = StyleSheet.create({
   },
   warningText: {
     flex: 1,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     lineHeight: 18,
   },
   modalOverlay: {

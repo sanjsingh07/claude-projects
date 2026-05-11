@@ -175,11 +175,18 @@ export interface TransitForecast {
 export interface TransitForecastEvent {
   id: string;
   eventKind: 'natal_aspect' | 'sky_aspect' | 'ingress' | 'station_retrograde' | 'station_direct' | string;
+  zodiacSystem?: 'SIDEREAL' | 'TROPICAL';
+  systemLabel?: string;
   date: {
     iso: string;
     month: string;
     day: number;
     year: number;
+  };
+  duration?: {
+    start: string;
+    end: string;
+    label: string;
   };
   orb: {
     value: number;

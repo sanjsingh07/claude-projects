@@ -44,7 +44,7 @@ export const TodayScreen: React.FC = () => {
           </View>
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.astraViolet} />
+          <ActivityIndicator size="large" color={colors.stellarViolet} />
         </View>
       </SafeAreaView>
     );
@@ -99,7 +99,7 @@ export const TodayScreen: React.FC = () => {
           <RefreshControl
             refreshing={isLoading}
             onRefresh={refresh}
-            tintColor={colors.astraFg}
+            tintColor={colors.stellarFg}
           />
         }
       >
@@ -137,7 +137,7 @@ export const TodayScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   header: {
     flexDirection: 'row',
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: colors.astraBorder,
+    borderBottomColor: colors.stellarBorder,
   },
   dateInfo: {
     flexDirection: 'column',
@@ -155,13 +155,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginBottom: 2,
     fontFamily: 'DM Sans',
   },
   fullDateText: {
     fontSize: 18,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontFamily: 'Instrument Serif',
   },
   loadingContainer: {
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
   notifBadge: {
     width: 34,
     height: 34,
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',

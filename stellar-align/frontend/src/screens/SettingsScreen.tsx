@@ -33,10 +33,13 @@ import {
 } from '../components/SettingsComponents';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
 
+import { useTransitStore } from '@store/transitStore';
+
 export const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
   const logout = useAuthStore((state) => state.logout);
+  const { filters: transitFilters, toggleFilter: toggleTransitFilter } = useTransitStore();
 
   const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | 'timezone' | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -95,7 +98,7 @@ export const SettingsScreen: React.FC = () => {
   if (isProfileLoading || isSettingsLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator color={colors.astraViolet} />
+        <ActivityIndicator color={colors.stellarViolet} />
       </View>
     );
   }
@@ -294,6 +297,26 @@ export const SettingsScreen: React.FC = () => {
             }
           />
           <SettingsRow
+            label="Vedic transits"
+            sub="Show Sidereal/Indian events"
+            right={
+              <Toggle
+                on={transitFilters.showVedic}
+                onToggle={() => toggleTransitFilter('showVedic')}
+              />
+            }
+          />
+          <SettingsRow
+            label="Western transits"
+            sub="Show Tropical/Western events"
+            right={
+              <Toggle
+                on={transitFilters.showWestern}
+                onToggle={() => toggleTransitFilter('showWestern')}
+              />
+            }
+          />
+          <SettingsRow
             label="Compatibility updates"
             sub={`${settings.notifications.compatibilityUpdates.frequency.charAt(0).toUpperCase() + settings.notifications.compatibilityUpdates.frequency.slice(1)} updates`}
             onPress={() => setActiveModal('compFreq')}
@@ -335,7 +358,7 @@ export const SettingsScreen: React.FC = () => {
           />
           <SettingsRow
             label="Analytics"
-            sub="Help improve Astra"
+            sub="Help improve Stellar Align"
             right={
               <Toggle
                 on={settings.privacy.analytics}
@@ -357,12 +380,12 @@ export const SettingsScreen: React.FC = () => {
 
         {/* Support */}
         <SettingsSection label="Support">
-          <SettingsRow label="Rate Astra" onPress={() => Alert.alert('Rate', 'Redirecting to App Store...')} />
+          <SettingsRow label="Rate Stellar Align" onPress={() => Alert.alert('Rate', 'Redirecting to App Store...')} />
           <SettingsRow label="Send feedback" onPress={() => Alert.alert('Feedback', 'Opening email client...')} />
           <SettingsRow
             label="About"
             right={<ValueBadge val="v1.0.0" />}
-            onPress={() => Alert.alert('About', 'Astra v1.0.0\nBuilt with ❤️ by Stellar Align')}
+            onPress={() => Alert.alert('About', 'Stellar Align v1.0.0\nBuilt with ❤️ by Stellar Align')}
             isLast
           />
         </SettingsSection>
@@ -600,13 +623,13 @@ export const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.astraBg,
+    backgroundColor: colors.stellarBg,
   },
   body: {
     flex: 1,
@@ -616,19 +639,19 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: colors.astraBorder,
+    borderTopColor: colors.stellarBorder,
     marginTop: 16,
   },
   ver: {
     fontFamily: 'DMSans-Regular',
     fontSize: 10,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     letterSpacing: 1,
   },
   copy: {
     fontFamily: 'DMSans-Regular',
     fontSize: 9,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     opacity: 0.6,
     marginTop: 3,
   },

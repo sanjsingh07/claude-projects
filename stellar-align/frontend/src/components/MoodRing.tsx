@@ -29,7 +29,7 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
               cx="25"
               cy="25"
               r={radius}
-              stroke={colors.astraBorder}
+              stroke={colors.stellarBorder}
               strokeWidth="5"
               fill="none"
             />
@@ -37,7 +37,7 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
               cx="25"
               cy="25"
               r={radius}
-              stroke={colors.astraAmber}
+              stroke={colors.stellarAmber}
               strokeWidth="5"
               strokeDasharray={circumference}
               strokeDashoffset={offset}
@@ -58,7 +58,7 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
               <CostarText
                 style={[
                   styles.aspectVal,
-                  aspect.highlight && { color: colors.astraAmber },
+                  aspect.highlight && { color: colors.stellarAmber },
                 ]}
               >
                 {aspect.val}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: colors.astraViolet,
+    color: colors.stellarViolet,
     marginBottom: 12,
     fontFamily: 'DM Sans', // Assuming DM Sans is available or falls back
   },
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 18,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontWeight: '500',
     fontFamily: 'Instrument Serif',
   },
   scoreSubtext: {
     fontSize: 9,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     letterSpacing: 1,
     fontFamily: 'DM Sans',
   },
@@ -125,13 +125,13 @@ const styles = StyleSheet.create({
   },
   aspectKey: {
     fontSize: 13,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontFamily: 'DM Sans',
   },
   aspectVal: {
     fontSize: 13,
     fontWeight: '500',
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     fontFamily: 'DM Sans',
   },
 });

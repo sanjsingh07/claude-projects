@@ -19,10 +19,10 @@ export const TransitCard: React.FC<TransitCardProps> = ({
   source,
 }) => {
   const badgeColor = 
-    badge === 'major' ? colors.astraPink :
-    badge === 'minor' ? colors.astraViolet :
-    badge === 'shadow' ? colors.astraAmber :
-    colors.astraPink;
+    badge === 'major' ? colors.stellarPink :
+    badge === 'minor' ? colors.stellarViolet :
+    badge === 'shadow' ? colors.stellarAmber :
+    colors.stellarPink;
 
   const renderBody = (text: string) => {
     const parts = text.split(/(<em>.*?<\/em>)/g);
@@ -61,9 +61,9 @@ export const TransitCard: React.FC<TransitCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.astraSurface,
+    backgroundColor: colors.stellarSurface,
     borderWidth: 1,
-    borderColor: colors.astraBorder,
+    borderColor: colors.stellarBorder,
     borderRadius: 14,
     padding: 16,
     marginBottom: 22,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     lineHeight: 22,
     flex: 1,
   },
@@ -96,14 +96,14 @@ const styles = StyleSheet.create({
   },
   planets: {
     fontSize: 12,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     marginBottom: 10,
     fontFamily: 'DM Sans',
   },
   body: {
     fontSize: 14,
     lineHeight: 23,
-    color: colors.astraFg,
+    color: colors.stellarFg,
     fontFamily: 'DM Sans',
   },
   bodyEm: {
@@ -111,14 +111,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     borderTopWidth: 1,
-    borderTopColor: colors.astraBorder,
+    borderTopColor: colors.stellarBorder,
     marginTop: 10,
     paddingTop: 8,
   },
   source: {
     fontSize: 10,
     letterSpacing: 1,
-    color: colors.astraMuted,
+    color: colors.stellarMuted,
     fontFamily: 'DM Sans',
   },
 });

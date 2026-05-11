@@ -51,190 +51,205 @@ export async function getTransitsForPeriod(
     days: period === "week" ? 7 : period === "month" ? 30 : 365 
   });
 
-  const { zodiacType, ayanamsa: ayanamsaType, planetaryPositions: natalPositions } = natalChart;
-  const ayanamsaToUse = zodiacType === "SIDEREAL" ? ayanamsaType : undefined;
-
+  const { planetaryPositions: natalPositions, ayanamsa: ayanamsaType } = natalChart;
   const step = period === "week" ? 1 : period === "month" ? 1 : 4;
+  
+  // We will now calculate for BOTH systems
   const transitsFound = new Map<string, any>();
   
-  let prevPositions: Record<string, any> | null = null;
-  let currentDate = start;
+  // Systems to calculate: Tropical (Western) and Sidereal (Vedic)
+  const systems = [
+    { type: "TROPICAL", label: "Western", ayanamsa: undefined },
+    { type: "SIDEREAL", label: "Vedic", ayanamsa: ayanamsaType || "LAHIRI" }
+  ];
 
-  while (currentDate.toJSDate() <= end.toJSDate()) {
-    const transitPositions = await getPlanetaryPositions(currentDate.toJSDate(), ayanamsaToUse);
-    
-    // 1. Detect Aspects to Natal Chart
-    const dayTransits = calculateUserTransits(natalPositions, transitPositions as any);
-    for (const transit of dayTransits) {
-      const key = `natal-aspect-${transit.planet1}-${transit.type}-${transit.planet2}`;
+  for (const system of systems) {
+    let prevPositions: Record<string, any> | null = null;
+    let currentDate = start;
+
+    while (currentDate.toJSDate() <= end.toJSDate()) {
+      const transitPositions = await getPlanetaryPositions(currentDate.toJSDate(), system.ayanamsa as any);
       
-      const aspectData = FORECAST_ASPECTS[transit.type as keyof typeof FORECAST_ASPECTS];
-      const maxOrb = aspectData?.orb || 2.5;
+      // 1. Detect Aspects to Natal Chart
+      const dayTransits = calculateUserTransits(natalPositions, transitPositions as any);
+      for (const transit of dayTransits) {
+        const key = `${system.type}-natal-aspect-${transit.planet1}-${transit.type}-${transit.planet2}`;
+        
+        const aspectData = FORECAST_ASPECTS[transit.type as keyof typeof FORECAST_ASPECTS];
+        const maxOrb = aspectData?.orb || 2.5;
 
-      // Find boundaries for this transit
-      const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
-        currentDate,
-        transit.planet1,
-        transit.type,
-        transit.planet2,
-        maxOrb,
-        ayanamsaToUse,
-        natalPositions
-      );
+        const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
+          currentDate,
+          transit.planet1,
+          transit.type,
+          transit.planet2,
+          maxOrb,
+          system.ayanamsa,
+          natalPositions
+        );
 
-      // Determine display date: Today if active now, else the start of the transit
-      const isCurrentlyActive = now >= eventStart && now <= eventEnd;
-      const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
+        const isCurrentlyActive = now >= eventStart && now <= eventEnd;
+        const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
 
-      const type = classifyTransitType(transit.planet1, transit.type, false, false, transit.orb);
-      const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
-      
-      const progress = computeTransitProgress(
-        now.toJSDate(), 
-        currentDate.toJSDate(), 
-        type, 
-        transit.orb,
-        maxOrb,
-        transit.applying
-      );
-      
-      const sym1 = PLANET_SYMBOLS[transit.planet1.toUpperCase()] || transit.planet1;
-      const sym2 = PLANET_SYMBOLS[transit.planet2.toUpperCase()] || transit.planet2;
-      const aspSym = ASPECT_SYMBOLS[transit.type.toUpperCase()] || transit.type;
-      const natalPlanetName = natalPlanetLabel(transit.planet2);
-      
-      const event = {
-        id: key,
-        eventKind: "natal_aspect",
-        aspectType: transit.type,
-        quality: transit.type.toLowerCase(),
-        date: formatEventDate(displayDate),
-        duration: {
-          start: eventStart.toISO(),
-          end: eventEnd.toISO(),
-          label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
-        },
-        orb: {
-          value: transit.orb,
-          formatted: formatOrb(transit.orb)
-        },
-        type,
-        title: `${capitalize(transit.planet1)} ${aspectVerb(transit.type)} ${natalPlanetName}`,
-        symbols: `${sym1} ${aspSym} ${sym2}`,
-        description: generateInterpretation(transit.planet1, transit.type, transit.planet2, undefined, false, false, natalChart),
-        impact,
-        progress
-      };
-      upsertPersistentEvent(transitsFound, key, event);
-    }
+        const type = classifyTransitType(transit.planet1, transit.type, false, false, transit.orb);
+        const impact = determineImpactLevel(transit.planet1, transit.type, false, transit.orb);
+        
+        const progress = computeTransitProgress(
+          now.toJSDate(), 
+          currentDate.toJSDate(), 
+          type, 
+          transit.orb,
+          maxOrb,
+          transit.applying
+        );
+        
+        const sym1 = PLANET_SYMBOLS[transit.planet1.toUpperCase()] || transit.planet1;
+        const sym2 = PLANET_SYMBOLS[transit.planet2.toUpperCase()] || transit.planet2;
+        const aspSym = ASPECT_SYMBOLS[transit.type.toUpperCase()] || transit.type;
+        const natalPlanetName = natalPlanetLabel(transit.planet2);
+        
+        const event = {
+          id: key,
+          eventKind: "natal_aspect",
+          zodiacSystem: system.type,
+          systemLabel: system.label,
+          aspectType: transit.type,
+          quality: transit.type.toLowerCase(),
+          date: formatEventDate(displayDate),
+          duration: {
+            start: eventStart.toISO(),
+            end: eventEnd.toISO(),
+            label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
+          },
+          orb: {
+            value: transit.orb,
+            formatted: formatOrb(transit.orb)
+          },
+          type,
+          title: `${capitalize(transit.planet1)} ${aspectVerb(transit.type)} ${natalPlanetName} (${system.label})`,
+          symbols: `${sym1} ${aspSym} ${sym2}`,
+          description: generateInterpretation(transit.planet1, transit.type, transit.planet2, undefined, false, false, natalChart),
+          impact,
+          progress
+        };
+        upsertPersistentEvent(transitsFound, key, event);
+      }
 
-    // 2. Detect current-sky planet-to-planet aspects
-    for (const aspect of calculateSkyAspects(transitPositions as Record<string, any>)) {
-      const key = `sky-aspect-${aspect.planet1}-${aspect.type}-${aspect.planet2}`;
-      
-      const aspectData = FORECAST_ASPECTS[aspect.type as keyof typeof FORECAST_ASPECTS];
-      const maxOrb = aspectData?.orb || 2.5;
+      // 2. Detect current-sky planet-to-planet aspects
+      for (const aspect of calculateSkyAspects(transitPositions as Record<string, any>)) {
+        const key = `${system.type}-sky-aspect-${aspect.planet1}-${aspect.type}-${aspect.planet2}`;
+        
+        const aspectData = FORECAST_ASPECTS[aspect.type as keyof typeof FORECAST_ASPECTS];
+        const maxOrb = aspectData?.orb || 2.5;
 
-      const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
-        currentDate,
-        aspect.planet1,
-        aspect.type,
-        aspect.planet2,
-        maxOrb,
-        ayanamsaToUse
-      );
+        const { startDate: eventStart, endDate: eventEnd } = await findTransitBoundaries(
+          currentDate,
+          aspect.planet1,
+          aspect.type,
+          aspect.planet2,
+          maxOrb,
+          system.ayanamsa
+        );
 
-      const isCurrentlyActive = now >= eventStart && now <= eventEnd;
-      const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
+        const isCurrentlyActive = now >= eventStart && now <= eventEnd;
+        const displayDate = isCurrentlyActive ? now : (eventStart > start ? eventStart : start);
 
-      const eventType = classifyTransitType(aspect.planet1, aspect.type, false, false, aspect.orb);
-      const impact = determineImpactLevel(aspect.planet1, aspect.type, false, aspect.orb);
+        const eventType = classifyTransitType(aspect.planet1, aspect.type, false, false, aspect.orb);
+        const impact = determineImpactLevel(aspect.planet1, aspect.type, false, aspect.orb);
 
-      const progress = computeTransitProgress(
-        now.toJSDate(), 
-        currentDate.toJSDate(), 
-        eventType, 
-        aspect.orb,
-        maxOrb,
-        aspect.applying
-      );
-      const event = {
-        id: key,
-        eventKind: "sky_aspect",
-        aspectType: aspect.type,
-        quality: aspect.type.toLowerCase(),
-        date: formatEventDate(displayDate),
-        duration: {
-          start: eventStart.toISO(),
-          end: eventEnd.toISO(),
-          label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
-        },
-        orb: {
-          value: aspect.orb,
-          formatted: formatOrb(aspect.orb),
-        },
-        type: eventType,
-        title: `${capitalize(aspect.planet1)} ${aspectTitleSymbol(aspect.type)} ${capitalize(aspect.planet2)}`,
-        symbols: `${formatPosition(aspect.pos1)} ${aspectTitleSymbol(aspect.type)} ${formatPosition(aspect.pos2)}`,
-        description: generateSkyAspectInterpretation(aspect.planet1, aspect.type, aspect.planet2),
-        impact,
-        progress,
-      };
-      upsertPersistentEvent(transitsFound, key, event);
-    }
+        const progress = computeTransitProgress(
+          now.toJSDate(), 
+          currentDate.toJSDate(), 
+          eventType, 
+          aspect.orb,
+          maxOrb,
+          aspect.applying
+        );
+        const event = {
+          id: key,
+          eventKind: "sky_aspect",
+          zodiacSystem: system.type,
+          systemLabel: system.label,
+          aspectType: aspect.type,
+          quality: aspect.type.toLowerCase(),
+          date: formatEventDate(displayDate),
+          duration: {
+            start: eventStart.toISO(),
+            end: eventEnd.toISO(),
+            label: `${eventStart.toFormat("LLL d")} – ${eventEnd.toFormat("LLL d")}`
+          },
+          orb: {
+            value: aspect.orb,
+            formatted: formatOrb(aspect.orb),
+          },
+          type: eventType,
+          title: `${capitalize(aspect.planet1)} ${aspectTitleSymbol(aspect.type)} ${capitalize(aspect.planet2)} (${system.label})`,
+          symbols: `${formatPosition(aspect.pos1)} ${aspectTitleSymbol(aspect.type)} ${formatPosition(aspect.pos2)}`,
+          description: generateSkyAspectInterpretation(aspect.planet1, aspect.type, aspect.planet2),
+          impact,
+          progress,
+        };
+        upsertPersistentEvent(transitsFound, key, event);
+      }
 
-    // 3. Detect Sign Ingresses
-    if (prevPositions) {
-      for (const planet in transitPositions) {
-        const pos = (transitPositions as any)[planet];
-        const prevPos = prevPositions[planet];
-        if (pos.sign !== prevPos.sign) {
-          const key = `ingress-${planet}-${pos.sign}`;
-          if (!transitsFound.has(key)) {
-            const sym = PLANET_SYMBOLS[planet.toUpperCase()] || planet;
-            const signSym = SIGN_SYMBOLS[pos.sign.toUpperCase()] || pos.sign;            
-            upsertClosestEvent(transitsFound, key, {
-              id: key,
-              eventKind: "ingress",
-              quality: "conjunction",
-              date: formatEventDate(currentDate),
-              orb: { value: 0, formatted: "0°00'" },
-              type: "major",
-              title: `${capitalize(planet)} enters ${capitalize(pos.sign)}`,
-              symbols: `${sym} ${signSym} 00°`,
-              description: generateInterpretation(capitalize(planet), "", undefined, capitalize(pos.sign), true, false, natalChart),
-              impact: { level: "high", label: "Impact: · high" },
-              progress: { percentage: null, label: "active" }
-            });
+      // 3. Detect Sign Ingresses
+      if (prevPositions) {
+        for (const planet in transitPositions) {
+          const pos = (transitPositions as any)[planet];
+          const prevPos = prevPositions[planet];
+          if (pos.sign !== prevPos.sign) {
+            const key = `${system.type}-ingress-${planet}-${pos.sign}`;
+            if (!transitsFound.has(key)) {
+              const exactIngressDate = await findIngressDate(currentDate, planet, system.ayanamsa);
+              const sym = PLANET_SYMBOLS[planet.toUpperCase()] || planet;
+              const signSym = SIGN_SYMBOLS[pos.sign.toUpperCase()] || pos.sign;            
+              upsertPersistentEvent(transitsFound, key, {
+                id: key,
+                eventKind: "ingress",
+                zodiacSystem: system.type,
+                systemLabel: system.label,
+                quality: "conjunction",
+                date: formatEventDate(exactIngressDate),
+                orb: { value: 0, formatted: "0°00'" },
+                type: "major",
+                title: `${capitalize(planet)} enters ${capitalize(pos.sign)} (${system.label})`,
+                symbols: `${sym} ${signSym} 00°`,
+                description: generateInterpretation(capitalize(planet), "", undefined, capitalize(pos.sign), true, false, natalChart),
+                impact: { level: "high", label: "Impact: · high" },
+                progress: { percentage: null, label: "active" }
+              });
+            }
           }
-        }
 
-        // 4. Detect Retrograde Changes
-        if (pos.retrograde !== prevPos.retrograde) {
-          const key = `retrograde-${planet}-${pos.retrograde ? 'start' : 'end'}`;
-          if (!transitsFound.has(key)) {
-            const sym = PLANET_SYMBOLS[planet.toUpperCase()] || planet;
-            
-            upsertClosestEvent(transitsFound, key, {
-              id: key,
-              eventKind: pos.retrograde ? "station_retrograde" : "station_direct",
-              quality: "shadow",
-              date: formatEventDate(currentDate),
-              orb: { value: 0, formatted: "0°00'" },
-              type: "major",
-              title: `${capitalize(planet)} ${pos.retrograde ? 'retrograde' : 'direct'}`,
-              symbols: `${sym} ${pos.retrograde ? 'R' : 'D'}`,
-              description: generateInterpretation(capitalize(planet), "", undefined, undefined, false, true, natalChart),
-              impact: { level: isOuterPlanet(planet) ? "profound" : "high", label: `Impact: · ${isOuterPlanet(planet) ? "profound" : "high"}` },
-              progress: computeTransitProgress(DateTime.now().setZone(timezone).toJSDate(), currentDate.toJSDate(), "major", 0)
-            });
+          // 4. Detect Retrograde Changes
+          if (pos.retrograde !== prevPos.retrograde) {
+            const key = `${system.type}-retrograde-${planet}-${pos.retrograde ? 'start' : 'end'}`;
+            if (!transitsFound.has(key)) {
+              const sym = PLANET_SYMBOLS[planet.toUpperCase()] || planet;
+              
+              upsertPersistentEvent(transitsFound, key, {
+                id: key,
+                eventKind: pos.retrograde ? "station_retrograde" : "station_direct",
+                zodiacSystem: system.type,
+                systemLabel: system.label,
+                quality: "shadow",
+                date: formatEventDate(currentDate),
+                orb: { value: 0, formatted: "0°00'" },
+                type: "major",
+                title: `${capitalize(planet)} ${pos.retrograde ? 'retrograde' : 'direct'} (${system.label})`,
+                symbols: `${sym} ${pos.retrograde ? 'R' : 'D'}`,
+                description: generateInterpretation(capitalize(planet), "", undefined, undefined, false, true, natalChart),
+                impact: { level: isOuterPlanet(planet) ? "profound" : "high", label: `Impact: · ${isOuterPlanet(planet) ? "profound" : "high"}` },
+                progress: computeTransitProgress(now.toJSDate(), currentDate.toJSDate(), "major", 0)
+              });
+            }
           }
         }
       }
-    }
 
-    prevPositions = transitPositions;
-    currentDate = currentDate.plus({ days: step });
+      prevPositions = transitPositions;
+      currentDate = currentDate.plus({ days: step });
+    }
   }
 
   return {
@@ -293,6 +308,31 @@ function calculateSkyAspects(transitPositions: Record<string, any>) {
 }
 
 /**
+ * Finds the exact date (to the nearest hour) when a planet enters a new sign.
+ */
+async function findIngressDate(
+  detectionDate: DateTime,
+  planet: string,
+  ayanamsaType?: any
+) {
+  const targetSignPos: any = await getPlanetaryPositions(detectionDate.toJSDate(), ayanamsaType) as any;
+  const targetSign = targetSignPos[planet.toLowerCase()].sign;
+  
+  // Step back hour by hour from the detection date to find the transition
+  let current = detectionDate;
+  for (let i = 1; i <= 24; i++) {
+    const prev = detectionDate.minus({ hours: i });
+    const pos: any = await getPlanetaryPositions(prev.toJSDate(), ayanamsaType) as any;
+    if (pos[planet.toLowerCase()].sign !== targetSign) {
+      // The crossing happened after 'prev', so 'current' is the first hour in the new sign
+      return current;
+    }
+    current = prev;
+  }
+  return detectionDate;
+}
+
+/**
  * Steps backward and forward from a given date to find when an aspect enters/exits the orb.
  */
 async function findTransitBoundaries(
@@ -312,7 +352,7 @@ async function findTransitBoundaries(
     
     let pos2: any;
     if (natalPositions) {
-      pos2 = natalPositions.find(p => p.planet.toLowerCase() === planet2.toLowerCase());
+      pos2 = natalPositions.find((p: any) => p.planet.toLowerCase() === planet2.toLowerCase());
     } else {
       pos2 = transitPositions[planet2.toLowerCase()];
     }
