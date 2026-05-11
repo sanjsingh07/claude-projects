@@ -740,3 +740,21 @@ Created a new Chart Screen template (`screens_09-chart-v4.html`) that directly m
 **Files modified:**
 - stellar-align/screens_09-chart-v4.html (new)
 - stellar-align/report/changes.md
+
+## [2026-05-12 00:50] Refinement: Standardized Chart Screen (v5)
+
+**What was changed and why:**
+Created a new Chart Screen template (`screens_09-chart-v5.html`) that directly maps the structure and logic of the current `ChartScreen.tsx` to the project's premium "Astra" design system. This ensures a seamless transition between the functional React Native code and the stylized HTML templates.
+
+**Summary of changes:**
+- Re-implemented the chart screen layout using the functional components from `ChartScreen.tsx`:
+    - **Header Toggle:** A toggle button to switch between Western and Vedic systems.
+    - **Big Three Card:** Displays Sun, Moon, and Rising signs with icons in a horizontal row.
+    - **Planetary Positions Card:** A detailed list of planetary placements with degrees and sign icons.
+    - **Vedic Section:** Includes a divisional chart selector (D1, D9, D10), a North Indian style diamond chart, and a Nakshatra details card.
+- Applied the full Astra design kit: `oklch` color palette, `Instrument Serif` headings, and standardized card/border styling.
+- Integrated a small JavaScript script to demonstrate the Western/Vedic toggle behavior.
+
+**Files modified:**
+- stellar-align/screens_09-chart-v5.html (new)
+- stellar-align/report/changes.md
