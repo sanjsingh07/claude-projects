@@ -41,7 +41,7 @@ const generateStars = (count: number = 50): Star[] => {
   return stars;
 };
 
-export const CostarBackground: React.FC<{ style?: any }> = memo(({ style }) => {
+export const StellarBackground: React.FC<{ style?: any }> = memo(({ style }) => {
   const stars = React.useMemo(() => generateStars(60), []);
 
   return (
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CostarBackground;
+export default StellarBackground;

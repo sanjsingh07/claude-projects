@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
-import { CostarText } from '@components/CostarCard';
+import { StellarText } from '@components/StellarCard';
 import { colors } from '@theme/theme';
 
 interface CompatibilityRingProps {
@@ -54,12 +54,12 @@ export const CompatibilityRing: React.FC<CompatibilityRingProps> = ({
         </G>
       </Svg>
       <View style={[styles.textContainer, { width: size, height: size }]}>
-        <CostarText variant="heading2" style={styles.score}>
+        <StellarText variant="heading2" style={styles.score}>
           {Math.round(score)}
-        </CostarText>
-        <CostarText variant="caption" color={colors.gray500} style={styles.label}>
+        </StellarText>
+        <StellarText variant="caption" color={colors.gray500} style={styles.label}>
           {getLabel(score)}
-        </CostarText>
+        </StellarText>
       </View>
     </View>
   );

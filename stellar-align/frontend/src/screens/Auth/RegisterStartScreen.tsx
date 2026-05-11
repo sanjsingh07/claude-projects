@@ -17,8 +17,8 @@ import * as AuthSession from 'expo-auth-session';
 import { RootStackParamList } from '@navigation/RootNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
-import { CostarText } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarText } from '@components/StellarCard';
+import { StellarBackground } from '@components/StellarBackground';
 import { colors, spacing } from '@theme/theme';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -111,20 +111,20 @@ export const RegisterStartScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
       <StatusBar barStyle="light-content" />
       <View style={styles.island} />
       
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           <View style={styles.logoArea}>
-            <CostarText style={styles.logoIcon}>✧</CostarText>
-            <CostarText variant="heading1" serif italic style={styles.appName}>
+            <StellarText style={styles.logoIcon}>✧</StellarText>
+            <StellarText variant="heading1" serif italic style={styles.appName}>
               Stellar Align
-            </CostarText>
-            <CostarText style={styles.tagline}>
+            </StellarText>
+            <StellarText style={styles.tagline}>
               The universe, mapped for you.
-            </CostarText>
+            </StellarText>
           </View>
 
           <View style={styles.actions}>
@@ -132,20 +132,20 @@ export const RegisterStartScreen: React.FC = () => {
               style={[styles.btn, styles.btnPrimary]}
               onPress={() => navigation.navigate('Register')}
             >
-              <CostarText style={styles.btnPrimaryText}>Create Account</CostarText>
+              <StellarText style={styles.btnPrimaryText}>Create Account</StellarText>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.btn, styles.btnSecondary]}
               onPress={() => navigation.navigate('Login')}
             >
-              <CostarText style={styles.btnSecondaryText}>Log In</CostarText>
+              <StellarText style={styles.btnSecondaryText}>Log In</StellarText>
             </TouchableOpacity>
 
             <View style={styles.altLogin}>
               <View style={styles.altLoginTextContainer}>
                 <View style={styles.altLine} />
-                <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+                <StellarText style={styles.altLoginText}>Or continue with</StellarText>
                 <View style={styles.altLine} />
               </View>
               
@@ -155,7 +155,7 @@ export const RegisterStartScreen: React.FC = () => {
                     style={styles.socialBtn}
                     onPress={handleAppleLogin}
                   >
-                    <CostarText style={styles.socialIcon}></CostarText>
+                    <StellarText style={styles.socialIcon}></StellarText>
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity 
@@ -163,16 +163,16 @@ export const RegisterStartScreen: React.FC = () => {
                   onPress={handleGoogleLogin}
                   disabled={!request}
                 >
-                  <CostarText style={styles.socialIcon}>G</CostarText>
+                  <StellarText style={styles.socialIcon}>G</StellarText>
                 </TouchableOpacity>
               </View>
             </View>
 
-            <CostarText style={styles.legal}>
+            <StellarText style={styles.legal}>
               By continuing, you agree to our{' '}
-              <CostarText style={styles.legalHighlight}>Terms of Service</CostarText> and{' '}
-              <CostarText style={styles.legalHighlight}>Privacy Policy</CostarText>.
-            </CostarText>
+              <StellarText style={styles.legalHighlight}>Terms of Service</StellarText> and{' '}
+              <StellarText style={styles.legalHighlight}>Privacy Policy</StellarText>.
+            </StellarText>
           </View>
         </View>
       </SafeAreaView>

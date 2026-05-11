@@ -27,9 +27,9 @@ import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
 import { api } from '@services/api';
 import { 
-  CostarText, 
-  CostarButton, 
-  CostarBackground, 
+  StellarText, 
+  StellarButton, 
+  StellarBackground, 
   SignIcon,
   TimezoneSelectionModal
 } from '@components';
@@ -451,7 +451,7 @@ export const RegisterScreen: React.FC = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <CostarBackground />
+        <StellarBackground />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardView}
@@ -467,20 +467,20 @@ export const RegisterScreen: React.FC = () => {
 
               <View style={styles.header}>
                 <View style={styles.logoRow}>
-                  <CostarText style={styles.logoSym}>☉</CostarText>
-                  <CostarText style={[styles.logoSym, { opacity: 0.4 }]}>☽</CostarText>
+                  <StellarText style={styles.logoSym}>☉</StellarText>
+                  <StellarText style={[styles.logoSym, { opacity: 0.4 }]}>☽</StellarText>
                 </View>
-                <CostarText variant="heading1" serif italic style={styles.title}>
+                <StellarText variant="heading1" serif italic style={styles.title}>
                   Create Account
-                </CostarText>
-                <CostarText style={styles.subtitle}>
+                </StellarText>
+                <StellarText style={styles.subtitle}>
                   Begin your cosmic journey
-                </CostarText>
+                </StellarText>
               </View>
 
               <View style={styles.form}>
                 <View style={styles.inputGroup}>
-                  <CostarText style={styles.label}>Email</CostarText>
+                  <StellarText style={styles.label}>Email</StellarText>
                   <TextInput
                     style={styles.input}
                     placeholder="your@email.com"
@@ -493,7 +493,7 @@ export const RegisterScreen: React.FC = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                  <CostarText style={styles.label}>Password</CostarText>
+                  <StellarText style={styles.label}>Password</StellarText>
                   <TextInput
                     style={styles.input}
                     placeholder="Min 8 characters"
@@ -505,7 +505,7 @@ export const RegisterScreen: React.FC = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                  <CostarText style={styles.label}>Confirm Password</CostarText>
+                  <StellarText style={styles.label}>Confirm Password</StellarText>
                   <TextInput
                     style={styles.input}
                     placeholder="Repeat password"
@@ -524,14 +524,14 @@ export const RegisterScreen: React.FC = () => {
                   {isLoginPending ? (
                     <ActivityIndicator color={colors.stellarBg} />
                   ) : (
-                    <CostarText style={styles.btnText}>Continue</CostarText>
+                    <StellarText style={styles.btnText}>Continue</StellarText>
                   )}
                 </TouchableOpacity>
 
                 <View style={styles.altLogin}>
                   <View style={styles.altLoginTextContainer}>
                     <View style={styles.altLine} />
-                    <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+                    <StellarText style={styles.altLoginText}>Or continue with</StellarText>
                     <View style={styles.altLine} />
                   </View>
                   
@@ -541,7 +541,7 @@ export const RegisterScreen: React.FC = () => {
                         style={styles.socialBtn}
                         onPress={handleAppleLogin}
                       >
-                        <CostarText style={styles.socialIcon}></CostarText>
+                        <StellarText style={styles.socialIcon}></StellarText>
                       </TouchableOpacity>
                     )}
                     <TouchableOpacity 
@@ -549,7 +549,7 @@ export const RegisterScreen: React.FC = () => {
                       onPress={handleGoogleLogin}
                       disabled={!request}
                     >
-                      <CostarText style={styles.socialIcon}>G</CostarText>
+                      <StellarText style={styles.socialIcon}>G</StellarText>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -558,9 +558,9 @@ export const RegisterScreen: React.FC = () => {
               {!isAuthenticated && (
                 <View style={styles.footer}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <CostarText style={styles.footerText}>Already have an account? </CostarText>
+                    <StellarText style={styles.footerText}>Already have an account? </StellarText>
                     <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                      <CostarText style={[styles.footerText, styles.footerLink]}>Log In</CostarText>
+                      <StellarText style={[styles.footerText, styles.footerLink]}>Log In</StellarText>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -571,19 +571,19 @@ export const RegisterScreen: React.FC = () => {
               <View style={styles.island} />
               
               <View style={styles.stepHeader}>
-                <CostarText variant="bodySmall" style={styles.stepNum}>
+                <StellarText variant="bodySmall" style={styles.stepNum}>
                   Step 1 of 2
-                </CostarText>
-                <CostarText variant="heading1" serif italic style={styles.stepMainTitle}>
+                </StellarText>
+                <StellarText variant="heading1" serif italic style={styles.stepMainTitle}>
                   When and where were you born?
-                </CostarText>
+                </StellarText>
               </View>
 
               <View style={styles.stellarForm}>
                 <View style={styles.inputGroup}>
-                  <CostarText variant="label" style={styles.label}>
+                  <StellarText variant="label" style={styles.label}>
                     Full Name
-                  </CostarText>
+                  </StellarText>
                   <TextInput
                     style={[styles.stellarInput, styles.stellarInputText]}
                     placeholder="Eleanor Vance"
@@ -594,45 +594,45 @@ export const RegisterScreen: React.FC = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                  <CostarText variant="label" style={styles.label}>
+                  <StellarText variant="label" style={styles.label}>
                     Birth Date
-                  </CostarText>
+                  </StellarText>
                   <TouchableOpacity
                     style={styles.stellarInput}
                     onPress={() => setShowDatePicker(true)}
                   >
-                    <CostarText variant="body" style={styles.stellarInputText}>
+                    <StellarText variant="body" style={styles.stellarInputText}>
                       {birthData.date ? formatDate(birthData.date) : 'Select date'}
-                    </CostarText>
+                    </StellarText>
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.row}>
                   <View style={[styles.inputGroup, { flex: 1 }]}>
-                    <CostarText variant="label" style={styles.label}>
+                    <StellarText variant="label" style={styles.label}>
                       Time
-                    </CostarText>
+                    </StellarText>
                     <TouchableOpacity
                       style={[styles.stellarInput, birthData.birthTimeUnknown && { opacity: 0.5 }]}
                       onPress={() => !birthData.birthTimeUnknown && setShowTimePicker(true)}
                       disabled={birthData.birthTimeUnknown}
                     >
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <CostarText variant="body" style={styles.stellarInputText}>
+                        <StellarText variant="body" style={styles.stellarInputText}>
                           {birthData.birthTimeUnknown ? '--:--' : (birthData.time ? formatTime(birthData.time).split(' ')[0] : 'Select time')}
-                        </CostarText>
+                        </StellarText>
                         {!birthData.birthTimeUnknown && birthData.time && (
-                          <CostarText variant="body" style={[styles.stellarInputText, { color: colors.stellarMuted, marginLeft: 4 }]}>
+                          <StellarText variant="body" style={[styles.stellarInputText, { color: colors.stellarMuted, marginLeft: 4 }]}>
                             {formatTime(birthData.time).split(' ')[1]}
-                          </CostarText>
+                          </StellarText>
                         )}
                       </View>
                     </TouchableOpacity>
                   </View>
                   <View style={[styles.inputGroup, { flex: 1 }]}>
-                    <CostarText variant="label" style={styles.label}>
+                    <StellarText variant="label" style={styles.label}>
                       Gender
-                    </CostarText>
+                    </StellarText>
                     <TouchableOpacity 
                       style={styles.stellarInput}
                       onPress={() => {
@@ -641,9 +641,9 @@ export const RegisterScreen: React.FC = () => {
                         setGender(genderOptions[nextIndex]);
                       }}
                     >
-                      <CostarText variant="body" style={styles.stellarInputText}>
+                      <StellarText variant="body" style={styles.stellarInputText}>
                         {gender}
-                      </CostarText>
+                      </StellarText>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -655,45 +655,45 @@ export const RegisterScreen: React.FC = () => {
                   <View style={[styles.checkbox, birthData.birthTimeUnknown && styles.checkboxChecked]}>
                     {birthData.birthTimeUnknown && <Ionicons name="checkmark" size={12} color={colors.stellarBg} />}
                   </View>
-                  <CostarText variant="bodySmall" style={styles.unknownTimeText}>
+                  <StellarText variant="bodySmall" style={styles.unknownTimeText}>
                     I don't know my birth time
-                  </CostarText>
+                  </StellarText>
                 </TouchableOpacity>
 
                 {birthData.birthTimeUnknown && (
                   <View style={styles.warningBox}>
                     <Ionicons name="information-circle-outline" size={16} color={colors.stellarViolet} />
-                    <CostarText variant="bodySmall" style={styles.warningText}>
+                    <StellarText variant="bodySmall" style={styles.warningText}>
                       Note: Without an exact time, your Rising sign and house placements will be estimated. Readings will be less precise.
-                    </CostarText>
+                    </StellarText>
                   </View>
                 )}
 
                 <View style={styles.inputGroup}>
-                  <CostarText variant="label" style={styles.label}>
+                  <StellarText variant="label" style={styles.label}>
                     Birth Location
-                  </CostarText>
+                  </StellarText>
                   <TouchableOpacity
                     style={styles.stellarInput}
                     onPress={handleOpenLocationModal}
                   >
-                    <CostarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
+                    <StellarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
                       {birthData.locationName || 'Select location'}
-                    </CostarText>
+                    </StellarText>
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.inputGroup}>
-                  <CostarText variant="label" style={styles.label}>
+                  <StellarText variant="label" style={styles.label}>
                     Timezone
-                  </CostarText>
+                  </StellarText>
                   <TouchableOpacity
                     style={styles.stellarInput}
                     onPress={() => setShowTimezoneModal(true)}
                   >
-                    <CostarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
+                    <StellarText variant="body" style={[styles.stellarInputText, { flexShrink: 1 }]}>
                       {birthData.timezone}
-                    </CostarText>
+                    </StellarText>
                   </TouchableOpacity>
                 </View>
 
@@ -705,9 +705,9 @@ export const RegisterScreen: React.FC = () => {
                   {isLoginPending ? (
                     <ActivityIndicator color={colors.stellarBg} />
                   ) : (
-                    <CostarText variant="body" style={styles.stellarButtonText}>
+                    <StellarText variant="body" style={styles.stellarButtonText}>
                       Calculate Natal Chart
-                    </CostarText>
+                    </StellarText>
                   )}
                 </TouchableOpacity>
 
@@ -715,9 +715,9 @@ export const RegisterScreen: React.FC = () => {
                   onPress={handleBack}
                   style={styles.stellarBackButton}
                 >
-                  <CostarText variant="bodySmall" style={{ textAlign: 'center', color: colors.stellarMuted }}>
+                  <StellarText variant="bodySmall" style={{ textAlign: 'center', color: colors.stellarMuted }}>
                     Go Back
-                  </CostarText>
+                  </StellarText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -765,9 +765,9 @@ export const RegisterScreen: React.FC = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
+              <StellarText variant="heading3" uppercase>
                 Select Date
-              </CostarText>
+              </StellarText>
               <TouchableOpacity onPress={() => setShowDatePicker(false)}>
                 <Ionicons name="close" size={24} color={colors.white} />
               </TouchableOpacity>
@@ -786,9 +786,9 @@ export const RegisterScreen: React.FC = () => {
               style={styles.modalConfirmButton}
               onPress={() => setShowDatePicker(false)}
             >
-              <CostarText variant="label" style={styles.modalConfirmText}>
+              <StellarText variant="label" style={styles.modalConfirmText}>
                 Done
-              </CostarText>
+              </StellarText>
             </TouchableOpacity>
           </View>
         </View>
@@ -803,9 +803,9 @@ export const RegisterScreen: React.FC = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
+              <StellarText variant="heading3" uppercase>
                 Select Time
-              </CostarText>
+              </StellarText>
               <TouchableOpacity onPress={() => setShowTimePicker(false)}>
                 <Ionicons name="close" size={24} color={colors.white} />
               </TouchableOpacity>
@@ -825,9 +825,9 @@ export const RegisterScreen: React.FC = () => {
               style={styles.modalConfirmButton}
               onPress={() => setShowTimePicker(false)}
             >
-              <CostarText variant="label" style={styles.modalConfirmText}>
+              <StellarText variant="label" style={styles.modalConfirmText}>
                 Done
-              </CostarText>
+              </StellarText>
             </TouchableOpacity>
           </View>
         </View>
@@ -847,9 +847,9 @@ export const RegisterScreen: React.FC = () => {
             <View style={styles.modalOverlay}>
               <View style={[styles.modalContent, { height: '80%', backgroundColor: colors.stellarSurface }]}>
                 <View style={styles.modalHeader}>
-                  <CostarText variant="heading3" uppercase>
+                  <StellarText variant="heading3" uppercase>
                     Select Location
-                  </CostarText>
+                  </StellarText>
                   <TouchableOpacity onPress={() => setShowLocationModal(false)}>
                     <Ionicons name="close" size={24} color={colors.white} />
                   </TouchableOpacity>
@@ -873,9 +873,9 @@ export const RegisterScreen: React.FC = () => {
                 {locationError ? (
                   <View style={styles.errorContainer}>
                     <Ionicons name="alert-circle" size={24} color={colors.error} />
-                    <CostarText variant="body" color={colors.error} style={styles.errorText}>
+                    <StellarText variant="body" color={colors.error} style={styles.errorText}>
                       {locationError}
-                    </CostarText>
+                    </StellarText>
                   </View>
                 ) : null}
 
@@ -890,12 +890,12 @@ export const RegisterScreen: React.FC = () => {
                     >
                       <Ionicons name="location" size={20} color={colors.gray400} />
                       <View style={styles.locationTextContainer}>
-                        <CostarText variant="body" style={styles.locationName}>
+                        <StellarText variant="body" style={styles.locationName}>
                           {item.displayName}
-                        </CostarText>
-                        <CostarText variant="bodySmall" color={colors.gray500}>
+                        </StellarText>
+                        <StellarText variant="bodySmall" color={colors.gray500}>
                           {item.name}
-                        </CostarText>
+                        </StellarText>
                       </View>
                     </TouchableOpacity>
                   )}
@@ -903,9 +903,9 @@ export const RegisterScreen: React.FC = () => {
                     !isLoadingLocations && locationSearchInput.trim().length > 0 ? (
                       <View style={styles.emptyContainer}>
                         <Ionicons name="search-outline" size={40} color={colors.gray600} />
-                        <CostarText variant="body" color={colors.gray500} style={styles.emptyText}>
+                        <StellarText variant="body" color={colors.gray500} style={styles.emptyText}>
                           No locations found
-                        </CostarText>
+                        </StellarText>
                       </View>
                     ) : null
                   }

@@ -12,11 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTime } from 'luxon';
 
 import { 
-  CostarText, 
+  StellarText, 
   MoodRing, 
   TransitCard, 
   AspectList,
-  CostarBackground
+  StellarBackground
 } from '@components';
 import { useHoroscope } from '@hooks/useHoroscope';
 import { colors } from '@theme/theme';
@@ -36,11 +36,11 @@ export const TodayScreen: React.FC = () => {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <StatusBar barStyle="light-content" />
-        <CostarBackground />
+        <StellarBackground />
         <View style={styles.header}>
           <View style={styles.dateInfo}>
-            <CostarText style={styles.dayText}>TODAY · {dayName}</CostarText>
-            <CostarText style={styles.fullDateText} serif>{fullDate}</CostarText>
+            <StellarText style={styles.dayText}>TODAY · {dayName}</StellarText>
+            <StellarText style={styles.fullDateText} serif>{fullDate}</StellarText>
           </View>
         </View>
         <View style={styles.loadingContainer}>
@@ -78,16 +78,16 @@ export const TodayScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" />
-      <CostarBackground />
+      <StellarBackground />
 
       {/* Date Header */}
       <View style={styles.header}>
         <View style={styles.dateInfo}>
-          <CostarText style={styles.dayText}>TODAY · {dayName}</CostarText>
-          <CostarText style={styles.fullDateText} serif>{fullDate}</CostarText>
+          <StellarText style={styles.dayText}>TODAY · {dayName}</StellarText>
+          <StellarText style={styles.fullDateText} serif>{fullDate}</StellarText>
         </View>
         <TouchableOpacity style={styles.notifBadge}>
-          <CostarText style={styles.notifIcon}>🔔</CostarText>
+          <StellarText style={styles.notifIcon}>🔔</StellarText>
         </TouchableOpacity>
       </View>
 

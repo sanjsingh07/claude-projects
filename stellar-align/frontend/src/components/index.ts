@@ -1,7 +1,7 @@
-// Co-Star style components
-export { CostarCard, CostarText } from './CostarCard';
-export { CostarButton } from './CostarButton';
-export { CostarBackground } from './CostarBackground';
+// Stellar style components
+export { StellarCard, StellarText } from './StellarCard';
+export { StellarButton } from './StellarButton';
+export { StellarBackground } from './StellarBackground';
 export { StarField } from './StarField';
 
 // Astrology components

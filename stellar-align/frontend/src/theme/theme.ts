@@ -1,4 +1,4 @@
-// Co-Star inspired theme - minimalist, bold, high contrast
+// Stellar Align inspired theme - minimalist, bold, high contrast
 export const colors = {
   // Core colors
   black: '#000000',
@@ -15,7 +15,7 @@ export const colors = {
   gray800: '#343A40',
   gray900: '#212529',
 
-  // Accent colors (used sparingly in Co-Star style)
+  // Accent colors (used sparingly in Stellar style)
   accent: '#FFFFFF',
 
   // Status colors
@@ -41,7 +41,7 @@ export const colors = {
 };
 
 export const typography = {
-  // Font sizes - Co-Star uses large, bold text
+  // Font sizes - Stellar uses large, bold text
   xs: 10,
   sm: 12,
   md: 14,

@@ -413,7 +413,7 @@ export const SettingsScreen: React.FC = () => {
         </SettingsSection>
 
         <View style={styles.footer}>
-          <Text style={styles.ver}>ASTRA V1.0.0 (BETA)</Text>
+          <Text style={styles.ver}>STELLAR ALIGN V1.0.0 (BETA)</Text>
           <Text style={styles.copy}>© 2026 STELLAR ALIGN INC.</Text>
         </View>
         <View style={{ height: 40 }} />

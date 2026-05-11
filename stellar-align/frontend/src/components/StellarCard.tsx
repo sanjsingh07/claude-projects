@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, TextStyle, StyleProp } from 'react-native';
 import { colors, typography, spacing, borderRadius, theme } from '@theme/theme';
 
-interface CostarCardProps {
+interface StellarCardProps {
   children: React.ReactNode;
   title?: string;
   icon?: React.ReactNode;
@@ -10,7 +10,7 @@ interface CostarCardProps {
   variant?: 'default' | 'bordered' | 'filled';
 }
 
-export const CostarCard: React.FC<CostarCardProps> = ({
+export const StellarCard: React.FC<StellarCardProps> = ({
   children,
   title,
   icon,
@@ -30,7 +30,7 @@ export const CostarCard: React.FC<CostarCardProps> = ({
   );
 };
 
-interface CostarTextProps {
+interface StellarTextProps {
   children: React.ReactNode;
   variant?:
     | 'heading1'
@@ -51,7 +51,7 @@ interface CostarTextProps {
   numberOfLines?: number;
 }
 
-export const CostarText: React.FC<CostarTextProps> = ({
+export const StellarText: React.FC<StellarTextProps> = ({
   children,
   variant = 'body',
   style,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // Text variants - Co-Star style: bold, uppercase, high contrast
+  // Text variants - Stellar style: bold, uppercase, high contrast
   heading1: {
     fontSize: typography['4xl'],
     fontWeight: '700' as const,
@@ -210,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CostarCard;
+export default StellarCard;

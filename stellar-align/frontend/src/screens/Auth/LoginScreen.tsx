@@ -20,9 +20,9 @@ import { RootStackParamList } from '@navigation/RootNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
 import { api } from '@services/api';
-import { CostarText } from '@components/CostarCard';
-import { CostarButton } from '@components/CostarButton';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarText } from '@components/StellarCard';
+import { StellarButton } from '@components/StellarButton';
+import { StellarBackground } from '@components/StellarBackground';
 import { SignIcon } from '@components/SignIcon';
 import { colors, spacing } from '@theme/theme';
 
@@ -162,7 +162,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -176,22 +176,22 @@ export const LoginScreen: React.FC = () => {
             style={styles.backBtn}
             onPress={() => navigation.goBack()}
           >
-            <CostarText style={styles.backBtnText}>←</CostarText>
+            <StellarText style={styles.backBtnText}>←</StellarText>
           </TouchableOpacity>
 
           <View style={styles.header}>
-            <CostarText variant="heading1" serif italic style={styles.title}>
+            <StellarText variant="heading1" serif italic style={styles.title}>
               Welcome back
-            </CostarText>
-            <CostarText style={styles.subtitle}>
+            </StellarText>
+            <StellarText style={styles.subtitle}>
               Please enter your details to sign in.
-            </CostarText>
+            </StellarText>
           </View>
 
           {/* Login Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <CostarText style={styles.label}>Email Address</CostarText>
+              <StellarText style={styles.label}>Email Address</StellarText>
               <TextInput
                 style={styles.input}
                 placeholder="alex.kim@example.com"
@@ -204,7 +204,7 @@ export const LoginScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <CostarText style={styles.label}>Password</CostarText>
+              <StellarText style={styles.label}>Password</StellarText>
               <TextInput
                 style={styles.input}
                 placeholder="••••••••••••"
@@ -219,7 +219,7 @@ export const LoginScreen: React.FC = () => {
               style={styles.forgotPw}
               onPress={handleForgotPassword}
             >
-              <CostarText style={styles.forgotPwText}>Forgot password?</CostarText>
+              <StellarText style={styles.forgotPwText}>Forgot password?</StellarText>
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -230,7 +230,7 @@ export const LoginScreen: React.FC = () => {
               {isLoginPending ? (
                 <ActivityIndicator color={colors.stellarBg} />
               ) : (
-                <CostarText style={styles.btnText}>Sign In</CostarText>
+                <StellarText style={styles.btnText}>Sign In</StellarText>
               )}
             </TouchableOpacity>
           </View>
@@ -238,7 +238,7 @@ export const LoginScreen: React.FC = () => {
           <View style={styles.altLogin}>
             <View style={styles.altLoginTextContainer}>
               <View style={styles.altLine} />
-              <CostarText style={styles.altLoginText}>Or continue with</CostarText>
+              <StellarText style={styles.altLoginText}>Or continue with</StellarText>
               <View style={styles.altLine} />
             </View>
             
@@ -248,7 +248,7 @@ export const LoginScreen: React.FC = () => {
                   style={styles.socialBtn}
                   onPress={handleAppleLogin}
                 >
-                  <CostarText style={styles.socialIcon}></CostarText>
+                  <StellarText style={styles.socialIcon}></StellarText>
                 </TouchableOpacity>
               )}
               <TouchableOpacity 
@@ -256,7 +256,7 @@ export const LoginScreen: React.FC = () => {
                 onPress={handleGoogleLogin}
                 disabled={!request}
               >
-                <CostarText style={styles.socialIcon}>G</CostarText>
+                <StellarText style={styles.socialIcon}>G</StellarText>
               </TouchableOpacity>
             </View>
           </View>

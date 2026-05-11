@@ -13,8 +13,8 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { api } from '@services/api';
-import { CostarText } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarText } from '@components/StellarCard';
+import { StellarBackground } from '@components/StellarBackground';
 import { colors, spacing } from '@theme/theme';
 
 export const ResetPasswordScreen: React.FC = () => {
@@ -60,7 +60,7 @@ export const ResetPasswordScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -74,22 +74,22 @@ export const ResetPasswordScreen: React.FC = () => {
             style={styles.backBtn}
             onPress={() => navigation.goBack()}
           >
-            <CostarText style={styles.backBtnText}>←</CostarText>
+            <StellarText style={styles.backBtnText}>←</StellarText>
           </TouchableOpacity>
 
           <View style={styles.header}>
-            <CostarText variant="heading1" serif italic style={styles.title}>
+            <StellarText variant="heading1" serif italic style={styles.title}>
               Reset Password
-            </CostarText>
-            <CostarText style={styles.subtitle}>
+            </StellarText>
+            <StellarText style={styles.subtitle}>
               Please enter your new password below.
-            </CostarText>
+            </StellarText>
           </View>
 
           <View style={styles.form}>
             {!initialToken && (
               <View style={styles.inputGroup}>
-                <CostarText style={styles.label}>Reset Token</CostarText>
+                <StellarText style={styles.label}>Reset Token</StellarText>
                 <TextInput
                   style={styles.input}
                   placeholder="Enter token from email"
@@ -102,7 +102,7 @@ export const ResetPasswordScreen: React.FC = () => {
             )}
 
             <View style={styles.inputGroup}>
-              <CostarText style={styles.label}>New Password</CostarText>
+              <StellarText style={styles.label}>New Password</StellarText>
               <TextInput
                 style={styles.input}
                 placeholder="••••••••••••"
@@ -114,7 +114,7 @@ export const ResetPasswordScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <CostarText style={styles.label}>Confirm New Password</CostarText>
+              <StellarText style={styles.label}>Confirm New Password</StellarText>
               <TextInput
                 style={styles.input}
                 placeholder="••••••••••••"
@@ -133,7 +133,7 @@ export const ResetPasswordScreen: React.FC = () => {
               {isLoading ? (
                 <ActivityIndicator color={colors.stellarBg} />
               ) : (
-                <CostarText style={styles.btnText}>Reset Password</CostarText>
+                <StellarText style={styles.btnText}>Reset Password</StellarText>
               )}
             </TouchableOpacity>
           </View>

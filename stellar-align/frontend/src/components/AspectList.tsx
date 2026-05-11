@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { CostarText } from './CostarCard';
+import { StellarText } from './StellarCard';
 import { colors } from '@theme/theme';
 
 interface AspectItem {
@@ -18,19 +18,19 @@ interface AspectListProps {
 export const AspectList: React.FC<AspectListProps> = ({ label, aspects }) => {
   return (
     <View style={styles.container}>
-      <CostarText style={styles.label}>{label}</CostarText>
+      <StellarText style={styles.label}>{label}</StellarText>
       <View style={styles.list}>
         {aspects.map((item, index) => (
           <View key={index} style={[styles.item, index === aspects.length - 1 && styles.lastItem]}>
-            <CostarText style={styles.symbol}>{item.symbol}</CostarText>
+            <StellarText style={styles.symbol}>{item.symbol}</StellarText>
             <View style={styles.body}>
-              <CostarText style={styles.name}>{item.name}</CostarText>
-              <CostarText style={styles.description}>{item.description}</CostarText>
+              <StellarText style={styles.name}>{item.name}</StellarText>
+              <StellarText style={styles.description}>{item.description}</StellarText>
             </View>
             <View style={[styles.quality, getQualityStyle(item.quality)]}>
-              <CostarText style={[styles.qualityText, getQualityTextStyle(item.quality)]}>
+              <StellarText style={[styles.qualityText, getQualityTextStyle(item.quality)]}>
                 {item.quality}
-              </CostarText>
+              </StellarText>
             </View>
           </View>
         ))}

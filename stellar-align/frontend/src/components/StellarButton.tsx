@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, borderRadius } from '@theme/theme';
 
-interface CostarButtonProps {
+interface StellarButtonProps {
   children: React.ReactNode;
   onPress: () => void;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -21,7 +21,7 @@ interface CostarButtonProps {
   fullWidth?: boolean;
 }
 
-export const CostarButton: React.FC<CostarButtonProps> = ({
+export const StellarButton: React.FC<StellarButtonProps> = ({
   children,
   onPress,
   variant = 'primary',
@@ -218,4 +218,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CostarButton;
+export default StellarButton;

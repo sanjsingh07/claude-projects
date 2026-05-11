@@ -13,8 +13,8 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { useTransitStore } from '@store/transitStore';
 import { 
-  CostarText, 
-  CostarBackground 
+  StellarText, 
+  StellarBackground 
 } from '@components';
 import { colors } from '@theme/theme';
 import { TransitForecast } from '@types';
@@ -89,41 +89,41 @@ export const TransitsScreen: React.FC = () => {
       onPress={() => setPeriod(p)}
       activeOpacity={0.7}
     >
-      <CostarText
+      <StellarText
         style={[styles.periodBtnText, period === p && styles.periodBtnTextActive]}
       >
         {label}
-      </CostarText>
+      </StellarText>
     </TouchableOpacity>
   );
 
   const renderDescription = (text: string) => {
     const parts = text.split(/(<em>.*?<\/em>)/g);
     return (
-      <CostarText style={styles.tiBody}>
+      <StellarText style={styles.tiBody}>
         {parts.map((part, index) => {
           if (part.startsWith('<em>') && part.endsWith('</em>')) {
             return (
-              <CostarText key={index} style={styles.tiBodyEm}>
+              <StellarText key={index} style={styles.tiBodyEm}>
                 {part.slice(4, -5)}
-              </CostarText>
+              </StellarText>
             );
           }
           return part;
         })}
-      </CostarText>
+      </StellarText>
     );
   };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" />
-      <CostarBackground />
+      <StellarBackground />
 
       {/* Header */}
       <View style={styles.header}>
-        <CostarText style={styles.headerTitle} serif italic>Transit forecast</CostarText>
-        <CostarText style={styles.headerSubtitle}>{data?.range?.label || '...'}</CostarText>
+        <StellarText style={styles.headerTitle} serif italic>Transit forecast</StellarText>
+        <StellarText style={styles.headerSubtitle}>{data?.range?.label || '...'}</StellarText>
       </View>
 
       {/* Period Selector */}
@@ -154,32 +154,32 @@ export const TransitsScreen: React.FC = () => {
             <View key={item.id || index} style={[styles.transitItem, index === mergedTransits.length - 1 && styles.transitItemLast]}>
               <View style={styles.tiLeft}>
                 <View style={styles.tiDate}>
-                  <CostarText style={styles.tiMonth}>{item.date.month}</CostarText>
-                  <CostarText style={styles.tiDay} serif>{item.date.day.toString()}</CostarText>
-                  <CostarText style={styles.tiYear}>{item.date.year.toString()}</CostarText>
+                  <StellarText style={styles.tiMonth}>{item.date.month}</StellarText>
+                  <StellarText style={styles.tiDay} serif>{item.date.day.toString()}</StellarText>
+                  <StellarText style={styles.tiYear}>{item.date.year.toString()}</StellarText>
                 </View>
-                <CostarText style={styles.tiOrb}>orb: {item.orb.formatted}</CostarText>
+                <StellarText style={styles.tiOrb}>orb: {item.orb.formatted}</StellarText>
               </View>
               <View style={styles.tiRight}>
                 <View style={styles.tiHead}>
-                  <CostarText style={styles.tiTitle} serif italic>{item.title}</CostarText>
+                  <StellarText style={styles.tiTitle} serif italic>{item.title}</StellarText>
                   <View style={[styles.tiType, styles[`tiType_${item.type}` as keyof typeof styles] as any]}>
-                    <CostarText style={[styles.tiTypeText, styles[`tiTypeText_${item.type}` as keyof typeof styles] as any]}>
+                    <StellarText style={[styles.tiTypeText, styles[`tiTypeText_${item.type}` as keyof typeof styles] as any]}>
                       {item.type}
-                    </CostarText>
+                    </StellarText>
                   </View>
                 </View>
-                <CostarText style={styles.tiSyms}>
+                <StellarText style={styles.tiSyms}>
                   {item.symbols}
                   {(item as any).duration?.label && (
-                    <CostarText style={styles.tiDuration}> • {(item as any).duration.label}</CostarText>
+                    <StellarText style={styles.tiDuration}> • {(item as any).duration.label}</StellarText>
                   )}
-                </CostarText>
+                </StellarText>
                 
                 {renderDescription(item.description)}
                 
                 <View style={styles.tiFooter}>
-                  <CostarText style={styles.tiImpact}>{item.impact.label}</CostarText>
+                  <StellarText style={styles.tiImpact}>{item.impact.label}</StellarText>
                   <View style={styles.tiProgress}>
                     <View style={styles.progBar}>
                       <View style={[styles.progFill, { 
@@ -187,9 +187,9 @@ export const TransitsScreen: React.FC = () => {
                         backgroundColor: item.type === 'major' ? colors.stellarPink : item.type === 'minor' ? colors.stellarViolet : colors.stellarAmber
                       }]} />
                     </View>
-                    <CostarText style={styles.progPct} numberOfLines={1}>
+                    <StellarText style={styles.progPct} numberOfLines={1}>
                       {typeof item.progress.percentage === 'number' ? `${item.progress.percentage}%` : item.progress.label}
-                    </CostarText>
+                    </StellarText>
                   </View>
                 </View>
               </View>
@@ -197,7 +197,7 @@ export const TransitsScreen: React.FC = () => {
           ))
         ) : (
           <View style={styles.emptyContainer}>
-            <CostarText style={styles.emptyText}>No transits match your filters.</CostarText>
+            <StellarText style={styles.emptyText}>No transits match your filters.</StellarText>
           </View>
         )}
         <View style={styles.bottomSpacing} />

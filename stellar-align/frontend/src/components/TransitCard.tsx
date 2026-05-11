@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { CostarText } from './CostarCard';
+import { StellarText } from './StellarCard';
 import { colors } from '@theme/theme';
 
 interface TransitCardProps {
@@ -27,33 +27,33 @@ export const TransitCard: React.FC<TransitCardProps> = ({
   const renderBody = (text: string) => {
     const parts = text.split(/(<em>.*?<\/em>)/g);
     return (
-      <CostarText style={styles.body}>
+      <StellarText style={styles.body}>
         {parts.map((part, index) => {
           if (part.startsWith('<em>') && part.endsWith('</em>')) {
             return (
-              <CostarText key={index} style={[styles.bodyEm, { color: badgeColor }]}>
+              <StellarText key={index} style={[styles.bodyEm, { color: badgeColor }]}>
                 {part.slice(4, -5)}
-              </CostarText>
+              </StellarText>
             );
           }
           return part;
         })}
-      </CostarText>
+      </StellarText>
     );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <CostarText style={styles.title} serif italic>{title}</CostarText>
+        <StellarText style={styles.title} serif italic>{title}</StellarText>
         <View style={[styles.badge, { borderColor: badgeColor }]}>
-          <CostarText style={[styles.badgeText, { color: badgeColor }]}>{badge}</CostarText>
+          <StellarText style={[styles.badgeText, { color: badgeColor }]}>{badge}</StellarText>
         </View>
       </View>
-      <CostarText style={styles.planets}>{planets}</CostarText>
+      <StellarText style={styles.planets}>{planets}</StellarText>
       {renderBody(body)}
       <View style={styles.footer}>
-        <CostarText style={styles.source}>{source}</CostarText>
+        <StellarText style={styles.source}>{source}</StellarText>
       </View>
     </View>
   );

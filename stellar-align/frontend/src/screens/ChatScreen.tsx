@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { CostarText } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarText } from '@components/StellarCard';
+import { StellarBackground } from '@components/StellarBackground';
 import { useAuthStore } from '@store/authStore';
 import { colors, spacing } from '@theme/theme';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -96,16 +96,16 @@ export const ChatScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
 
       {/* Header */}
       <View style={styles.header}>
-        <CostarText variant="heading2" uppercase>
+        <StellarText variant="heading2" uppercase>
           Astro Guide
-        </CostarText>
-        <CostarText variant="caption" color={colors.gray400}>
+        </StellarText>
+        <StellarText variant="caption" color={colors.gray400}>
           Your personal astrology assistant
-        </CostarText>
+        </StellarText>
       </View>
 
       {/* Chat Messages */}
@@ -118,19 +118,19 @@ export const ChatScreen: React.FC = () => {
         {(!messages || messages.length === 0) ? (
           <View style={styles.emptyState}>
             <Ionicons name="chatbubbles-outline" size={64} color={colors.gray600} />
-            <CostarText variant="heading3" style={{ marginTop: spacing.lg, color: colors.gray400 }}>
+            <StellarText variant="heading3" style={{ marginTop: spacing.lg, color: colors.gray400 }}>
               Start a Conversation
-            </CostarText>
-            <CostarText
+            </StellarText>
+            <StellarText
               variant="body"
               style={{ marginTop: spacing.sm, color: colors.gray500, textAlign: 'center', maxWidth: 300 }}
             >
               Ask me anything about your natal chart, horoscopes, or astrology!
-            </CostarText>
+            </StellarText>
             <View style={styles.suggestions}>
-              <CostarText variant="bodySmall" color={colors.gray500}>
+              <StellarText variant="bodySmall" color={colors.gray500}>
                 Try asking:
-              </CostarText>
+              </StellarText>
               <Text style={styles.suggestion}>• "What does my Sun sign mean?"</Text>
               <Text style={styles.suggestion}>• "Tell me about my rising sign"</Text>
               <Text style={styles.suggestion}>• "How will today's transits affect me?"</Text>
@@ -145,21 +145,21 @@ export const ChatScreen: React.FC = () => {
                 msg.role === 'user' ? styles.userMessage : styles.assistantMessage,
               ]}
             >
-              <CostarText
+              <StellarText
                 variant="body"
                 style={msg.role === 'user' ? styles.userMessageText : styles.assistantMessageText}
               >
                 {msg.content}
-              </CostarText>
+              </StellarText>
             </View>
           ))
         )}
         {sendMessageMutation.isPending && (
           <View style={[styles.messageBubble, styles.assistantMessage]}>
             <ActivityIndicator size="small" color={colors.white} />
-            <CostarText variant="body" style={{ marginLeft: spacing.sm, color: colors.gray400 }}>
+            <StellarText variant="body" style={{ marginLeft: spacing.sm, color: colors.gray400 }}>
               {sendMessageMutation.isPending ? "Consulting the stars..." : ""}
-            </CostarText>
+            </StellarText>
           </View>
         )}
       </ScrollView>

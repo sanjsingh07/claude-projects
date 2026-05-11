@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { CostarCard, CostarText } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarCard, StellarText } from '@components/StellarCard';
+import { StellarBackground } from '@components/StellarBackground';
 import { SignIcon } from '@components/SignIcon';
 import { VedicChartCard, VedicChartSelector } from '@components/VedicChartCard';
 import { useAuthStore } from '@store/authStore';
@@ -149,12 +149,12 @@ export const ChartScreen: React.FC = () => {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
-        <CostarBackground />
+        <StellarBackground />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.white} />
-          <CostarText variant="body" style={{ marginTop: spacing.md, color: colors.gray400 }}>
+          <StellarText variant="body" style={{ marginTop: spacing.md, color: colors.gray400 }}>
             Loading your natal chart...
-          </CostarText>
+          </StellarText>
         </View>
       </SafeAreaView>
     );
@@ -163,20 +163,20 @@ export const ChartScreen: React.FC = () => {
   if (chartError || !chart) {
     return (
       <SafeAreaView style={styles.container}>
-        <CostarBackground />
+        <StellarBackground />
         <View style={styles.emptyContainer}>
           <Ionicons name="cloud-outline" size={64} color={colors.gray600} />
-          <CostarText variant="heading3" style={{ marginTop: spacing.lg, color: colors.gray400 }}>
+          <StellarText variant="heading3" style={{ marginTop: spacing.lg, color: colors.gray400 }}>
             No Natal Chart
-          </CostarText>
-          <CostarText variant="body" style={{ marginTop: spacing.sm, color: colors.gray500, textAlign: 'center' }}>
+          </StellarText>
+          <StellarText variant="body" style={{ marginTop: spacing.sm, color: colors.gray500, textAlign: 'center' }}>
             Your natal chart hasn't been calculated yet.
-          </CostarText>
+          </StellarText>
           <TouchableOpacity
             style={styles.calculateButton}
             onPress={() => calculateWesternChart.mutate()}
           >
-            <CostarText style={styles.calculateButtonText}>Calculate Chart</CostarText>
+            <StellarText style={styles.calculateButtonText}>Calculate Chart</StellarText>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -195,7 +195,7 @@ export const ChartScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
       <ScrollView
         style={styles.content}
         showsVerticalScrollIndicator={false}
@@ -213,13 +213,13 @@ export const ChartScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <CostarText variant="heading2" uppercase>
+          <StellarText variant="heading2" uppercase>
             {showVedic ? 'Vedic Chart' : 'Your Natal Chart'}
-          </CostarText>
+          </StellarText>
           <TouchableOpacity style={styles.toggleButton} onPress={handleToggleVedic}>
-            <CostarText variant="body" style={styles.toggleButtonText}>
+            <StellarText variant="body" style={styles.toggleButtonText}>
               {showVedic ? 'Show Western' : 'Show Vedic'}
-            </CostarText>
+            </StellarText>
             <Ionicons
               name={showVedic ? 'ellipse-outline' : 'analytics-outline'}
               size={20}
@@ -232,9 +232,9 @@ export const ChartScreen: React.FC = () => {
         {isRefreshing && (
           <View style={styles.refreshStatus}>
             <ActivityIndicator size="small" color={colors.white} />
-            <CostarText variant="bodySmall" style={styles.refreshStatusText}>
+            <StellarText variant="bodySmall" style={styles.refreshStatusText}>
               {showVedic ? 'Refreshing Vedic chart...' : 'Refreshing natal chart...'}
-            </CostarText>
+            </StellarText>
           </View>
         )}
 
@@ -244,9 +244,9 @@ export const ChartScreen: React.FC = () => {
             {isVedicLoadingState && (
               <View style={styles.loadingContainer}>
                 <ActivityIndicator size="small" color={colors.accent} />
-                <CostarText variant="body" style={{ marginTop: spacing.sm, color: colors.gray400 }}>
+                <StellarText variant="body" style={{ marginTop: spacing.sm, color: colors.gray400 }}>
                   Calculating Vedic chart...
-                </CostarText>
+                </StellarText>
               </View>
             )}
 
@@ -267,95 +267,95 @@ export const ChartScreen: React.FC = () => {
                 nakshatra={nakshatra}
               />
             ) : !isVedicLoadingState ? (
-              <CostarCard variant="bordered">
-                <CostarText>Tap a chart type above to view</CostarText>
-              </CostarCard>
+              <StellarCard variant="bordered">
+                <StellarText>Tap a chart type above to view</StellarText>
+              </StellarCard>
             ) : null}
 
             {nakshatra && (
-              <CostarCard variant="bordered" style={styles.card}>
-                <CostarText variant="label" style={styles.cardTitle}>
+              <StellarCard variant="bordered" style={styles.card}>
+                <StellarText variant="label" style={styles.cardTitle}>
                   Your Nakshatra
-                </CostarText>
+                </StellarText>
                 <View style={styles.nakshatraInfo}>
                   <View style={styles.nakshatraRow}>
-                    <CostarText variant="body" style={styles.nakshatraLabel}>Name:</CostarText>
-                    <CostarText variant="body" style={styles.nakshatraValue}>{nakshatra.name}</CostarText>
+                    <StellarText variant="body" style={styles.nakshatraLabel}>Name:</StellarText>
+                    <StellarText variant="body" style={styles.nakshatraValue}>{nakshatra.name}</StellarText>
                   </View>
                   <View style={styles.nakshatraRow}>
-                    <CostarText variant="body" style={styles.nakshatraLabel}>Pada:</CostarText>
-                    <CostarText variant="body" style={styles.nakshatraValue}>{nakshatra.pada}</CostarText>
+                    <StellarText variant="body" style={styles.nakshatraLabel}>Pada:</StellarText>
+                    <StellarText variant="body" style={styles.nakshatraValue}>{nakshatra.pada}</StellarText>
                   </View>
                   <View style={styles.nakshatraRow}>
-                    <CostarText variant="body" style={styles.nakshatraLabel}>Lord:</CostarText>
-                    <CostarText variant="body" style={styles.nakshatraValue}>{nakshatra.lord}</CostarText>
+                    <StellarText variant="body" style={styles.nakshatraLabel}>Lord:</StellarText>
+                    <StellarText variant="body" style={styles.nakshatraValue}>{nakshatra.lord}</StellarText>
                   </View>
                 </View>
-              </CostarCard>
+              </StellarCard>
             )}
           </View>
         ) : (
           // Western Chart View
           <>
             {/* Big Three Card */}
-            <CostarCard variant="bordered" style={styles.card}>
-              <CostarText variant="label" style={styles.cardTitle}>
+            <StellarCard variant="bordered" style={styles.card}>
+              <StellarText variant="label" style={styles.cardTitle}>
                 The Big Three
-              </CostarText>
+              </StellarText>
               <View style={styles.bigThree}>
                 <View style={styles.bigThreeItem}>
                   <SignIcon sign={chart.sunSign?.toLowerCase() as any} size={32} color={colors.white} />
-                  <CostarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
+                  <StellarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
                     Sun
-                  </CostarText>
-                  <CostarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
+                  </StellarText>
+                  <StellarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
                     {chart.sunSign}
-                  </CostarText>
+                  </StellarText>
                 </View>
                 <View style={styles.bigThreeItem}>
                   <SignIcon sign={chart.moonSign?.toLowerCase() as any} size={32} color={colors.white} />
-                  <CostarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
+                  <StellarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
                     Moon
-                  </CostarText>
-                  <CostarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
+                  </StellarText>
+                  <StellarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
                     {chart.moonSign}
-                  </CostarText>
+                  </StellarText>
                 </View>
                 <View style={styles.bigThreeItem}>
                   <SignIcon sign={chart.risingSign?.toLowerCase() as any} size={32} color={colors.white} />
-                  <CostarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
+                  <StellarText variant="caption" color={colors.gray500} style={{ marginTop: spacing.xs }}>
                     Rising
-                  </CostarText>
-                  <CostarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
+                  </StellarText>
+                  <StellarText variant="body" style={{ marginTop: spacing.sm, textTransform: 'capitalize' }}>
                     {chart.risingSign}
-                  </CostarText>
+                  </StellarText>
                 </View>
               </View>
-            </CostarCard>
+            </StellarCard>
 
             {/* Planetary Positions Card */}
-            <CostarCard variant="bordered" style={styles.card}>
-              <CostarText variant="label" style={styles.cardTitle}>
+            <StellarCard variant="bordered" style={styles.card}>
+              <StellarText variant="label" style={styles.cardTitle}>
                 Planetary Positions
-              </CostarText>
+              </StellarText>
               {PLANETS.map((planet) => {
                 const position = getPlanetPosition(planet.key);
                 if (!position) return null;
                 return (
                   <View key={planet.key} style={styles.planetRow}>
-                    <CostarText variant="body" style={styles.planetName}>
+                    <StellarText variant="body" style={styles.planetName}>
                       {planet.name}
-                    </CostarText>
+                    </StellarText>
                     <View style={styles.planetSign}>
                       <SignIcon sign={position.sign?.toLowerCase() as any} size={16} color={colors.gray400} />
-                      <CostarText variant="bodySmall" style={{ marginLeft: spacing.sm, textTransform: 'capitalize' }}>
+                      <StellarText variant="bodySmall" style={{ marginLeft: spacing.sm, textTransform: 'capitalize' }}>
                         {position.sign} {position.degree}°
-                      </CostarText>
+                      </StellarText>
                     </View>
                   </View>
                 );
               })}
-            </CostarCard>
+            </StellarCard>
           </>
         )}
 

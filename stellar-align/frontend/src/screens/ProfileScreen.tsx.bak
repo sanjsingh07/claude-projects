@@ -18,10 +18,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { DateTime } from 'luxon';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import { CostarText, CostarCard } from '@components/CostarCard';
-import { CostarBackground } from '@components/CostarBackground';
+import { StellarText, StellarCard } from '@components/StellarCard';
+import { StellarBackground } from '@components/StellarBackground';
 import { SignIcon } from '@components/SignIcon';
-import { CostarButton } from '@components/CostarButton';
+import { StellarButton } from '@components/StellarButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@store/authStore';
 import { useAuth } from '@hooks/useAuth';
@@ -311,9 +311,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
-        <CostarBackground />
+        <StellarBackground />
         <View style={styles.loadingContainer}>
-          <CostarText variant="heading3">Loading...</CostarText>
+          <StellarText variant="heading3">Loading...</StellarText>
         </View>
       </SafeAreaView>
     );
@@ -321,30 +321,30 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
 
   return (
     <SafeAreaView style={styles.container}>
-      <CostarBackground />
+      <StellarBackground />
 
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color={colors.white} />
         </TouchableOpacity>
-        <CostarText variant="heading3" uppercase>
+        <StellarText variant="heading3" uppercase>
           Profile
-        </CostarText>
+        </StellarText>
         <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(!isEditing)}>
           {isEditing ? (
             <>
               <Ionicons name="close" size={24} color={colors.white} />
-              <CostarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
+              <StellarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
                 Cancel
-              </CostarText>
+              </StellarText>
             </>
           ) : (
             <>
               <Ionicons name="create-outline" size={24} color={colors.white} />
-              <CostarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
+              <StellarText variant="body" style={{ color: colors.white, marginLeft: spacing.sm }}>
                 Edit
-              </CostarText>
+              </StellarText>
             </>
           )}
         </TouchableOpacity>
@@ -354,103 +354,103 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
         {/* Avatar and Name Section */}
         <View style={styles.avatarSection}>
           <View style={styles.avatarLarge}>
-            <CostarText variant="heading2">
+            <StellarText variant="heading2">
               {(user.email || 'U').charAt(0).toUpperCase()}
-            </CostarText>
+            </StellarText>
           </View>
-          <CostarText variant="heading2" style={styles.email}>
+          <StellarText variant="heading2" style={styles.email}>
             {user.email}
-          </CostarText>
+          </StellarText>
           {zodiacSign && (
             <View style={styles.zodiacRow}>
               <SignIcon sign={zodiacSign as any} size={24} color={colors.gray400} />
-              <CostarText variant="body" color={colors.gray400} style={styles.zodiacText}>
+              <StellarText variant="body" color={colors.gray400} style={styles.zodiacText}>
                 {zodiacSign.charAt(0).toUpperCase() + zodiacSign.slice(1)}
-              </CostarText>
+              </StellarText>
             </View>
           )}
         </View>
 
         {/* Account Info Card */}
-        <CostarCard variant="bordered" style={styles.card}>
-          <CostarText variant="label" style={styles.cardTitle}>
+        <StellarCard variant="bordered" style={styles.card}>
+          <StellarText variant="label" style={styles.cardTitle}>
             Account Information
-          </CostarText>
+          </StellarText>
 
           {/* Birth Date */}
           <View style={styles.profileItem}>
-            <CostarText variant="caption" color={colors.gray500}>
+            <StellarText variant="caption" color={colors.gray500}>
               Birth Date
-            </CostarText>
+            </StellarText>
             {isEditing ? (
               <TouchableOpacity
                 style={styles.editableField}
                 onPress={handleOpenDatePicker}
               >
                 <Ionicons name="calendar-outline" size={20} color={colors.gray400} />
-                <CostarText variant="body" style={styles.editableFieldText}>
+                <StellarText variant="body" style={styles.editableFieldText}>
                   {editData.birthDate ? formatDate(editData.birthDate) : 'Select date'}
-                </CostarText>
+                </StellarText>
                 <Ionicons name="chevron-down" size={20} color={colors.gray400} />
               </TouchableOpacity>
             ) : (
-              <CostarText variant="body">
+              <StellarText variant="body">
                 {editData.birthDate ? formatDate(editData.birthDate) : 'Not set'}
-              </CostarText>
+              </StellarText>
             )}
           </View>
 
           {/* Birth Time */}
           <View style={styles.profileItem}>
-            <CostarText variant="caption" color={colors.gray500}>
+            <StellarText variant="caption" color={colors.gray500}>
               Birth Time
-            </CostarText>
+            </StellarText>
             {isEditing ? (
               <TouchableOpacity
                 style={styles.editableField}
                 onPress={handleOpenTimePicker}
               >
                 <Ionicons name="time-outline" size={20} color={colors.gray400} />
-                <CostarText variant="body" style={styles.editableFieldText}>
+                <StellarText variant="body" style={styles.editableFieldText}>
                   {editData.birthTime ? formatTime(editData.birthTime) : 'Select time'}
-                </CostarText>
+                </StellarText>
                 <Ionicons name="chevron-down" size={20} color={colors.gray400} />
               </TouchableOpacity>
             ) : (
-              <CostarText variant="body">
+              <StellarText variant="body">
                 {editData.birthTime ? formatTime(editData.birthTime) : 'Not set'}
-              </CostarText>
+              </StellarText>
             )}
           </View>
 
           {/* Birth Location */}
           <View style={styles.profileItem}>
-            <CostarText variant="caption" color={colors.gray500}>
+            <StellarText variant="caption" color={colors.gray500}>
               Birth Location
-            </CostarText>
+            </StellarText>
             {isEditing ? (
               <TouchableOpacity
                 style={styles.editableField}
                 onPress={() => setShowLocationModal(true)}
               >
                 <Ionicons name="location-outline" size={20} color={colors.gray400} />
-                <CostarText variant="body" style={styles.editableFieldText}>
+                <StellarText variant="body" style={styles.editableFieldText}>
                   {editData.birthLocationName || 'Select location'}
-                </CostarText>
+                </StellarText>
                 <Ionicons name="chevron-down" size={20} color={colors.gray400} />
               </TouchableOpacity>
             ) : (
-              <CostarText variant="body">
+              <StellarText variant="body">
                 {editData.birthLocationName || 'Not set'}
-              </CostarText>
+              </StellarText>
             )}
           </View>
 
           {/* Timezone */}
           <View style={styles.profileItem}>
-            <CostarText variant="caption" color={colors.gray500}>
+            <StellarText variant="caption" color={colors.gray500}>
               Timezone
-            </CostarText>
+            </StellarText>
             {isEditing ? (
               <View style={styles.timezoneContainer}>
                 {TIMEZONES.map((tz) => (
@@ -465,7 +465,7 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
                       setEditData({ ...editData, birthTimezone: tz.value })
                     }
                   >
-                    <CostarText
+                    <StellarText
                       variant="bodySmall"
                       style={
                         editData.birthTimezone === tz.value
@@ -474,51 +474,51 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
                       }
                     >
                       {tz.label}
-                    </CostarText>
+                    </StellarText>
                   </TouchableOpacity>
                 ))}
               </View>
             ) : (
-              <CostarText variant="body">{editData.birthTimezone || 'Not set'}</CostarText>
+              <StellarText variant="body">{editData.birthTimezone || 'Not set'}</StellarText>
             )}
           </View>
 
           {/* Save Button */}
           {isEditing && (
             <View style={styles.saveButtonContainer}>
-              <CostarButton onPress={handleSave} loading={isUpdatingProfile}>
+              <StellarButton onPress={handleSave} loading={isUpdatingProfile}>
                 Save Changes
-              </CostarButton>
+              </StellarButton>
             </View>
           )}
-        </CostarCard>
+        </StellarCard>
 
         {/* Settings Card */}
-        <CostarCard variant="bordered" style={styles.card}>
-          <CostarText variant="label" style={styles.cardTitle}>
+        <StellarCard variant="bordered" style={styles.card}>
+          <StellarText variant="label" style={styles.cardTitle}>
             Settings
-          </CostarText>
+          </StellarText>
 
           <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={20} color={colors.error} />
-            <CostarText
+            <StellarText
               variant="body"
               style={{ color: colors.error, flex: 1, marginLeft: spacing.md }}
             >
               Logout
-            </CostarText>
+            </StellarText>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem}>
             <Ionicons name="trash-outline" size={20} color={colors.error} />
-            <CostarText
+            <StellarText
               variant="body"
               style={{ color: colors.error, flex: 1, marginLeft: spacing.md }}
             >
               Delete Account
-            </CostarText>
+            </StellarText>
           </TouchableOpacity>
-        </CostarCard>
+        </StellarCard>
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
@@ -533,9 +533,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
+              <StellarText variant="heading3" uppercase>
                 Select Date
-              </CostarText>
+              </StellarText>
               <TouchableOpacity onPress={() => setShowDatePicker(false)}>
                 <Ionicons name="close" size={24} color={colors.white} />
               </TouchableOpacity>
@@ -553,9 +553,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
               style={styles.modalConfirmButton}
               onPress={() => setShowDatePicker(false)}
             >
-              <CostarText variant="label" style={styles.modalConfirmText}>
+              <StellarText variant="label" style={styles.modalConfirmText}>
                 Done
-              </CostarText>
+              </StellarText>
             </TouchableOpacity>
           </View>
         </View>
@@ -571,9 +571,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
+              <StellarText variant="heading3" uppercase>
                 Select Time
-              </CostarText>
+              </StellarText>
               <TouchableOpacity onPress={() => setShowTimePicker(false)}>
                 <Ionicons name="close" size={24} color={colors.white} />
               </TouchableOpacity>
@@ -590,9 +590,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
               style={styles.modalConfirmButton}
               onPress={() => setShowTimePicker(false)}
             >
-              <CostarText variant="label" style={styles.modalConfirmText}>
+              <StellarText variant="label" style={styles.modalConfirmText}>
                 Done
-              </CostarText>
+              </StellarText>
             </TouchableOpacity>
           </View>
         </View>
@@ -608,9 +608,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <CostarText variant="heading3" uppercase>
+              <StellarText variant="heading3" uppercase>
                 Select Location
-              </CostarText>
+              </StellarText>
               <TouchableOpacity onPress={() => setShowLocationModal(false)}>
                 <Ionicons name="close" size={24} color={colors.white} />
               </TouchableOpacity>
@@ -641,12 +641,12 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
                 >
                   <Ionicons name="location" size={20} color={colors.gray400} />
                   <View style={styles.locationTextContainer}>
-                    <CostarText variant="body" style={styles.locationName}>
+                    <StellarText variant="body" style={styles.locationName}>
                       {item.displayName}
-                    </CostarText>
-                    <CostarText variant="bodySmall" color={colors.gray500}>
+                    </StellarText>
+                    <StellarText variant="bodySmall" color={colors.gray500}>
                       {item.name}
-                    </CostarText>
+                    </StellarText>
                   </View>
                 </TouchableOpacity>
               )}
@@ -654,9 +654,9 @@ const { mutateAsync: recalculateChart, isPending: isRecalculating } = useMutatio
                 !isLoadingLocations && locationSearch.trim().length > 0 ? (
                   <View style={styles.emptyContainer}>
                     <Ionicons name="search-outline" size={40} color={colors.gray600} />
-                    <CostarText variant="body" color={colors.gray500} style={styles.emptyText}>
+                    <StellarText variant="body" color={colors.gray500} style={styles.emptyText}>
                       No locations found
-                    </CostarText>
+                    </StellarText>
                   </View>
                 ) : null
               }

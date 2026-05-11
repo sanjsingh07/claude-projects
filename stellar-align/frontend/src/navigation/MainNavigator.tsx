@@ -8,7 +8,7 @@ import { ProfileScreen } from '@screens/ProfileScreen';
 import { ChartScreen } from '@screens/ChartScreen';
 import { ChatScreen } from '@screens/ChatScreen';
 import { TransitsScreen } from '@screens/TransitsScreen';
-import { CostarText } from '@components';
+import { StellarText } from '@components';
 
 export type MainTabParamList = {
   Daily: undefined;
@@ -24,7 +24,7 @@ export const MainNavigator: React.FC = () => {
   const renderTabIcon = (icon: string, color: string) => (
     <View style={{ alignItems: 'center' }}>
       <View style={[styles.tabRule, { opacity: color === colors.stellarFg ? 1 : 0 }]} />
-      <CostarText style={{ fontSize: 20, color, marginTop: 2 }}>{icon}</CostarText>
+      <StellarText style={{ fontSize: 20, color, marginTop: 2 }}>{icon}</StellarText>
     </View>
   );
 

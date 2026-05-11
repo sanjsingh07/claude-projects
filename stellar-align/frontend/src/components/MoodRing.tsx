@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { CostarText } from './CostarCard';
+import { StellarText } from './StellarCard';
 import { colors } from '@theme/theme';
 
 interface MoodRingProps {
@@ -21,7 +21,7 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
 
   return (
     <View style={styles.container}>
-      <CostarText style={styles.label}>{label}</CostarText>
+      <StellarText style={styles.label}>{label}</StellarText>
       <View style={styles.content}>
         <View style={styles.ringContainer}>
           <Svg width={68} height={68} viewBox="0 0 50 50">
@@ -47,22 +47,22 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
             />
           </Svg>
           <View style={styles.scoreContainer}>
-            <CostarText style={styles.scoreText}>{score}</CostarText>
-            <CostarText style={styles.scoreSubtext}>energy</CostarText>
+            <StellarText style={styles.scoreText}>{score}</StellarText>
+            <StellarText style={styles.scoreSubtext}>energy</StellarText>
           </View>
         </View>
         <View style={styles.aspectsContainer}>
           {aspects.map((aspect, index) => (
             <View key={index} style={styles.aspect}>
-              <CostarText style={styles.aspectKey}>{aspect.key}</CostarText>
-              <CostarText
+              <StellarText style={styles.aspectKey}>{aspect.key}</StellarText>
+              <StellarText
                 style={[
                   styles.aspectVal,
                   aspect.highlight && { color: colors.stellarAmber },
                 ]}
               >
                 {aspect.val}
-              </CostarText>
+              </StellarText>
             </View>
           ))}
         </View>

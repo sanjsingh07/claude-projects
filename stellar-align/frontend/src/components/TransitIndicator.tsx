@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { CostarText } from '@components/CostarCard';
+import { StellarText } from '@components/StellarCard';
 import { colors, spacing, theme } from '@theme/theme';
 
 interface TransitIndicatorProps {
@@ -43,12 +43,12 @@ export const TransitIndicator: React.FC<TransitIndicatorProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <CostarText variant="heading2" style={styles.count}>
+        <StellarText variant="heading2" style={styles.count}>
           {count}
-        </CostarText>
-        <CostarText variant="caption" color={colors.gray500} style={styles.label}>
+        </StellarText>
+        <StellarText variant="caption" color={colors.gray500} style={styles.label}>
           active transit{count !== 1 ? 's' : ''}
-        </CostarText>
+        </StellarText>
       </View>
       {mainPlanets.length > 0 && (
         <View style={styles.planetsRow}>
@@ -60,12 +60,12 @@ export const TransitIndicator: React.FC<TransitIndicatorProps> = ({
                 { borderColor: planetColors[planet] || colors.gray500 },
               ]}
             >
-              <CostarText
+              <StellarText
                 variant="body"
                 style={{ color: planetColors[planet] || colors.gray500 }}
               >
                 {planetSymbols[planet] || planet.charAt(0).toUpperCase()}
-              </CostarText>
+              </StellarText>
             </View>
           ))}
         </View>
