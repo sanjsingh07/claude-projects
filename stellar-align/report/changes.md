@@ -722,3 +722,21 @@ Redesigned the Chart Screen template for the second time to meet higher aestheti
 **Files modified:**
 - stellar-align/screens_09-chart-v3.html (new)
 - stellar-align/report/changes.md
+
+## [2026-05-12 00:30] Refinement: Astra-Styled Chart Screen (v4)
+
+**What was changed and why:**
+Created a new Chart Screen template (`screens_09-chart-v4.html`) that directly maps the original layout to the premium "Astra" design system, as requested.
+
+**Summary of changes:**
+- Re-implemented the chart screen using core Astra UI components:
+    - **Astra Header:** Standardized title and metadata.
+    - **System Selector:** Styled after the Transit screen's period bar for visual consistency.
+    - **Chart Card:** A centered, padded surface hosting both Tropical and Divisional visualizations.
+    - **Refined Placements:** List items now match the aspect and transit list styles with optimized iconography.
+- Integrated dual-view logic (Tropical Wheel / Vedic Divisional) with a simple tab-style toggle.
+- Strictly adhered to the project's color scheme (oklch) and typography (Instrument Serif).
+
+**Files modified:**
+- stellar-align/screens_09-chart-v4.html (new)
+- stellar-align/report/changes.md
