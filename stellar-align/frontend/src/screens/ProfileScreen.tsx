@@ -175,7 +175,7 @@ export const ProfileScreen: React.FC = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ProfileHero
         name={profile.name}
         avatarInitial={profile.avatarInitial}
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingVertical: 16,
-    paddingBottom: 100, // Extra padding to avoid footer/tabbar overlap
+    paddingBottom: 120, // Sufficient padding to clear the bottom tab bar entirely
   },
   section: {
     marginBottom: 16,
