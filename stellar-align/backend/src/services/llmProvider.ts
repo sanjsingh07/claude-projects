@@ -239,7 +239,19 @@ class GeminiProvider implements LLMProvider {
     if (!apiKey) throw new Error("Gemini API key not configured");
 
     const start = Date.now();
+    const config = {
+      maxOutputTokens: opts?.maxTokens ?? 4000,
+      temperature: opts?.temperature ?? 0.6,
+      responseMimeType: "application/json",
+    };
+
     try {
+      logger.debug("Gemini request payload", {
+        model: this.model,
+        config,
+        messagesCount: messages.length,
+      });
+
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${apiKey}`,
         {
@@ -247,22 +259,29 @@ class GeminiProvider implements LLMProvider {
             role: m.role === "assistant" ? "model" : "user",
             parts: [{ text: m.content }],
           })),
-          generationConfig: {
-            maxOutputTokens: opts?.maxTokens ?? 4000,
-            temperature: opts?.temperature ?? 0.6,
-          },
+          generationConfig: config,
         },
         { timeout: 30_000 },
       );
 
-      const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const candidate = response.data?.candidates?.[0];
+      const text = candidate?.content?.parts?.[0]?.text ?? "";
+      const finishReason = candidate?.finishReason;
       const duration = Date.now() - start;
 
       logger.info(`Gemini LLM success`, {
         duration,
         model: this.model,
         key: maskKey(apiKey),
+        finishReason,
       });
+
+      if (finishReason && finishReason !== "STOP") {
+        logger.warn(`Gemini finished with reason: ${finishReason}`, {
+          textLength: text.length,
+          preview: text.substring(text.length - 100)
+        });
+      }
 
       return { text };
     } catch (error: any) {

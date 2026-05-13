@@ -34,7 +34,7 @@ const envSchema = z.object({
   APPLE_PRIVATE_KEY: z.string().optional(),
 
   // AI Provider: 'anthropic', 'nvidia', 'gemini', 'groq', 'opencode', or 'openrouter' (default: nvidia)
-  AI_PROVIDER: z.enum(["opencode", "anthropic", "nvidia", "gemini", "groq", "openrouter"]).default("opencode"),
+  AI_PROVIDER: z.enum(["gemini", "opencode", "openrouter", "nvidia", "anthropic", "groq"]).default("opencode"),
 
   // Anthropic (optional — used when AI_PROVIDER=anthropic)
   ANTHROPIC_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
@@ -47,12 +47,12 @@ const envSchema = z.object({
 
   // NVIDIA NIM (optional — used when AI_PROVIDER=nvidia)
   NVIDIA_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
-  NVIDIA_MODEL: z.string().default("nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"),
+  NVIDIA_MODEL: z.string().default("minimaxai/minimax-m2.7"),
   NVIDIA_BASE_URL: z.string().default("https://integrate.api.nvidia.com/v1"),
 
   // Gemini (optional)
   GEMINI_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
-  GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
+  GEMINI_MODEL: z.string().default("gemini-3-flash-preview"),
 
   // Groq (optional)
   GROQ_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),

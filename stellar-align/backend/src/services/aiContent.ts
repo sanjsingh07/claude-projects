@@ -568,15 +568,39 @@ Respond with ONLY the JSON object.`;
   }
 
   private sanitizeJSON(text: string): string {
+    if (!text) return "";
     let cleaned = text.trim();
-    if (cleaned.startsWith("```json")) {
-      cleaned = cleaned.slice(7);
-    } else if (cleaned.startsWith("```")) {
-      cleaned = cleaned.slice(3);
+    
+    // 1. Remove markdown code blocks if they exist
+    if (cleaned.includes("```json")) {
+      const parts = cleaned.split("```json");
+      cleaned = parts[parts.length - 1]; // Take content after the last ```json
+      if (cleaned.includes("```")) {
+        cleaned = cleaned.split("```")[0];
+      }
+    } else if (cleaned.includes("```")) {
+      const parts = cleaned.split("```");
+      // Find the largest part that looks like JSON
+      cleaned = parts.sort((a, b) => b.length - a.length)[0];
     }
-    if (cleaned.endsWith("```")) {
-      cleaned = cleaned.slice(0, -3);
+
+    // 2. If it still doesn't look like it starts with {, try to find the first {
+    if (!cleaned.startsWith("{")) {
+      const startIdx = cleaned.indexOf("{");
+      if (startIdx !== -1) {
+        cleaned = cleaned.substring(startIdx);
+      }
     }
+
+    // 3. If it doesn't end with }, it might be truncated. 
+    // We can't easily fix truncated JSON but we can at least trim trailing text
+    if (!cleaned.endsWith("}")) {
+      const lastIdx = cleaned.lastIndexOf("}");
+      if (lastIdx !== -1) {
+        cleaned = cleaned.substring(0, lastIdx + 1);
+      }
+    }
+
     return cleaned.trim();
   }
 }

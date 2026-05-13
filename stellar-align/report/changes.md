@@ -873,3 +873,12 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **Files modified**:
   - `stellar-align/backend/src/config/env.ts`
   - `stellar-align/backend/.env`
+
+## [2026-05-13 23:48] - Resolve Gemini Truncation and JSON Parsing
+- **What was changed**: Switched Gemini model to `gemini-3-flash-preview` and improved JSON sanitization.
+- **Summary**: Gemini 2.x models were truncating responses early with `MAX_TOKENS` reason at ~750 characters despite high limits, likely due to internal "thinking" budgets. `gemini-3-flash-preview` handles the requested 4000 token limit correctly. Also enhanced `sanitizeJSON` to handle truncated or unclosed JSON and added `responseMimeType: "application/json"` to Gemini requests.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/.env`
+  - `stellar-align/backend/src/services/aiContent.ts`
+  - `stellar-align/backend/src/services/llmProvider.ts`
