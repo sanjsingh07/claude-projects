@@ -34,7 +34,8 @@ const envSchema = z.object({
   APPLE_PRIVATE_KEY: z.string().optional(),
 
   // AI Provider: 'anthropic', 'nvidia', 'gemini', 'groq', 'opencode', or 'openrouter' (default: nvidia)
-  AI_PROVIDER: z.enum(["gemini", "opencode", "openrouter", "nvidia", "anthropic", "groq"]).default("opencode"),
+  // removed "anthropic" and "groq" as options since we're not using them anymore, but can easily add back if needed
+  AI_PROVIDER: z.enum(["gemini", "opencode", "openrouter", "nvidia"]).default("opencode"),
 
   // Anthropic (optional — used when AI_PROVIDER=anthropic)
   ANTHROPIC_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),

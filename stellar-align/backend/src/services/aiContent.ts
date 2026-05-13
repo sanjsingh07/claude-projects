@@ -213,7 +213,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
     try {
       const response = await llmProvider.complete(
         [{ role: "user", content: prompt }],
-        { maxTokens: 1500, purpose: "horoscope", mappingId: natalChart.userId },
+        { maxTokens: 1500, purpose: "horoscope", mappingId: chart1.userId },
       );
       return JSON.parse(this.sanitizeJSON(response.text));
     } catch (error) {
@@ -294,9 +294,11 @@ ${divisionalSummary}
 `;
     }
 
+    // Separate Personal (Natal) vs Mundane (Sky) transits for the AI
     // 3. TRANSIT CATEGORIZATION
     const personalTransits = activeTransits.filter(t => t.eventKind === "natal_aspect");
-    const mundaneTransits = activeTransits.filter(t => t.eventKind !== "natal_aspect");
+    // const mundaneTransits = activeTransits.filter(t => t.eventKind !== "natal_aspect");
+    const mundaneTransits = activeTransits.filter(t => t.eventKind === "sky_aspect" || t.eventKind === "ingress" || t.eventKind.includes("station"));
 
     const personalSummary = this.formatTransitSummary(personalTransits);
     const mundaneSummary = this.formatTransitSummary(mundaneTransits);
