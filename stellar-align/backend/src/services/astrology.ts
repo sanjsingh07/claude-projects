@@ -730,6 +730,17 @@ export async function generateDailyHoroscope(
       vedicData
     );
 
+    // If it's a fallback, schedule a retry job for 5 minutes later
+    if (content.isFallback) {
+      const { horoscopeQueue } = await import("../config/queue");
+      await horoscopeQueue.add(
+        `retry-horoscope-${userId}-${date.toISOString()}`,
+        { userId, date },
+        { delay: 5 * 60 * 1000, jobId: `retry-${userId}-${date.toISOString()}` }
+      );
+      logger.info(`Scheduled horoscope retry for user ${userId} in 5 minutes`);
+    }
+
     const horoscope = await prisma.dailyHoroscope.upsert({
       where: {
         userId_forDate: {
@@ -749,7 +760,7 @@ export async function generateDailyHoroscope(
         contentWork: content.work,
         contentLove: content.love,
         contentSocial: content.social,
-        generatedBy: llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED",
+        generatedBy: content.isFallback ? "RULE_BASED" : (llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED"),
         generationVersion: 2,
       },
       create: {
@@ -766,24 +777,40 @@ export async function generateDailyHoroscope(
         contentWork: content.work,
         contentLove: content.love,
         contentSocial: content.social,
-        generatedBy: llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED",
+        generatedBy: content.isFallback ? "RULE_BASED" : (llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED"),
         generationVersion: 2,
       },
     });
 
+    // Invalidate cache
+    try {
+      const { cache } = await import("../config/redis");
+      const dateISO = DateTime.fromJSDate(date, { zone: userTimezone }).toISODate();
+      const chartContext = user.natalChart
+        ? `${user.natalChart.zodiacType}:${user.natalChart.ayanamsa}:${user.natalChart.calculatedAt.toISOString()}`
+        : "no-chart";
+      const cacheKey = `horoscope:v2:${userId}:${dateISO}:${userTimezone}:${chartContext}`;
+      await cache.delete(cacheKey);
+      logger.info(`Invalidated horoscope cache for user ${userId} on ${dateISO}`);
+    } catch (cacheError) {
+      logger.warn("Failed to invalidate horoscope cache", { error: cacheError });
+    }
+
     // Notify user in background
-    (async () => {
-      try {
-        await notificationService.sendToUser(userId, {
-          title: "Your Daily Insight is Ready",
-          body: `Discover what the stars have in store for you today, ${user.displayName || "traveler"}.`,
-          type: "daily_horoscope",
-          data: { horoscopeId: horoscope.id },
-        });
-      } catch (err) {
-        logger.error("Failed to send horoscope notification", { err, userId });
-      }
-    })();
+    if (!content.isFallback) {
+      (async () => {
+        try {
+          await notificationService.sendToUser(userId, {
+            title: "Your Daily Insight is Ready",
+            body: `Discover what the stars have in store for you today, ${user.displayName || "traveler"}.`,
+            type: "daily_horoscope",
+            data: { horoscopeId: horoscope.id },
+          });
+        } catch (err) {
+          logger.error("Failed to send horoscope notification", { err, userId });
+        }
+      })();
+    }
 
     return horoscope;
   } catch (error) {

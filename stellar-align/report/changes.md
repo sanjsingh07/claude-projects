@@ -849,3 +849,20 @@ To improve observability and debugging of LLM provider performance and failures,
 
 ### Why
 The new logging system revealed that long LLM response durations and truncation at 2000 tokens were causing JSON parsing errors and database unique constraint failures.
+
+## [2026-05-13 19:35] - Implemented LLM Horoscope Retry Mechanism
+
+### Changed
+- Added `isFallback` flag to `DailyHoroscopeContent` to distinguish between AI-generated and rule-based horoscopes.
+- Implemented **background retry mechanism**: if all LLMs fail, a retry job is scheduled for 5 minutes later using BullMQ.
+- Improved **pull-to-refresh logic**: the controller now allows regenerating horoscopes if the existing one is a fallback (`RULE_BASED`) and at least 5 minutes old.
+- Added **Redis cache invalidation** in `astrologyService` to ensure users see the updated AI content as soon as a background retry succeeds.
+- Refined notifications: push notifications are now only sent when a high-quality (non-fallback) horoscope is successfully generated.
+
+### Modified Files
+- `stellar-align/backend/src/services/aiContent.ts`
+- `stellar-align/backend/src/services/astrology.ts`
+- `stellar-align/backend/src/controllers/horoscopeController.ts`
+
+### Why
+To ensure users eventually receive an AI-generated horoscope even if providers are temporarily down or timing out, while still providing an immediate fallback for the initial load.

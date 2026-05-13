@@ -17,6 +17,7 @@ export interface DailyHoroscopeContent {
   love: string;
   social: string;
   energyScore: number;
+  isFallback?: boolean;
   moodAspects: {
     emotion: string;
     career: string;
@@ -120,6 +121,7 @@ class AIContentService {
       }
 
       const normalized = this.normalizeDailyContent(parsed, natalChart, moonSign, moonPhase, activeTransits);
+      normalized.isFallback = false;
 
       await cache.set(cacheKey, normalized, 86400);
       return normalized;
@@ -129,7 +131,9 @@ class AIContentService {
         stack: error.stack,
         provider: llmProvider.name,
       });
-      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
+      const fallback = this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
+      fallback.isFallback = true;
+      return fallback;
     }
   }
 
