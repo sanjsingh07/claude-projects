@@ -98,7 +98,7 @@ class AnthropicProvider implements LLMProvider {
 
       const response = await client.messages.create({
         model: this.model,
-        max_tokens: opts?.maxTokens ?? 2000,
+        max_tokens: opts?.maxTokens ?? 4000,
         ...(systemMsg && { system: systemMsg.content }),
         messages: chatMessages,
       });
@@ -166,7 +166,7 @@ class NvidiaProvider implements LLMProvider {
         {
           model: this.model,
           messages: messages.map((m) => ({ role: m.role, content: m.content })),
-          max_tokens: opts?.maxTokens ?? 500,
+          max_tokens: opts?.maxTokens ?? 4000,
           temperature: opts?.temperature ?? 0.6,
           top_p: 0.95,
           stream: false,
@@ -248,7 +248,7 @@ class GeminiProvider implements LLMProvider {
             parts: [{ text: m.content }],
           })),
           generationConfig: {
-            maxOutputTokens: opts?.maxTokens ?? 2000,
+            maxOutputTokens: opts?.maxTokens ?? 4000,
             temperature: opts?.temperature ?? 0.6,
           },
         },
@@ -308,7 +308,7 @@ class GroqProvider implements LLMProvider {
         {
           model: this.model,
           messages: messages.map((m) => ({ role: m.role, content: m.content })),
-          max_tokens: opts?.maxTokens ?? 1000,
+          max_tokens: opts?.maxTokens ?? 4000,
           temperature: opts?.temperature ?? 0.6,
         },
         {
@@ -465,7 +465,7 @@ class OpenRouterProvider implements LLMProvider {
         {
           model: this.model,
           messages: messages.map((m) => ({ role: m.role, content: m.content })),
-          max_tokens: opts?.maxTokens ?? 2000,
+          max_tokens: opts?.maxTokens ?? 4000,
           temperature: opts?.temperature ?? 0.7,
         },
         {

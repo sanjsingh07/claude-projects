@@ -102,16 +102,31 @@ class AIContentService {
 
       const response = await llmProvider.complete(
         [{ role: "user", content: prompt }],
-        { maxTokens: 2000, purpose: "horoscope", mappingId: natalChart.userId },
+        { maxTokens: 4000, purpose: "horoscope", mappingId: natalChart.userId },
       );
 
-      const parsed = this.normalizeDailyContent(JSON.parse(this.sanitizeJSON(response.text)), natalChart, moonSign, moonPhase, activeTransits);
+      let parsed;
+      try {
+        const sanitized = this.sanitizeJSON(response.text);
+        parsed = JSON.parse(sanitized);
+      } catch (e: any) {
+        logger.error("Failed to parse AI horoscope JSON", {
+          error: e.message,
+          text_length: response.text?.length,
+          preview: response.text?.substring(0, 200) + "...",
+          end_preview: response.text?.substring(response.text?.length - 200),
+        });
+        throw e;
+      }
 
-      await cache.set(cacheKey, parsed, 86400);
-      return parsed;
-    } catch (error) {
+      const normalized = this.normalizeDailyContent(parsed, natalChart, moonSign, moonPhase, activeTransits);
+
+      await cache.set(cacheKey, normalized, 86400);
+      return normalized;
+    } catch (error: any) {
       logger.error("AI horoscope generation failed", {
-        error,
+        error: error.message,
+        stack: error.stack,
         provider: llmProvider.name,
       });
       return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);

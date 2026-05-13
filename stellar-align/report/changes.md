@@ -833,3 +833,19 @@ To improve reliability, bypass rate limits via key rotation, and add support for
 
 ### Why
 To improve observability and debugging of LLM provider performance and failures, specifically helping to distinguish between timeouts and configuration errors.
+
+## [2026-05-13 19:25] - Fixed Horoscope Truncation and Race Conditions
+
+### Changed
+- Increased **maxTokens** to 4000 for all LLM providers to prevent response truncation.
+- Implemented **detailed JSON parsing error logging** in `aiContent.ts` (logs text length and previews on failure).
+- Switched DailyHoroscope database operation from `create` to `upsert` in `astrology.ts` to handle race conditions from parallel requests.
+- Fixed return value in `generateDailyHoroscope` to correctly return normalized content.
+
+### Modified Files
+- `stellar-align/backend/src/services/aiContent.ts`
+- `stellar-align/backend/src/services/astrology.ts`
+- `stellar-align/backend/src/services/llmProvider.ts`
+
+### Why
+The new logging system revealed that long LLM response durations and truncation at 2000 tokens were causing JSON parsing errors and database unique constraint failures.

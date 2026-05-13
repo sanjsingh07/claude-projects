@@ -730,8 +730,29 @@ export async function generateDailyHoroscope(
       vedicData
     );
 
-    const horoscope = await prisma.dailyHoroscope.create({
-      data: {
+    const horoscope = await prisma.dailyHoroscope.upsert({
+      where: {
+        userId_forDate: {
+          userId,
+          forDate: date,
+        },
+      },
+      update: {
+        moonSign: moonPos.sign,
+        moonPhase,
+        activeTransits: todayTransits as any,
+        energyScore: content.energyScore,
+        moodAspects: content.moodAspects,
+        primaryTransit: content.primaryTransit,
+        aspects: content.aspects,
+        contentSelf: content.self,
+        contentWork: content.work,
+        contentLove: content.love,
+        contentSocial: content.social,
+        generatedBy: llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED",
+        generationVersion: 2,
+      },
+      create: {
         userId,
         forDate: date,
         moonSign: moonPos.sign,
