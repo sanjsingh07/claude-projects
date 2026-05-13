@@ -866,3 +866,10 @@ The new logging system revealed that long LLM response durations and truncation 
 
 ### Why
 To ensure users eventually receive an AI-generated horoscope even if providers are temporarily down or timing out, while still providing an immediate fallback for the initial load.
+
+## [2026-05-13 23:23] - Fix Gemini 404 Error
+- **What was changed**: Updated Gemini model to `gemini-2.5-flash` which is a valid model for the `generateContent` method in this timeline.
+- **Summary**: The previous models (`gemini-2.5-flash` in `env.ts` was actually a typo or placeholder, and `gemini-3.1-flash-live-preview` in `.env`) were either invalid or did not support the `generateContent` method, leading to 404 errors. Listed available models and confirmed `gemini-2.5-flash` works correctly.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/.env`

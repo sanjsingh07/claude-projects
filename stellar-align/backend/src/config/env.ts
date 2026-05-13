@@ -52,7 +52,7 @@ const envSchema = z.object({
 
   // Gemini (optional)
   GEMINI_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
-  GEMINI_MODEL: z.string().default("gemini-1.5-pro"),
+  GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
 
   // Groq (optional)
   GROQ_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
