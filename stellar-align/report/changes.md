@@ -818,3 +818,18 @@ Completed the project-wide rebranding by removing the last remaining "Astra" ref
 
 ### Why
 To improve reliability, bypass rate limits via key rotation, and add support for OpenRouter's diverse model set.
+
+## [2026-05-13 19:20] - Enhanced LLM Provider Logging
+
+### Changed
+- Added comprehensive logging to all LLM providers and the resilient wrapper.
+- Implemented **request timing** (`duration` in ms) for all LLM attempts to identify slow responses.
+- Added **API key masking** (`maskKey`) to logs to help identify problematic keys while maintaining security.
+- Enhanced error reporting to include HTTP status codes and detailed error messages.
+- Added `purpose` and `mappingId` context to rotation logs.
+
+### Modified Files
+- `stellar-align/backend/src/services/llmProvider.ts`: Added `maskKey`, timing logic, and expanded logger calls.
+
+### Why
+To improve observability and debugging of LLM provider performance and failures, specifically helping to distinguish between timeouts and configuration errors.

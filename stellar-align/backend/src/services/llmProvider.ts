@@ -54,6 +54,12 @@ function selectApiKey(keys: string[], purpose?: string, mappingId?: string): str
   return keys[0];
 }
 
+function maskKey(key: string): string {
+  if (!key) return "none";
+  if (key.length <= 8) return "****";
+  return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
+}
+
 // ────────────────────────────────────────────
 // Anthropic provider
 // ────────────────────────────────────────────
@@ -77,32 +83,54 @@ class AnthropicProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Anthropic API key not configured");
 
-    const client = new Anthropic({ apiKey });
+    const start = Date.now();
+    try {
+      const client = new Anthropic({ apiKey });
 
-    // Anthropic uses a separate `system` param instead of a system message
-    const systemMsg = messages.find((m) => m.role === "system");
-    const chatMessages = messages
-      .filter((m) => m.role !== "system")
-      .map((m) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      }));
+      // Anthropic uses a separate `system` param instead of a system message
+      const systemMsg = messages.find((m) => m.role === "system");
+      const chatMessages = messages
+        .filter((m) => m.role !== "system")
+        .map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }));
 
-    const response = await client.messages.create({
-      model: this.model,
-      max_tokens: opts?.maxTokens ?? 2000,
-      ...(systemMsg && { system: systemMsg.content }),
-      messages: chatMessages,
-    });
+      const response = await client.messages.create({
+        model: this.model,
+        max_tokens: opts?.maxTokens ?? 2000,
+        ...(systemMsg && { system: systemMsg.content }),
+        messages: chatMessages,
+      });
 
-    const text = response.content.find((b) => b.type === "text");
-    return {
-      text: text && "text" in text ? text.text : "",
-      usage: {
+      const text = response.content.find((b) => b.type === "text");
+      const duration = Date.now() - start;
+
+      logger.info(`Anthropic LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
         inputTokens: response.usage.input_tokens,
         outputTokens: response.usage.output_tokens,
-      },
-    };
+      });
+
+      return {
+        text: text && "text" in text ? text.text : "",
+        usage: {
+          inputTokens: response.usage.input_tokens,
+          outputTokens: response.usage.output_tokens,
+        },
+      };
+    } catch (error: any) {
+      const duration = Date.now() - start;
+      logger.error(`Anthropic LLM error`, {
+        duration,
+        key: maskKey(apiKey),
+        error: error.message,
+        status: error.status,
+      });
+      throw error;
+    }
   }
 }
 
@@ -131,12 +159,7 @@ class NvidiaProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("NVIDIA API key not configured");
 
-    logger.info("NVIDIA LLM request", {
-      model: this.model,
-      messageCount: messages.length,
-      maxTokens: opts?.maxTokens ?? 2000,
-    });
-
+    const start = Date.now();
     try {
       const response = await axios.post(
         `${this.baseUrl}/chat/completions`,
@@ -160,8 +183,16 @@ class NvidiaProvider implements LLMProvider {
 
       const choice = response.data?.choices?.[0];
       const text: string = choice?.message?.content ?? "";
-
       const cleaned = text?.replace(/<think>[\s\S]*?<\/think>/g, "").trim() || "No response";
+      const duration = Date.now() - start;
+
+      logger.info(`NVIDIA LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
+        inputTokens: response.data?.usage?.prompt_tokens,
+        outputTokens: response.data?.usage?.completion_tokens,
+      });
 
       return {
         text: cleaned,
@@ -171,7 +202,10 @@ class NvidiaProvider implements LLMProvider {
         },
       };
     } catch (error: any) {
+      const duration = Date.now() - start;
       logger.error("NVIDIA LLM error", {
+        duration,
+        key: maskKey(apiKey),
         error: error.message,
         code: error.code,
         status: error.response?.status,
@@ -204,6 +238,7 @@ class GeminiProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Gemini API key not configured");
 
+    const start = Date.now();
     try {
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${apiKey}`,
@@ -221,9 +256,23 @@ class GeminiProvider implements LLMProvider {
       );
 
       const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const duration = Date.now() - start;
+
+      logger.info(`Gemini LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
+      });
+
       return { text };
     } catch (error: any) {
-      logger.error("Gemini LLM error", { error: error.message });
+      const duration = Date.now() - start;
+      logger.error("Gemini LLM error", {
+        duration,
+        key: maskKey(apiKey),
+        error: error.message,
+        status: error.response?.status,
+      });
       throw error;
     }
   }
@@ -252,6 +301,7 @@ class GroqProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Groq API key not configured");
 
+    const start = Date.now();
     try {
       const response = await axios.post(
         "https://api.groq.com/openai/v1/chat/completions",
@@ -271,9 +321,25 @@ class GroqProvider implements LLMProvider {
       );
 
       const text = response.data?.choices?.[0]?.message?.content ?? "";
+      const duration = Date.now() - start;
+
+      logger.info(`Groq LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
+        inputTokens: response.data?.usage?.prompt_tokens,
+        outputTokens: response.data?.usage?.completion_tokens,
+      });
+
       return { text };
     } catch (error: any) {
-      logger.error("Groq LLM error", { error: error.message });
+      const duration = Date.now() - start;
+      logger.error("Groq LLM error", {
+        duration,
+        key: maskKey(apiKey),
+        error: error.message,
+        status: error.response?.status,
+      });
       throw error;
     }
   }
@@ -304,6 +370,7 @@ class OpencodeProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Opencode API key not configured");
 
+    const start = Date.now();
     try {
       const systemMsg = messages.find((m) => m.role === "system");
       const chatMessages = messages
@@ -335,6 +402,15 @@ class OpencodeProvider implements LLMProvider {
       );
 
       const text = response.data?.content?.find((b: any) => b.type === "text")?.text ?? "";
+      const duration = Date.now() - start;
+
+      logger.info(`Opencode LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
+        inputTokens: response.data?.usage?.input_tokens,
+        outputTokens: response.data?.usage?.output_tokens,
+      });
       
       return {
         text,
@@ -344,7 +420,10 @@ class OpencodeProvider implements LLMProvider {
         },
       };
     } catch (error: any) {
+      const duration = Date.now() - start;
       logger.error("Opencode LLM error", {
+        duration,
+        key: maskKey(apiKey),
         error: error.message,
         status: error.response?.status,
         data: error.response?.data,
@@ -379,6 +458,7 @@ class OpenRouterProvider implements LLMProvider {
     const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("OpenRouter API key not configured");
 
+    const start = Date.now();
     try {
       const response = await axios.post(
         `${this.baseUrl}/chat/completions`,
@@ -398,6 +478,16 @@ class OpenRouterProvider implements LLMProvider {
       );
 
       const text = response.data?.choices?.[0]?.message?.content ?? "";
+      const duration = Date.now() - start;
+
+      logger.info(`OpenRouter LLM success`, {
+        duration,
+        model: this.model,
+        key: maskKey(apiKey),
+        inputTokens: response.data?.usage?.prompt_tokens,
+        outputTokens: response.data?.usage?.completion_tokens,
+      });
+
       return {
         text,
         usage: {
@@ -406,7 +496,10 @@ class OpenRouterProvider implements LLMProvider {
         },
       };
     } catch (error: any) {
+      const duration = Date.now() - start;
       logger.error("OpenRouter LLM error", {
+        duration,
+        key: maskKey(apiKey),
         error: error.message,
         status: error.response?.status,
         data: error.response?.data,
@@ -456,6 +549,8 @@ class ResilientLLMProvider implements LLMProvider {
     }
 
     logger.info("LLM Provider Rotation", {
+      purpose: opts?.purpose,
+      mappingId: opts?.mappingId,
       preferred: preferredName,
       available_count: availableProviders.length,
       rotation: sorted.map(p => p.name)
@@ -464,8 +559,9 @@ class ResilientLLMProvider implements LLMProvider {
     let lastError: Error | null = null;
 
     for (const provider of sorted) {
+      const start = Date.now();
       try {
-        logger.info(`Attempting LLM completion with ${provider.name}`);
+        logger.info(`Attempting LLM completion`, { provider: provider.name, purpose: opts?.purpose });
         const response = await provider.complete(messages, opts);
         
         if (!response.text || response.text === "No response") {
@@ -474,7 +570,12 @@ class ResilientLLMProvider implements LLMProvider {
         
         return response;
       } catch (error: any) {
-        logger.warn(`LLM provider ${provider.name} failed: ${error.message}`);
+        const duration = Date.now() - start;
+        logger.warn(`LLM provider ${provider.name} failed`, {
+          duration,
+          error: error.message,
+          purpose: opts?.purpose,
+        });
         lastError = error;
       }
     }
