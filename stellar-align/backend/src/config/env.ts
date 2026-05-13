@@ -33,25 +33,35 @@ const envSchema = z.object({
   APPLE_KEY_ID: z.string().optional(),
   APPLE_PRIVATE_KEY: z.string().optional(),
 
-  // AI Provider: 'anthropic' or 'nvidia' (default: nvidia)
-  AI_PROVIDER: z.enum(["anthropic", "nvidia"]).default("nvidia"),
+  // AI Provider: 'anthropic', 'nvidia', 'gemini', 'groq', 'opencode', or 'openrouter' (default: nvidia)
+  AI_PROVIDER: z.enum(["opencode", "anthropic", "nvidia", "gemini", "groq", "openrouter"]).default("opencode"),
 
   // Anthropic (optional — used when AI_PROVIDER=anthropic)
-  ANTHROPIC_API_KEY: z.string().optional(),
+  ANTHROPIC_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
   ANTHROPIC_MODEL: z.string().default("claude-3-5-sonnet-20241022"),
 
+  // Opencode (optional — used when AI_PROVIDER=opencode)
+  OPENCODE_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
+  OPENCODE_MODEL: z.string().default("minimax-m2.5-free"),
+  OPENCODE_BASE_URL: z.string().default("https://opencode.ai/zen/v1"),
+
   // NVIDIA NIM (optional — used when AI_PROVIDER=nvidia)
-  NVIDIA_API_KEY: z.string().optional(),
-  NVIDIA_MODEL: z.string().default("qwen/qwen3.5-397b-a17b"),
+  NVIDIA_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
+  NVIDIA_MODEL: z.string().default("nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"),
   NVIDIA_BASE_URL: z.string().default("https://integrate.api.nvidia.com/v1"),
 
   // Gemini (optional)
-  GEMINI_API_KEY: z.string().optional(),
+  GEMINI_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
   GEMINI_MODEL: z.string().default("gemini-1.5-pro"),
 
   // Groq (optional)
-  GROQ_API_KEY: z.string().optional(),
+  GROQ_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
   GROQ_MODEL: z.string().default("llama3-70b-8192"),
+
+  // OpenRouter (optional)
+  OPENROUTER_API_KEY: z.string().optional().transform(v => v ? v.split(',').map(s => s.trim()) : []),
+  OPENROUTER_MODEL: z.string().default("openai/gpt-3.5-turbo"),
+  OPENROUTER_BASE_URL: z.string().default("https://openrouter.ai/api/v1"),
 
   // Push Notifications
   FIREBASE_PROJECT_ID: z.string().optional(),

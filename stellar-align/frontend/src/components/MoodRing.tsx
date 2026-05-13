@@ -60,6 +60,7 @@ export const MoodRing: React.FC<MoodRingProps> = ({ score, label, aspects }) => 
                   styles.aspectVal,
                   aspect.highlight && { color: colors.stellarAmber },
                 ]}
+                numberOfLines={1}
               >
                 {aspect.val}
               </StellarText>

@@ -164,6 +164,8 @@ User's Natal Chart Context:
         const response = await llmProvider.complete(messages, {
           maxTokens: 500,
           temperature: 0.7,
+          purpose: "chat",
+          mappingId: chatSession.id,
         });
         responseText = response.text;
       } catch (error: any) {

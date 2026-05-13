@@ -799,3 +799,22 @@ Completed the project-wide rebranding by removing the last remaining "Astra" ref
 - All screens and components in `stellar-align/frontend/src/**/*` (updated usages)
 - `stellar-align/frontend/src/theme/theme.ts`
 - `stellar-align/report/changes.md`
+
+## [2026-05-13 19:16] - Multi-Key AI Providers & OpenRouter Integration
+
+### Changed
+- Refactored all LLM providers to support multiple API keys via comma-separated environment variables.
+- Implemented API key selection strategy:
+  - **Random selection** for daily horoscope and astrological interpretations.
+  - **Mapped selection** (consistent per session) for chat interactions.
+- Added **OpenRouter** as a new supported AI provider.
+- Enhanced **Gemini** provider to support multiple keys and consistent selection.
+
+### Modified Files
+- `stellar-align/backend/src/config/env.ts`: Updated env schema for multiple keys and added OpenRouter config.
+- `stellar-align/backend/src/services/llmProvider.ts`: Implemented `selectApiKey` logic and added `OpenRouterProvider`.
+- `stellar-align/backend/src/services/aiContent.ts`: Updated calls to pass `purpose: "horoscope"` and `mappingId`.
+- `stellar-align/backend/src/controllers/chatController.ts`: Updated calls to pass `purpose: "chat"` and `mappingId`.
+
+### Why
+To improve reliability, bypass rate limits via key rotation, and add support for OpenRouter's diverse model set.

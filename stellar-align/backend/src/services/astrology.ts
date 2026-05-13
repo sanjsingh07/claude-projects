@@ -667,7 +667,11 @@ export async function generateDailyHoroscope(
             planetaryPositions: true,
             houses: true,
             aspects: true,
-            divisionalCharts: true
+            divisionalCharts: {
+              include: {
+                planetaryPositions: true
+              }
+            }
           }
         } 
       },
@@ -682,11 +686,16 @@ export async function generateDailyHoroscope(
     // Calculate transits for today using the consolidated transit engine
     const userTimezone = user.birthTimezone || "UTC";
     const forecastData = await getTransitsForPeriod(user.natalChart, "week", date, userTimezone);
+    
     // Filter for transits happening exactly today (or very close)
     const todayISO = DateTime.fromJSDate(date, { zone: userTimezone }).toISODate();
-    const userTransits = forecastData.transits.filter(t => 
-      DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 1
+    const todayTransits = forecastData.transits.filter(t => 
+      DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 0.5
     );
+
+    // Separate Personal (Natal) vs Mundane (Sky) transits for the AI
+    const personalTransits = todayTransits.filter(t => t.eventKind === "natal_aspect");
+    const mundaneTransits = todayTransits.filter(t => t.eventKind === "sky_aspect" || t.eventKind === "ingress" || t.eventKind.includes("station"));
 
     // Get current planetary positions for moon sign/phase
     const transitPositions = await getPlanetaryPositions(
@@ -717,7 +726,7 @@ export async function generateDailyHoroscope(
       date,
       moonPos.sign,
       moonPhase,
-      userTransits,
+      todayTransits, // Keep the full list for DB storage
       vedicData
     );
 
@@ -727,7 +736,7 @@ export async function generateDailyHoroscope(
         forDate: date,
         moonSign: moonPos.sign,
         moonPhase,
-        activeTransits: userTransits as any,
+        activeTransits: todayTransits as any,
         energyScore: content.energyScore,
         moodAspects: content.moodAspects,
         primaryTransit: content.primaryTransit,
