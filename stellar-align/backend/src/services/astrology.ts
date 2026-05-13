@@ -693,11 +693,7 @@ export async function generateDailyHoroscope(
       DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 0.5
     );
 
-    // Separate Personal (Natal) vs Mundane (Sky) transits for the AI
-    const personalTransits = todayTransits.filter(t => t.eventKind === "natal_aspect");
-    const mundaneTransits = todayTransits.filter(t => t.eventKind === "sky_aspect" || t.eventKind === "ingress" || t.eventKind.includes("station"));
-
-    // Get current planetary positions for moon sign/phase
+    // Get current planetary positions for moon sign/phase using the user's preferred zodiac system
     const transitPositions = await getPlanetaryPositions(
       date, 
       zodiacType === "SIDEREAL" ? ayanamsaType : undefined

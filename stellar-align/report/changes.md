@@ -882,3 +882,10 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
   - `stellar-align/backend/.env`
   - `stellar-align/backend/src/services/aiContent.ts`
   - `stellar-align/backend/src/services/llmProvider.ts`
+
+## [2026-05-14 01:14] - Sync Settings and Astrology Systems
+- **What was changed**: Linked frontend `chartStyle` setting to backend `NatalChart.zodiacType` and cleaned up horoscope generation.
+- **Summary**: Previously, changing the chart style (Western/Vedic) in the UI didn't update the underlying astronomical system used for daily horoscopes. Now, `updateUserSettings` automatically syncs `NatalChart.zodiacType` (TROPICAL/SIDEREAL) with the selected style. Also removed redundant transit filtering variables in `astrology.ts` as this categorization is already handled by the `AIContentService` prompt builder.
+- **Files modified**:
+  - `stellar-align/backend/src/services/settingsService.ts`
+  - `stellar-align/backend/src/services/astrology.ts`

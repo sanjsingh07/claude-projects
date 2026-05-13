@@ -1,4 +1,5 @@
 import { prisma } from "../config/database";
+import logger from "../config/logger";
 
 export const getUserSettings = async (userId: string) => {
   let settings = await prisma.userSettings.findUnique({
@@ -85,6 +86,16 @@ export const updateUserSettings = async (userId: string, patch: any) => {
     where: { userId },
     data: updateData
   });
+
+  // Sync NatalChart zodiacType if chartStyle changed
+  if (patch.display?.chartStyle) {
+    const zodiacType = patch.display.chartStyle === "vedic" ? "SIDEREAL" : "TROPICAL";
+    await prisma.natalChart.updateMany({
+      where: { userId },
+      data: { zodiacType }
+    });
+    logger.info(`Synced zodiacType to ${zodiacType} for user ${userId} based on chartStyle change`);
+  }
 
   return getUserSettings(userId);
 };
