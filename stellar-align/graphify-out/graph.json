@@ -108,7 +108,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_astrology_ts",
-      "community": 4,
+      "community": 3,
       "norm_label": "astrology.ts"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L16",
       "id": "utils_astrology_getsignemoji",
-      "community": 4,
+      "community": 3,
       "norm_label": "getsignemoji()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L22",
       "id": "utils_astrology_formatsignname",
-      "community": 4,
+      "community": 3,
       "norm_label": "formatsignname()"
     },
     {
@@ -135,17 +135,8 @@
       "source_file": "frontend/src/screens/ChatScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_chatscreen_tsx",
-      "community": 28,
+      "community": 41,
       "norm_label": "chatscreen.tsx"
-    },
-    {
-      "label": "handleSend()",
-      "file_type": "code",
-      "source_file": "frontend/src/screens/ChatScreen.tsx",
-      "source_location": "L81",
-      "id": "screens_chatscreen_handlesend",
-      "community": 28,
-      "norm_label": "handlesend()"
     },
     {
       "label": "TodayScreen.tsx",
@@ -162,7 +153,7 @@
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_profilescreen_tsx",
-      "community": 4,
+      "community": 3,
       "norm_label": "profilescreen.tsx"
     },
     {
@@ -171,7 +162,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_chartscreen_tsx",
-      "community": 19,
+      "community": 18,
       "norm_label": "chartscreen.tsx"
     },
     {
@@ -180,7 +171,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L114",
       "id": "screens_chartscreen_handletogglevedic",
-      "community": 19,
+      "community": 18,
       "norm_label": "handletogglevedic()"
     },
     {
@@ -189,7 +180,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L129",
       "id": "screens_chartscreen_handleselectchart",
-      "community": 19,
+      "community": 18,
       "norm_label": "handleselectchart()"
     },
     {
@@ -198,7 +189,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L133",
       "id": "screens_chartscreen_handlerefresh",
-      "community": 19,
+      "community": 18,
       "norm_label": "handlerefresh()"
     },
     {
@@ -207,7 +198,7 @@
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_settingsscreen_tsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "settingsscreen.tsx"
     },
     {
@@ -216,7 +207,7 @@
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L138",
       "id": "screens_settingsscreen_getbirthdate",
-      "community": 10,
+      "community": 11,
       "norm_label": "getbirthdate()"
     },
     {
@@ -225,7 +216,7 @@
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L149",
       "id": "screens_settingsscreen_getbirthtimedate",
-      "community": 10,
+      "community": 11,
       "norm_label": "getbirthtimedate()"
     },
     {
@@ -234,7 +225,7 @@
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L166",
       "id": "screens_settingsscreen_getdailynotificationdate",
-      "community": 10,
+      "community": 11,
       "norm_label": "getdailynotificationdate()"
     },
     {
@@ -243,7 +234,7 @@
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L186",
       "id": "screens_settingsscreen_handlelocationselect",
-      "community": 10,
+      "community": 11,
       "norm_label": "handlelocationselect()"
     },
     {
@@ -261,7 +252,7 @@
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_auth_registerstartscreen_tsx",
-      "community": 4,
+      "community": 3,
       "norm_label": "registerstartscreen.tsx"
     },
     {
@@ -270,7 +261,7 @@
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
       "source_location": "L74",
       "id": "auth_registerstartscreen_handlegooglelogin",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlegooglelogin()"
     },
     {
@@ -279,7 +270,7 @@
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
       "source_location": "L82",
       "id": "auth_registerstartscreen_handleapplelogin",
-      "community": 4,
+      "community": 3,
       "norm_label": "handleapplelogin()"
     },
     {
@@ -432,7 +423,7 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_auth_loginscreen_tsx",
-      "community": 4,
+      "community": 3,
       "norm_label": "loginscreen.tsx"
     },
     {
@@ -441,7 +432,7 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L94",
       "id": "auth_loginscreen_handlelogin",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlelogin()"
     },
     {
@@ -450,7 +441,7 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L111",
       "id": "auth_loginscreen_handleforgotpassword",
-      "community": 4,
+      "community": 3,
       "norm_label": "handleforgotpassword()"
     },
     {
@@ -459,7 +450,7 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L125",
       "id": "auth_loginscreen_handlegooglelogin",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlegooglelogin()"
     },
     {
@@ -468,7 +459,7 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L133",
       "id": "auth_loginscreen_handleapplelogin",
-      "community": 4,
+      "community": 3,
       "norm_label": "handleapplelogin()"
     },
     {
@@ -477,7 +468,7 @@
       "source_file": "frontend/src/components/StarField.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_starfield_tsx",
-      "community": 29,
+      "community": 31,
       "norm_label": "starfield.tsx"
     },
     {
@@ -486,7 +477,7 @@
       "source_file": "frontend/src/components/StarField.tsx",
       "source_location": "L19",
       "id": "components_starfield_generatestars",
-      "community": 29,
+      "community": 31,
       "norm_label": "generatestars()"
     },
     {
@@ -495,7 +486,7 @@
       "source_file": "frontend/src/components/MoodRing.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_moodring_tsx",
-      "community": 30,
+      "community": 32,
       "norm_label": "moodring.tsx"
     },
     {
@@ -513,7 +504,7 @@
       "source_file": "frontend/src/components/SettingsComponents.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_settingscomponents_tsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "settingscomponents.tsx"
     },
     {
@@ -522,7 +513,7 @@
       "source_file": "frontend/src/components/SettingsComponents.tsx",
       "source_location": "L15",
       "id": "components_settingscomponents_settingsheader",
-      "community": 10,
+      "community": 11,
       "norm_label": "settingsheader()"
     },
     {
@@ -531,7 +522,7 @@
       "source_file": "frontend/src/components/SettingsComponents.tsx",
       "source_location": "L26",
       "id": "components_settingscomponents_settingssection",
-      "community": 10,
+      "community": 11,
       "norm_label": "settingssection()"
     },
     {
@@ -540,7 +531,7 @@
       "source_file": "frontend/src/components/SettingsComponents.tsx",
       "source_location": "L138",
       "id": "components_settingscomponents_fetchlocations",
-      "community": 10,
+      "community": 11,
       "norm_label": "fetchlocations()"
     },
     {
@@ -621,7 +612,7 @@
       "source_file": "frontend/src/components/StellarCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_stellarcard_tsx",
-      "community": 31,
+      "community": 33,
       "norm_label": "stellarcard.tsx"
     },
     {
@@ -630,7 +621,7 @@
       "source_file": "frontend/src/components/StellarCard.tsx",
       "source_location": "L65",
       "id": "components_stellarcard_gettextstyle",
-      "community": 31,
+      "community": 33,
       "norm_label": "gettextstyle()"
     },
     {
@@ -648,7 +639,7 @@
       "source_file": "frontend/src/components/CompatibilityRing.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_compatibilityring_tsx",
-      "community": 32,
+      "community": 34,
       "norm_label": "compatibilityring.tsx"
     },
     {
@@ -657,7 +648,7 @@
       "source_file": "frontend/src/components/CompatibilityRing.tsx",
       "source_location": "L13",
       "id": "components_compatibilityring_compatibilityring",
-      "community": 32,
+      "community": 34,
       "norm_label": "compatibilityring()"
     },
     {
@@ -666,7 +657,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_vedicchartcard_tsx",
-      "community": 18,
+      "community": 19,
       "norm_label": "vedicchartcard.tsx"
     },
     {
@@ -675,7 +666,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L24",
       "id": "components_vedicchartcard_normalizesign",
-      "community": 18,
+      "community": 19,
       "norm_label": "normalizesign()"
     },
     {
@@ -684,7 +675,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L28",
       "id": "components_vedicchartcard_formatsign",
-      "community": 18,
+      "community": 19,
       "norm_label": "formatsign()"
     },
     {
@@ -693,7 +684,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L33",
       "id": "components_vedicchartcard_displayplanetname",
-      "community": 18,
+      "community": 19,
       "norm_label": "displayplanetname()"
     },
     {
@@ -702,7 +693,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L44",
       "id": "components_vedicchartcard_displayplanetlabel",
-      "community": 18,
+      "community": 19,
       "norm_label": "displayplanetlabel()"
     },
     {
@@ -711,7 +702,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L51",
       "id": "components_vedicchartcard_formatdegree",
-      "community": 18,
+      "community": 19,
       "norm_label": "formatdegree()"
     },
     {
@@ -720,7 +711,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L65",
       "id": "components_vedicchartcard_renderplanetlist",
-      "community": 18,
+      "community": 19,
       "norm_label": "renderplanetlist()"
     },
     {
@@ -765,7 +756,7 @@
       "source_file": "frontend/src/components/TransitCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitcard_tsx",
-      "community": 33,
+      "community": 35,
       "norm_label": "transitcard.tsx"
     },
     {
@@ -774,7 +765,7 @@
       "source_file": "frontend/src/components/TransitCard.tsx",
       "source_location": "L14",
       "id": "components_transitcard_transitcard",
-      "community": 33,
+      "community": 35,
       "norm_label": "transitcard()"
     },
     {
@@ -819,7 +810,7 @@
       "source_file": "frontend/src/components/StellarBackground.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_stellarbackground_tsx",
-      "community": 34,
+      "community": 36,
       "norm_label": "stellarbackground.tsx"
     },
     {
@@ -828,7 +819,7 @@
       "source_file": "frontend/src/components/StellarBackground.tsx",
       "source_location": "L22",
       "id": "components_stellarbackground_generatestars",
-      "community": 34,
+      "community": 36,
       "norm_label": "generatestars()"
     },
     {
@@ -855,7 +846,7 @@
       "source_file": "frontend/src/hooks/useAuth.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_useauth_ts",
-      "community": 4,
+      "community": 3,
       "norm_label": "useauth.ts"
     },
     {
@@ -864,7 +855,7 @@
       "source_file": "frontend/src/hooks/useAuth.ts",
       "source_location": "L7",
       "id": "hooks_useauth_useauth",
-      "community": 4,
+      "community": 3,
       "norm_label": "useauth()"
     },
     {
@@ -900,7 +891,7 @@
       "source_file": "frontend/src/hooks/useVedicChart.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usevedicchart_ts",
-      "community": 19,
+      "community": 18,
       "norm_label": "usevedicchart.ts"
     },
     {
@@ -909,7 +900,7 @@
       "source_file": "frontend/src/hooks/useVedicChart.ts",
       "source_location": "L5",
       "id": "hooks_usevedicchart_usevedicchart",
-      "community": 19,
+      "community": 18,
       "norm_label": "usevedicchart()"
     },
     {
@@ -918,7 +909,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L1",
       "id": "frontend_src_services_api_ts",
-      "community": 37,
+      "community": 30,
       "norm_label": "api.ts"
     },
     {
@@ -927,7 +918,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L13",
       "id": "services_api_getapiurl",
-      "community": 37,
+      "community": 30,
       "norm_label": "getapiurl()"
     },
     {
@@ -945,7 +936,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L44",
       "id": "services_api_apiservice_constructor",
-      "community": 35,
+      "community": 29,
       "norm_label": ".constructor()"
     },
     {
@@ -954,7 +945,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L56",
       "id": "services_api_apiservice_setupinterceptors",
-      "community": 35,
+      "community": 29,
       "norm_label": ".setupinterceptors()"
     },
     {
@@ -990,7 +981,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L180",
       "id": "services_api_apiservice_cleartokens",
-      "community": 36,
+      "community": 28,
       "norm_label": ".cleartokens()"
     },
     {
@@ -1017,7 +1008,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L224",
       "id": "services_api_apiservice_logout",
-      "community": 36,
+      "community": 28,
       "norm_label": ".logout()"
     },
     {
@@ -1152,7 +1143,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L300",
       "id": "services_api_apiservice_getvedicchart",
-      "community": 19,
+      "community": 18,
       "norm_label": ".getvedicchart()"
     },
     {
@@ -1584,7 +1575,7 @@
       "source_file": "backend/src/types/astronomia.d.ts",
       "source_location": "L1",
       "id": "backend_src_types_astronomia_d_ts",
-      "community": 38,
+      "community": 37,
       "norm_label": "astronomia.d.ts"
     },
     {
@@ -1593,7 +1584,7 @@
       "source_file": "backend/src/types/astronomia.d.ts",
       "source_location": "L55",
       "id": "types_astronomia_d_planet",
-      "community": 38,
+      "community": 37,
       "norm_label": "planet"
     },
     {
@@ -1701,7 +1692,7 @@
       "source_file": "backend/src/utils/timezone.ts",
       "source_location": "L1",
       "id": "backend_src_utils_timezone_ts",
-      "community": 3,
+      "community": 6,
       "norm_label": "timezone.ts"
     },
     {
@@ -1710,7 +1701,7 @@
       "source_file": "backend/src/utils/timezone.ts",
       "source_location": "L9",
       "id": "utils_timezone_gettimezonefromcoords",
-      "community": 3,
+      "community": 6,
       "norm_label": "gettimezonefromcoords()"
     },
     {
@@ -1719,7 +1710,7 @@
       "source_file": "backend/src/utils/timezone.ts",
       "source_location": "L25",
       "id": "utils_timezone_getalltimezones",
-      "community": 3,
+      "community": 6,
       "norm_label": "getalltimezones()"
     },
     {
@@ -1728,7 +1719,7 @@
       "source_file": "backend/src/utils/timezone.ts",
       "source_location": "L43",
       "id": "utils_timezone_validatetimezone",
-      "community": 3,
+      "community": 6,
       "norm_label": "validatetimezone()"
     },
     {
@@ -1737,7 +1728,7 @@
       "source_file": "backend/src/utils/timezone.ts",
       "source_location": "L69",
       "id": "utils_timezone_gettimezoneoffset",
-      "community": 3,
+      "community": 6,
       "norm_label": "gettimezoneoffset()"
     },
     {
@@ -1917,7 +1908,7 @@
       "source_file": "backend/src/scripts/migrateData.ts",
       "source_location": "L1",
       "id": "backend_src_scripts_migratedata_ts",
-      "community": 39,
+      "community": 38,
       "norm_label": "migratedata.ts"
     },
     {
@@ -1926,7 +1917,7 @@
       "source_file": "backend/src/scripts/migrateData.ts",
       "source_location": "L8",
       "id": "scripts_migratedata_migrate",
-      "community": 39,
+      "community": 38,
       "norm_label": "migrate()"
     },
     {
@@ -1935,7 +1926,7 @@
       "source_file": "backend/src/jobs/horoscopeWorker.ts",
       "source_location": "L1",
       "id": "backend_src_jobs_horoscopeworker_ts",
-      "community": 40,
+      "community": 39,
       "norm_label": "horoscopeworker.ts"
     },
     {
@@ -1944,7 +1935,7 @@
       "source_file": "backend/src/jobs/horoscopeWorker.ts",
       "source_location": "L51",
       "id": "jobs_horoscopeworker_enqueuedailyhoroscopes",
-      "community": 40,
+      "community": 39,
       "norm_label": "enqueuedailyhoroscopes()"
     },
     {
@@ -1980,7 +1971,7 @@
       "source_file": "backend/src/controllers/authController.spec.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_authcontroller_spec_ts",
-      "community": 11,
+      "community": 12,
       "norm_label": "authcontroller.spec.ts"
     },
     {
@@ -2043,7 +2034,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L15",
       "id": "controllers_authcontroller_authcontroller",
-      "community": 11,
+      "community": 12,
       "norm_label": "authcontroller"
     },
     {
@@ -2052,7 +2043,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L16",
       "id": "controllers_authcontroller_authcontroller_constructor",
-      "community": 11,
+      "community": 12,
       "norm_label": ".constructor()"
     },
     {
@@ -2061,7 +2052,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L30",
       "id": "controllers_authcontroller_authcontroller_register",
-      "community": 11,
+      "community": 12,
       "norm_label": ".register()"
     },
     {
@@ -2070,7 +2061,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L111",
       "id": "controllers_authcontroller_authcontroller_login",
-      "community": 11,
+      "community": 12,
       "norm_label": ".login()"
     },
     {
@@ -2079,7 +2070,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L128",
       "id": "controllers_authcontroller_authcontroller_refreshtoken",
-      "community": 11,
+      "community": 12,
       "norm_label": ".refreshtoken()"
     },
     {
@@ -2088,7 +2079,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L148",
       "id": "controllers_authcontroller_authcontroller_logout",
-      "community": 11,
+      "community": 12,
       "norm_label": ".logout()"
     },
     {
@@ -2097,7 +2088,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L165",
       "id": "controllers_authcontroller_authcontroller_forgotpassword",
-      "community": 11,
+      "community": 12,
       "norm_label": ".forgotpassword()"
     },
     {
@@ -2106,7 +2097,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L184",
       "id": "controllers_authcontroller_authcontroller_resetpassword",
-      "community": 11,
+      "community": 12,
       "norm_label": ".resetpassword()"
     },
     {
@@ -2115,7 +2106,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L202",
       "id": "controllers_authcontroller_authcontroller_changepassword",
-      "community": 11,
+      "community": 12,
       "norm_label": ".changepassword()"
     },
     {
@@ -2124,7 +2115,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L225",
       "id": "controllers_authcontroller_authcontroller_googleauth",
-      "community": 11,
+      "community": 12,
       "norm_label": ".googleauth()"
     },
     {
@@ -2133,7 +2124,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L234",
       "id": "controllers_authcontroller_authcontroller_googlecallback",
-      "community": 11,
+      "community": 12,
       "norm_label": ".googlecallback()"
     },
     {
@@ -2142,7 +2133,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L248",
       "id": "controllers_authcontroller_authcontroller_appleauth",
-      "community": 11,
+      "community": 12,
       "norm_label": ".appleauth()"
     },
     {
@@ -2151,7 +2142,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L256",
       "id": "controllers_authcontroller_authcontroller_sociallogin",
-      "community": 11,
+      "community": 12,
       "norm_label": ".sociallogin()"
     },
     {
@@ -2160,7 +2151,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L335",
       "id": "controllers_authcontroller_authcontroller_calculateuserchart",
-      "community": 11,
+      "community": 12,
       "norm_label": ".calculateuserchart()"
     },
     {
@@ -2358,7 +2349,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_usercontroller_ts",
-      "community": 3,
+      "community": 6,
       "norm_label": "usercontroller.ts"
     },
     {
@@ -2367,7 +2358,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L14",
       "id": "controllers_usercontroller_usercontroller",
-      "community": 3,
+      "community": 10,
       "norm_label": "usercontroller"
     },
     {
@@ -2376,7 +2367,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L15",
       "id": "controllers_usercontroller_usercontroller_constructor",
-      "community": 3,
+      "community": 10,
       "norm_label": ".constructor()"
     },
     {
@@ -2385,7 +2376,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L27",
       "id": "controllers_usercontroller_usercontroller_getcurrentuser",
-      "community": 3,
+      "community": 10,
       "norm_label": ".getcurrentuser()"
     },
     {
@@ -2394,7 +2385,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L57",
       "id": "controllers_usercontroller_usercontroller_updatecurrentuser",
-      "community": 3,
+      "community": 6,
       "norm_label": ".updatecurrentuser()"
     },
     {
@@ -2403,7 +2394,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L230",
       "id": "controllers_usercontroller_usercontroller_calculateallchartsforuserinternal",
-      "community": 3,
+      "community": 10,
       "norm_label": ".calculateallchartsforuserinternal()"
     },
     {
@@ -2412,7 +2403,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L243",
       "id": "controllers_usercontroller_usercontroller_calculatenatalchartforuserinternal",
-      "community": 3,
+      "community": 10,
       "norm_label": ".calculatenatalchartforuserinternal()"
     },
     {
@@ -2421,7 +2412,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L370",
       "id": "controllers_usercontroller_usercontroller_calculatevedicchartforuserinternal",
-      "community": 3,
+      "community": 10,
       "norm_label": ".calculatevedicchartforuserinternal()"
     },
     {
@@ -2430,7 +2421,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L492",
       "id": "controllers_usercontroller_usercontroller_recalculatenatalchart",
-      "community": 3,
+      "community": 10,
       "norm_label": ".recalculatenatalchart()"
     },
     {
@@ -2439,7 +2430,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L518",
       "id": "controllers_usercontroller_usercontroller_getuserprofile",
-      "community": 3,
+      "community": 10,
       "norm_label": ".getuserprofile()"
     },
     {
@@ -2448,7 +2439,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L605",
       "id": "controllers_usercontroller_usercontroller_deleteaccount",
-      "community": 3,
+      "community": 10,
       "norm_label": ".deleteaccount()"
     },
     {
@@ -2457,7 +2448,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L633",
       "id": "controllers_usercontroller_usercontroller_getsettings",
-      "community": 3,
+      "community": 10,
       "norm_label": ".getsettings()"
     },
     {
@@ -2466,7 +2457,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L670",
       "id": "controllers_usercontroller_usercontroller_updatesettings",
-      "community": 3,
+      "community": 10,
       "norm_label": ".updatesettings()"
     },
     {
@@ -2475,7 +2466,7 @@
       "source_file": "backend/src/controllers/userController.ts",
       "source_location": "L707",
       "id": "controllers_usercontroller_usercontroller_registerpushtoken",
-      "community": 3,
+      "community": 10,
       "norm_label": ".registerpushtoken()"
     },
     {
@@ -2502,7 +2493,7 @@
       "source_file": "backend/src/routes/utils.ts",
       "source_location": "L1",
       "id": "backend_src_routes_utils_ts",
-      "community": 3,
+      "community": 6,
       "norm_label": "utils.ts"
     },
     {
@@ -2601,7 +2592,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L68",
       "id": "services_aicontent_aicontentservice",
-      "community": 5,
+      "community": 4,
       "norm_label": "aicontentservice"
     },
     {
@@ -2610,7 +2601,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L70",
       "id": "services_aicontent_aicontentservice_generatedailyhoroscope",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generatedailyhoroscope()"
     },
     {
@@ -2619,7 +2610,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L141",
       "id": "services_aicontent_aicontentservice_generatechartinterpretation",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generatechartinterpretation()"
     },
     {
@@ -2628,7 +2619,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L178",
       "id": "services_aicontent_aicontentservice_generatecompatibilityinterpretation",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generatecompatibilityinterpretation()"
     },
     {
@@ -2637,7 +2628,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L226",
       "id": "services_aicontent_aicontentservice_shouldgeneratehoroscopes",
-      "community": 5,
+      "community": 4,
       "norm_label": ".shouldgeneratehoroscopes()"
     },
     {
@@ -2646,7 +2637,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L236",
       "id": "services_aicontent_aicontentservice_markgenerationcomplete",
-      "community": 5,
+      "community": 4,
       "norm_label": ".markgenerationcomplete()"
     },
     {
@@ -2655,7 +2646,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L249",
       "id": "services_aicontent_aicontentservice_buildhoroscopeprompt",
-      "community": 5,
+      "community": 4,
       "norm_label": ".buildhoroscopeprompt()"
     },
     {
@@ -2664,7 +2655,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L366",
       "id": "services_aicontent_aicontentservice_generaterulebasedhoroscope",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generaterulebasedhoroscope()"
     },
     {
@@ -2673,7 +2664,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L411",
       "id": "services_aicontent_aicontentservice_formattransitsummary",
-      "community": 5,
+      "community": 4,
       "norm_label": ".formattransitsummary()"
     },
     {
@@ -2682,7 +2673,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L425",
       "id": "services_aicontent_aicontentservice_normalizedailycontent",
-      "community": 5,
+      "community": 4,
       "norm_label": ".normalizedailycontent()"
     },
     {
@@ -2691,7 +2682,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L465",
       "id": "services_aicontent_aicontentservice_transittoaspectentry",
-      "community": 5,
+      "community": 4,
       "norm_label": ".transittoaspectentry()"
     },
     {
@@ -2700,7 +2691,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L475",
       "id": "services_aicontent_aicontentservice_normalizebadge",
-      "community": 5,
+      "community": 4,
       "norm_label": ".normalizebadge()"
     },
     {
@@ -2709,7 +2700,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L481",
       "id": "services_aicontent_aicontentservice_normalizequality",
-      "community": 5,
+      "community": 4,
       "norm_label": ".normalizequality()"
     },
     {
@@ -2718,7 +2709,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L487",
       "id": "services_aicontent_aicontentservice_requiredtext",
-      "community": 5,
+      "community": 4,
       "norm_label": ".requiredtext()"
     },
     {
@@ -2727,7 +2718,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L492",
       "id": "services_aicontent_aicontentservice_shortstatus",
-      "community": 5,
+      "community": 4,
       "norm_label": ".shortstatus()"
     },
     {
@@ -2736,7 +2727,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L496",
       "id": "services_aicontent_aicontentservice_clampscore",
-      "community": 5,
+      "community": 4,
       "norm_label": ".clampscore()"
     },
     {
@@ -2745,7 +2736,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L502",
       "id": "services_aicontent_aicontentservice_transitorbvalue",
-      "community": 5,
+      "community": 4,
       "norm_label": ".transitorbvalue()"
     },
     {
@@ -2754,7 +2745,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L508",
       "id": "services_aicontent_aicontentservice_transitimportance",
-      "community": 5,
+      "community": 4,
       "norm_label": ".transitimportance()"
     },
     {
@@ -2763,7 +2754,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L514",
       "id": "services_aicontent_aicontentservice_generaterulebasedchartinterpretation",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generaterulebasedchartinterpretation()"
     },
     {
@@ -2772,7 +2763,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L533",
       "id": "services_aicontent_aicontentservice_generaterulebasedcompatibility",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generaterulebasedcompatibility()"
     },
     {
@@ -2781,7 +2772,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L572",
       "id": "services_aicontent_aicontentservice_sanitizejson",
-      "community": 5,
+      "community": 4,
       "norm_label": ".sanitizejson()"
     },
     {
@@ -2790,7 +2781,7 @@
       "source_file": "backend/src/services/astrologyFormatter.ts",
       "source_location": "L1",
       "id": "backend_src_services_astrologyformatter_ts",
-      "community": 3,
+      "community": 10,
       "norm_label": "astrologyformatter.ts"
     },
     {
@@ -2799,7 +2790,7 @@
       "source_file": "backend/src/services/astrologyFormatter.ts",
       "source_location": "L3",
       "id": "services_astrologyformatter_formatplacement",
-      "community": 3,
+      "community": 10,
       "norm_label": "formatplacement()"
     },
     {
@@ -2808,7 +2799,7 @@
       "source_file": "backend/src/services/astrologyFormatter.ts",
       "source_location": "L8",
       "id": "services_astrologyformatter_getsignemoji",
-      "community": 3,
+      "community": 10,
       "norm_label": "getsignemoji()"
     },
     {
@@ -2817,7 +2808,7 @@
       "source_file": "backend/src/services/astrologyFormatter.ts",
       "source_location": "L26",
       "id": "services_astrologyformatter_getsignbadgetype",
-      "community": 3,
+      "community": 10,
       "norm_label": "getsignbadgetype()"
     },
     {
@@ -2826,7 +2817,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_auth_service_ts",
-      "community": 3,
+      "community": 6,
       "norm_label": "auth.service.ts"
     },
     {
@@ -2835,7 +2826,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L17",
       "id": "services_auth_service_authservice",
-      "community": 12,
+      "community": 6,
       "norm_label": "authservice"
     },
     {
@@ -2844,7 +2835,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L18",
       "id": "services_auth_service_authservice_register",
-      "community": 12,
+      "community": 6,
       "norm_label": ".register()"
     },
     {
@@ -2853,7 +2844,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L58",
       "id": "services_auth_service_authservice_login",
-      "community": 12,
+      "community": 6,
       "norm_label": ".login()"
     },
     {
@@ -2862,7 +2853,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L87",
       "id": "services_auth_service_authservice_sociallogin",
-      "community": 12,
+      "community": 6,
       "norm_label": ".sociallogin()"
     },
     {
@@ -2871,7 +2862,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L144",
       "id": "services_auth_service_authservice_refreshtoken",
-      "community": 12,
+      "community": 6,
       "norm_label": ".refreshtoken()"
     },
     {
@@ -2880,7 +2871,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L172",
       "id": "services_auth_service_authservice_revoketoken",
-      "community": 12,
+      "community": 6,
       "norm_label": ".revoketoken()"
     },
     {
@@ -2889,7 +2880,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L184",
       "id": "services_auth_service_authservice_logout",
-      "community": 12,
+      "community": 6,
       "norm_label": ".logout()"
     },
     {
@@ -2898,7 +2889,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L188",
       "id": "services_auth_service_authservice_changepassword",
-      "community": 12,
+      "community": 6,
       "norm_label": ".changepassword()"
     },
     {
@@ -2907,7 +2898,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L221",
       "id": "services_auth_service_authservice_setpassword",
-      "community": 12,
+      "community": 6,
       "norm_label": ".setpassword()"
     },
     {
@@ -2916,7 +2907,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L230",
       "id": "services_auth_service_authservice_requestpasswordreset",
-      "community": 12,
+      "community": 6,
       "norm_label": ".requestpasswordreset()"
     },
     {
@@ -2925,7 +2916,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L248",
       "id": "services_auth_service_authservice_resetpassword",
-      "community": 12,
+      "community": 6,
       "norm_label": ".resetpassword()"
     },
     {
@@ -2934,7 +2925,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L266",
       "id": "services_auth_service_authservice_generatetokens",
-      "community": 12,
+      "community": 6,
       "norm_label": ".generatetokens()"
     },
     {
@@ -2943,7 +2934,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L296",
       "id": "services_auth_service_authservice_revokeallusertokens",
-      "community": 12,
+      "community": 6,
       "norm_label": ".revokeallusertokens()"
     },
     {
@@ -2952,7 +2943,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L302",
       "id": "services_auth_service_authservice_parseduration",
-      "community": 12,
+      "community": 6,
       "norm_label": ".parseduration()"
     },
     {
@@ -2961,7 +2952,7 @@
       "source_file": "backend/src/services/auth.service.ts",
       "source_location": "L319",
       "id": "services_auth_service_authservice_mapdbusertouser",
-      "community": 12,
+      "community": 6,
       "norm_label": ".mapdbusertouser()"
     },
     {
@@ -3249,7 +3240,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L77",
       "id": "services_vedicastrology_getayanamsa",
-      "community": 6,
+      "community": 5,
       "norm_label": "getayanamsa()"
     },
     {
@@ -3474,7 +3465,7 @@
       "source_file": "backend/src/services/userService.ts",
       "source_location": "L1",
       "id": "backend_src_services_userservice_ts",
-      "community": 3,
+      "community": 10,
       "norm_label": "userservice.ts"
     },
     {
@@ -3483,7 +3474,7 @@
       "source_file": "backend/src/services/userService.ts",
       "source_location": "L38",
       "id": "services_userservice_builduserprofile",
-      "community": 3,
+      "community": 10,
       "norm_label": "builduserprofile()"
     },
     {
@@ -3528,7 +3519,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L1",
       "id": "backend_src_services_astrology_ts",
-      "community": 6,
+      "community": 5,
       "norm_label": "astrology.ts"
     },
     {
@@ -3537,7 +3528,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L137",
       "id": "services_astrology_sanitizenumber",
-      "community": 6,
+      "community": 5,
       "norm_label": "sanitizenumber()"
     },
     {
@@ -3546,7 +3537,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L144",
       "id": "services_astrology_getsignfromlongitude",
-      "community": 6,
+      "community": 5,
       "norm_label": "getsignfromlongitude()"
     },
     {
@@ -3555,7 +3546,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L151",
       "id": "services_astrology_getsigndegree",
-      "community": 6,
+      "community": 5,
       "norm_label": "getsigndegree()"
     },
     {
@@ -3564,7 +3555,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L163",
       "id": "services_astrology_normalizeangle",
-      "community": 6,
+      "community": 5,
       "norm_label": "normalizeangle()"
     },
     {
@@ -3573,7 +3564,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L172",
       "id": "services_astrology_calcplanetposition",
-      "community": 6,
+      "community": 5,
       "norm_label": "calcplanetposition()"
     },
     {
@@ -3582,7 +3573,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L232",
       "id": "services_astrology_calchouses",
-      "community": 6,
+      "community": 5,
       "norm_label": "calchouses()"
     },
     {
@@ -3591,7 +3582,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L278",
       "id": "services_astrology_assignhouses",
-      "community": 6,
+      "community": 5,
       "norm_label": "assignhouses()"
     },
     {
@@ -3618,7 +3609,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L345",
       "id": "services_astrology_calculateaspects",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculateaspects()"
     },
     {
@@ -3627,7 +3618,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L382",
       "id": "services_astrology_calculatenatalchart",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculatenatalchart()"
     },
     {
@@ -3636,7 +3627,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L548",
       "id": "services_astrology_getplanetarypositions",
-      "community": 6,
+      "community": 5,
       "norm_label": "getplanetarypositions()"
     },
     {
@@ -3645,7 +3636,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L600",
       "id": "services_astrology_getcurrentplanetarypositions",
-      "community": 6,
+      "community": 5,
       "norm_label": "getcurrentplanetarypositions()"
     },
     {
@@ -3654,7 +3645,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L608",
       "id": "services_astrology_getmoonphase",
-      "community": 6,
+      "community": 5,
       "norm_label": "getmoonphase()"
     },
     {
@@ -3663,7 +3654,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L622",
       "id": "services_astrology_getchartelements",
-      "community": 6,
+      "community": 5,
       "norm_label": "getchartelements()"
     },
     {
@@ -3672,7 +3663,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L647",
       "id": "services_astrology_generatedailyhoroscope",
-      "community": 6,
+      "community": 5,
       "norm_label": "generatedailyhoroscope()"
     },
     {
@@ -3681,7 +3672,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L858",
       "id": "services_astrology_calculatecompatibility",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculatecompatibility()"
     },
     {
@@ -3690,7 +3681,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L904",
       "id": "services_astrology_calculatetransits",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculatetransits()"
     },
     {
@@ -3699,7 +3690,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L955",
       "id": "services_astrology_calculatecurrenttransits",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculatecurrenttransits()"
     },
     {
@@ -3717,7 +3708,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L1008",
       "id": "services_astrology_calculateforecast",
-      "community": 6,
+      "community": 5,
       "norm_label": "calculateforecast()"
     },
     {
@@ -3726,7 +3717,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L1082",
       "id": "services_astrology_capitalize",
-      "community": 6,
+      "community": 5,
       "norm_label": "capitalize()"
     },
     {
@@ -3735,7 +3726,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L1",
       "id": "backend_src_services_vedicastrology_test_ts",
-      "community": 6,
+      "community": 5,
       "norm_label": "vedicastrology.test.ts"
     },
     {
@@ -3744,7 +3735,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L11",
       "id": "services_vedicastrology_test_tropicalfromsidereal",
-      "community": 6,
+      "community": 5,
       "norm_label": "tropicalfromsidereal()"
     },
     {
@@ -3753,7 +3744,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L15",
       "id": "services_vedicastrology_test_position",
-      "community": 6,
+      "community": 5,
       "norm_label": "position()"
     },
     {
@@ -3762,7 +3753,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L31",
       "id": "services_vedicastrology_test_planet",
-      "community": 6,
+      "community": 5,
       "norm_label": "planet()"
     },
     {
@@ -3843,7 +3834,7 @@
       "source_file": "backend/src/services/transits/orbCalculator.ts",
       "source_location": "L1",
       "id": "backend_src_services_transits_orbcalculator_ts",
-      "community": 41,
+      "community": 40,
       "norm_label": "orbcalculator.ts"
     },
     {
@@ -3852,7 +3843,7 @@
       "source_file": "backend/src/services/transits/orbCalculator.ts",
       "source_location": "L6",
       "id": "transits_orbcalculator_calculateorb",
-      "community": 41,
+      "community": 40,
       "norm_label": "calculateorb()"
     },
     {
@@ -4072,6 +4063,15 @@
       "norm_label": "generateskyaspectinterpretation()"
     },
     {
+      "label": "handleSend()",
+      "file_type": "code",
+      "source_file": "frontend/src/screens/ChatScreen.tsx",
+      "source_location": "L81",
+      "community": 41,
+      "norm_label": "handlesend()",
+      "id": "screens_chatscreen_handlesend"
+    },
+    {
       "label": "locationError()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
@@ -4085,7 +4085,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/MoodRing.tsx",
       "source_location": "L17",
-      "community": 30,
+      "community": 32,
       "norm_label": "moodring()",
       "id": "components_moodring_moodring"
     },
@@ -4157,7 +4157,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L132",
-      "community": 10,
+      "community": 11,
       "norm_label": "savebirthdate()",
       "id": "screens_settingsscreen_savebirthdate"
     },
@@ -4166,7 +4166,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L139",
-      "community": 10,
+      "community": 11,
       "norm_label": "savebirthtime()",
       "id": "screens_settingsscreen_savebirthtime"
     },
@@ -4175,7 +4175,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L148",
-      "community": 10,
+      "community": 11,
       "norm_label": "savedailytime()",
       "id": "screens_settingsscreen_savedailytime"
     },
@@ -4193,7 +4193,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L125",
-      "community": 10,
+      "community": 11,
       "norm_label": "handledatechange()",
       "id": "screens_settingsscreen_handledatechange"
     },
@@ -4202,7 +4202,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L132",
-      "community": 10,
+      "community": 11,
       "norm_label": "handletimechange()",
       "id": "screens_settingsscreen_handletimechange"
     },
@@ -4211,7 +4211,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L141",
-      "community": 10,
+      "community": 11,
       "norm_label": "handledailytimechange()",
       "id": "screens_settingsscreen_handledailytimechange"
     },
@@ -4229,7 +4229,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L93",
-      "community": 4,
+      "community": 3,
       "norm_label": "fetchlocations()",
       "id": "screens_profilescreen_fetchlocations"
     },
@@ -4238,7 +4238,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L148",
-      "community": 4,
+      "community": 3,
       "norm_label": "handledatechange()",
       "id": "screens_profilescreen_handledatechange"
     },
@@ -4247,7 +4247,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L158",
-      "community": 4,
+      "community": 3,
       "norm_label": "handletimechange()",
       "id": "screens_profilescreen_handletimechange"
     },
@@ -4256,7 +4256,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L170",
-      "community": 4,
+      "community": 3,
       "norm_label": "handleopentimepicker()",
       "id": "screens_profilescreen_handleopentimepicker"
     },
@@ -4265,7 +4265,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L181",
-      "community": 4,
+      "community": 3,
       "norm_label": "handleopendatepicker()",
       "id": "screens_profilescreen_handleopendatepicker"
     },
@@ -4274,7 +4274,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L190",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlelocationselect()",
       "id": "screens_profilescreen_handlelocationselect"
     },
@@ -4283,7 +4283,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L202",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlesave()",
       "id": "screens_profilescreen_handlesave"
     },
@@ -4292,7 +4292,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L219",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlecancel()",
       "id": "screens_profilescreen_handlecancel"
     },
@@ -4301,7 +4301,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L231",
-      "community": 4,
+      "community": 3,
       "norm_label": "getzodiacsign()",
       "id": "screens_profilescreen_getzodiacsign"
     },
@@ -4310,7 +4310,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L255",
-      "community": 4,
+      "community": 3,
       "norm_label": "formatdate()",
       "id": "screens_profilescreen_formatdate"
     },
@@ -4319,7 +4319,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L265",
-      "community": 4,
+      "community": 3,
       "norm_label": "formattime()",
       "id": "screens_profilescreen_formattime"
     },
@@ -4328,7 +4328,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L290",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlelogout()",
       "id": "screens_profilescreen_handlelogout"
     },
@@ -4337,7 +4337,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L355",
-      "community": 5,
+      "community": 4,
       "norm_label": ".getelement()",
       "id": "services_aicontent_aicontentservice_getelement"
     },
@@ -4346,7 +4346,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L368",
-      "community": 5,
+      "community": 4,
       "norm_label": ".getmoonphaseadvice()",
       "id": "services_aicontent_aicontentservice_getmoonphaseadvice"
     },
@@ -4355,7 +4355,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L382",
-      "community": 5,
+      "community": 4,
       "norm_label": ".gettheme()",
       "id": "services_aicontent_aicontentservice_gettheme"
     },
@@ -4364,7 +4364,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L395",
-      "community": 5,
+      "community": 4,
       "norm_label": ".generateluckynumbers()",
       "id": "services_aicontent_aicontentservice_generateluckynumbers"
     },
@@ -4373,7 +4373,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L409",
-      "community": 5,
+      "community": 4,
       "norm_label": ".hashstring()",
       "id": "services_aicontent_aicontentservice_hashstring"
     }
@@ -11170,5 +11170,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f0ac59cca2286f4fe4f07a1cfe9edb6e27b5a0f3"
+  "built_at_commit": "12db929faf1cbe38edd7a26d27fab60777409298"
 }

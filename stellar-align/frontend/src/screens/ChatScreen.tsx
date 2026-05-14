@@ -129,7 +129,7 @@ export const ChatScreen: React.FC = () => {
                   {msg.content}
                 </StellarText>
               </View>
-              <StellarText style={styles.msgTime}>
+              <StellarText style={[styles.msgTime, msg.role === 'user' && styles.userTime]}>
                 {formatTime(msg.timestamp)}
               </StellarText>
             </View>
@@ -159,9 +159,6 @@ export const ChatScreen: React.FC = () => {
               onChangeText={setInput}
               multiline
             />
-            <TouchableOpacity onPress={() => {}}>
-              <StellarText style={styles.emojiIcon}>☺</StellarText>
-            </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={[styles.sendBtn, (!input.trim() || sendMessageMutation.isPending) && styles.sendBtnDisabled]}
@@ -243,9 +240,11 @@ const styles = StyleSheet.create({
   },
   aiMsg: {
     alignSelf: 'flex-start',
+    alignItems: 'flex-start',
   },
   userMsg: {
     alignSelf: 'flex-end',
+    alignItems: 'flex-end',
   },
   bubble: {
     paddingHorizontal: 16,
@@ -273,6 +272,9 @@ const styles = StyleSheet.create({
     color: colors.stellarMuted,
     fontFamily: 'DM Sans',
     paddingHorizontal: 4,
+  },
+  userTime: {
+    textAlign: 'right',
   },
   typingIndicator: {
     fontSize: 12,
@@ -309,11 +311,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.stellarFg,
     maxHeight: 100,
-  },
-  emojiIcon: {
-    fontSize: 16,
-    color: colors.stellarMuted,
-    marginLeft: 8,
+    paddingVertical: 8,
   },
   sendBtn: {
     width: 36,

@@ -917,3 +917,13 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
   - Switched to `DateTime` from luxon for accurate message timestamps.
 - **Files modified:**
   - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:02] - Fix Chat Alignment and Input UI
+- **What was changed and why:** Corrected a layout bug where user messages were not properly right-aligned and removed an unwanted emoji icon from the input field.
+- **Summary of changes:** 
+  - Added `alignItems: 'flex-end'` to `userMsg` to ensure correct horizontal positioning within the flex container.
+  - Added `textAlign: 'right'` to timestamps for user messages (`userTime`).
+  - Removed the emoji icon and its associated styles from the chat input bar.
+  - Improved `textInput` vertical padding for better alignment with the send button.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
