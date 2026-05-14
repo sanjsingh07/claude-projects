@@ -499,6 +499,15 @@
       "norm_label": "moodring.tsx"
     },
     {
+      "label": "TransitInfoModal.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/TransitInfoModal.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_transitinfomodal_tsx",
+      "community": 49,
+      "norm_label": "transitinfomodal.tsx"
+    },
+    {
       "label": "SettingsComponents.tsx",
       "file_type": "code",
       "source_file": "frontend/src/components/SettingsComponents.tsx",
@@ -540,7 +549,7 @@
       "source_file": "frontend/src/components/Card.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_card_tsx",
-      "community": 49,
+      "community": 50,
       "norm_label": "card.tsx"
     },
     {
@@ -549,7 +558,7 @@
       "source_file": "frontend/src/components/SignIcon.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_signicon_tsx",
-      "community": 50,
+      "community": 51,
       "norm_label": "signicon.tsx"
     },
     {
@@ -630,7 +639,7 @@
       "source_file": "frontend/src/components/MoonPhase.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_moonphase_tsx",
-      "community": 51,
+      "community": 52,
       "norm_label": "moonphase.tsx"
     },
     {
@@ -720,7 +729,7 @@
       "source_file": "frontend/src/components/AspectList.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_aspectlist_tsx",
-      "community": 52,
+      "community": 53,
       "norm_label": "aspectlist.tsx"
     },
     {
@@ -729,7 +738,7 @@
       "source_file": "frontend/src/components/ProfileComponents.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_profilecomponents_tsx",
-      "community": 53,
+      "community": 54,
       "norm_label": "profilecomponents.tsx"
     },
     {
@@ -738,7 +747,7 @@
       "source_file": "frontend/src/components/GenerationInfoModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_generationinfomodal_tsx",
-      "community": 54,
+      "community": 55,
       "norm_label": "generationinfomodal.tsx"
     },
     {
@@ -747,7 +756,7 @@
       "source_file": "frontend/src/components/index.ts",
       "source_location": "L1",
       "id": "frontend_src_components_index_ts",
-      "community": 55,
+      "community": 56,
       "norm_label": "index.ts"
     },
     {
@@ -801,7 +810,7 @@
       "source_file": "frontend/src/components/TransitIndicator.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitindicator_tsx",
-      "community": 56,
+      "community": 57,
       "norm_label": "transitindicator.tsx"
     },
     {
@@ -828,7 +837,7 @@
       "source_file": "frontend/src/theme/index.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_index_ts",
-      "community": 57,
+      "community": 58,
       "norm_label": "index.ts"
     },
     {
@@ -837,7 +846,7 @@
       "source_file": "frontend/src/theme/theme.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_theme_ts",
-      "community": 58,
+      "community": 59,
       "norm_label": "theme.ts"
     },
     {
@@ -936,7 +945,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L44",
       "id": "services_api_apiservice_constructor",
-      "community": 36,
+      "community": 35,
       "norm_label": ".constructor()"
     },
     {
@@ -945,7 +954,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L56",
       "id": "services_api_apiservice_setupinterceptors",
-      "community": 36,
+      "community": 35,
       "norm_label": ".setupinterceptors()"
     },
     {
@@ -981,7 +990,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L180",
       "id": "services_api_apiservice_cleartokens",
-      "community": 35,
+      "community": 36,
       "norm_label": ".cleartokens()"
     },
     {
@@ -1008,7 +1017,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L224",
       "id": "services_api_apiservice_logout",
-      "community": 35,
+      "community": 36,
       "norm_label": ".logout()"
     },
     {
@@ -1332,7 +1341,7 @@
       "source_file": "frontend/src/store/transitStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_transitstore_ts",
-      "community": 59,
+      "community": 60,
       "norm_label": "transitstore.ts"
     },
     {
@@ -1341,7 +1350,7 @@
       "source_file": "frontend/src/store/vedicChartStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_vedicchartstore_ts",
-      "community": 60,
+      "community": 61,
       "norm_label": "vedicchartstore.ts"
     },
     {
@@ -1350,7 +1359,7 @@
       "source_file": "frontend/src/store/authStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_authstore_ts",
-      "community": 61,
+      "community": 62,
       "norm_label": "authstore.ts"
     },
     {
@@ -1359,7 +1368,7 @@
       "source_file": "frontend/src/store/horoscopeStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_horoscopestore_ts",
-      "community": 62,
+      "community": 63,
       "norm_label": "horoscopestore.ts"
     },
     {
@@ -1593,7 +1602,7 @@
       "source_file": "backend/src/types/api.ts",
       "source_location": "L1",
       "id": "backend_src_types_api_ts",
-      "community": 63,
+      "community": 64,
       "norm_label": "api.ts"
     },
     {
@@ -1602,7 +1611,7 @@
       "source_file": "backend/src/types/astrology.ts",
       "source_location": "L1",
       "id": "backend_src_types_astrology_ts",
-      "community": 64,
+      "community": 65,
       "norm_label": "astrology.ts"
     },
     {
@@ -1611,7 +1620,7 @@
       "source_file": "backend/src/types/index.ts",
       "source_location": "L1",
       "id": "backend_src_types_index_ts",
-      "community": 65,
+      "community": 66,
       "norm_label": "index.ts"
     },
     {
@@ -1620,7 +1629,7 @@
       "source_file": "backend/src/types/user.ts",
       "source_location": "L1",
       "id": "backend_src_types_user_ts",
-      "community": 66,
+      "community": 67,
       "norm_label": "user.ts"
     },
     {
@@ -1629,7 +1638,7 @@
       "source_file": "backend/src/config/redis.ts",
       "source_location": "L1",
       "id": "backend_src_config_redis_ts",
-      "community": 67,
+      "community": 68,
       "norm_label": "redis.ts"
     },
     {
@@ -1638,7 +1647,7 @@
       "source_file": "backend/src/config/logger.ts",
       "source_location": "L1",
       "id": "backend_src_config_logger_ts",
-      "community": 68,
+      "community": 69,
       "norm_label": "logger.ts"
     },
     {
@@ -1674,7 +1683,7 @@
       "source_file": "backend/src/config/env.ts",
       "source_location": "L1",
       "id": "backend_src_config_env_ts",
-      "community": 69,
+      "community": 70,
       "norm_label": "env.ts"
     },
     {
@@ -1683,7 +1692,7 @@
       "source_file": "backend/src/config/queue.ts",
       "source_location": "L1",
       "id": "backend_src_config_queue_ts",
-      "community": 70,
+      "community": 71,
       "norm_label": "queue.ts"
     },
     {
@@ -1872,7 +1881,7 @@
       "source_file": "backend/src/models/natalChart.ts",
       "source_location": "L1",
       "id": "backend_src_models_natalchart_ts",
-      "community": 71,
+      "community": 72,
       "norm_label": "natalchart.ts"
     },
     {
@@ -2547,7 +2556,7 @@
       "source_file": "backend/src/routes/index.ts",
       "source_location": "L1",
       "id": "backend_src_routes_index_ts",
-      "community": 72,
+      "community": 73,
       "norm_label": "index.ts"
     },
     {
@@ -11161,5 +11170,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "14c7c1838d52f73fb9cd90015fa0d939e2f16553"
+  "built_at_commit": "f0ac59cca2286f4fe4f07a1cfe9edb6e27b5a0f3"
 }

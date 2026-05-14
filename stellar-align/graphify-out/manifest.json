@@ -52,8 +52,8 @@
     "hash": "779f6e7425e68a087bc28747c1503682"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/TransitsScreen.tsx": {
-    "mtime": 1778525853.2053685,
-    "hash": "2105d53a45ea832775129a1d665f1493"
+    "mtime": 1778757418.1039994,
+    "hash": "6ba27ef06cbc8d6d12347c00786bc0a0"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx": {
     "mtime": 1778525853.2278464,
@@ -74,6 +74,10 @@
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/MoodRing.tsx": {
     "mtime": 1778612048.4356272,
     "hash": "9fa1d769320d08efa8a788f540e3e4e5"
+  },
+  "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/TransitInfoModal.tsx": {
+    "mtime": 1778757449.5989573,
+    "hash": "8429e983bcd82c12d60e9dca54c3117b"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/SettingsComponents.tsx": {
     "mtime": 1778525345.2336285,
@@ -120,8 +124,8 @@
     "hash": "5bddad87886ad60ae68796ee67f4e622"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/index.ts": {
-    "mtime": 1778751794.7944117,
-    "hash": "3d3723b98e93936f1eb5c34a79286217"
+    "mtime": 1778757053.7163968,
+    "hash": "bd94ac21f28d47143db028b4907c6854"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/TransitCard.tsx": {
     "mtime": 1778525853.2320652,

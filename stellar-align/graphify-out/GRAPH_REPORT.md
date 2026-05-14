@@ -1,16 +1,16 @@
 # Graph Report - stellar-align  (2026-05-14)
 
 ## Corpus Check
-- 111 files · ~57,994 words
+- 112 files · ~58,792 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 485 nodes · 651 edges · 26 communities detected
+- 486 nodes · 651 edges · 26 communities detected
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `14c7c183`
+- Built from commit: `f0ac59cc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -66,7 +66,7 @@
 - `calculateTransits()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
 
-## Communities (73 total, 14 thin omitted)
+## Communities (74 total, 14 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -129,7 +129,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `getTransitsForPeriod()` connect `Community 1` to `Community 0`, `Community 6`?**
   _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Why does `ApiError` connect `Community 0` to `Community 3`, `Community 15`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
   _`getTransitsForPeriod()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Planet` to the rest of the system?**

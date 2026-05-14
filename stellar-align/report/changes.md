@@ -905,3 +905,15 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **Files modified:**
   - `stellar-align/frontend/src/components/TransitInfoModal.tsx`
   - `stellar-align/frontend/src/screens/TransitsScreen.tsx`
+
+## [2026-05-14 16:55] - Refactor Chat Screen Design
+- **What was changed and why:** Updated the chat screen to match the high-fidelity HTML mockup (screens_07-chat.html) for better visual appeal and brand consistency.
+- **Summary of changes:** 
+  - Redesigned header with AI avatar and "Consulting the stars..." status.
+  - Implemented asymmetrical message bubbles (rounded with distinct tail corners).
+  - Added a dynamic "typing indicator" during AI response generation.
+  - Refined the input area with a pill-shaped box and circular send button.
+  - Omitted attachment button as per requirements.
+  - Switched to `DateTime` from luxon for accurate message timestamps.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
