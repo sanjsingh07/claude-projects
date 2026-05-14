@@ -89,6 +89,28 @@ export const ChatScreen: React.FC = () => {
     return DateTime.fromISO(iso).toFormat('h:mm a');
   };
 
+  const renderMessageContent = (content: string) => {
+    if (!content) return '';
+    
+    // Check if it's a JSON string
+    const trimmed = content.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        // If it's the structured format we've seen: { greeting: "...", analysis: "..." }
+        if (parsed.greeting || parsed.analysis) {
+          return `${parsed.greeting || ''}\n\n${parsed.analysis || ''}`.trim();
+        }
+        // Fallback for other JSON structures
+        return JSON.stringify(parsed, null, 2);
+      } catch (e) {
+        // Not valid JSON, just return as is
+        return content;
+      }
+    }
+    return content;
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" />
@@ -126,7 +148,7 @@ export const ChatScreen: React.FC = () => {
             <View key={msg.id || index} style={[styles.msg, msg.role === 'user' ? styles.userMsg : styles.aiMsg]}>
               <View style={[styles.bubble, msg.role === 'user' ? styles.userBubble : styles.aiBubble]}>
                 <StellarText style={styles.bubbleText}>
-                  {msg.content}
+                  {renderMessageContent(msg.content)}
                 </StellarText>
               </View>
               <StellarText style={[styles.msgTime, msg.role === 'user' && styles.userTime]}>
@@ -233,6 +255,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 16,
+    flexGrow: 1,
+    alignItems: 'stretch',
   },
   msg: {
     maxWidth: '85%',
@@ -240,7 +264,6 @@ const styles = StyleSheet.create({
   },
   aiMsg: {
     alignSelf: 'flex-start',
-    alignItems: 'flex-start',
   },
   userMsg: {
     alignSelf: 'flex-end',

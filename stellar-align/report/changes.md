@@ -927,3 +927,14 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
   - Improved `textInput` vertical padding for better alignment with the send button.
 - **Files modified:**
   - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:15] - Fix Chat Alignment and JSON Response Handling
+- **What was changed and why:** Resolved persistent alignment issues for user messages and added robust handling for JSON-formatted AI responses.
+- **Summary of changes:** 
+  - Modified `llmProvider.ts` to use `text/plain` for Gemini chat responses, preventing forced JSON output.
+  - Added `renderMessageContent` helper in `ChatScreen.tsx` to parse and format potential JSON strings from the AI.
+  - Refined `ChatScreen` styles: removed redundant `width: '100%'` from message containers to allow `alignSelf: 'flex-end'` to work correctly.
+  - Ensured `chatContent` uses `alignItems: 'stretch'` and `flexGrow: 1` for full-screen coverage.
+- **Files modified:**
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`

@@ -242,7 +242,7 @@ class GeminiProvider implements LLMProvider {
     const config = {
       maxOutputTokens: opts?.maxTokens ?? 4000,
       temperature: opts?.temperature ?? 0.6,
-      responseMimeType: "application/json",
+      responseMimeType: opts?.purpose === "chat" ? "text/plain" : "application/json",
     };
 
     try {
