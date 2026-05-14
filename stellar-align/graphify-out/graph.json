@@ -2221,7 +2221,7 @@
       "label": "ChatController",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L24",
+      "source_location": "L25",
       "id": "controllers_chatcontroller_chatcontroller",
       "community": 0,
       "norm_label": "chatcontroller"
@@ -2230,7 +2230,7 @@
       "label": ".getHistory()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L26",
+      "source_location": "L27",
       "id": "controllers_chatcontroller_chatcontroller_gethistory",
       "community": 0,
       "norm_label": ".gethistory()"
@@ -2239,7 +2239,7 @@
       "label": ".sendMessage()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L90",
+      "source_location": "L91",
       "id": "controllers_chatcontroller_chatcontroller_sendmessage",
       "community": 0,
       "norm_label": ".sendmessage()"
@@ -2248,7 +2248,7 @@
       "label": ".clearHistory()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L214",
+      "source_location": "L215",
       "id": "controllers_chatcontroller_chatcontroller_clearhistory",
       "community": 0,
       "norm_label": ".clearhistory()"
@@ -11170,5 +11170,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7c863dd4ba1659f7d7fa14e86effc45a3814b739"
+  "built_at_commit": "0ae140461dcdda8915c77441414657cf29e5b83e"
 }
