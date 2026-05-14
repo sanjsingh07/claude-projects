@@ -1,4 +1,3 @@
-import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -10,15 +9,18 @@ import {
   ActivityIndicator,
   StatusBar,
   Alert,
+  Text,
+  Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StellarText } from '@components/StellarCard';
 import { StellarBackground } from '@components/StellarBackground';
 import { useAuthStore } from '@store/authStore';
-import { colors } from '@theme/theme';
+import { colors, spacing, shadows } from '@theme/theme';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { DateTime } from 'luxon';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Message {
   id: string;
@@ -35,6 +37,7 @@ export const ChatScreen: React.FC = () => {
   const user = useAuthStore((s) => s.user);
   const [input, setInput] = useState('');
   const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
+  const [menuVisible, setMenuVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch chat history
@@ -80,6 +83,7 @@ export const ChatScreen: React.FC = () => {
 
   const handleClearChat = async () => {
     try {
+      setMenuVisible(false);
       await api.client.delete('/chat/session');
       refetch();
     } catch (error) {
@@ -88,30 +92,17 @@ export const ChatScreen: React.FC = () => {
     }
   };
 
-  const handleMorePress = () => {
+  const confirmClearChat = () => {
     Alert.alert(
-      'Chat Options',
-      'Choose an action',
+      'Clear Chat History',
+      'This action is permanent and will clear the chat to start fresh. Are you sure?',
       [
-        {
-          text: 'Clear Chat',
-          style: 'destructive',
-          onPress: () => {
-            Alert.alert(
-              'Clear Chat History',
-              'This action is permanent and will clear the chat to start fresh. Are you sure?',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                { 
-                  text: 'Clear Chat', 
-                  style: 'destructive', 
-                  onPress: handleClearChat 
-                },
-              ]
-            );
-          },
-        },
         { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Clear Chat', 
+          style: 'destructive', 
+          onPress: handleClearChat 
+        },
       ]
     );
   };
@@ -166,9 +157,27 @@ export const ChatScreen: React.FC = () => {
             {sendMessageMutation.isPending ? 'Consulting the stars...' : 'Online'}
           </StellarText>
         </View>
-        <TouchableOpacity style={styles.moreButton} onPress={handleMorePress}>
+        <TouchableOpacity style={styles.moreButton} onPress={() => setMenuVisible(!menuVisible)}>
           <StellarText style={styles.moreIcon}>⋮</StellarText>
         </TouchableOpacity>
+
+        {/* Custom Dropdown Menu */}
+        {menuVisible && (
+          <Pressable 
+            style={styles.menuOverlay} 
+            onPress={() => setMenuVisible(false)}
+          >
+            <View style={styles.menuContainer}>
+              <TouchableOpacity 
+                style={styles.menuItem} 
+                onPress={confirmClearChat}
+              >
+                <Ionicons name="trash-outline" size={18} color={colors.error} />
+                <StellarText style={[styles.menuItemText, { color: colors.error }]}>Clear Chat</StellarText>
+              </TouchableOpacity>
+            </View>
+          </Pressable>
+        )}
       </View>
 
       <KeyboardAvoidingView 
@@ -176,37 +185,61 @@ export const ChatScreen: React.FC = () => {
         style={styles.keyboardView}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        {/* Chat Messages */}
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.chatArea}
-          contentContainerStyle={styles.chatContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {messages.map((msg, index) => {
-            const isUser = msg.role.toLowerCase() === 'user';
-            return (
-              <View key={msg.id || index} style={[styles.msg, isUser ? styles.userMsg : styles.aiMsg]}>
-                <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
-                  <StellarText style={styles.bubbleText}>
-                    {renderMessageContent(msg.content)}
-                  </StellarText>
-                </View>
-                <StellarText style={[styles.msgTime, isUser && styles.userTime]}>
-                  {formatTime(msg.timestamp)}
+        {/* Chat Messages or Empty State */}
+        {(!messages || messages.length === 0) ? (
+          <ScrollView contentContainerStyle={styles.emptyStateContainer}>
+            <View style={styles.emptyState}>
+              <Ionicons name="chatbubbles-outline" size={64} color={colors.gray600} />
+              <StellarText style={{ fontSize: 24, marginTop: spacing.lg, color: colors.gray400, fontFamily: 'Instrument Serif', fontStyle: 'italic' }}>
+                Start a Conversation
+              </StellarText>
+              <StellarText
+                style={{ marginTop: spacing.sm, color: colors.gray500, textAlign: 'center', maxWidth: 300, fontSize: 14, fontFamily: 'DM Sans' }}
+              >
+                Ask me anything about your natal chart, horoscopes, or astrology!
+              </StellarText>
+              <View style={styles.suggestions}>
+                <StellarText style={{ fontSize: 12, color: colors.gray500, fontFamily: 'DM Sans', marginBottom: 8 }}>
+                  Try asking:
                 </StellarText>
-              </View>
-            );
-          })}
-          
-          {sendMessageMutation.isPending && (
-            <View style={styles.aiMsg}>
-              <View style={[styles.bubble, styles.aiBubble]}>
-                <ActivityIndicator size="small" color={colors.stellarFg} />
+                <Text style={styles.suggestion}>• "What does my Sun sign mean?"</Text>
+                <Text style={styles.suggestion}>• "Tell me about my rising sign"</Text>
+                <Text style={styles.suggestion}>• "How will today's transits affect me?"</Text>
               </View>
             </View>
-          )}
-        </ScrollView>
+          </ScrollView>
+        ) : (
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.chatArea}
+            contentContainerStyle={styles.chatContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {messages.map((msg, index) => {
+              const isUser = msg.role.toLowerCase() === 'user';
+              return (
+                <View key={msg.id || index} style={[styles.msg, isUser ? styles.userMsg : styles.aiMsg]}>
+                  <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
+                    <StellarText style={styles.bubbleText}>
+                      {renderMessageContent(msg.content)}
+                    </StellarText>
+                  </View>
+                  <StellarText style={[styles.msgTime, isUser && styles.userTime]}>
+                    {formatTime(msg.timestamp)}
+                  </StellarText>
+                </View>
+              );
+            })}
+            
+            {sendMessageMutation.isPending && (
+              <View style={styles.aiMsg}>
+                <View style={[styles.bubble, styles.aiBubble]}>
+                  <ActivityIndicator size="small" color={colors.stellarFg} />
+                </View>
+              </View>
+            )}
+          </ScrollView>
+        )}
 
         {sendMessageMutation.isPending && (
           <StellarText style={styles.typingIndicator}>Stellar Align is typing...</StellarText>
@@ -393,6 +426,52 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.stellarFg,
     fontWeight: '700',
+  },
+  menuOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1000,
+  },
+  menuContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 24,
+    backgroundColor: colors.stellarSurface,
+    borderWidth: 1,
+    borderColor: colors.stellarBorder,
+    borderRadius: 12,
+    padding: 4,
+    minWidth: 140,
+    ...shadows.lg,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    gap: 10,
+  },
+  menuItemText: {
+    fontSize: 14,
+    fontFamily: 'DM Sans',
+  },
+  emptyStateContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingBottom: 40,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  suggestions: {
+    marginTop: 32,
+    alignItems: 'center',
+  },
+  suggestion: {
+    fontSize: 14,
+    color: colors.stellarMuted,
+    fontFamily: 'DM Sans',
+    marginBottom: 8,
+    textAlign: 'center',
   },
 });
 

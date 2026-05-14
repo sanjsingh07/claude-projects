@@ -313,3 +313,11 @@ The backend server should be reloaded to pick up the changes.
 ### Improved
 - **Chat Persistence**: Refactored `chatController.ts` to filter out cleared sessions in `getHistory` and `sendMessage`.
 - **User Experience**: Added permanent clearing warning to ensure users are aware of the "start fresh" action.
+
+## [2026-05-14] - Chat UI Refinements
+### Added
+- **Custom Dropdown Menu**: Replaced system alert menu with a custom-styled dropdown that appears right next to the three-dots icon.
+- **Empty State Restoration**: Re-introduced the "Start a Conversation" empty state with suggestions when the chat is cleared or empty.
+### Improved
+- **Visual Consistency**: Used project-specific fonts (Instrument Serif, DM Sans) and colors for the new UI elements.
+- **Interactions**: Added a backdrop (Pressable overlay) to close the custom menu when clicking outside.
