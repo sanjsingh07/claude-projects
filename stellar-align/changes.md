@@ -305,3 +305,11 @@ The backend server should be reloaded to pick up the changes.
 - **Personalized Context**: Chat prompts now include planetary positions, house cusps, and aspects for Western charts, or D1 placements, Nakshatras, and zodiac info for Vedic charts, based on user preferences.
 ### Improved
 - **System Prompt**: Refined `ASTROLOGY_SYSTEM_PROMPT` to explicitly instruct the AI to use the provided full chart data for high-fidelity, personalized readings.
+
+## [2026-05-14] - Clear Chat Feature (Soft Delete)
+### Added
+- **Soft Delete for Chat Sessions**: Added `isCleared` field to `ChatSession` model to allow clearing chat history without deleting data from the DB.
+- **Clear Chat UI**: Implemented three-dots menu on Chat screen with confirmation pop-up.
+### Improved
+- **Chat Persistence**: Refactored `chatController.ts` to filter out cleared sessions in `getHistory` and `sendMessage`.
+- **User Experience**: Added permanent clearing warning to ensure users are aware of the "start fresh" action.

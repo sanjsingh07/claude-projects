@@ -1,7 +1,7 @@
 # Graph Report - claude-projects  (2026-05-14)
 
 ## Corpus Check
-- 121 files · ~61,082 words
+- 121 files · ~61,210 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0ae14046`
+- Built from commit: `62f7e85e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -107,10 +107,10 @@ Cohesion: 0.22
 Nodes (7): useScan(), clearHistory(), exportHistoryToCSV(), getHistory(), saveToHistory(), scanImage(), handleExport()
 
 ### Community 11 - "Community 11"
-Cohesion: 0.18
+Cohesion: 0.2
 Nodes (3): TransitController, authMiddleware(), validateRequest()
 
-### Community 13 - "Community 13"
+### Community 14 - "Community 14"
 Cohesion: 0.22
 Nodes (4): ConflictError, ForbiddenError, UnauthorizedError, ValidationError
 
@@ -138,11 +138,11 @@ Nodes (4): displayPlanetLabel(), displayPlanetName(), formatSign(), normalizeSig
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `calculateVedicChart()` connect `Community 5` to `Community 2`, `Community 11`, `Community 14`?**
+- **Why does `calculateVedicChart()` connect `Community 5` to `Community 2`, `Community 11`, `Community 12`?**
   _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Why does `getTransitsForPeriod()` connect `Community 1` to `Community 2`, `Community 11`, `Community 5`?**
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
-- **Why does `ApiError` connect `Community 14` to `Community 6`, `Community 11`, `Community 13`, `Community 16`, `Community 24`?**
+- **Why does `ApiError` connect `Community 12` to `Community 6`, `Community 11`, `Community 14`, `Community 16`, `Community 23`?**
   _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
   _`getTransitsForPeriod()` has 11 INFERRED edges - model-reasoned connections that need verification._

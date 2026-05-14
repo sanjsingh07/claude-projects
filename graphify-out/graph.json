@@ -441,7 +441,7 @@
       "source_file": "stellar-align/frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L1",
       "id": "stellar_align_frontend_src_screens_settingsscreen_tsx",
-      "community": 12,
+      "community": 13,
       "norm_label": "settingsscreen.tsx"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "stellar-align/frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L138",
       "id": "screens_settingsscreen_getbirthdate",
-      "community": 12,
+      "community": 13,
       "norm_label": "getbirthdate()"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "stellar-align/frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L149",
       "id": "screens_settingsscreen_getbirthtimedate",
-      "community": 12,
+      "community": 13,
       "norm_label": "getbirthtimedate()"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "stellar-align/frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L166",
       "id": "screens_settingsscreen_getdailynotificationdate",
-      "community": 12,
+      "community": 13,
       "norm_label": "getdailynotificationdate()"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "stellar-align/frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L186",
       "id": "screens_settingsscreen_handlelocationselect",
-      "community": 12,
+      "community": 13,
       "norm_label": "handlelocationselect()"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "stellar-align/frontend/src/components/SettingsComponents.tsx",
       "source_location": "L1",
       "id": "stellar_align_frontend_src_components_settingscomponents_tsx",
-      "community": 12,
+      "community": 13,
       "norm_label": "settingscomponents.tsx"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "stellar-align/frontend/src/components/SettingsComponents.tsx",
       "source_location": "L15",
       "id": "components_settingscomponents_settingsheader",
-      "community": 12,
+      "community": 13,
       "norm_label": "settingsheader()"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "stellar-align/frontend/src/components/SettingsComponents.tsx",
       "source_location": "L26",
       "id": "components_settingscomponents_settingssection",
-      "community": 12,
+      "community": 13,
       "norm_label": "settingssection()"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "stellar-align/frontend/src/components/SettingsComponents.tsx",
       "source_location": "L138",
       "id": "components_settingscomponents_fetchlocations",
-      "community": 12,
+      "community": 13,
       "norm_label": "fetchlocations()"
     },
     {
@@ -1800,7 +1800,7 @@
       "source_file": "stellar-align/backend/src/middleware/validator.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_middleware_validator_ts",
-      "community": 11,
+      "community": 12,
       "norm_label": "validator.ts"
     },
     {
@@ -1980,7 +1980,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_utils_errors_ts",
-      "community": 13,
+      "community": 14,
       "norm_label": "errors.ts"
     },
     {
@@ -1989,7 +1989,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L3",
       "id": "utils_errors_apierror",
-      "community": 14,
+      "community": 12,
       "norm_label": "apierror"
     },
     {
@@ -1998,7 +1998,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L8",
       "id": "utils_errors_apierror_constructor",
-      "community": 14,
+      "community": 12,
       "norm_label": ".constructor()"
     },
     {
@@ -2007,7 +2007,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L22",
       "id": "utils_errors_validationerror",
-      "community": 13,
+      "community": 14,
       "norm_label": "validationerror"
     },
     {
@@ -2016,7 +2016,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L23",
       "id": "utils_errors_validationerror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -2025,7 +2025,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L28",
       "id": "utils_errors_notfounderror",
-      "community": 14,
+      "community": 12,
       "norm_label": "notfounderror"
     },
     {
@@ -2034,7 +2034,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L29",
       "id": "utils_errors_notfounderror_constructor",
-      "community": 14,
+      "community": 12,
       "norm_label": ".constructor()"
     },
     {
@@ -2043,7 +2043,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L34",
       "id": "utils_errors_unauthorizederror",
-      "community": 13,
+      "community": 14,
       "norm_label": "unauthorizederror"
     },
     {
@@ -2052,7 +2052,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L35",
       "id": "utils_errors_unauthorizederror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -2061,7 +2061,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L40",
       "id": "utils_errors_forbiddenerror",
-      "community": 13,
+      "community": 14,
       "norm_label": "forbiddenerror"
     },
     {
@@ -2070,7 +2070,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L41",
       "id": "utils_errors_forbiddenerror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -2079,7 +2079,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L46",
       "id": "utils_errors_conflicterror",
-      "community": 13,
+      "community": 14,
       "norm_label": "conflicterror"
     },
     {
@@ -2088,7 +2088,7 @@
       "source_file": "stellar-align/backend/src/utils/errors.ts",
       "source_location": "L47",
       "id": "utils_errors_conflicterror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -2259,7 +2259,7 @@
       "source_file": "stellar-align/backend/src/controllers/userController.spec.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_usercontroller_spec_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "usercontroller.spec.ts"
     },
     {
@@ -2268,7 +2268,7 @@
       "source_file": "stellar-align/backend/src/controllers/authController.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_authcontroller_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "authcontroller.ts"
     },
     {
@@ -2403,7 +2403,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_notificationcontroller_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "notificationcontroller.ts"
     },
     {
@@ -2412,7 +2412,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L6",
       "id": "controllers_notificationcontroller_notificationcontroller",
-      "community": 23,
+      "community": 24,
       "norm_label": "notificationcontroller"
     },
     {
@@ -2421,7 +2421,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L10",
       "id": "controllers_notificationcontroller_notificationcontroller_registertoken",
-      "community": 23,
+      "community": 24,
       "norm_label": ".registertoken()"
     },
     {
@@ -2430,7 +2430,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L33",
       "id": "controllers_notificationcontroller_notificationcontroller_unregistertoken",
-      "community": 23,
+      "community": 24,
       "norm_label": ".unregistertoken()"
     },
     {
@@ -2439,7 +2439,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L55",
       "id": "controllers_notificationcontroller_notificationcontroller_gethistory",
-      "community": 23,
+      "community": 24,
       "norm_label": ".gethistory()"
     },
     {
@@ -2448,7 +2448,7 @@
       "source_file": "stellar-align/backend/src/controllers/notificationController.ts",
       "source_location": "L91",
       "id": "controllers_notificationcontroller_notificationcontroller_markasread",
-      "community": 23,
+      "community": 24,
       "norm_label": ".markasread()"
     },
     {
@@ -2457,7 +2457,7 @@
       "source_file": "stellar-align/backend/src/controllers/chatController.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_chatcontroller_ts",
-      "community": 24,
+      "community": 23,
       "norm_label": "chatcontroller.ts"
     },
     {
@@ -2466,7 +2466,7 @@
       "source_file": "stellar-align/backend/src/controllers/chatController.ts",
       "source_location": "L27",
       "id": "controllers_chatcontroller_chatcontroller",
-      "community": 24,
+      "community": 23,
       "norm_label": "chatcontroller"
     },
     {
@@ -2475,7 +2475,7 @@
       "source_file": "stellar-align/backend/src/controllers/chatController.ts",
       "source_location": "L29",
       "id": "controllers_chatcontroller_chatcontroller_gethistory",
-      "community": 24,
+      "community": 23,
       "norm_label": ".gethistory()"
     },
     {
@@ -2484,7 +2484,7 @@
       "source_file": "stellar-align/backend/src/controllers/chatController.ts",
       "source_location": "L93",
       "id": "controllers_chatcontroller_chatcontroller_sendmessage",
-      "community": 24,
+      "community": 23,
       "norm_label": ".sendmessage()"
     },
     {
@@ -2493,7 +2493,7 @@
       "source_file": "stellar-align/backend/src/controllers/chatController.ts",
       "source_location": "L258",
       "id": "controllers_chatcontroller_chatcontroller_clearhistory",
-      "community": 24,
+      "community": 23,
       "norm_label": ".clearhistory()"
     },
     {
@@ -2502,7 +2502,7 @@
       "source_file": "stellar-align/backend/src/controllers/horoscopeController.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_horoscopecontroller_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "horoscopecontroller.ts"
     },
     {
@@ -2592,7 +2592,7 @@
       "source_file": "stellar-align/backend/src/controllers/userController.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_controllers_usercontroller_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "usercontroller.ts"
     },
     {
@@ -2727,7 +2727,7 @@
       "source_file": "stellar-align/backend/src/routes/notifications.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_routes_notifications_ts",
-      "community": 23,
+      "community": 24,
       "norm_label": "notifications.ts"
     },
     {
@@ -2745,7 +2745,7 @@
       "source_file": "stellar-align/backend/src/routes/chat.ts",
       "source_location": "L1",
       "id": "stellar_align_backend_src_routes_chat_ts",
-      "community": 24,
+      "community": 23,
       "norm_label": "chat.ts"
     },
     {
@@ -8445,9 +8445,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stellar_align_backend_src_services_llmprovider_ts",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "contains",
@@ -8592,9 +8592,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L112",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_anthropicprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "calls",
@@ -8603,9 +8603,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L192",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_nvidiaprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "calls",
@@ -8614,9 +8614,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L275",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_geminiprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "calls",
@@ -8625,9 +8625,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L348",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_groqprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "calls",
@@ -8636,9 +8636,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L429",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_opencodeprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "calls",
@@ -8647,9 +8647,9 @@
       "source_file": "stellar-align/backend/src/services/llmProvider.ts",
       "source_location": "L505",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_openrouterprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "method",
@@ -10930,5 +10930,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0ae140461dcdda8915c77441414657cf29e5b83e"
+  "built_at_commit": "62f7e85e8971674afc4a724a38bb95f2f4cab6b7"
 }

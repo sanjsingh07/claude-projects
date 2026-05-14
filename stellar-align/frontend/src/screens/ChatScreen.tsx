@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StellarText } from '@components/StellarCard';
@@ -77,6 +78,44 @@ export const ChatScreen: React.FC = () => {
     sendMessageMutation.mutate(input);
   };
 
+  const handleClearChat = async () => {
+    try {
+      await api.client.delete('/chat/session');
+      refetch();
+    } catch (error) {
+      console.error('Failed to clear chat:', error);
+      Alert.alert('Error', 'Failed to clear chat. Please try again.');
+    }
+  };
+
+  const handleMorePress = () => {
+    Alert.alert(
+      'Chat Options',
+      'Choose an action',
+      [
+        {
+          text: 'Clear Chat',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Clear Chat History',
+              'This action is permanent and will clear the chat to start fresh. Are you sure?',
+              [
+                { text: 'Cancel', style: 'cancel' },
+                { 
+                  text: 'Clear Chat', 
+                  style: 'destructive', 
+                  onPress: handleClearChat 
+                },
+              ]
+            );
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
+
   const messages: Message[] = [...(chatHistory || []), ...pendingMessages];
 
   useEffect(() => {
@@ -127,7 +166,7 @@ export const ChatScreen: React.FC = () => {
             {sendMessageMutation.isPending ? 'Consulting the stars...' : 'Online'}
           </StellarText>
         </View>
-        <TouchableOpacity style={styles.moreButton}>
+        <TouchableOpacity style={styles.moreButton} onPress={handleMorePress}>
           <StellarText style={styles.moreIcon}>⋮</StellarText>
         </TouchableOpacity>
       </View>

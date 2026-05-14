@@ -46,7 +46,7 @@ export class ChatController {
 
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
-        where: { userId },
+        where: { userId, isCleared: false },
         orderBy: { createdAt: 'desc' },
         include: {
           messages: {
@@ -118,7 +118,7 @@ export class ChatController {
 
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
-        where: { userId },
+        where: { userId, isCleared: false },
         orderBy: { createdAt: 'desc' },
       });
 
@@ -254,7 +254,7 @@ ${aspects}
     }
   }
 
-  // DELETE /chat/session - Clear chat history
+  // DELETE /chat/session - Clear chat history (Soft Delete)
   async clearHistory(
     req: Request,
     res: Response,
@@ -263,8 +263,10 @@ ${aspects}
     try {
       const userId = req.userId!;
 
-      await prisma.chatSession.deleteMany({
-        where: { userId },
+      // Mark all user sessions as cleared instead of deleting them
+      await prisma.chatSession.updateMany({
+        where: { userId, isCleared: false },
+        data: { isCleared: true },
       });
 
       res.json({
