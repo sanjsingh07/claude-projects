@@ -321,3 +321,7 @@ The backend server should be reloaded to pick up the changes.
 ### Improved
 - **Visual Consistency**: Used project-specific fonts (Instrument Serif, DM Sans) and colors for the new UI elements.
 - **Interactions**: Added a backdrop (Pressable overlay) to close the custom menu when clicking outside.
+
+## [2026-05-14] - Fix Missing Imports
+### Fixed
+- **ChatScreen Hook Imports**: Fixed `ReferenceError: Property 'useState' doesn't exist` by restoring missing React hook imports.
