@@ -938,3 +938,13 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **Files modified:**
   - `stellar-align/backend/src/services/llmProvider.ts`
   - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:25] - Fix Chat Alignment Mismatch and Response Truncation
+- **What was changed and why:** Resolved a role string mismatch that broke user message alignment after refresh and fixed incomplete AI responses.
+- **Summary of changes:** 
+  - Updated `ChatScreen.tsx` to use case-insensitive role comparison (`msg.role.toLowerCase() === 'user'`), ensuring user messages stay right-aligned when loaded from history (where the role is returned as 'USER').
+  - Increased `maxTokens` in `ChatController.ts` from 500 to 1500 to allow for longer, more complete astrological interpretations.
+  - Updated the `ASTROLOGY_SYSTEM_PROMPT` in the backend to explicitly forbid JSON formatting, reinforcing the switch to plain text responses for chat.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+  - `stellar-align/backend/src/controllers/chatController.ts`

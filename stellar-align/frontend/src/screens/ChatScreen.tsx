@@ -144,18 +144,21 @@ export const ChatScreen: React.FC = () => {
           contentContainerStyle={styles.chatContent}
           showsVerticalScrollIndicator={false}
         >
-          {messages.map((msg, index) => (
-            <View key={msg.id || index} style={[styles.msg, msg.role === 'user' ? styles.userMsg : styles.aiMsg]}>
-              <View style={[styles.bubble, msg.role === 'user' ? styles.userBubble : styles.aiBubble]}>
-                <StellarText style={styles.bubbleText}>
-                  {renderMessageContent(msg.content)}
+          {messages.map((msg, index) => {
+            const isUser = msg.role.toLowerCase() === 'user';
+            return (
+              <View key={msg.id || index} style={[styles.msg, isUser ? styles.userMsg : styles.aiMsg]}>
+                <View style={[styles.bubble, isUser ? styles.userBubble : styles.aiBubble]}>
+                  <StellarText style={styles.bubbleText}>
+                    {renderMessageContent(msg.content)}
+                  </StellarText>
+                </View>
+                <StellarText style={[styles.msgTime, isUser && styles.userTime]}>
+                  {formatTime(msg.timestamp)}
                 </StellarText>
               </View>
-              <StellarText style={[styles.msgTime, msg.role === 'user' && styles.userTime]}>
-                {formatTime(msg.timestamp)}
-              </StellarText>
-            </View>
-          ))}
+            );
+          })}
           
           {sendMessageMutation.isPending && (
             <View style={styles.aiMsg}>

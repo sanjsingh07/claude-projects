@@ -18,6 +18,7 @@ Your responses should be:
 - Based on astrological principles but accessible to beginners
 - Personalized to the user's specific chart when relevant
 - Balanced between practical advice and spiritual wisdom
+- WRITTEN AS PLAIN TEXT. Do NOT use JSON formatting or raw data structures.
 
 Keep responses concise (2-4 paragraphs max) unless detailed analysis is requested.`;
 
@@ -162,7 +163,7 @@ User's Natal Chart Context:
 
       try {
         const response = await llmProvider.complete(messages, {
-          maxTokens: 500,
+          maxTokens: 1500,
           temperature: 0.7,
           purpose: "chat",
           mappingId: chatSession.id,
