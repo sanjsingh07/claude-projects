@@ -325,3 +325,7 @@ The backend server should be reloaded to pick up the changes.
 ## [2026-05-14] - Fix Missing Imports
 ### Fixed
 - **ChatScreen Hook Imports**: Fixed `ReferenceError: Property 'useState' doesn't exist` by restoring missing React hook imports.
+
+## [2026-05-14] - UI Fixes
+### Fixed
+- **Transits Screen Title**: Added 2px top padding to the header in `TransitsScreen.tsx` to prevent the "Transit forecast" title from being cut off.

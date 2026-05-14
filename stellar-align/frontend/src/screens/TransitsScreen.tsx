@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
+    paddingTop: 2,
     paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: colors.stellarBorder,
