@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 2,
     paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: colors.stellarBorder,
@@ -249,6 +248,8 @@ const styles = StyleSheet.create({
     color: colors.stellarFg,
     fontFamily: 'Instrument Serif',
     fontStyle: 'italic',
+    lineHeight: 34,
+    paddingTop: 2,
   },
   headerSubtitle: {
     fontSize: 12,

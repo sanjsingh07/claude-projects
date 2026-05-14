@@ -329,3 +329,7 @@ The backend server should be reloaded to pick up the changes.
 ## [2026-05-14] - UI Fixes
 ### Fixed
 - **Transits Screen Title**: Added 2px top padding to the header in `TransitsScreen.tsx` to prevent the "Transit forecast" title from being cut off.
+
+## [2026-05-14] - Refined UI Fix for Transits Screen
+### Fixed
+- **Title Clipping**: Reverted container padding and applied `lineHeight` and `paddingTop` directly to the `headerTitle` style in `TransitsScreen.tsx`. This ensures the larger font has enough space within its line box to prevent the top of the text from being cut off.
