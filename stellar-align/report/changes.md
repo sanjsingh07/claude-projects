@@ -889,3 +889,8 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **Files modified**:
   - `stellar-align/backend/src/services/settingsService.ts`
   - `stellar-align/backend/src/services/astrology.ts`
+
+## 2026-05-14
+- **What was changed and why:** Created a comprehensive codebase audit report requested by the user. Analyzed the frontend, backend, and DB for bugs, placeholders, and app-store readiness.
+- **Summary of changes:** Added `report/audit-report.md`.
+- **Files modified:** `report/audit-report.md`, `report/changes.md`
