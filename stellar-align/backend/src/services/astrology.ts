@@ -703,17 +703,50 @@ export async function generateDailyHoroscope(
     const moonPos = transitPositions.moon as any;
     const moonPhase = getMoonPhase(sunPos.longitude, moonPos.longitude);
 
+    // Separate Personal (Natal) vs Mundane (Sky) transits for the generation meta
+    const personalTransits = todayTransits.filter(t => t.eventKind === "natal_aspect");
+    const mundaneTransits = todayTransits.filter(t => t.eventKind !== "natal_aspect");
+
     // Prepare Vedic data if applicable
     let vedicData = undefined;
+    let generationMeta: any = {
+      system: zodiacType === "SIDEREAL" ? "Vedic (Sidereal)" : "Western (Tropical)",
+      zodiacType,
+      ayanamsa: zodiacType === "SIDEREAL" ? ayanamsaType : null,
+      personalTransits: personalTransits.map(t => ({ title: t.title, symbols: t.symbols, description: t.description })),
+      mundaneTransits: mundaneTransits.map(t => ({ title: t.title, symbols: t.symbols, description: t.description })),
+    };
+
     if (zodiacType === "SIDEREAL") {
-      const { calculateNakshatra } = await import("./vedicAstrology");
+      const { calculateNakshatra, calculateVimshottariDasha, detectYogas } = await import("./vedicAstrology");
       const moonNak = calculateNakshatra(moonPos.longitude);
+      
+      // Calculate Dasha for the current date
+      const birthDate = user.birthDateTime;
+      const allDashas = calculateVimshottariDasha(
+        user.natalChart.planetaryPositions.find((p: any) => p.planet === "MOON")?.longitude || 0,
+        birthDate
+      );
+      const currentDasha = allDashas.find(d => d.startDate <= date && d.endDate >= date);
+
+      // Detect Yogas in Natal Chart (D1)
+      const d1 = user.natalChart.divisionalCharts.find((dc: any) => dc.chartType === "D1");
+      const yogas = d1 ? detectYogas(d1) : [];
+
       vedicData = {
         nakshatra: moonNak.name,
         nakshatraPada: moonNak.pada,
         nakshatraLord: moonNak.lord,
         ayanamsa: ayanamsaType,
         divisionalCharts: user.natalChart.divisionalCharts,
+      };
+
+      generationMeta.vedicDetails = {
+        nakshatra: moonNak.name,
+        pada: moonNak.pada,
+        lord: moonNak.lord,
+        dasha: currentDasha ? currentDasha.planet : "Unknown",
+        yogas: yogas,
       };
     }
 
@@ -748,6 +781,7 @@ export async function generateDailyHoroscope(
         moonSign: moonPos.sign,
         moonPhase,
         activeTransits: todayTransits as any,
+        generationMeta: generationMeta as any,
         energyScore: content.energyScore,
         moodAspects: content.moodAspects,
         primaryTransit: content.primaryTransit,
@@ -765,6 +799,7 @@ export async function generateDailyHoroscope(
         moonSign: moonPos.sign,
         moonPhase,
         activeTransits: todayTransits as any,
+        generationMeta: generationMeta as any,
         energyScore: content.energyScore,
         moodAspects: content.moodAspects,
         primaryTransit: content.primaryTransit,

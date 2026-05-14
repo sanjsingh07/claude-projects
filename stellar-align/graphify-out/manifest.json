@@ -4,8 +4,8 @@
     "hash": "9b3738cb483b1978a2ea6b9d0637db82"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/types/index.ts": {
-    "mtime": 1778508606.724556,
-    "hash": "8e97ddacf49f79a2391b4340c22c6132"
+    "mtime": 1778751752.0880113,
+    "hash": "2ef6b1286460d23bbaed5dff41fe6654"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/navigation/MainNavigator.tsx": {
     "mtime": 1778525853.1465485,
@@ -36,8 +36,8 @@
     "hash": "8ecae22e590d1afc3827a87678a7cbcb"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/TodayScreen.tsx": {
-    "mtime": 1778525853.2033536,
-    "hash": "411dc98181efe56fa0c89ad1155fa879"
+    "mtime": 1778756064.1257348,
+    "hash": "5b24d115a546e9c04ce3cb230a44ac31"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/ProfileScreen.tsx": {
     "mtime": 1778525345.2309947,
@@ -115,9 +115,13 @@
     "mtime": 1778525345.2355072,
     "hash": "6b6886b8a655b2079e157b843a528ff6"
   },
+  "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/GenerationInfoModal.tsx": {
+    "mtime": 1778756058.7265975,
+    "hash": "5bddad87886ad60ae68796ee67f4e622"
+  },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/index.ts": {
-    "mtime": 1778525848.5018013,
-    "hash": "430399169827bff49b1bb85392c5f81c"
+    "mtime": 1778751794.7944117,
+    "hash": "3d3723b98e93936f1eb5c34a79286217"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/TransitCard.tsx": {
     "mtime": 1778525853.2320652,
@@ -368,8 +372,8 @@
     "hash": "1dd0a5ebeb847ae5203c8a007c164efe"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/aiContent.ts": {
-    "mtime": 1778695536.5927143,
-    "hash": "4bdbb1df91a34bb3a9144aedd78fd5c7"
+    "mtime": 1778701911.0558934,
+    "hash": "af2e10c39e3a9233b2689de3a1f0a436"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/astrologyFormatter.ts": {
     "mtime": 1778074801.8052363,
@@ -400,8 +404,8 @@
     "hash": "2d6efff8ecd46ea60bd3b55f44478358"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/astrology.ts": {
-    "mtime": 1778701428.343966,
-    "hash": "c7bb1a82e3a125c4b042fa2fe5e212e5"
+    "mtime": 1778751739.353376,
+    "hash": "029cd88602d019e4a093c43f69d5f2b3"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/vedicAstrology.test.ts": {
     "mtime": 1778074801.8074455,

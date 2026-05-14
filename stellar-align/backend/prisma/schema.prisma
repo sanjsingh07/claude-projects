@@ -276,6 +276,7 @@ model DailyHoroscope {
   moonSign            ZodiacSign?
   moonPhase           String?
   activeTransits      Json?
+  generationMeta      Json?     // Added to store system info, Vedic details, etc.
   energyScore         Int?
   moodAspects         Json?
   primaryTransit      Json?

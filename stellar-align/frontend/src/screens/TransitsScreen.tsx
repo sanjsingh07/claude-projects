@@ -14,13 +14,15 @@ import { api } from '@services/api';
 import { useTransitStore } from '@store/transitStore';
 import { 
   StellarText, 
-  StellarBackground 
+  StellarBackground,
+  TransitInfoModal
 } from '@components';
 import { colors } from '@theme/theme';
-import { TransitForecast } from '@types';
+import { TransitForecast, TransitForecastEvent } from '@types';
 
 export const TransitsScreen: React.FC = () => {
   const [period, setPeriod] = useState<'week' | 'month' | 'year'>('week');
+  const [showInfo, setShowInfo] = useState(false);
   const { filters } = useTransitStore();
 
   const { data, isLoading, refetch, isFetching } = useQuery<TransitForecast>({
@@ -122,8 +124,19 @@ export const TransitsScreen: React.FC = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <StellarText style={styles.headerTitle} serif italic>Transit forecast</StellarText>
-        <StellarText style={styles.headerSubtitle}>{data?.range?.label || '...'}</StellarText>
+        <View style={styles.headerRow}>
+          <View style={styles.titleInfo}>
+            <StellarText style={styles.headerTitle} serif italic>Transit forecast</StellarText>
+            <StellarText style={styles.headerSubtitle}>{data?.range?.label || '...'}</StellarText>
+          </View>
+          <TouchableOpacity 
+            style={styles.infoButton} 
+            onPress={() => setShowInfo(true)}
+            activeOpacity={0.7}
+          >
+            <StellarText style={styles.infoIcon}>i</StellarText>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Period Selector */}
@@ -202,6 +215,11 @@ export const TransitsScreen: React.FC = () => {
         )}
         <View style={styles.bottomSpacing} />
       </ScrollView>
+
+      <TransitInfoModal
+        visible={showInfo}
+        onClose={() => setShowInfo(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -217,6 +235,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.stellarBorder,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleInfo: {
+    flex: 1,
+  },
   headerTitle: {
     fontSize: 28,
     color: colors.stellarFg,
@@ -228,6 +254,28 @@ const styles = StyleSheet.create({
     color: colors.stellarMuted,
     fontFamily: 'DM Sans',
     marginTop: 3,
+  },
+  infoButton: {
+    width: 38,
+    height: 38,
+    backgroundColor: colors.stellarSurface,
+    borderWidth: 1.5,
+    borderColor: colors.stellarViolet + '60',
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.stellarViolet,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  infoIcon: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.stellarViolet,
+    fontFamily: 'Instrument Serif',
+    fontStyle: 'italic',
   },
   periodBar: {
     flexDirection: 'row',

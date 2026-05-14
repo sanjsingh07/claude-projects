@@ -894,3 +894,14 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **What was changed and why:** Created a comprehensive codebase audit report requested by the user. Analyzed the frontend, backend, and DB for bugs, placeholders, and app-store readiness.
 - **Summary of changes:** Added `report/audit-report.md`.
 - **Files modified:** `report/audit-report.md`, `report/changes.md`
+
+## [2026-05-14 16:48] - Add Transit Information Modal
+- **What was changed and why:** Added an information button to the Transits screen to explain how transits are calculated and the differences between Western and Vedic systems.
+- **Summary of changes:** 
+  - Updated `TransitInfoModal.tsx` with detailed content on dual-system analysis (Tropical vs. Sidereal), transit classification (Major/Minor/Shadow), and energy flow (Applying/Separating).
+  - Integrated the "i" info button into `TransitsScreen.tsx` header.
+  - Added state and logic to trigger the modal from the `TransitsScreen`.
+  - Ensured visual consistency with the `TodayScreen` info button.
+- **Files modified:**
+  - `stellar-align/frontend/src/components/TransitInfoModal.tsx`
+  - `stellar-align/frontend/src/screens/TransitsScreen.tsx`

@@ -1,16 +1,16 @@
 # Graph Report - stellar-align  (2026-05-14)
 
 ## Corpus Check
-- 110 files · ~56,985 words
+- 111 files · ~57,994 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 484 nodes · 649 edges · 26 communities detected
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 32 edges (avg confidence: 0.8)
+- 485 nodes · 651 edges · 26 communities detected
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0c74902f`
+- Built from commit: `14c7c183`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,10 +37,10 @@
 - [[_COMMUNITY_Community 19|Community 19]]
 - [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 23|Community 23]]
 - [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 38|Community 38]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `ApiService` - 45 edges
@@ -66,13 +66,13 @@
 - `calculateTransits()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
 
-## Communities (68 total, 14 thin omitted)
+## Communities (73 total, 14 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
 Nodes (13): ChatController, NotificationController, SettingsController, TransitController, authMiddleware(), validateRequest(), transformPlanetaryPositions(), ApiError (+5 more)
 
-### Community 2 - "Community 2"
+### Community 1 - "Community 1"
 Cohesion: 0.1
 Nodes (27): calculateUserTransits(), getOrb(), isAspectApplying(), investigate(), main(), findNatalHouse(), formatSign(), generateInterpretation() (+19 more)
 
@@ -125,9 +125,9 @@ Nodes (4): displayPlanetLabel(), displayPlanetName(), formatSign(), normalizeSig
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `calculateVedicChart()` connect `Community 8` to `Community 0`, `Community 3`, `Community 6`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `getTransitsForPeriod()` connect `Community 2` to `Community 0`, `Community 6`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+- **Why does `getTransitsForPeriod()` connect `Community 1` to `Community 0`, `Community 6`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Why does `ApiError` connect `Community 0` to `Community 3`, `Community 15`?**
   _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
@@ -137,4 +137,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._

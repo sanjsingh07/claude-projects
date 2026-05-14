@@ -16,7 +16,8 @@ import {
   MoodRing, 
   TransitCard, 
   AspectList,
-  StellarBackground
+  StellarBackground,
+  GenerationInfoModal
 } from '@components';
 import { useHoroscope } from '@hooks/useHoroscope';
 import { colors } from '@theme/theme';
@@ -25,6 +26,7 @@ import { DailyHoroscope } from '@types';
 export const TodayScreen: React.FC = () => {
   const { todayHoroscope, refresh, isLoading } = useHoroscope();
   const horoscope = todayHoroscope as DailyHoroscope | null;
+  const [showInfo, setShowInfo] = React.useState(false);
 
   const headerDate = horoscope?.forDate
     ? DateTime.fromISO(horoscope.forDate)
@@ -86,8 +88,12 @@ export const TodayScreen: React.FC = () => {
           <StellarText style={styles.dayText}>TODAY · {dayName}</StellarText>
           <StellarText style={styles.fullDateText} serif>{fullDate}</StellarText>
         </View>
-        <TouchableOpacity style={styles.notifBadge}>
-          <StellarText style={styles.notifIcon}>🔔</StellarText>
+        <TouchableOpacity 
+          style={styles.infoButton} 
+          onPress={() => setShowInfo(true)}
+          activeOpacity={0.7}
+        >
+          <StellarText style={styles.infoIcon}>i</StellarText>
         </TouchableOpacity>
       </View>
 
@@ -130,6 +136,12 @@ export const TodayScreen: React.FC = () => {
         {/* Bottom Spacing */}
         <View style={styles.bottomSpacing} />
       </ScrollView>
+
+      <GenerationInfoModal
+        visible={showInfo}
+        onClose={() => setShowInfo(false)}
+        horoscope={horoscope}
+      />
     </SafeAreaView>
   );
 };
@@ -169,18 +181,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  notifBadge: {
-    width: 34,
-    height: 34,
+  infoButton: {
+    width: 38,
+    height: 38,
     backgroundColor: colors.stellarSurface,
-    borderWidth: 1,
-    borderColor: colors.stellarBorder,
-    borderRadius: 17,
+    borderWidth: 1.5,
+    borderColor: colors.stellarViolet + '60',
+    borderRadius: 19,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: colors.stellarViolet,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  notifIcon: {
-    fontSize: 16,
+  infoIcon: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.stellarViolet,
+    fontFamily: 'Instrument Serif',
+    fontStyle: 'italic',
   },
   content: {
     flex: 1,

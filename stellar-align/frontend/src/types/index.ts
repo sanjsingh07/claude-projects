@@ -150,6 +150,20 @@ export interface DailyHoroscope {
     description: string;
     quality: 'opposition' | 'trine' | 'square' | 'conjunction' | 'sextile' | 'quincunx' | 'quintile' | 'shadow';
   }[];
+  generationMeta?: {
+    system: string;
+    zodiacType: string;
+    ayanamsa?: string | null;
+    personalTransits: { title: string; symbols: string; description: string }[];
+    mundaneTransits: { title: string; symbols: string; description: string }[];
+    vedicDetails?: {
+      nakshatra: string;
+      pada: number;
+      lord: string;
+      dasha: string;
+      yogas: string[];
+    };
+  };
   contentSelf: string;
   contentWork: string;
   contentLove: string;
