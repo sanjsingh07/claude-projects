@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from '@navigation/RootNavigator';
 import { useAuthStore } from '@store/authStore';
 import { configureForegroundNotifications, registerForPushNotificationsAsync } from '@utils/notifications';
+import { subscriptionService } from '@services/subscriptionService';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,9 +42,6 @@ export default function App() {
         </NavigationContainer>
       </QueryClientProvider>
       <StatusBar style="light" />
-    </SafeAreaProvider>
-  );
-}
     </SafeAreaProvider>
   );
 }
