@@ -1,15 +1,20 @@
 import Purchases, { LOG_LEVEL, PurchasesPackage, CustomerInfo } from 'react-native-purchases';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
+import Constants from 'expo-constants';
 import { useAuthStore } from '../store/authStore';
 import { api } from './api';
 
 const API_KEYS = {
-  apple: 'goog_EXAMPLE_REVENUECAT_APPLE_KEY', // Replace with actual keys
+  apple: 'goog_EXAMPLE_REVENUECAT_APPLE_KEY', // Replace with actual keys from RevenueCat
   google: 'goog_EXAMPLE_REVENUECAT_GOOGLE_KEY',
 };
 
+// Toggle this to true to bypass RevenueCat and test Premium features locally
+const IS_DEV_BYPASS = true;
+
 class SubscriptionService {
   private static instance: SubscriptionService;
+  private isInitialized = false;
 
   private constructor() {}
 
@@ -21,19 +26,54 @@ class SubscriptionService {
   }
 
   public async initialize() {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+    if (this.isInitialized) return;
 
-    if (Platform.OS === 'ios') {
-      await Purchases.configure({ apiKey: API_KEYS.apple });
-    } else if (Platform.OS === 'android') {
-      await Purchases.configure({ apiKey: API_KEYS.google });
+    // Check if running in Expo Go (IAP doesn't work here)
+    if (Constants.appOwnership === 'expo') {
+      console.warn('SubscriptionService: Running in Expo Go. Native IAP is disabled.');
+      if (IS_DEV_BYPASS) {
+        console.log('SubscriptionService: Dev Bypass is active.');
+      }
+      return;
     }
 
-    // Sync with backend on init
-    this.updateCustomerInfo();
+    try {
+      Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+      if (Platform.OS === 'ios') {
+        await Purchases.configure({ apiKey: API_KEYS.apple });
+      } else if (Platform.OS === 'android') {
+        await Purchases.configure({ apiKey: API_KEYS.google });
+      }
+
+      this.isInitialized = true;
+      this.updateCustomerInfo();
+    } catch (e) {
+      console.error('SubscriptionService: Initialization failed', e);
+    }
   }
 
   public async getOfferings() {
+    if (IS_DEV_BYPASS) {
+      // Mocked packages for testing the UI
+      return [
+        {
+          identifier: 'stellar_premium_monthly',
+          packageType: 'MONTHLY',
+          product: {
+            identifier: 'monthly_subscription',
+            description: 'Full access to all cosmic insights',
+            title: 'Stellar Monthly',
+            price: 9.99,
+            priceString: '$9.99',
+            currencyCode: 'USD',
+          },
+        }
+      ] as any[];
+    }
+
+    if (!this.isInitialized) return [];
+
     try {
       const offerings = await Purchases.getOfferings();
       if (offerings.current !== null && offerings.current.availablePackages.length !== 0) {
@@ -46,18 +86,39 @@ class SubscriptionService {
   }
 
   public async purchasePackage(pkg: PurchasesPackage): Promise<boolean> {
+    if (IS_DEV_BYPASS) {
+      // Simulate a successful purchase
+      console.log('SubscriptionService: Mocking successful purchase of', pkg.identifier);
+      return new Promise((resolve) => {
+        setTimeout(async () => {
+          const success = await this.syncWithBackend(true);
+          resolve(success);
+        }, 1500);
+      });
+    }
+
+    if (!this.isInitialized) {
+      Alert.alert('Error', 'Subscription service not initialized. Use a development build.');
+      return false;
+    }
+
     try {
       const { customerInfo } = await Purchases.purchasePackage(pkg);
       return this.handleCustomerInfo(customerInfo);
     } catch (e: any) {
       if (!e.userCancelled) {
         console.error('Purchase failed', e);
+        Alert.alert('Error', e.message || 'Purchase failed');
       }
       return false;
     }
   }
 
   public async restorePurchases(): Promise<boolean> {
+    if (IS_DEV_BYPASS) return this.syncWithBackend(true);
+
+    if (!this.isInitialized) return false;
+
     try {
       const customerInfo = await Purchases.restorePurchases();
       return this.handleCustomerInfo(customerInfo);
@@ -68,6 +129,9 @@ class SubscriptionService {
   }
 
   public async updateCustomerInfo(): Promise<boolean> {
+    if (IS_DEV_BYPASS) return true;
+    if (!this.isInitialized) return false;
+
     try {
       const customerInfo = await Purchases.getCustomerInfo();
       return this.handleCustomerInfo(customerInfo);
@@ -78,22 +142,25 @@ class SubscriptionService {
   }
 
   private async handleCustomerInfo(customerInfo: CustomerInfo): Promise<boolean> {
-    // RevenueCat "entitlement" check. We'll use "premium" as the ID.
     const isPremium = typeof customerInfo.entitlements.active['premium'] !== 'undefined';
-    
-    // Sync with our own backend
+    return this.syncWithBackend(isPremium);
+  }
+
+  private async syncWithBackend(isPremium: boolean): Promise<boolean> {
     try {
-      await api.updateProfile({ isPremium });
-      // Update local store
+      // Update local store first for immediate UI feedback
       const user = useAuthStore.getState().user;
       if (user) {
         useAuthStore.getState().setUser({ ...user, isPremium });
       }
+
+      // Sync with server
+      await api.client.patch('/users/profile', { isPremium });
+      return true;
     } catch (e) {
       console.error('Failed to sync premium status with backend', e);
+      return IS_DEV_BYPASS; // If bypass is on, treat as success locally
     }
-
-    return isPremium;
   }
 }
 
