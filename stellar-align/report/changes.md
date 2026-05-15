@@ -965,3 +965,16 @@ Temporarily hid the "Delete Account" button from the Settings screen as it is no
 - **Changes**:
   - Commented out the `SettingsRow` for "Delete account" in the Danger zone section.
   - Added `isLast` prop to the "Sign out" button to ensure proper border styling as the now-last item in the section.
+
+## [2026-05-15 16:30:00] Implement Premium Subscription System
+Implemented a cross-platform (Apple/Google) subscription system to gate premium transit forecasts.
+- **Backend**:
+  - Added `isPremium` and `subscriptionExpiresAt` to the database.
+  - Updated `AuthService` to propagate premium status in the user profile.
+  - Secured `TransitController` to prevent non-premium access to month/year forecasts.
+- **Frontend**:
+  - Integrated `react-native-purchases` (RevenueCat) for subscription management.
+  - Created `SubscriptionService` for handling IAP initialization, purchases, and restoration.
+  - Developed a high-fidelity `Paywall` component listing premium benefits.
+  - Gated "Month" and "Year" forecasts in `TransitsScreen` with paywall triggers and lock icons.
+  - Added subscription status and upgrade paths to the `SettingsScreen`.

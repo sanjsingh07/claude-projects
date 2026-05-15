@@ -108,6 +108,8 @@ model User {
   isActive              Boolean   @default(true)
   isDeleted             Boolean   @default(false)
   profileCompleted      Boolean   @default(false)
+  isPremium             Boolean   @default(false)
+  subscriptionExpiresAt DateTime?
   deletedAt             DateTime?
   requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
   addresseeCompat       CompatibilityReport[] @relation("AddresseeCompat")

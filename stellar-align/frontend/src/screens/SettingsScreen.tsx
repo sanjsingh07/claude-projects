@@ -617,6 +617,12 @@ export const SettingsScreen: React.FC = () => {
           />
         </Modal>
       )}
+
+      <Paywall
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        featureName="Premium Features"
+      />
     </SafeAreaView>
   );
 };
@@ -645,6 +651,19 @@ const styles = StyleSheet.create({
   },
   ver: {
     fontFamily: 'DMSans-Regular',
+    fontSize: 10,
+    color: colors.stellarMuted,
+    letterSpacing: 1,
+  },
+  copy: {
+    fontFamily: 'DMSans-Regular',
+    fontSize: 9,
+    color: colors.stellarMuted,
+    opacity: 0.6,
+    marginTop: 3,
+  },
+});
+   fontFamily: 'DMSans-Regular',
     fontSize: 10,
     color: colors.stellarMuted,
     letterSpacing: 1,

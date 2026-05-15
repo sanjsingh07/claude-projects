@@ -10,6 +10,8 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
   profileCompleted: boolean;
+  isPremium: boolean;
+  subscriptionExpiresAt?: Date;
 
   // Birth data
   birthDateTime: Date;

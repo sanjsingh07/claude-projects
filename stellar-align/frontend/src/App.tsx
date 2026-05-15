@@ -23,6 +23,7 @@ export default function App() {
   useEffect(() => {
     // App startup logic
     configureForegroundNotifications();
+    subscriptionService.initialize();
     setLoading(false);
   }, [setLoading]);
 
@@ -40,6 +41,9 @@ export default function App() {
         </NavigationContainer>
       </QueryClientProvider>
       <StatusBar style="light" />
+    </SafeAreaProvider>
+  );
+}
     </SafeAreaProvider>
   );
 }

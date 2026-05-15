@@ -27,9 +27,15 @@ export class TransitController {
 
       const userTimezone = user.birthTimezone || "UTC";
       const requestedPeriod = (req.query.period as string) || "week";
-      const period = ["week", "month", "year"].includes(requestedPeriod)
+      let period = ["week", "month", "year"].includes(requestedPeriod)
         ? (requestedPeriod as "week" | "month" | "year")
         : "week";
+
+      // Security check: only premium users can access month and year forecasts
+      if (period !== "week" && !user.isPremium) {
+        period = "week";
+      }
+
       const startDateQuery = req.query.startDate as string;
       const startDate = startDateQuery 
         ? DateTime.fromISO(startDateQuery, { zone: userTimezone }).startOf("day").toJSDate()

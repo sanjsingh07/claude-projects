@@ -63,7 +63,7 @@ export const TransitInfoModal: React.FC<TransitInfoModalProps> = ({
               </View>
               <View style={[styles.layerItem, { borderBottomWidth: 0 }]}>
                 <StellarText style={styles.layerTitle}>3. Temporal Depth</StellarText>
-                <StellarText style={styles.layerDesc}>We calculate the entire window of influence, tracking a transit from its first stirrings to its final resolution.</StellarText>
+                <StellarText style={styles.layerDesc}>We calculate the entire window of influence, tracking a transit from its first stirrings to its final resolution. Detailed Month and Year forecasts are available for Premium subscribers.</StellarText>
               </View>
             </View>
 

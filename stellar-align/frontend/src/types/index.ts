@@ -5,6 +5,8 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
   profileCompleted: boolean;
+  isPremium: boolean;
+  subscriptionExpiresAt?: string;
   birthDateTime: string;
   birthTimeUnknown: boolean;
   birthTimezone: string;

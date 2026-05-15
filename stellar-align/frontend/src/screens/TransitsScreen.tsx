@@ -15,10 +15,12 @@ import { useTransitStore } from '@store/transitStore';
 import { 
   StellarText, 
   StellarBackground,
-  TransitInfoModal
+  TransitInfoModal,
+  Paywall
 } from '@components';
 import { colors } from '@theme/theme';
 import { TransitForecast, TransitForecastEvent } from '@types';
+import { Ionicons } from '@expo/vector-icons';
 
 export const TransitsScreen: React.FC = () => {
   const [period, setPeriod] = useState<'week' | 'month' | 'year'>('week');
@@ -220,6 +222,12 @@ export const TransitsScreen: React.FC = () => {
         visible={showInfo}
         onClose={() => setShowInfo(false)}
       />
+
+      <Paywall
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        featureName={`${period.charAt(0).toUpperCase() + period.slice(1)} Forecasts`}
+      />
     </SafeAreaView>
   );
 };
@@ -248,8 +256,8 @@ const styles = StyleSheet.create({
     color: colors.stellarFg,
     fontFamily: 'Instrument Serif',
     fontStyle: 'italic',
-    lineHeight: 34,
-    paddingTop: 2,
+    lineHeight: 27,
+    // paddingTop: 2,
   },
   headerSubtitle: {
     fontSize: 12,
@@ -455,6 +463,23 @@ const styles = StyleSheet.create({
   progPct: {
     fontSize: 9,
     color: colors.stellarMuted,
+    fontFamily: 'DM Sans',
+  },
+  emptyContainer: {
+    marginTop: 100,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: colors.stellarMuted,
+    fontFamily: 'DM Sans',
+  },
+  bottomSpacing: {
+    height: 60,
+  },
+});
+
+export default TransitsScreen;
+larMuted,
     fontFamily: 'DM Sans',
   },
   emptyContainer: {
