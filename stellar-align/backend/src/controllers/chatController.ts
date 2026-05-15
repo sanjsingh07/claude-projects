@@ -116,6 +116,28 @@ export class ChatController {
         throw new ApiError(404, "User not found");
       }
 
+      // Security check: only 1 free message per day for non-premium users
+      if (!user.isPremium) {
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0);
+
+        const dailyMessageCount = await prisma.chatMessage.count({
+          where: {
+            role: ChatRole.USER,
+            createdAt: {
+              gte: startOfDay,
+            },
+            session: {
+              userId: userId,
+            },
+          },
+        });
+
+        if (dailyMessageCount >= 1) {
+          throw new ApiError(403, "Daily message limit reached. Upgrade to Premium for unlimited guidance.", "PREMIUM_REQUIRED");
+        }
+      }
+
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
         where: { userId, isCleared: false },

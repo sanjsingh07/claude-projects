@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StellarText } from '@components/StellarCard';
 import { StellarBackground } from '@components/StellarBackground';
+import { Paywall } from '@components';
 import { useAuthStore } from '@store/authStore';
 import { colors, spacing, shadows } from '@theme/theme';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -39,6 +40,7 @@ export const ChatScreen: React.FC = () => {
   const [input, setInput] = useState('');
   const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch chat history
@@ -74,6 +76,13 @@ export const ChatScreen: React.FC = () => {
     onError: (error: any) => {
       console.error('Chat error:', error);
       setPendingMessages([]);
+
+      // Check for premium required error
+      if (error.response?.status === 403 && error.response?.data?.errorCode === 'PREMIUM_REQUIRED') {
+        setShowPaywall(true);
+      } else {
+        Alert.alert('Error', error.response?.data?.message || 'Failed to send message. Please try again.');
+      }
     },
   });
 
@@ -267,6 +276,12 @@ export const ChatScreen: React.FC = () => {
           </View>
         </Pressable>
       )}
+
+      <Paywall
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        featureName="Unlimited AI Guidance"
+      />
     </SafeAreaView>
   );
 };

@@ -978,3 +978,14 @@ Implemented a cross-platform (Apple/Google) subscription system to gate premium 
   - Developed a high-fidelity `Paywall` component listing premium benefits.
   - Gated "Month" and "Year" forecasts in `TransitsScreen` with paywall triggers and lock icons.
   - Added subscription status and upgrade paths to the `SettingsScreen`.
+
+## [2026-05-15 16:45:00] Gated AI Chat Guidance
+Implemented a daily message limit for non-premium users in the AI chat consultant.
+- **Backend**:
+  - Updated `ChatController.ts` to enforce a 1-message-per-day limit for standard members.
+  - Used UTC-day based counting of user messages to determine limit status.
+  - Returns a specific `PREMIUM_REQUIRED` error code when the limit is exceeded.
+- **Frontend**:
+  - Modified `ChatScreen.tsx` to detect the `PREMIUM_REQUIRED` error.
+  - Automatically triggers the `Paywall` component when a user attempts to send more than one message per day.
+  - Cleaned up file corruption and syntax errors in the chat screen component.
