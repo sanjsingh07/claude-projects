@@ -159,26 +159,8 @@ export const ChatScreen: React.FC = () => {
           </StellarText>
         </View>
         <TouchableOpacity style={styles.moreButton} onPress={() => setMenuVisible(!menuVisible)}>
-          <StellarText style={styles.moreIcon}>⋮</StellarText>
+          <Ionicons name="ellipsis-vertical" size={20} color={colors.stellarMuted} />
         </TouchableOpacity>
-
-        {/* Custom Dropdown Menu */}
-        {menuVisible && (
-          <Pressable 
-            style={styles.menuOverlay} 
-            onPress={() => setMenuVisible(false)}
-          >
-            <View style={styles.menuContainer}>
-              <TouchableOpacity 
-                style={styles.menuItem} 
-                onPress={confirmClearChat}
-              >
-                <Ionicons name="trash-outline" size={18} color={colors.error} />
-                <StellarText style={[styles.menuItemText, { color: colors.error }]}>Clear Chat</StellarText>
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        )}
       </View>
 
       <KeyboardAvoidingView 
@@ -267,6 +249,24 @@ export const ChatScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Custom Dropdown Menu */}
+      {menuVisible && (
+        <Pressable 
+          style={styles.menuOverlay} 
+          onPress={() => setMenuVisible(false)}
+        >
+          <View style={styles.menuContainer}>
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={confirmClearChat}
+            >
+              <Ionicons name="trash-outline" size={18} color={colors.error} />
+              <StellarText style={[styles.menuItemText, { color: colors.error }]}>Clear Chat</StellarText>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      )}
     </SafeAreaView>
   );
 };
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: 'absolute',
-    top: 50,
+    top: 44,
     right: 24,
     backgroundColor: colors.stellarSurface,
     borderWidth: 1,

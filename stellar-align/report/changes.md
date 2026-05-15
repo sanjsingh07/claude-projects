@@ -948,3 +948,12 @@ To ensure users eventually receive an AI-generated horoscope even if providers a
 - **Files modified:**
   - `stellar-align/frontend/src/screens/ChatScreen.tsx`
   - `stellar-align/backend/src/controllers/chatController.ts`
+
+## [2026-05-15 15:45:00] Fix Chat Screen menu behavior and styling
+Fixed issues with the three-dot menu in the Chat screen where it wouldn't close when clicking away and appeared disconnected from the icon.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+- **Changes**:
+  - **Click-Away Behavior**: Moved the menu overlay from the header to the root of the `SafeAreaView`, ensuring the `Pressable` backdrop covers the entire screen to capture dismiss taps.
+  - **Improved Positioning**: Adjusted the `menuContainer` top offset to `44px` to align it more closely with the three-dot icon, resolving the "floating" appearance.
+  - **UI Polish**: Replaced the text-based vertical ellipsis (`⋮`) with a consistent `Ionicons` icon (`ellipsis-vertical`).
