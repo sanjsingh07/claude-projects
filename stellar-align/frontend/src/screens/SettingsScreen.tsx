@@ -31,6 +31,7 @@ import {
   TextInputModal,
   TimezoneSelectionModal,
   Paywall,
+  showCustomerCenter,
 } from '../components';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
 
