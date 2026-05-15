@@ -399,8 +399,9 @@ export const SettingsScreen: React.FC = () => {
               { text: 'Cancel', style: 'cancel' },
               { text: 'Sign out', style: 'destructive', onPress: () => logout() }
             ])}
+            isLast
           />
-          <SettingsRow
+          {/* <SettingsRow
             label="Delete account"
             sub="Permanent · unrecoverable"
             isDanger
@@ -409,7 +410,7 @@ export const SettingsScreen: React.FC = () => {
               { text: 'Delete', style: 'destructive', onPress: () => { } }
             ])}
             isLast
-          />
+          /> */}
         </SettingsSection>
 
         <View style={styles.footer}>

@@ -957,3 +957,11 @@ Fixed issues with the three-dot menu in the Chat screen where it wouldn't close 
   - **Click-Away Behavior**: Moved the menu overlay from the header to the root of the `SafeAreaView`, ensuring the `Pressable` backdrop covers the entire screen to capture dismiss taps.
   - **Improved Positioning**: Adjusted the `menuContainer` top offset to `44px` to align it more closely with the three-dot icon, resolving the "floating" appearance.
   - **UI Polish**: Replaced the text-based vertical ellipsis (`⋮`) with a consistent `Ionicons` icon (`ellipsis-vertical`).
+
+## [2026-05-15 16:00:00] Hide Delete Account button
+Temporarily hid the "Delete Account" button from the Settings screen as it is not yet functional, while preserving the code for future implementation.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+- **Changes**:
+  - Commented out the `SettingsRow` for "Delete account" in the Danger zone section.
+  - Added `isLast` prop to the "Sign out" button to ensure proper border styling as the now-last item in the section.
