@@ -17,6 +17,10 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string().optional(),
   REDIS_DB: z.string().default("0"),
 
+  // Resend
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().default("Stellar Align <onboarding@resend.dev>"),
+
   // JWT
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.string().default("15m"),

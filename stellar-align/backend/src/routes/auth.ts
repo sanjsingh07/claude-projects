@@ -66,12 +66,6 @@ router.post(
   authController.changePassword,
 );
 
-// OAuth routes
-router.get("/google", authController.googleAuth);
-router.get("/google/callback", authController.googleCallback);
-
-router.post("/apple", authController.appleAuth);
-
 // Social login (client-side OAuth flow)
 router.post(
   "/social",

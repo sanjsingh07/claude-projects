@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 import { JwtPayload } from "../types/api";
+import { prisma } from "../config/database";
 
 // Extend Express Request
 declare global {
@@ -16,11 +17,11 @@ declare global {
   }
 }
 
-export function authMiddleware(
+export async function authMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -39,10 +40,27 @@ export function authMiddleware(
   try {
     const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
 
+    // Verify user exists in DB to prevent issues with orphaned tokens from deleted users
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { id: true, email: true, isActive: true, isDeleted: true },
+    });
+
+    if (!user || !user.isActive || user.isDeleted) {
+      res.status(401).json({
+        success: false,
+        error: {
+          code: "UNAUTHORIZED",
+          message: "User not found or inactive",
+        },
+      });
+      return;
+    }
+
     req.userId = payload.userId;
     req.user = {
-      id: payload.userId,
-      email: payload.email,
+      id: user.id,
+      email: user.email,
     };
 
     next();
@@ -69,11 +87,11 @@ export function authMiddleware(
 }
 
 // Optional auth - sets user if token present but doesn't require it
-export function optionalAuthMiddleware(
+export async function optionalAuthMiddleware(
   req: Request,
   _res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -85,11 +103,19 @@ export function optionalAuthMiddleware(
 
   try {
     const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
-    req.userId = payload.userId;
-    req.user = {
-      id: payload.userId,
-      email: payload.email,
-    };
+    
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { id: true, email: true, isActive: true, isDeleted: true },
+    });
+
+    if (user && user.isActive && !user.isDeleted) {
+      req.userId = payload.userId;
+      req.user = {
+        id: user.id,
+        email: user.email,
+      };
+    }
   } catch {
     // Ignore invalid tokens for optional auth
   }
@@ -103,5 +129,5 @@ export function requireAuth(): (
   res: Response,
   next: NextFunction,
 ) => void {
-  return authMiddleware;
+  return authMiddleware as any;
 }

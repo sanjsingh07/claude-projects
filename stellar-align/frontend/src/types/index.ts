@@ -87,7 +87,7 @@ export interface UserProfile {
     venus?: { sign: ZodiacSign; degree: number; label: string };
     mars?: { sign: ZodiacSign; degree: number; label: string };
   };
-  badges: Array<{ label: string; type: 'accent' | 'pink' | 'default' }>;
+  badges: Array<{ label: string; type: 'fire' | 'water' | 'earth' | 'air' }>;
 }
 
 export interface NatalChart {

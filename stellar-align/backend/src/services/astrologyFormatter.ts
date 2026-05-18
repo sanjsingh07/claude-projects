@@ -23,12 +23,13 @@ export const getSignEmoji = (sign: ZodiacSign): string => {
   return emojis[sign] || "";
 };
 
-export const getSignBadgeType = (sign: ZodiacSign): "accent" | "pink" | "default" => {
-  // Logic to determine badge color based on sign element or just hardcoded examples
+export const getSignBadgeType = (sign: ZodiacSign): "fire" | "water" | "earth" | "air" => {
   const fire: ZodiacSign[] = ["ARIES", "LEO", "SAGITTARIUS"];
   const water: ZodiacSign[] = ["CANCER", "SCORPIO", "PISCES"];
+  const earth: ZodiacSign[] = ["TAURUS", "VIRGO", "CAPRICORN"];
 
-  if (water.includes(sign)) return "pink";
-  if (fire.includes(sign)) return "accent";
-  return "default";
+  if (water.includes(sign)) return "water";
+  if (fire.includes(sign)) return "fire";
+  if (earth.includes(sign)) return "earth";
+  return "air";
 };

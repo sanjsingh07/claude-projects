@@ -1,7 +1,17 @@
 import { prisma } from "../config/database";
 import logger from "../config/logger";
+import { NotFoundError } from "../utils/errors";
 
 export const getUserSettings = async (userId: string) => {
+  // Verify user exists first to avoid orphaned token issues and foreign key violations
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  });
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
   let settings = await prisma.userSettings.findUnique({
     where: { userId }
   });

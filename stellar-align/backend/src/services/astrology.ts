@@ -731,7 +731,7 @@ export async function generateDailyHoroscope(
 
       // Detect Yogas in Natal Chart (D1)
       const d1 = user.natalChart.divisionalCharts.find((dc: any) => dc.chartType === "D1");
-      const yogas = d1 ? detectYogas(d1) : [];
+      const yogas = d1 ? detectYogas(d1 as any) : [];
 
       vedicData = {
         nakshatra: moonNak.name,

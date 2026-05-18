@@ -4,8 +4,9 @@ import { env } from "./config/env";
 import { checkDatabaseHealth, disconnectDatabase } from "./config/database";
 import logger from "./config/logger";
 import { redis } from "./config/redis";
-import { horoscopeQueue } from "./config/queue";
+import { horoscopeQueue, chartQueue } from "./config/queue";
 import { horoscopeWorker } from "./jobs/horoscopeWorker";
+import { chartWorker } from "./jobs/chartWorker";
 
 const PORT = parseInt(env.PORT);
 
@@ -14,13 +15,15 @@ async function gracefulShutdown(signal: string): Promise<void> {
   logger.info(`Received ${signal}. Shutting down gracefully...`);
 
   try {
-    // Stop worker
+    // Stop workers
     await horoscopeWorker.close();
-    logger.info("Horoscope worker closed");
+    await chartWorker.close();
+    logger.info("Workers closed");
 
-    // Close queue
+    // Close queues
     await horoscopeQueue.close();
-    logger.info("Horoscope queue closed");
+    await chartQueue.close();
+    logger.info("Queues closed");
 
     // Close Redis connections
     await redis.quit();

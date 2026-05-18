@@ -32,7 +32,7 @@ export interface UserProfileResponse {
     mars?: { sign: ZodiacSign; degree: number; label: string };
   };
   bio?: string;
-  badges: Array<{ label: string; type: "accent" | "pink" | "default" }>;
+  badges: Array<{ label: string; type: "fire" | "water" | "earth" | "air" }>;
 }
 
 export const buildUserProfile = (user: any): UserProfileResponse => {

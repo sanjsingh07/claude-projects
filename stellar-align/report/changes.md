@@ -998,3 +998,18 @@ Fully integrated the RevenueCat Pro suite for subscription management.
 - **Modern Paywalls**: Implemented `RevenueCatUI.Paywall` which renders dashboard-configured paywalls natively.
 - **Customer Center**: Added support for `RevenueCatUI.presentCustomerCenter()` in Settings for managing active subscriptions.
 - **UI Gating**: Updated `SettingsScreen` to allow premium members to manage subscriptions and standard members to upgrade.
+
+## [2026-05-18 13:57] Created Stellar Align Landing Page
+
+**What was changed and why:**
+Created a comprehensive Next.js landing page for the Stellar Align project to provide a professional web presence and detailed information about the app's AI-driven features.
+
+**Summary of changes:**
+- Scaffolded a new Next.js 15 project in `stellar-align-landing-page`.
+- Implemented brand-specific styling using Tailwind CSS v4 and custom fonts (Instrument Serif, DM Sans).
+- Developed a high-fidelity landing page with Hero, Features, Technical Architecture, and CTA sections.
+- Created Privacy Policy, Terms of Service, and Contact pages.
+- Linked all subpages and verified the production build.
+
+**Files modified:**
+- Created `stellar-align-landing-page/` directory and all its contents.

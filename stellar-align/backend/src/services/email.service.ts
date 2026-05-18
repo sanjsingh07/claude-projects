@@ -1,3 +1,4 @@
+import { Resend } from "resend";
 import logger from "../config/logger";
 import { env } from "../config/env";
 
@@ -9,6 +10,16 @@ export interface EmailOptions {
 }
 
 class EmailService {
+  private resend: Resend | null = null;
+
+  constructor() {
+    if (env.RESEND_API_KEY) {
+      this.resend = new Resend(env.RESEND_API_KEY);
+    } else {
+      logger.warn("RESEND_API_KEY is missing. Email service will run in simulation mode.");
+    }
+  }
+
   /**
    * Send a password reset email
    */
@@ -39,24 +50,53 @@ class EmailService {
   }
 
   /**
-   * Core send email method - currently logs to console
-   * In production, this would use Nodemailer, SendGrid, Resend, etc.
+   * Core send email method using Resend
    */
   private async sendEmail(options: EmailOptions): Promise<void> {
-    // In a real app, we would use a library like nodemailer or an API like Resend
-    // For now, we log it so the user can see it in development
-    logger.info("📧 Email Sent (Simulation)", {
-      to: options.to,
-      subject: options.subject,
-      preview: options.text.substring(0, 100) + "...",
-    });
+    if (!this.resend) {
+      // Simulation mode
+      logger.info("📧 Email Sent (Simulation)", {
+        to: options.to,
+        subject: options.subject,
+        preview: options.text.substring(0, 100) + "...",
+      });
 
-    if (env.NODE_ENV === "development") {
-      console.log("-----------------------------------------");
-      console.log(`To: ${options.to}`);
-      console.log(`Subject: ${options.subject}`);
-      console.log(`Text: ${options.text}`);
-      console.log("-----------------------------------------");
+      if (env.NODE_ENV === "development") {
+        console.log("-----------------------------------------");
+        console.log(`To: ${options.to}`);
+        console.log(`Subject: ${options.subject}`);
+        console.log(`Text: ${options.text}`);
+        console.log("-----------------------------------------");
+      }
+      return;
+    }
+
+    try {
+      const { data, error } = await this.resend.emails.send({
+        from: env.EMAIL_FROM,
+        to: options.to,
+        subject: options.subject,
+        text: options.text,
+        html: options.html,
+      });
+
+      if (error) {
+        logger.error("Resend API error", { error });
+        throw new Error(`Failed to send email: ${error.message}`);
+      }
+
+      logger.info("📧 Email sent successfully via Resend", {
+        id: data?.id,
+        to: options.to,
+        subject: options.subject,
+      });
+    } catch (error: any) {
+      logger.error("Failed to send email via Resend", {
+        to: options.to,
+        error: error.message,
+      });
+      // We don't necessarily want to crash the request if email fails, 
+      // but we log it as an error.
     }
   }
 }

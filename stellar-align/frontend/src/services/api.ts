@@ -5,31 +5,21 @@ import { User, AyanamsaType, DivisionalChartType } from '@types';
 import { secureStorage } from '@utils/secureStorage';
 
 // API URL configuration
-const DEFAULT_API_URL = process.env.API_URL || 'http://localhost:3000/api';
-// For iOS simulator/emulator, use your machine's IP or host.docker.internal
-const IOS_SIMULATOR_URL = 'http://host.docker.internal:3000/api';
-const ANDROID_EMULATOR_URL = 'http://10.0.2.2:3000/api';
+const DEFAULT_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const getApiUrl = () => {
   // Check if we have a custom URL in app.json
-  const configUrl = Constants.expoConfig?.extra?.apiUrl;
-  if (configUrl) {
-    return configUrl;
-  }
-
-  // Fallback based on platform
-  if (Platform.OS === 'android') {
-    return ANDROID_EMULATOR_URL;
-  }
-
-  if (Platform.OS === 'ios') {
-    return IOS_SIMULATOR_URL;
-  }
+  // const configUrl = Constants.expoConfig?.extra?.apiUrl;
+  // if (configUrl) {
+  //   return configUrl;
+  // }
 
   return DEFAULT_API_URL;
 };
 
 const API_URL = getApiUrl();
+
+console.log(`API URL: ${API_URL}`);
 
 interface ApiError {
   code: string;
@@ -91,8 +81,19 @@ class ApiService {
             }
             return this.client(originalRequest);
           } catch (refreshError) {
+            // If refresh fails with 401, it means the refresh token is also invalid or user is gone
+            // In this case we MUST force logout to clear the stuck state
+            const { useAuthStore } = await import('@store/authStore');
+            useAuthStore.getState().logout();
             return Promise.reject(refreshError);
           }
+        }
+
+        // If we get a 401 and it's either an auth endpoint or a second attempt
+        // it means the session is completely dead
+        if (error.response?.status === 401) {
+          const { useAuthStore } = await import('@store/authStore');
+          useAuthStore.getState().logout();
         }
 
         return Promise.reject(this.handleError(error));
@@ -185,9 +186,7 @@ class ApiService {
   // ==================== AUTH ====================
 
   async login(email: string, password: string) {
-    console.log('Logging in with:', { email });
     const response: any = await this.client.post('/auth/login', { email, password });
-    console.log('Login response:', response);
     // Response is already unwrapped by interceptor, so response is { success, data, meta }
     const tokens = response.data?.tokens || response.tokens;
     if (!tokens) {
@@ -209,9 +208,7 @@ class ApiService {
     displayName?: string;
     gender?: string;
   }) {
-    console.log('Registering with:', { email: data.email, birthDate: data.birthDate });
     const response: any = await this.client.post('/auth/register', data);
-    console.log('Register response:', response);
     // Response is already unwrapped by interceptor, so response is { success, data, meta }
     const tokens = response.data?.tokens || response.tokens;
     if (!tokens) {

@@ -55,8 +55,6 @@ export const LoginScreen: React.FC = () => {
     redirectUri,
   });
 
-  console.log('LoginScreen - isAuthenticated:', isAuthenticated);
-
   useEffect(() => {
     console.log('useEffect - auth check:', { isAuthenticated, profileCompleted: user?.profileCompleted });
     if (isAuthenticated) {
