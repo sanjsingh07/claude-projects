@@ -1104,3 +1104,13 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/src/components/Paywall.tsx`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Improved Purchase Error Handling
+- **What was changed and why**: Refined the error handling in `SubscriptionService` to provide better feedback during testing and for edge cases.
+- **Summary of changes**:
+  - Added specific detection for simulated sandbox failures to provide clearer "Sandbox Test" alerts.
+  - Improved error messages for both purchase and restore operations.
+  - Ensured `userCancelled` errors are consistently ignored across all operations.
+- **Files modified**:
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/report/changes.md`

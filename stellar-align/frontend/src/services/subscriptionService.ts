@@ -96,10 +96,18 @@ class SubscriptionService {
       const { customerInfo } = await Purchases.purchasePackage(pkg);
       return this.handleCustomerInfoUpdate(customerInfo);
     } catch (e: any) {
-      if (!e.userCancelled) {
-        console.error('Purchase failed', e);
-        Alert.alert('Purchase Error', e.message || 'The purchase could not be completed.');
+      if (e.userCancelled) {
+        return false;
       }
+
+      console.error('Purchase failed', e);
+      
+      // Better feedback for simulated failures or standard errors
+      const isSimulated = e.message?.includes('simulated') || e.code === 'PURCHASE_CANCELLED';
+      const title = isSimulated ? 'Sandbox Test' : 'Purchase Error';
+      const message = e.message || 'The purchase could not be completed at this time. Please try again later.';
+      
+      Alert.alert(title, message);
       return false;
     }
   }
@@ -122,8 +130,11 @@ class SubscriptionService {
       
       return this.handleCustomerInfoUpdate(customerInfo);
     } catch (e: any) {
+      if (e.userCancelled) return false;
+      
       console.error('Restore failed', e);
-      Alert.alert('Restore Error', e.message || 'Failed to restore purchases.');
+      const message = e.message || 'Failed to restore purchases. Please ensure you are logged into the correct App Store account.';
+      Alert.alert('Restore Error', message);
       return false;
     }
   }
