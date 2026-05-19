@@ -81,16 +81,10 @@ export const RegisterScreen: React.FC = () => {
   const { setUser, isAuthenticated, user } = useAuthStore();
   const route = useRoute<any>();
 
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: 'stellar-align',
-  });
-
   const [request, response, promptAsync] = useIdTokenAuthRequest({
-    clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
-    redirectUri,
   });
 
   const initialStep = route.params?.step || 1;

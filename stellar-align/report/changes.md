@@ -1038,3 +1038,11 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Behavior**: Uses `handleBack` which correctly calls `navigation.goBack()` when on Step 1.
 - **Files modified**:
   - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-19 17:22:32] Fixed Google OAuth 400 invalid_request
+- **Problem**: Google Auth was failing with `invalid_request` because the manually provided `redirect_uri` (stellar-align://) violated Google's security policy for Web Client IDs on mobile.
+- **Cause**: Using a custom URI scheme with a Web Client ID is deprecated/blocked by Google. Also, forcing a single scheme breaks the Expo Go proxy flow.
+- **Solution**: Refactored `LoginScreen.tsx` and `RegisterScreen.tsx` to let `expo-auth-session` handle platform-specific `redirect_uri` automatically. Removed the manual `redirectUri` override.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
