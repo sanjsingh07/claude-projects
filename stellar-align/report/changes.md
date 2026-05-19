@@ -1031,3 +1031,10 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
   - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
   - `stellar-align/frontend/src/screens/Auth/ResetPasswordScreen.tsx`
+
+## [2026-05-19 17:02:24] Added back button to Create Account screen
+- **Requirement**: Add a back button on the Create Account screen (Step 1 of registration).
+- **Implementation**: Added a `TouchableOpacity` with a back arrow (`←`) and corresponding `backBtn`/`backBtnText` styles in `RegisterScreen.tsx`.
+- **Behavior**: Uses `handleBack` which correctly calls `navigation.goBack()` when on Step 1.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`

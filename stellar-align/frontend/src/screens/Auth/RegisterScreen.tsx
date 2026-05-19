@@ -459,6 +459,13 @@ export const RegisterScreen: React.FC = () => {
           <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
             {step === 1 ? (
             <View style={styles.step1Container}>
+              <TouchableOpacity 
+                style={styles.backBtn}
+                onPress={handleBack}
+              >
+                <StellarText style={styles.backBtnText}>←</StellarText>
+              </TouchableOpacity>
+
               <View style={styles.progressContainer}>
                 <View style={[styles.dot, styles.activeDot]} />
                 <View style={styles.line} />
@@ -952,6 +959,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingTop: 80,
     paddingBottom: 60,
+  },
+  backBtn: {
+    width: 40,
+    marginBottom: 32,
+  },
+  backBtnText: {
+    fontSize: 24,
+    color: colors.stellarFg,
   },
   progressContainer: {
     flexDirection: 'row',
