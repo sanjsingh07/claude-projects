@@ -1081,3 +1081,14 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/backend/src/services/aiContent.ts`
   - `stellar-align/backend/src/services/llmProvider.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Improved LLM Provider Key Rotation
+- **What was changed and why**: Modified the LLM rotation logic to retry all available API keys for a given provider before switching to the next provider. This addresses issues where a preferred provider (like Gemini) would be skipped entirely if a single API key hit a rate limit, even if other keys were available.
+- **Summary of changes**:
+  - Updated `LLMProvider` interface to expose `apiKeys`.
+  - Modified all LLM providers (Anthropic, NVIDIA, Gemini, Groq, Opencode, OpenRouter) to support an `apiKeyOverride` in their `complete()` method.
+  - Refined `ResilientLLMProvider` to iterate through all keys of each provider in the rotation order.
+  - Added detailed logging for key rotation and individual key failures.
+- **Files modified**:
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`

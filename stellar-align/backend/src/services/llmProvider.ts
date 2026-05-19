@@ -20,7 +20,8 @@ export interface LLMResponse {
 export interface LLMProvider {
   name: string;
   isAvailable: boolean;
-  complete(messages: LLMMessage[], opts?: LLMOptions): Promise<LLMResponse>;
+  apiKeys: string[];
+  complete(messages: LLMMessage[], opts?: LLMOptions, apiKey?: string): Promise<LLMResponse>;
 }
 
 export interface LLMOptions {
@@ -67,7 +68,7 @@ function maskKey(key: string): string {
 class AnthropicProvider implements LLMProvider {
   name = "anthropic";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
 
   constructor() {
@@ -79,15 +80,14 @@ class AnthropicProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Anthropic API key not configured");
 
     const start = Date.now();
     try {
       const client = new Anthropic({ apiKey });
-
-      // Anthropic uses a separate `system` param instead of a system message
       const systemMsg = messages.find((m) => m.role === "system");
       const chatMessages = messages
         .filter((m) => m.role !== "system")
@@ -141,7 +141,7 @@ class AnthropicProvider implements LLMProvider {
 class NvidiaProvider implements LLMProvider {
   name = "nvidia";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
   private baseUrl: string;
 
@@ -155,8 +155,9 @@ class NvidiaProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("NVIDIA API key not configured");
 
     const start = Date.now();
@@ -223,7 +224,7 @@ class NvidiaProvider implements LLMProvider {
 class GeminiProvider implements LLMProvider {
   name = "gemini";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
 
   constructor() {
@@ -235,8 +236,9 @@ class GeminiProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Gemini API key not configured");
 
     const start = Date.now();
@@ -305,7 +307,7 @@ class GeminiProvider implements LLMProvider {
 class GroqProvider implements LLMProvider {
   name = "groq";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
 
   constructor() {
@@ -317,8 +319,9 @@ class GroqProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Groq API key not configured");
 
     const start = Date.now();
@@ -374,7 +377,7 @@ class GroqProvider implements LLMProvider {
 class OpencodeProvider implements LLMProvider {
   name = "opencode";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
   private baseUrl: string;
 
@@ -388,8 +391,9 @@ class OpencodeProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("Opencode API key not configured");
 
     const start = Date.now();
@@ -462,7 +466,7 @@ class OpencodeProvider implements LLMProvider {
 class OpenRouterProvider implements LLMProvider {
   name = "openrouter";
   isAvailable: boolean;
-  private apiKeys: string[];
+  apiKeys: string[];
   private model: string;
   private baseUrl: string;
 
@@ -476,8 +480,9 @@ class OpenRouterProvider implements LLMProvider {
   async complete(
     messages: LLMMessage[],
     opts?: LLMOptions,
+    apiKeyOverride?: string,
   ): Promise<LLMResponse> {
-    const apiKey = selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
+    const apiKey = apiKeyOverride || selectApiKey(this.apiKeys, opts?.purpose, opts?.mappingId);
     if (!apiKey) throw new Error("OpenRouter API key not configured");
 
     const start = Date.now();
@@ -583,28 +588,52 @@ class ResilientLLMProvider implements LLMProvider {
     let lastError: Error | null = null;
 
     for (const provider of sorted) {
-      const start = Date.now();
-      try {
-        logger.info(`Attempting LLM completion`, { provider: provider.name, purpose: opts?.purpose });
-        const response = await provider.complete(messages, opts);
-        
-        if (!response.text || response.text === "No response") {
-          throw new Error(`Provider ${provider.name} returned empty or invalid response`);
+      // Create a list of keys to try for this provider
+      const keysToTry = [...provider.apiKeys];
+      
+      // If purpose is chat or horoscope, we start with the key selected by the standard logic
+      const preferredKey = selectApiKey(provider.apiKeys, opts?.purpose, opts?.mappingId);
+      if (preferredKey) {
+        const prefIdx = keysToTry.indexOf(preferredKey);
+        if (prefIdx !== -1) {
+          keysToTry.splice(prefIdx, 1);
+          keysToTry.unshift(preferredKey);
         }
-        
-        return response;
-      } catch (error: any) {
-        const duration = Date.now() - start;
-        logger.warn(`LLM provider ${provider.name} failed`, {
-          duration,
-          error: error.message,
-          purpose: opts?.purpose,
-        });
-        lastError = error;
+      }
+
+      for (const [keyIndex, key] of keysToTry.entries()) {
+        const start = Date.now();
+        try {
+          logger.info(`Attempting LLM completion`, { 
+            provider: provider.name, 
+            purpose: opts?.purpose,
+            key_index: `${keyIndex + 1}/${keysToTry.length}`,
+            key: maskKey(key)
+          });
+          
+          const response = await provider.complete(messages, opts, key);
+          
+          if (!response.text || response.text === "No response") {
+            throw new Error(`Provider ${provider.name} returned empty or invalid response`);
+          }
+          
+          return response;
+        } catch (error: any) {
+          const duration = Date.now() - start;
+          logger.warn(`LLM provider ${provider.name} key failed`, {
+            duration,
+            key_index: `${keyIndex + 1}/${keysToTry.length}`,
+            key: maskKey(key),
+            error: error.message,
+            purpose: opts?.purpose,
+          });
+          lastError = error;
+          // If this was the last key for this provider, the outer loop will move to the next provider
+        }
       }
     }
 
-    throw lastError || new Error("All LLM providers failed");
+    throw lastError || new Error("All LLM providers and their keys failed");
   }
 }
 
