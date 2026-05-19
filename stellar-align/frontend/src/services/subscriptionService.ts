@@ -3,6 +3,7 @@ import { Platform, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { useAuthStore } from '../store/authStore';
 import { api } from './api';
+import { queryClient } from './queryClient';
 
 // RevenueCat Configuration
 const REVENUECAT_API_KEY = 'test_LEGbZQobWbZkWUXBbLFasDWNrFC';
@@ -163,6 +164,11 @@ class SubscriptionService {
       // 2. Sync with Backend API - only if authenticated
       if (isAuthenticated) {
         await api.client.patch('/users/profile', { isPremium });
+        
+        // 3. Invalidate relevant queries to refresh UI
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+        queryClient.invalidateQueries({ queryKey: ['transits'] });
+        queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       }
       
       return isPremium;

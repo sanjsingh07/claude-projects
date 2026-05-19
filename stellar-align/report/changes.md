@@ -1114,3 +1114,20 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/src/services/subscriptionService.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed Premium Status Sync and Transit Data Ranges
+- **What was changed and why**: Fixed a bug where premium status was correctly detected on the frontend but not saved in the backend database. This caused the Settings screen to show "Standard Member" and the Transit screen to restrict data to 7 days even when Month/Year was selected.
+- **Summary of changes**:
+  - **Backend**: Updated `UserController.updateCurrentUser` to allow the `isPremium` field to be updated via the API.
+  - **Backend**: Updated route validation in `users.ts` to accept the `isPremium` boolean.
+  - **Backend**: Included premium status in the `TransitController` cache key to prevent newly upgraded users from seeing cached non-premium data.
+  - **Frontend**: Extracted `QueryClient` to a global service to allow cache invalidation from non-component files.
+  - **Frontend**: Updated `SubscriptionService` to automatically invalidate `profile`, `transits`, and `horoscope` queries immediately after a successful purchase or restore.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/routes/users.ts`
+  - `stellar-align/backend/src/controllers/transitController.ts`
+  - `stellar-align/frontend/src/services/queryClient.ts` (new)
+  - `stellar-align/frontend/src/App.tsx`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/report/changes.md`

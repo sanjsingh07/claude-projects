@@ -137,7 +137,7 @@ export class UserController {
       }
 
       // Copy other fields
-      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude", "birthTimeUnknown"].forEach(field => {
+      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude", "birthTimeUnknown", "isPremium"].forEach(field => {
         if (updateData[field] !== undefined) {
           processedData[field] = updateData[field];
         }
