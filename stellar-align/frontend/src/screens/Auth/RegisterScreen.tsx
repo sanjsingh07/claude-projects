@@ -962,7 +962,7 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     width: 40,
-    marginBottom: 32,
+    marginBottom: 5,
   },
   backBtnText: {
     fontSize: 24,
