@@ -1050,3 +1050,11 @@ Fixed a recurring error where the app would fail to sync premium status with the
 ## [2026-05-19 19:30:26] Unified Google Auth across all entry points
 - **Fix**: Updated `RegisterStartScreen.tsx` to use the secure iOS redirect scheme and remove the problematic `clientId` property.
 - **Result**: Google Sign-In now works consistently in `RegisterStartScreen`, `RegisterScreen`, and `LoginScreen`.
+
+## [2026-05-19 19:40:34] Fixed Google Social Login Audience Mismatch
+- **Problem**: Backend was rejecting Google ID tokens from iOS/Android with `payload audience != requiredAudience`.
+- **Cause**: Backend only validated against a single `GOOGLE_CLIENT_ID`.
+- **Solution**: Updated backend `env.ts` to support `GOOGLE_IOS_CLIENT_ID` and `GOOGLE_ANDROID_CLIENT_ID`. Modified `authController.ts` to validate against all possible Client IDs.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/src/controllers/authController.ts`

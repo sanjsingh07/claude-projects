@@ -234,7 +234,8 @@ export class AuthController {
             idToken,
             audience: [
               env.GOOGLE_CLIENT_ID || "",
-              // Add other client IDs if necessary (e.g., for different platforms)
+              env.GOOGLE_IOS_CLIENT_ID || "",
+              env.GOOGLE_ANDROID_CLIENT_ID || "",
             ].filter(Boolean),
           });
           const payload = ticket.getPayload();

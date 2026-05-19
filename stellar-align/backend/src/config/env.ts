@@ -29,6 +29,8 @@ const envSchema = z.object({
 
   // OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_IOS_CLIENT_ID: z.string().optional(),
+  GOOGLE_ANDROID_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_CALLBACK_URL: z.string().optional(),
 
