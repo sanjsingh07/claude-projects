@@ -1092,3 +1092,15 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/backend/src/services/llmProvider.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Redesigned Paywall Component
+- **What was changed and why**: Replaced the default RevenueCatUI paywall with a custom design that matches the "Stellar Align" visual style (colors, fonts, etc.) for better brand consistency and user experience.
+- **Summary of changes**:
+  - Rewrote `Paywall.tsx` as a custom React Native component.
+  - Integrated `StellarBackground`, `StellarText`, and `StellarButton` for a consistent look.
+  - Manually fetching and displaying offerings using `subscriptionService`.
+  - Added a feature list with icons and a selected package state.
+  - Maintained underlying RevenueCat functionality for purchases and restoration.
+- **Files modified**:
+  - `stellar-align/frontend/src/components/Paywall.tsx`
+  - `stellar-align/report/changes.md`
