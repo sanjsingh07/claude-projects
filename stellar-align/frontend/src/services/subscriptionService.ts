@@ -143,13 +143,16 @@ class SubscriptionService {
     
     try {
       // 1. Update local Zustand store
-      const user = useAuthStore.getState().user;
+      const { user, isAuthenticated } = useAuthStore.getState();
+      
       if (user && user.isPremium !== isPremium) {
         useAuthStore.getState().setUser({ ...user, isPremium });
       }
 
-      // 2. Sync with Backend API
-      await api.client.patch('/users/profile', { isPremium });
+      // 2. Sync with Backend API - only if authenticated
+      if (isAuthenticated) {
+        await api.client.patch('/users/profile', { isPremium });
+      }
       
       return isPremium;
     } catch (e) {

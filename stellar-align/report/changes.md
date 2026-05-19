@@ -1013,3 +1013,12 @@ Created a comprehensive Next.js landing page for the Stellar Align project to pr
 
 **Files modified:**
 - Created `stellar-align-landing-page/` directory and all its contents.
+
+## [2026-05-18 14:10:00] Fix: No refresh token error during premium sync
+Fixed a recurring error where the app would fail to sync premium status with the backend when no user was logged in.
+- **Files modified**:
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/frontend/src/hooks/useAuth.ts`
+- **Changes**:
+  - **Auth-Aware Sync**: Added an `isAuthenticated` check to `SubscriptionService.handleCustomerInfoUpdate`. This prevents the service from attempting to call the backend profile endpoint before the user has logged in, avoiding "No refresh token" errors.
+  - **On-Login Refresh**: Updated the `useAuth` hook to explicitly trigger a premium status refresh (`subscriptionService.refreshCustomerInfo()`) after successful login, registration, or social login. This ensures that the premium status is correctly synchronized as soon as the user is authenticated.

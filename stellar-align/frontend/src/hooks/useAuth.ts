@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { useAuthStore } from '@store/authStore';
+import { subscriptionService } from '@services/subscriptionService';
 import { User } from '@types';
 
 export function useAuth() {
@@ -22,6 +23,7 @@ export function useAuth() {
     },
     onSuccess: (userData) => {
       setUser(userData);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });
@@ -55,6 +57,7 @@ export function useAuth() {
     },
     onSuccess: (userData) => {
       setUser(userData);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
@@ -84,6 +87,7 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       setUser(data.user);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });
