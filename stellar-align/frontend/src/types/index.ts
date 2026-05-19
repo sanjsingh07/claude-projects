@@ -62,6 +62,7 @@ export interface UserProfile {
   name: string;
   avatarInitial: string;
   bio?: string;
+  isPremium: boolean;
   birthData: {
     date: string;
     formattedDate: string;

@@ -32,6 +32,7 @@ export interface UserProfileResponse {
     mars?: { sign: ZodiacSign; degree: number; label: string };
   };
   bio?: string;
+  isPremium: boolean;
   badges: Array<{ label: string; type: "fire" | "water" | "earth" | "air" }>;
 }
 
@@ -173,6 +174,7 @@ export const buildUserProfile = (user: any): UserProfileResponse => {
       }
     },
     astrology,
+    isPremium: user.isPremium || false,
     badges
   };
 };

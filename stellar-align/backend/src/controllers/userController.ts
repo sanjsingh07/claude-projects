@@ -578,6 +578,7 @@ export class UserController {
         sunSign: user.natalChart?.sunSign,
         moonSign: user.natalChart?.moonSign,
         risingSign: user.natalChart?.risingSign,
+        isPremium: user.isPremium,
         isFriend,
         friendRequestPending,
       };

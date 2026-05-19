@@ -1131,3 +1131,15 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/frontend/src/App.tsx`
   - `stellar-align/frontend/src/services/subscriptionService.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed Missing Premium Status in User Profile API
+- **What was changed and why**: Fixed a bug where the UI still showed "Standard Member" even after a successful purchase because the backend was omitting the `isPremium` field from the profile response.
+- **Summary of changes**:
+  - Updated `userService.ts` to include `isPremium` in the `UserProfileResponse` and returned it in `buildUserProfile`.
+  - Updated `userController.ts` to include `isPremium` in the `getUserProfile` endpoint response.
+  - Updated frontend `types/index.ts` to reflect the inclusion of `isPremium` in the `UserProfile` interface.
+- **Files modified**:
+  - `stellar-align/backend/src/services/userService.ts`
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/frontend/src/types/index.ts`
+  - `stellar-align/report/changes.md`
