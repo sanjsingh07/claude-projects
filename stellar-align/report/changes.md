@@ -1069,3 +1069,15 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/frontend/src/screens/TodayScreen.tsx`
   - `stellar-align/frontend/src/components/TransitCard.tsx`
   - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed AI Horoscope JSON Parsing and Truncation Errors
+- **What was changed and why**: Addressed `SyntaxError: Unterminated string in JSON` errors caused by LLM response truncation. This ensures the app can still display a partial horoscope instead of failing completely.
+- **Summary of changes**:
+  - Implemented `repairTruncatedJSON` in `AIContentService` to close open strings, objects, and arrays.
+  - Optimized horoscope prompt to request more concise responses (2-3 sentences), reducing token usage.
+  - Updated LLM providers (NVIDIA, OpenRouter, Groq) to resiliently remove `<think>` blocks even when they are truncated.
+  - Improved error logging and added successful repair confirmation.
+- **Files modified**:
+  - `stellar-align/backend/src/services/aiContent.ts`
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`

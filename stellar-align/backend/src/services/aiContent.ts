@@ -111,13 +111,21 @@ class AIContentService {
         const sanitized = this.sanitizeJSON(response.text);
         parsed = JSON.parse(sanitized);
       } catch (e: any) {
-        logger.error("Failed to parse AI horoscope JSON", {
-          error: e.message,
-          text_length: response.text?.length,
-          preview: response.text?.substring(0, 200) + "...",
-          end_preview: response.text?.substring(response.text?.length - 200),
-        });
-        throw e;
+        // Attempt one last-ditch repair if it's a syntax error
+        try {
+          const repaired = this.repairTruncatedJSON(this.sanitizeJSON(response.text));
+          parsed = JSON.parse(repaired);
+          logger.info("Successfully repaired truncated AI horoscope JSON");
+        } catch (repairError: any) {
+          logger.error("Failed to parse and repair AI horoscope JSON", {
+            error: e.message,
+            repairError: repairError.message,
+            text_length: response.text?.length,
+            preview: response.text?.substring(0, 200) + "...",
+            end_preview: response.text?.substring(Math.max(0, response.text?.length - 200)),
+          });
+          throw e;
+        }
       }
 
       const normalized = this.normalizeDailyContent(parsed, natalChart, moonSign, moonPhase, activeTransits);
@@ -352,7 +360,7 @@ Structure as valid JSON:
     "title": "Poetic/Technical Title",
     "badge": "major|minor|shadow",
     "planets": "Technical string (e.g. ♂ ☌ ♄)",
-    "body": "Deep 3-4 sentence interpretation. Use <em>...</em> for emphasis.",
+    "body": "Concise 2-3 sentence interpretation. Use <em>...</em> for emphasis.",
     "source": "Context line"
   },
   "aspects": [
@@ -360,7 +368,7 @@ Structure as valid JSON:
   ]
 }
 
-Respond with ONLY the JSON object.`;
+Respond with ONLY the JSON object. Do not exceed 2000 characters total.`;
   }
 
   private generateRuleBasedHoroscope(
@@ -604,6 +612,43 @@ Respond with ONLY the JSON object.`;
     }
 
     return cleaned.trim();
+  }
+
+  /**
+   * Attempts to repair truncated JSON by closing open strings and objects.
+   */
+  private repairTruncatedJSON(json: string): string {
+    let repaired = json.trim();
+    if (!repaired) return "{}";
+
+    // 1. If it ends inside a string, close it
+    // We check if the number of non-escaped quotes is odd
+    const quotes = repaired.match(/(?<!\\)"/g) || [];
+    if (quotes.length % 2 !== 0) {
+      repaired += '"';
+    }
+
+    // 2. Add closing braces/brackets in reverse order of appearance
+    const stack: ("}" | "]")[] = [];
+    for (let i = 0; i < repaired.length; i++) {
+      const char = repaired[i];
+      if (char === "{") stack.push("}");
+      else if (char === "[") stack.push("]");
+      else if (char === "}") {
+        if (stack[stack.length - 1] === "}") stack.pop();
+      } else if (char === "]") {
+        if (stack[stack.length - 1] === "]") stack.pop();
+      }
+    }
+
+    while (stack.length > 0) {
+      repaired += stack.pop();
+    }
+
+    // 3. One last check — if it ends with a comma before a closing brace, remove it
+    repaired = repaired.replace(/,\s*([}\]])/g, "$1");
+
+    return repaired;
   }
 }
 

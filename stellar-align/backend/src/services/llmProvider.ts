@@ -183,7 +183,8 @@ class NvidiaProvider implements LLMProvider {
 
       const choice = response.data?.choices?.[0];
       const text: string = choice?.message?.content ?? "";
-      const cleaned = text?.replace(/<think>[\s\S]*?<\/think>/g, "").trim() || "No response";
+      // Resiliently remove <think> blocks even if truncated
+      const cleaned = text?.replace(/<think>[\s\S]*?(?:<\/think>|$)/g, "").trim() || "No response";
       const duration = Date.now() - start;
 
       logger.info(`NVIDIA LLM success`, {
@@ -340,6 +341,8 @@ class GroqProvider implements LLMProvider {
       );
 
       const text = response.data?.choices?.[0]?.message?.content ?? "";
+      // Resiliently remove <think> blocks even if truncated
+      const cleaned = text?.replace(/<think>[\s\S]*?(?:<\/think>|$)/g, "").trim() || "No response";
       const duration = Date.now() - start;
 
       logger.info(`Groq LLM success`, {
@@ -350,7 +353,7 @@ class GroqProvider implements LLMProvider {
         outputTokens: response.data?.usage?.completion_tokens,
       });
 
-      return { text };
+      return { text: cleaned };
     } catch (error: any) {
       const duration = Date.now() - start;
       logger.error("Groq LLM error", {
@@ -497,6 +500,8 @@ class OpenRouterProvider implements LLMProvider {
       );
 
       const text = response.data?.choices?.[0]?.message?.content ?? "";
+      // Resiliently remove <think> blocks even if truncated
+      const cleaned = text?.replace(/<think>[\s\S]*?(?:<\/think>|$)/g, "").trim() || "No response";
       const duration = Date.now() - start;
 
       logger.info(`OpenRouter LLM success`, {
@@ -508,7 +513,7 @@ class OpenRouterProvider implements LLMProvider {
       });
 
       return {
-        text,
+        text: cleaned,
         usage: {
           inputTokens: response.data?.usage?.prompt_tokens ?? 0,
           outputTokens: response.data?.usage?.completion_tokens ?? 0,
