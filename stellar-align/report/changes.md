@@ -1058,3 +1058,14 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/backend/src/config/env.ts`
   - `stellar-align/backend/src/controllers/authController.ts`
+
+## [2026-05-19] Improved TodayScreen Loading UX
+- **What was changed and why**: Removed the blocking full-screen loading spinner on the TodayScreen to show the "Calculating transits..." messages immediately. This provides a better user experience, especially after signup, by giving immediate feedback while waiting for the backend.
+- **Summary of changes**:
+  - Modified `TodayScreen.tsx` to remove the conditional return that showed a full-screen `ActivityIndicator`.
+  - Updated `TransitCard.tsx` to accept an `isLoading` prop and show a small `ActivityIndicator` when loading.
+  - Passed `isLoading && !horoscope` to `TransitCard` in `TodayScreen.tsx`.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/TodayScreen.tsx`
+  - `stellar-align/frontend/src/components/TransitCard.tsx`
+  - `stellar-align/report/changes.md`

@@ -34,24 +34,6 @@ export const TodayScreen: React.FC = () => {
   const dayName = headerDate.toFormat('cccc').toUpperCase();
   const fullDate = headerDate.toFormat('MMMM d, yyyy');
 
-  if (isLoading && !horoscope) {
-    return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <StatusBar barStyle="light-content" />
-        <StellarBackground />
-        <View style={styles.header}>
-          <View style={styles.dateInfo}>
-            <StellarText style={styles.dayText}>TODAY · {dayName}</StellarText>
-            <StellarText style={styles.fullDateText} serif>{fullDate}</StellarText>
-          </View>
-        </View>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.stellarViolet} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   // Default data for when horoscope is loading or missing fields
   const moodAspects = horoscope?.moodAspects || {
     emotion: '...',
@@ -123,6 +105,7 @@ export const TodayScreen: React.FC = () => {
           planets={primaryTransit.planets}
           body={primaryTransit.body}
           source={primaryTransit.source}
+          isLoading={isLoading && !horoscope}
         />
 
         {/* Aspects List */}
