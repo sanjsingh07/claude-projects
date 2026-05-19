@@ -1022,3 +1022,12 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Changes**:
   - **Auth-Aware Sync**: Added an `isAuthenticated` check to `SubscriptionService.handleCustomerInfoUpdate`. This prevents the service from attempting to call the backend profile endpoint before the user has logged in, avoiding "No refresh token" errors.
   - **On-Login Refresh**: Updated the `useAuth` hook to explicitly trigger a premium status refresh (`subscriptionService.refreshCustomerInfo()`) after successful login, registration, or social login. This ensures that the premium status is correctly synchronized as soon as the user is authenticated.
+
+## [2026-05-19 16:57:27] Fixed logo cutoff in Register screen
+- **Problem**: The logo icon (✧) in `RegisterStartScreen.tsx` was being cut off by 70% from the top.
+- **Cause**: `StellarText` defaults to a `lineHeight` of 24px from the `body` variant. When `fontSize` is 64px, the text is clipped or misaligned within the small line height.
+- **Solution**: Added explicit `lineHeight` to `logoIcon` in `RegisterStartScreen.tsx`, and also fixed similar issues in `RegisterScreen.tsx` and `ResetPasswordScreen.tsx`.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/ResetPasswordScreen.tsx`

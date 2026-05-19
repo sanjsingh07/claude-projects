@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     fontSize: 64,
+    lineHeight: 80,
     color: colors.stellarViolet,
     marginBottom: 16,
     textShadowColor: colors.stellarViolet,

@@ -990,6 +990,7 @@ const styles = StyleSheet.create({
   },
   logoSym: {
     fontSize: 32,
+    lineHeight: 40,
     color: colors.stellarFg,
   },
   title: {
