@@ -1046,3 +1046,7 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
   - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-19 19:30:26] Unified Google Auth across all entry points
+- **Fix**: Updated `RegisterStartScreen.tsx` to use the secure iOS redirect scheme and remove the problematic `clientId` property.
+- **Result**: Google Sign-In now works consistently in `RegisterStartScreen`, `RegisterScreen`, and `LoginScreen`.
