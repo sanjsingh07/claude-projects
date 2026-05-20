@@ -7,6 +7,7 @@ import {
   StatusBar,
   Platform,
   Alert,
+  Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -116,6 +117,14 @@ export const RegisterStartScreen: React.FC = () => {
     }
   };
 
+  const handleOpenUrl = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      Alert.alert('Error', 'Could not open the link. Please try again later.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StellarBackground />
@@ -177,8 +186,19 @@ export const RegisterStartScreen: React.FC = () => {
 
             <StellarText style={styles.legal}>
               By continuing, you agree to our{' '}
-              <StellarText style={styles.legalHighlight}>Terms of Service</StellarText> and{' '}
-              <StellarText style={styles.legalHighlight}>Privacy Policy</StellarText>.
+              <StellarText 
+                style={styles.legalHighlight}
+                onPress={() => handleOpenUrl('https://stellaralign.com/terms')}
+              >
+                Terms of Service
+              </StellarText>{' '}
+              and{' '}
+              <StellarText 
+                style={styles.legalHighlight}
+                onPress={() => handleOpenUrl('https://stellaralign.com/privacy')}
+              >
+                Privacy Policy
+              </StellarText>.
             </StellarText>
           </View>
         </View>

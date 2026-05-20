@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableOpacity,
   Modal,
+  Linking,
 } from 'react-native';
 import axios from 'axios';
 import { DateTime } from 'luxon';
@@ -392,6 +393,8 @@ export const SettingsScreen: React.FC = () => {
         <SettingsSection label="Support">
           <SettingsRow label="Rate Stellar Align" onPress={() => Alert.alert('Rate', 'Redirecting to App Store...')} />
           <SettingsRow label="Send feedback" onPress={() => Alert.alert('Feedback', 'Opening email client...')} />
+          <SettingsRow label="Terms of Service" onPress={() => Linking.openURL('https://stellaralign.com/terms')} />
+          <SettingsRow label="Privacy Policy" onPress={() => Linking.openURL('https://stellaralign.com/privacy')} />
           <SettingsRow
             label="About"
             right={<ValueBadge val="v1.0.0" />}

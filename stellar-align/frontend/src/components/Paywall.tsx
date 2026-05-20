@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { Ionicons } from '@expo/vector-icons';
@@ -75,6 +76,14 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
     
     if (success) {
       onClose();
+    }
+  };
+
+  const handleOpenUrl = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      Alert.alert('Error', 'Could not open the link. Please try again later.');
     }
   };
 
@@ -222,8 +231,23 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
 
           <View style={styles.footer}>
             <StellarText variant="caption" align="center" color={colors.stellarMuted} style={styles.footerText}>
-              Recurring billing. Cancel anytime in Store settings. 
-              By continuing, you agree to our Terms and Privacy Policy.
+              Recurring billing. Cancel anytime in Store settings.{'\n'}
+              By continuing, you agree to our{' '}
+              <StellarText 
+                variant="caption" 
+                color={colors.stellarViolet}
+                onPress={() => handleOpenUrl('https://stellaralign.com/terms')}
+              >
+                Terms
+              </StellarText>{' '}
+              and{' '}
+              <StellarText 
+                variant="caption" 
+                color={colors.stellarViolet}
+                onPress={() => handleOpenUrl('https://stellaralign.com/privacy')}
+              >
+                Privacy Policy
+              </StellarText>.
             </StellarText>
           </View>
         </ScrollView>

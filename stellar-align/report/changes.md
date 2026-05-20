@@ -1185,3 +1185,11 @@ Fixed a recurring error where the app would fail to sync premium status with the
 ### App Icon Update (Final Refinement) - May 20, 2026
 - Increased '✧' size to 920.
 - Lowered vertical alignment for better centering.
+
+### App Store Compliance - Legal Links - May 20, 2026
+- Made 'Terms of Service' and 'Privacy Policy' links clickable across the app.
+- Modified `StellarText` in `StellarCard.tsx` to support `onPress` events.
+- Updated `RegisterStartScreen.tsx` with clickable legal footer.
+- Updated `Paywall.tsx` with clickable legal footer (critical for App Store review).
+- Added 'Terms of Service' and 'Privacy Policy' rows to `SettingsScreen.tsx` for easy access.
+- Used `https://stellaralign.com/terms` and `https://stellaralign.com/privacy` as destinations.
