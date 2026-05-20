@@ -1193,3 +1193,9 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - Updated `Paywall.tsx` with clickable legal footer (critical for App Store review).
 - Added 'Terms of Service' and 'Privacy Policy' rows to `SettingsScreen.tsx` for easy access.
 - Used `https://stellaralign.com/terms` and `https://stellaralign.com/privacy` as destinations.
+
+### Legal Document Handling Update - May 20, 2026
+- Implemented a native `LegalModal` component to display Terms and Privacy content inside the app.
+- This avoids using unprofessional/unsecured IP links (`http://92.4.221.191:3000`) which are risky for App Store approval.
+- Updated `RegisterStartScreen.tsx`, `Paywall.tsx`, and `SettingsScreen.tsx` to use the internal modal.
+- Benefits: Works offline, faster UX, professional native look, and safer for Apple Review.

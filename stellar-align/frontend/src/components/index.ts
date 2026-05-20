@@ -15,6 +15,7 @@ export { TransitCard } from './TransitCard';
 export { GenerationInfoModal } from './GenerationInfoModal';
 export { TransitInfoModal } from './TransitInfoModal';
 export { Paywall } from './Paywall';
+export { LegalModal } from './LegalModal';
 
 // Settings
 export * from './SettingsComponents';

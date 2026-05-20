@@ -18,6 +18,7 @@ import {
   StellarText, 
   StellarButton, 
   StellarBackground,
+  LegalModal,
 } from '@components';
 
 interface PaywallProps {
@@ -32,6 +33,10 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null);
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [legalModal, setLegalModal] = useState<{ visible: boolean; type: 'terms' | 'privacy' }>({
+    visible: false,
+    type: 'privacy',
+  });
 
   useEffect(() => {
     const checkConfig = async () => {
@@ -76,14 +81,6 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
     
     if (success) {
       onClose();
-    }
-  };
-
-  const handleOpenUrl = async (url: string) => {
-    try {
-      await Linking.openURL(url);
-    } catch (error) {
-      Alert.alert('Error', 'Could not open the link. Please try again later.');
     }
   };
 
@@ -236,7 +233,7 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
               <StellarText 
                 variant="caption" 
                 color={colors.stellarViolet}
-                onPress={() => handleOpenUrl('https://stellaralign.com/terms')}
+                onPress={() => setLegalModal({ visible: true, type: 'terms' })}
               >
                 Terms
               </StellarText>{' '}
@@ -244,13 +241,18 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
               <StellarText 
                 variant="caption" 
                 color={colors.stellarViolet}
-                onPress={() => handleOpenUrl('https://stellaralign.com/privacy')}
+                onPress={() => setLegalModal({ visible: true, type: 'privacy' })}
               >
                 Privacy Policy
               </StellarText>.
             </StellarText>
           </View>
         </ScrollView>
+        <LegalModal 
+          visible={legalModal.visible}
+          type={legalModal.type}
+          onClose={() => setLegalModal({ ...legalModal, visible: false })}
+        />
       </SafeAreaView>
     </Modal>
   );

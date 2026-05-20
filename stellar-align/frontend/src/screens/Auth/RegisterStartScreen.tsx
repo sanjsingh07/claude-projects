@@ -18,7 +18,7 @@ import * as AuthSession from 'expo-auth-session';
 import { RootStackParamList } from '@navigation/RootNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
-import { StellarText } from '@components/StellarCard';
+import { StellarText, LegalModal } from '@components';
 import { StellarBackground } from '@components/StellarBackground';
 import { colors, spacing } from '@theme/theme';
 
@@ -33,6 +33,10 @@ export const RegisterStartScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { socialLogin } = useAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const [legalModal, setLegalModal] = React.useState<{ visible: boolean; type: 'terms' | 'privacy' }>({
+    visible: false,
+    type: 'privacy',
+  });
 
   const googleRedirectUri = AuthSession.makeRedirectUri({
     scheme: Platform.OS === 'ios' 
@@ -117,14 +121,6 @@ export const RegisterStartScreen: React.FC = () => {
     }
   };
 
-  const handleOpenUrl = async (url: string) => {
-    try {
-      await Linking.openURL(url);
-    } catch (error) {
-      Alert.alert('Error', 'Could not open the link. Please try again later.');
-    }
-  };
-
   return (
     <View style={styles.container}>
       <StellarBackground />
@@ -188,14 +184,14 @@ export const RegisterStartScreen: React.FC = () => {
               By continuing, you agree to our{' '}
               <StellarText 
                 style={styles.legalHighlight}
-                onPress={() => handleOpenUrl('https://stellaralign.com/terms')}
+                onPress={() => setLegalModal({ visible: true, type: 'terms' })}
               >
                 Terms of Service
               </StellarText>{' '}
               and{' '}
               <StellarText 
                 style={styles.legalHighlight}
-                onPress={() => handleOpenUrl('https://stellaralign.com/privacy')}
+                onPress={() => setLegalModal({ visible: true, type: 'privacy' })}
               >
                 Privacy Policy
               </StellarText>.
@@ -208,6 +204,12 @@ export const RegisterStartScreen: React.FC = () => {
       <View style={styles.glow} pointerEvents="none" />
       
       <View style={styles.indicator} />
+
+      <LegalModal 
+        visible={legalModal.visible}
+        type={legalModal.type}
+        onClose={() => setLegalModal({ ...legalModal, visible: false })}
+      />
     </View>
   );
 };
