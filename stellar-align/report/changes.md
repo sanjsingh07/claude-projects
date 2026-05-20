@@ -1161,3 +1161,11 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - Created a new Prisma migration `20260520121121_enable_rls` that executes `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` for all 22 tables in the public schema.
 - **Files modified**:
   - `stellar-align/backend/prisma/migrations/20260520121121_enable_rls/migration.sql`
+
+### App Icon Update - May 20, 2026
+- Replaced the purple square app icon with a new design matching the app's aesthetic.
+- Design: '✧' logo with a violet glow on a solid black background.
+- Files modified:
+  - `frontend/assets/icon.png`: Updated with full icon design.
+  - `frontend/assets/adaptive-icon.png`: Updated with transparent foreground for Android.
+  - `frontend/app.json`: Updated Android adaptive icon background color to #000000.
