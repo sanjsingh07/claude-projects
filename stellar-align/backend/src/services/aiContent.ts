@@ -17,6 +17,7 @@ export interface DailyHoroscopeContent {
   love: string;
   social: string;
   energyScore: number;
+  isFallback?: boolean;
   moodAspects: {
     emotion: string;
     career: string;
@@ -102,19 +103,45 @@ class AIContentService {
 
       const response = await llmProvider.complete(
         [{ role: "user", content: prompt }],
-        { maxTokens: 2000 },
+        { maxTokens: 4000, purpose: "horoscope", mappingId: natalChart.userId },
       );
 
-      const parsed = this.normalizeDailyContent(JSON.parse(this.sanitizeJSON(response.text)), natalChart, moonSign, moonPhase, activeTransits);
+      let parsed;
+      try {
+        const sanitized = this.sanitizeJSON(response.text);
+        parsed = JSON.parse(sanitized);
+      } catch (e: any) {
+        // Attempt one last-ditch repair if it's a syntax error
+        try {
+          const repaired = this.repairTruncatedJSON(this.sanitizeJSON(response.text));
+          parsed = JSON.parse(repaired);
+          logger.info("Successfully repaired truncated AI horoscope JSON");
+        } catch (repairError: any) {
+          logger.error("Failed to parse and repair AI horoscope JSON", {
+            error: e.message,
+            repairError: repairError.message,
+            text_length: response.text?.length,
+            preview: response.text?.substring(0, 200) + "...",
+            end_preview: response.text?.substring(Math.max(0, response.text?.length - 200)),
+          });
+          throw e;
+        }
+      }
 
-      await cache.set(cacheKey, parsed, 86400);
-      return parsed;
-    } catch (error) {
+      const normalized = this.normalizeDailyContent(parsed, natalChart, moonSign, moonPhase, activeTransits);
+      normalized.isFallback = false;
+
+      await cache.set(cacheKey, normalized, 86400);
+      return normalized;
+    } catch (error: any) {
       logger.error("AI horoscope generation failed", {
-        error,
+        error: error.message,
+        stack: error.stack,
         provider: llmProvider.name,
       });
-      return this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
+      const fallback = this.generateRuleBasedHoroscope(natalChart, moonSign, moonPhase, activeTransits);
+      fallback.isFallback = true;
+      return fallback;
     }
   }
 
@@ -146,7 +173,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
     try {
       const response = await llmProvider.complete(
         [{ role: "user", content: prompt }],
-        { maxTokens: 1500 },
+        { maxTokens: 1500, purpose: "horoscope", mappingId: natalChart.userId },
       );
       return JSON.parse(this.sanitizeJSON(response.text));
     } catch (error) {
@@ -194,7 +221,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
     try {
       const response = await llmProvider.complete(
         [{ role: "user", content: prompt }],
-        { maxTokens: 1500 },
+        { maxTokens: 1500, purpose: "horoscope", mappingId: chart1.userId },
       );
       return JSON.parse(this.sanitizeJSON(response.text));
     } catch (error) {
@@ -238,19 +265,9 @@ Respond with ONLY the JSON object, no markdown fences.`;
     const { natalChart, date, moonSign, moonPhase, activeTransits, vedicData } = params;
 
     const isVedic = vedicData?.nakshatra && (natalChart.zodiacType === "SIDEREAL" || natalChart.zodiacType === "sidereal");
-
-    const vedicSection = isVedic
-      ? `
-VEDIC ASTROLOGY DATA:
-- Nakshatra: ${vedicData.nakshatra} (Lord: ${vedicData.nakshatraLord})
-- Pada: ${vedicData.nakshatraPada}
-- Ayanamsa: ${vedicData.ayanamsa || "Lahiri"}
-`
-      : "";
-
     const systemType = isVedic ? "Vedic (Sidereal)" : "Western (Tropical)";
 
-    // Format natal positions for the prompt
+    // 1. NATAL DATA SUMMARY
     const natalPos = natalChart.planetaryPositions as any;
     const natalSummary = Object.entries(natalPos)
       .filter(([_, pos]: any) => pos.sign)
@@ -264,29 +281,58 @@ VEDIC ASTROLOGY DATA:
           .join("\n")
       : "No natal aspects supplied.";
 
-    const transitSummary = this.formatTransitSummary(activeTransits);
+    // 2. VEDIC-SPECIFIC DATA (D1, D9, Nakshatras)
+    let vedicSection = "";
+    if (isVedic) {
+      const divisionalSummary = (vedicData.divisionalCharts || [])
+        .map((dc: any) => {
+          const positions = (dc.planetaryPositions || [])
+            .map((p: any) => `  - ${capitalize(p.planet)}: ${p.sign} ${Math.floor(p.degree)}°${Math.round((p.degree % 1) * 60)}' (House ${p.house})`)
+            .join("\n");
+          return `\n${dc.chartType} CHART (Ascendant: ${dc.ascendant} ${dc.ascendantDegree.toFixed(1)}°):\n${positions}`;
+        })
+        .join("\n");
 
-    return `You are Stellar Align's resident astrologer. Generate a deeply personalized daily horoscope based on the following data.
-This chart uses the ${systemType} system.
+      vedicSection = `
+VEDIC ASTROLOGY DEPTH:
+- Birth Nakshatra: ${vedicData.nakshatra} (Lord: ${vedicData.nakshatraLord})
+- Pada: ${vedicData.nakshatraPada}
+- Ayanamsa: ${vedicData.ayanamsa || "Lahiri"}
+${divisionalSummary}
+`;
+    }
 
-USER'S NATAL CHART:
+    // Separate Personal (Natal) vs Mundane (Sky) transits for the AI
+    // 3. TRANSIT CATEGORIZATION
+    const personalTransits = activeTransits.filter(t => t.eventKind === "natal_aspect");
+    // const mundaneTransits = activeTransits.filter(t => t.eventKind !== "natal_aspect");
+    const mundaneTransits = activeTransits.filter(t => t.eventKind === "sky_aspect" || t.eventKind === "ingress" || t.eventKind.includes("station"));
+
+    const personalSummary = this.formatTransitSummary(personalTransits);
+    const mundaneSummary = this.formatTransitSummary(mundaneTransits);
+
+    return `You are Stellar Align's resident expert astrologer. Generate a deeply personalized daily horoscope.
+System: ${systemType}
+
+USER'S NATAL CHART (BASE):
 ${natalSummary}
-- Sun Sign: ${natalChart.sunSign}
-- Moon Sign: ${natalChart.moonSign}
-- Rising Sign: ${natalChart.risingSign}
-- Chart Pattern: ${natalChart.chartPattern || "Not specified"}
+- Sun/Moon/Rising: ${natalChart.sunSign} / ${natalChart.moonSign} / ${natalChart.risingSign}
 - Natal Aspects:
 ${natalAspects}
 ${vedicSection}
 
 CURRENT CELESTIAL WEATHER (${date.toDateString()}):
-- Moon: ${moonSign}
+- Moon Sign: ${moonSign}
 - Moon Phase: ${moonPhase}
-- Active Transits to Natal Chart:
-${transitSummary}
+
+PERSONAL TRANSITS (Transit-to-Natal contacts):
+${personalSummary}
+
+MUNDANE TRANSITS (Collective/Sky aspects & Ingresses):
+${mundaneSummary}
 
 GOAL:
-Make the daily reading feel deeply personalized, specific, and human. It must look and read like a high-end editorial piece, not a generic horoscope.
+Produce a reading that feels "astrological" but reads like high-end psychological/emotional editorial. 
 
 INSTRUCTIONS:
 1. SPEAK IN SECOND PERSON ("You are...", "Your heart...").
@@ -297,53 +343,32 @@ INSTRUCTIONS:
 6. Do not use generic sign horoscopes. Every sentence should be anchored in the natal placements, houses, natal aspects, current Moon, ingress, retrograde, or active transit data above.
 7. Avoid repeated sentence structures across self, work, love, and social.
 
-Structure your response with these sections:
-- self, work, love, social: 2-3 sentences each. Distinct, poetic, and grounded.
-- energyScore: 0-100 reflecting celestial support.
-- moodAspects: Exactly 4 status words (e.g., "intense", "steady", "rising", "focus", "challenging", "electric") for emotion, career, love, and health.
-- primaryTransit: Select the most significant transit today. Provide:
-    * title: A poetic, serif-style title (e.g., "Saturn squares your Sun", "Mars enters your 10th house")
-    * badge: exactly one of "major", "minor", "shadow"
-    * planets: Technical detail (e.g., "☉ Sun 14° Taurus ↔ ♄ Saturn 14° Aquarius")
-    * body: A detailed interpretation (3-4 sentences). Use <em>...</em> for emphasis on key phrases.
-    * source: Context line (e.g., "Today · 1 of 7 active transits")
-- aspects: Top 3-4 current aspects. Provide:
-    * symbol: One of (□, △, ✕, ☌, ⟂, ◊, ✶, ☍)
-    * name: (e.g., "Moon ⟂ Venus")
-    * description: Short, punchy description (e.g., "Emotions feel awkward in love").
-    * quality: exactly one of "opposition", "trine", "square", "conjunction", "sextile", "quincunx", "shadow"
-
-Provide your response as valid JSON:
+Structure as valid JSON:
 {
   "self": "...",
   "work": "...",
   "love": "...",
   "social": "...",
-  "energyScore": 72,
-  "moodAspects": {
-    "emotion": "intense",
-    "career": "steady",
-    "love": "rising",
-    "health": "focus"
+  "energyScore": 0-100,
+  "moodAspects": { 
+    "emotion": "Single punchy word (e.g. steady)", 
+    "career": "Single punchy word (e.g. rising)", 
+    "love": "Single punchy word (e.g. tense)", 
+    "health": "Single punchy word (e.g. clear)" 
   },
   "primaryTransit": {
-    "title": "...",
-    "badge": "...",
-    "planets": "...",
-    "body": "...",
-    "source": "..."
+    "title": "Poetic/Technical Title",
+    "badge": "major|minor|shadow",
+    "planets": "Technical string (e.g. ♂ ☌ ♄)",
+    "body": "Concise 2-3 sentence interpretation. Use <em>...</em> for emphasis.",
+    "source": "Context line"
   },
   "aspects": [
-    {
-      "symbol": "...",
-      "name": "...",
-      "description": "...",
-      "quality": "..."
-    }
+    { "symbol": "...", "name": "...", "description": "Punchy 1-sentence interpretation", "quality": "..." }
   ]
 }
 
-Respond with ONLY the JSON object, no markdown fences.`;
+Respond with ONLY the JSON object. Do not exceed 2000 characters total.`;
   }
 
   private generateRuleBasedHoroscope(
@@ -364,7 +389,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
       title: topTransit.title || `${capitalize(topTransit.planet1)} ${String(topTransit.type).toLowerCase()} your ${capitalize(topTransit.planet2)}`,
       badge: this.normalizeBadge(topTransit.type),
       planets: topTransit.symbols || `${PLANET_SYMBOLS[String(topTransit.planet1).toUpperCase()] || topTransit.planet1} ${ASPECT_SYMBOLS[String(topTransit.aspectType || topTransit.type).toUpperCase()] || "↔"} ${PLANET_SYMBOLS[String(topTransit.planet2).toUpperCase()] || topTransit.planet2}`,
-      body: topTransit.description || `${capitalize(topTransit.planet1)} is pressing on your natal ${capitalize(topTransit.planet2)}. <em>The exact point matters:</em> this is not a general mood, but a pressure on a known part of your chart. Let the day show you where the old response has become too small.`,
+      body: `${capitalize(topTransit.planet1)} is pressing on your natal ${capitalize(topTransit.planet2)}. <em>The exact point matters:</em> this is not a general mood, but a specific pressure on your chart. Notice where the day asks for a more exact response from your ${capitalize(topTransit.planet2)} energy.`,
       source: `Today · 1 of ${activeTransits.length} active transits`
     } : {
       title: `Moon in ${moonInSign}`,
@@ -398,7 +423,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
       .slice(0, 12)
       .map((t, index) => {
         if (t.title && t.orb?.formatted) {
-          return `- ${index + 1}. ${t.title}; symbols ${t.symbols || "n/a"}; orb ${t.orb.formatted}; type ${t.type}; impact ${t.impact?.level || "moderate"}; description: ${String(t.description || "").replace(/<[^>]*>/g, "")}`;
+          return `- ${index + 1}. ${t.title}; symbols ${t.symbols || "n/a"}; orb ${t.orb.formatted}; type ${t.type}; impact ${t.impact?.level || "moderate"}`;
         }
         return `- ${index + 1}. ${capitalize(t.planet1)} ${String(t.type || t.aspectType).toLowerCase()} natal ${capitalize(t.planet2)}; orb ${formatOrb(Number(t.orb || 0))}; exact ${Boolean(t.exact)}`;
       })
@@ -473,7 +498,7 @@ Respond with ONLY the JSON object, no markdown fences.`;
   }
 
   private shortStatus(value: unknown, fallback: string): string {
-    return this.requiredText(value, fallback).split(/\s+/).slice(0, 2).join(" ").toLowerCase();
+    return this.requiredText(value, fallback).split(/\s+/)[0].toLowerCase();
   }
 
   private clampScore(value: unknown): number {
@@ -553,16 +578,77 @@ Respond with ONLY the JSON object, no markdown fences.`;
   }
 
   private sanitizeJSON(text: string): string {
+    if (!text) return "";
     let cleaned = text.trim();
-    if (cleaned.startsWith("```json")) {
-      cleaned = cleaned.slice(7);
-    } else if (cleaned.startsWith("```")) {
-      cleaned = cleaned.slice(3);
+    
+    // 1. Remove markdown code blocks if they exist
+    if (cleaned.includes("```json")) {
+      const parts = cleaned.split("```json");
+      cleaned = parts[parts.length - 1]; // Take content after the last ```json
+      if (cleaned.includes("```")) {
+        cleaned = cleaned.split("```")[0];
+      }
+    } else if (cleaned.includes("```")) {
+      const parts = cleaned.split("```");
+      // Find the largest part that looks like JSON
+      cleaned = parts.sort((a, b) => b.length - a.length)[0];
     }
-    if (cleaned.endsWith("```")) {
-      cleaned = cleaned.slice(0, -3);
+
+    // 2. If it still doesn't look like it starts with {, try to find the first {
+    if (!cleaned.startsWith("{")) {
+      const startIdx = cleaned.indexOf("{");
+      if (startIdx !== -1) {
+        cleaned = cleaned.substring(startIdx);
+      }
     }
+
+    // 3. If it doesn't end with }, it might be truncated. 
+    // We can't easily fix truncated JSON but we can at least trim trailing text
+    if (!cleaned.endsWith("}")) {
+      const lastIdx = cleaned.lastIndexOf("}");
+      if (lastIdx !== -1) {
+        cleaned = cleaned.substring(0, lastIdx + 1);
+      }
+    }
+
     return cleaned.trim();
+  }
+
+  /**
+   * Attempts to repair truncated JSON by closing open strings and objects.
+   */
+  private repairTruncatedJSON(json: string): string {
+    let repaired = json.trim();
+    if (!repaired) return "{}";
+
+    // 1. If it ends inside a string, close it
+    // We check if the number of non-escaped quotes is odd
+    const quotes = repaired.match(/(?<!\\)"/g) || [];
+    if (quotes.length % 2 !== 0) {
+      repaired += '"';
+    }
+
+    // 2. Add closing braces/brackets in reverse order of appearance
+    const stack: ("}" | "]")[] = [];
+    for (let i = 0; i < repaired.length; i++) {
+      const char = repaired[i];
+      if (char === "{") stack.push("}");
+      else if (char === "[") stack.push("]");
+      else if (char === "}") {
+        if (stack[stack.length - 1] === "}") stack.pop();
+      } else if (char === "]") {
+        if (stack[stack.length - 1] === "]") stack.pop();
+      }
+    }
+
+    while (stack.length > 0) {
+      repaired += stack.pop();
+    }
+
+    // 3. One last check — if it ends with a comma before a closing brace, remove it
+    repaired = repaired.replace(/,\s*([}\]])/g, "$1");
+
+    return repaired;
   }
 }
 

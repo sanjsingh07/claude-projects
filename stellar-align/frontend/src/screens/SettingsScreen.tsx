@@ -30,7 +30,10 @@ import {
   BirthDataEditModal,
   TextInputModal,
   TimezoneSelectionModal,
-} from '../components/SettingsComponents';
+  Paywall,
+  showCustomerCenter,
+  StellarText,
+} from '../components';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
 
 import { useTransitStore } from '@store/transitStore';
@@ -42,6 +45,7 @@ export const SettingsScreen: React.FC = () => {
   const { filters: transitFilters, toggleFilter: toggleTransitFilter } = useTransitStore();
 
   const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | 'timezone' | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDailyTimePicker, setShowDailyTimePicker] = useState(false);
@@ -217,6 +221,12 @@ export const SettingsScreen: React.FC = () => {
             label="Name"
             sub={profile.name}
             onPress={() => setActiveModal('name')}
+          />
+          <SettingsRow
+            label="Premium Status"
+            sub={profile.isPremium ? 'Active Premium Subscriber' : 'Standard Member'}
+            right={profile.isPremium ? <ValueBadge val="PREMIUM" /> : <StellarText style={{ fontSize: 12, color: colors.stellarViolet }}>Upgrade</StellarText>}
+            onPress={() => !profile.isPremium && setShowPaywall(true)}
           />
           <SettingsRow
             label="Bio"
@@ -399,8 +409,9 @@ export const SettingsScreen: React.FC = () => {
               { text: 'Cancel', style: 'cancel' },
               { text: 'Sign out', style: 'destructive', onPress: () => logout() }
             ])}
+            isLast
           />
-          <SettingsRow
+          {/* <SettingsRow
             label="Delete account"
             sub="Permanent · unrecoverable"
             isDanger
@@ -409,7 +420,7 @@ export const SettingsScreen: React.FC = () => {
               { text: 'Delete', style: 'destructive', onPress: () => { } }
             ])}
             isLast
-          />
+          /> */}
         </SettingsSection>
 
         <View style={styles.footer}>
@@ -616,6 +627,12 @@ export const SettingsScreen: React.FC = () => {
           />
         </Modal>
       )}
+
+      <Paywall
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        featureName="Premium Features"
+      />
     </SafeAreaView>
   );
 };

@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-stellar-bg: #0a0b14;
+  --color-stellar-surface: #0e101b;
+  --color-stellar-fg: #f8f8f8;
+  --color-stellar-muted: #9697a0;
+  --color-stellar-border: #1e202e;
+  --color-stellar-violet: #9d8df1;
+  --color-stellar-pink: #ff8da1;
+  --color-stellar-amber: #ffc15e;
+
+  --font-display: var(--font-instrument-serif);
+  --font-body: var(--font-dm-sans);
+}
+
+:root {
+  --background: #0a0b14;
+  --foreground: #f8f8f8;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-instrument-serif);
+  }
+}

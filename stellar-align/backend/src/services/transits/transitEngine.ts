@@ -403,12 +403,14 @@ function upsertPersistentEvent(events: Map<string, any>, key: string, event: any
   }
 }
 
-function upsertClosestEvent(events: Map<string, any>, key: string, event: any) {
+/*
+function _upsertClosestEvent(events: Map<string, any>, key: string, event: any) {
   const existing = events.get(key);
   if (!existing || event.orb.value < existing.orb.value) {
     events.set(key, event);
   }
 }
+*/
 
 function formatEventDate(date: DateTime) {
   return {

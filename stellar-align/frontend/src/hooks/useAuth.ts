@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { useAuthStore } from '@store/authStore';
+import { subscriptionService } from '@services/subscriptionService';
 import { User } from '@types';
 
 export function useAuth() {
@@ -12,7 +13,6 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
       const response = await api.login(email, password);
-      console.log('useAuth login response:', response);
       // After interceptor, response is the body: { success, data: { user, tokens } }
       // So response.data has { user, tokens }
       const userData = response.data?.user;
@@ -22,8 +22,8 @@ export function useAuth() {
       return userData;
     },
     onSuccess: (userData) => {
-      console.log('useAuth login success, setting user:', userData);
       setUser(userData);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });
@@ -49,7 +49,6 @@ export function useAuth() {
       gender?: string;
     }) => {
       const response = await api.register(data);
-      console.log('useAuth register response:', response);
       const userData = response.data?.user;
       if (!userData) {
         throw new Error('No user data in response: ' + JSON.stringify(response));
@@ -57,8 +56,8 @@ export function useAuth() {
       return userData;
     },
     onSuccess: (userData) => {
-      console.log('useAuth register success, setting user:', userData);
       setUser(userData);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
@@ -88,6 +87,7 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       setUser(data.user);
+      subscriptionService.refreshCustomerInfo();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });

@@ -8,25 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		2AEF09F9FA01C94602BE3851 /* libPods-StellarAlign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42E5E393D37320A06E292A39 /* libPods-StellarAlign.a */; };
+		39299D159470F9F5EF6588D1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C664FF3DB5C989CBBB63A39D /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		8E7444EF560FBBE986F602C6 /* libPods-StellarAlign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4557FCAD38F4D59A3629D626 /* libPods-StellarAlign.a */; };
+		85B96382A4F6BA4772ACEFA2 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF8AB504D51DF6A4C2AEE4F /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		E1D903ED7B9BED2905749396 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 11EC81D2ED94AE6CDE8192E9 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		F11B91EFC0EC48EDA950A93E /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4AD3ECC2F43BC2EDE13090 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		11EC81D2ED94AE6CDE8192E9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = StellarAlign/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* StellarAlign.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StellarAlign.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = StellarAlign/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = StellarAlign/Info.plist; sourceTree = "<group>"; };
-		3E372C298313B18BC81D360B /* Pods-StellarAlign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StellarAlign.debug.xcconfig"; path = "Target Support Files/Pods-StellarAlign/Pods-StellarAlign.debug.xcconfig"; sourceTree = "<group>"; };
-		4557FCAD38F4D59A3629D626 /* libPods-StellarAlign.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StellarAlign.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		45B4C41329F60DDB3C3403C1 /* Pods-StellarAlign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StellarAlign.release.xcconfig"; path = "Target Support Files/Pods-StellarAlign/Pods-StellarAlign.release.xcconfig"; sourceTree = "<group>"; };
+		1CF8AB504D51DF6A4C2AEE4F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-StellarAlign/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		42E5E393D37320A06E292A39 /* libPods-StellarAlign.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StellarAlign.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4379B4F4A2F21DC0EC42173E /* Pods-StellarAlign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StellarAlign.release.xcconfig"; path = "Target Support Files/Pods-StellarAlign/Pods-StellarAlign.release.xcconfig"; sourceTree = "<group>"; };
+		6A1883B3F966480743A7F864 /* Pods-StellarAlign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StellarAlign.debug.xcconfig"; path = "Target Support Files/Pods-StellarAlign/Pods-StellarAlign.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = StellarAlign/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		EB4AD3ECC2F43BC2EDE13090 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-StellarAlign/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		C664FF3DB5C989CBBB63A39D /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = StellarAlign/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = StellarAlign/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* StellarAlign-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "StellarAlign-Bridging-Header.h"; path = "StellarAlign/StellarAlign-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E7444EF560FBBE986F602C6 /* libPods-StellarAlign.a in Frameworks */,
+				2AEF09F9FA01C94602BE3851 /* libPods-StellarAlign.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,28 +53,27 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				11EC81D2ED94AE6CDE8192E9 /* PrivacyInfo.xcprivacy */,
+				C664FF3DB5C989CBBB63A39D /* PrivacyInfo.xcprivacy */,
 			);
 			name = StellarAlign;
-			sourceTree = "<group>";
-		};
-		1A437065B5937934BFE68EC5 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3E372C298313B18BC81D360B /* Pods-StellarAlign.debug.xcconfig */,
-				45B4C41329F60DDB3C3403C1 /* Pods-StellarAlign.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4557FCAD38F4D59A3629D626 /* libPods-StellarAlign.a */,
+				42E5E393D37320A06E292A39 /* libPods-StellarAlign.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		342EF9322DAB8F439B7443E9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6A1883B3F966480743A7F864 /* Pods-StellarAlign.debug.xcconfig */,
+				4379B4F4A2F21DC0EC42173E /* Pods-StellarAlign.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -84,6 +83,14 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
+		83B3CF271BCC3786E9BE1BA5 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				8F338B9AB25003117604DE02 /* StellarAlign */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
@@ -91,8 +98,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				1A437065B5937934BFE68EC5 /* Pods */,
-				DE5CD1BCAFDCD09B9985711B /* ExpoModulesProviders */,
+				342EF9322DAB8F439B7443E9 /* Pods */,
+				83B3CF271BCC3786E9BE1BA5 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -107,6 +114,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8F338B9AB25003117604DE02 /* StellarAlign */ = {
+			isa = PBXGroup;
+			children = (
+				1CF8AB504D51DF6A4C2AEE4F /* ExpoModulesProvider.swift */,
+			);
+			name = StellarAlign;
+			sourceTree = "<group>";
+		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,22 +129,6 @@
 			);
 			name = Supporting;
 			path = StellarAlign/Supporting;
-			sourceTree = "<group>";
-		};
-		DE5CD1BCAFDCD09B9985711B /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				FB9F529EA2833A73E539FE9A /* StellarAlign */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		FB9F529EA2833A73E539FE9A /* StellarAlign */ = {
-			isa = PBXGroup;
-			children = (
-				EB4AD3ECC2F43BC2EDE13090 /* ExpoModulesProvider.swift */,
-			);
-			name = StellarAlign;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,13 +139,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "StellarAlign" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				6FE6BF904C3301E6897BBC02 /* [Expo] Configure project */,
+				7BE335CB5C8907DD5486551D /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				5DE8C946B76EBD87FEC3D5AB /* [CP] Embed Pods Frameworks */,
+				129FD4745EF750AC3F3F0361 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +195,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				E1D903ED7B9BED2905749396 /* PrivacyInfo.xcprivacy in Resources */,
+				39299D159470F9F5EF6588D1 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +241,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5DE8C946B76EBD87FEC3D5AB /* [CP] Embed Pods Frameworks */ = {
+		129FD4745EF750AC3F3F0361 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -264,7 +263,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-StellarAlign/Pods-StellarAlign-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6FE6BF904C3301E6897BBC02 /* [Expo] Configure project */ = {
+		7BE335CB5C8907DD5486551D /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -302,10 +301,15 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoDevice/ExpoDevice_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI/ExpoSystemUI_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/PurchasesHybridCommon/PurchasesHybridCommon.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RevenueCat/RevenueCat.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RevenueCatUI/RevenueCat_RevenueCatUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-launcher/EXDevLauncher.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-menu/EXDevMenu.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -316,10 +320,15 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoDevice_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoSystemUI_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PurchasesHybridCommon.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RevenueCat.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RevenueCat_RevenueCatUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevLauncher.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevMenu.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -334,7 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				F11B91EFC0EC48EDA950A93E /* ExpoModulesProvider.swift in Sources */,
+				85B96382A4F6BA4772ACEFA2 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,12 +352,13 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E372C298313B18BC81D360B /* Pods-StellarAlign.debug.xcconfig */;
+			baseConfigurationReference = 6A1883B3F966480743A7F864 /* Pods-StellarAlign.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StellarAlign/StellarAlign.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U3C4PQ94A6;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -379,12 +389,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 45B4C41329F60DDB3C3403C1 /* Pods-StellarAlign.release.xcconfig */;
+			baseConfigurationReference = 4379B4F4A2F21DC0EC42173E /* Pods-StellarAlign.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = StellarAlign/StellarAlign.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U3C4PQ94A6;
 				INFOPLIST_FILE = StellarAlign/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (

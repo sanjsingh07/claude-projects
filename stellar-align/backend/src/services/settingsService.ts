@@ -1,6 +1,17 @@
 import { prisma } from "../config/database";
+import logger from "../config/logger";
+import { NotFoundError } from "../utils/errors";
 
 export const getUserSettings = async (userId: string) => {
+  // Verify user exists first to avoid orphaned token issues and foreign key violations
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  });
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
   let settings = await prisma.userSettings.findUnique({
     where: { userId }
   });
@@ -85,6 +96,16 @@ export const updateUserSettings = async (userId: string, patch: any) => {
     where: { userId },
     data: updateData
   });
+
+  // Sync NatalChart zodiacType if chartStyle changed
+  if (patch.display?.chartStyle) {
+    const zodiacType = patch.display.chartStyle === "vedic" ? "SIDEREAL" : "TROPICAL";
+    await prisma.natalChart.updateMany({
+      where: { userId },
+      data: { zodiacType }
+    });
+    logger.info(`Synced zodiacType to ${zodiacType} for user ${userId} based on chartStyle change`);
+  }
 
   return getUserSettings(userId);
 };

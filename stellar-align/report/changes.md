@@ -799,3 +799,365 @@ Completed the project-wide rebranding by removing the last remaining "Astra" ref
 - All screens and components in `stellar-align/frontend/src/**/*` (updated usages)
 - `stellar-align/frontend/src/theme/theme.ts`
 - `stellar-align/report/changes.md`
+
+## [2026-05-13 19:16] - Multi-Key AI Providers & OpenRouter Integration
+
+### Changed
+- Refactored all LLM providers to support multiple API keys via comma-separated environment variables.
+- Implemented API key selection strategy:
+  - **Random selection** for daily horoscope and astrological interpretations.
+  - **Mapped selection** (consistent per session) for chat interactions.
+- Added **OpenRouter** as a new supported AI provider.
+- Enhanced **Gemini** provider to support multiple keys and consistent selection.
+
+### Modified Files
+- `stellar-align/backend/src/config/env.ts`: Updated env schema for multiple keys and added OpenRouter config.
+- `stellar-align/backend/src/services/llmProvider.ts`: Implemented `selectApiKey` logic and added `OpenRouterProvider`.
+- `stellar-align/backend/src/services/aiContent.ts`: Updated calls to pass `purpose: "horoscope"` and `mappingId`.
+- `stellar-align/backend/src/controllers/chatController.ts`: Updated calls to pass `purpose: "chat"` and `mappingId`.
+
+### Why
+To improve reliability, bypass rate limits via key rotation, and add support for OpenRouter's diverse model set.
+
+## [2026-05-13 19:20] - Enhanced LLM Provider Logging
+
+### Changed
+- Added comprehensive logging to all LLM providers and the resilient wrapper.
+- Implemented **request timing** (`duration` in ms) for all LLM attempts to identify slow responses.
+- Added **API key masking** (`maskKey`) to logs to help identify problematic keys while maintaining security.
+- Enhanced error reporting to include HTTP status codes and detailed error messages.
+- Added `purpose` and `mappingId` context to rotation logs.
+
+### Modified Files
+- `stellar-align/backend/src/services/llmProvider.ts`: Added `maskKey`, timing logic, and expanded logger calls.
+
+### Why
+To improve observability and debugging of LLM provider performance and failures, specifically helping to distinguish between timeouts and configuration errors.
+
+## [2026-05-13 19:25] - Fixed Horoscope Truncation and Race Conditions
+
+### Changed
+- Increased **maxTokens** to 4000 for all LLM providers to prevent response truncation.
+- Implemented **detailed JSON parsing error logging** in `aiContent.ts` (logs text length and previews on failure).
+- Switched DailyHoroscope database operation from `create` to `upsert` in `astrology.ts` to handle race conditions from parallel requests.
+- Fixed return value in `generateDailyHoroscope` to correctly return normalized content.
+
+### Modified Files
+- `stellar-align/backend/src/services/aiContent.ts`
+- `stellar-align/backend/src/services/astrology.ts`
+- `stellar-align/backend/src/services/llmProvider.ts`
+
+### Why
+The new logging system revealed that long LLM response durations and truncation at 2000 tokens were causing JSON parsing errors and database unique constraint failures.
+
+## [2026-05-13 19:35] - Implemented LLM Horoscope Retry Mechanism
+
+### Changed
+- Added `isFallback` flag to `DailyHoroscopeContent` to distinguish between AI-generated and rule-based horoscopes.
+- Implemented **background retry mechanism**: if all LLMs fail, a retry job is scheduled for 5 minutes later using BullMQ.
+- Improved **pull-to-refresh logic**: the controller now allows regenerating horoscopes if the existing one is a fallback (`RULE_BASED`) and at least 5 minutes old.
+- Added **Redis cache invalidation** in `astrologyService` to ensure users see the updated AI content as soon as a background retry succeeds.
+- Refined notifications: push notifications are now only sent when a high-quality (non-fallback) horoscope is successfully generated.
+
+### Modified Files
+- `stellar-align/backend/src/services/aiContent.ts`
+- `stellar-align/backend/src/services/astrology.ts`
+- `stellar-align/backend/src/controllers/horoscopeController.ts`
+
+### Why
+To ensure users eventually receive an AI-generated horoscope even if providers are temporarily down or timing out, while still providing an immediate fallback for the initial load.
+
+## [2026-05-13 23:23] - Fix Gemini 404 Error
+- **What was changed**: Updated Gemini model to `gemini-2.5-flash` which is a valid model for the `generateContent` method in this timeline.
+- **Summary**: The previous models (`gemini-2.5-flash` in `env.ts` was actually a typo or placeholder, and `gemini-3.1-flash-live-preview` in `.env`) were either invalid or did not support the `generateContent` method, leading to 404 errors. Listed available models and confirmed `gemini-2.5-flash` works correctly.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/.env`
+
+## [2026-05-13 23:48] - Resolve Gemini Truncation and JSON Parsing
+- **What was changed**: Switched Gemini model to `gemini-3-flash-preview` and improved JSON sanitization.
+- **Summary**: Gemini 2.x models were truncating responses early with `MAX_TOKENS` reason at ~750 characters despite high limits, likely due to internal "thinking" budgets. `gemini-3-flash-preview` handles the requested 4000 token limit correctly. Also enhanced `sanitizeJSON` to handle truncated or unclosed JSON and added `responseMimeType: "application/json"` to Gemini requests.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/.env`
+  - `stellar-align/backend/src/services/aiContent.ts`
+  - `stellar-align/backend/src/services/llmProvider.ts`
+
+## [2026-05-14 01:14] - Sync Settings and Astrology Systems
+- **What was changed**: Linked frontend `chartStyle` setting to backend `NatalChart.zodiacType` and cleaned up horoscope generation.
+- **Summary**: Previously, changing the chart style (Western/Vedic) in the UI didn't update the underlying astronomical system used for daily horoscopes. Now, `updateUserSettings` automatically syncs `NatalChart.zodiacType` (TROPICAL/SIDEREAL) with the selected style. Also removed redundant transit filtering variables in `astrology.ts` as this categorization is already handled by the `AIContentService` prompt builder.
+- **Files modified**:
+  - `stellar-align/backend/src/services/settingsService.ts`
+  - `stellar-align/backend/src/services/astrology.ts`
+
+## 2026-05-14
+- **What was changed and why:** Created a comprehensive codebase audit report requested by the user. Analyzed the frontend, backend, and DB for bugs, placeholders, and app-store readiness.
+- **Summary of changes:** Added `report/audit-report.md`.
+- **Files modified:** `report/audit-report.md`, `report/changes.md`
+
+## [2026-05-14 16:48] - Add Transit Information Modal
+- **What was changed and why:** Added an information button to the Transits screen to explain how transits are calculated and the differences between Western and Vedic systems.
+- **Summary of changes:** 
+  - Updated `TransitInfoModal.tsx` with detailed content on dual-system analysis (Tropical vs. Sidereal), transit classification (Major/Minor/Shadow), and energy flow (Applying/Separating).
+  - Integrated the "i" info button into `TransitsScreen.tsx` header.
+  - Added state and logic to trigger the modal from the `TransitsScreen`.
+  - Ensured visual consistency with the `TodayScreen` info button.
+- **Files modified:**
+  - `stellar-align/frontend/src/components/TransitInfoModal.tsx`
+  - `stellar-align/frontend/src/screens/TransitsScreen.tsx`
+
+## [2026-05-14 16:55] - Refactor Chat Screen Design
+- **What was changed and why:** Updated the chat screen to match the high-fidelity HTML mockup (screens_07-chat.html) for better visual appeal and brand consistency.
+- **Summary of changes:** 
+  - Redesigned header with AI avatar and "Consulting the stars..." status.
+  - Implemented asymmetrical message bubbles (rounded with distinct tail corners).
+  - Added a dynamic "typing indicator" during AI response generation.
+  - Refined the input area with a pill-shaped box and circular send button.
+  - Omitted attachment button as per requirements.
+  - Switched to `DateTime` from luxon for accurate message timestamps.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:02] - Fix Chat Alignment and Input UI
+- **What was changed and why:** Corrected a layout bug where user messages were not properly right-aligned and removed an unwanted emoji icon from the input field.
+- **Summary of changes:** 
+  - Added `alignItems: 'flex-end'` to `userMsg` to ensure correct horizontal positioning within the flex container.
+  - Added `textAlign: 'right'` to timestamps for user messages (`userTime`).
+  - Removed the emoji icon and its associated styles from the chat input bar.
+  - Improved `textInput` vertical padding for better alignment with the send button.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:15] - Fix Chat Alignment and JSON Response Handling
+- **What was changed and why:** Resolved persistent alignment issues for user messages and added robust handling for JSON-formatted AI responses.
+- **Summary of changes:** 
+  - Modified `llmProvider.ts` to use `text/plain` for Gemini chat responses, preventing forced JSON output.
+  - Added `renderMessageContent` helper in `ChatScreen.tsx` to parse and format potential JSON strings from the AI.
+  - Refined `ChatScreen` styles: removed redundant `width: '100%'` from message containers to allow `alignSelf: 'flex-end'` to work correctly.
+  - Ensured `chatContent` uses `alignItems: 'stretch'` and `flexGrow: 1` for full-screen coverage.
+- **Files modified:**
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-14 17:25] - Fix Chat Alignment Mismatch and Response Truncation
+- **What was changed and why:** Resolved a role string mismatch that broke user message alignment after refresh and fixed incomplete AI responses.
+- **Summary of changes:** 
+  - Updated `ChatScreen.tsx` to use case-insensitive role comparison (`msg.role.toLowerCase() === 'user'`), ensuring user messages stay right-aligned when loaded from history (where the role is returned as 'USER').
+  - Increased `maxTokens` in `ChatController.ts` from 500 to 1500 to allow for longer, more complete astrological interpretations.
+  - Updated the `ASTROLOGY_SYSTEM_PROMPT` in the backend to explicitly forbid JSON formatting, reinforcing the switch to plain text responses for chat.
+- **Files modified:**
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+  - `stellar-align/backend/src/controllers/chatController.ts`
+
+## [2026-05-15 15:45:00] Fix Chat Screen menu behavior and styling
+Fixed issues with the three-dot menu in the Chat screen where it wouldn't close when clicking away and appeared disconnected from the icon.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+- **Changes**:
+  - **Click-Away Behavior**: Moved the menu overlay from the header to the root of the `SafeAreaView`, ensuring the `Pressable` backdrop covers the entire screen to capture dismiss taps.
+  - **Improved Positioning**: Adjusted the `menuContainer` top offset to `44px` to align it more closely with the three-dot icon, resolving the "floating" appearance.
+  - **UI Polish**: Replaced the text-based vertical ellipsis (`⋮`) with a consistent `Ionicons` icon (`ellipsis-vertical`).
+
+## [2026-05-15 16:00:00] Hide Delete Account button
+Temporarily hid the "Delete Account" button from the Settings screen as it is not yet functional, while preserving the code for future implementation.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+- **Changes**:
+  - Commented out the `SettingsRow` for "Delete account" in the Danger zone section.
+  - Added `isLast` prop to the "Sign out" button to ensure proper border styling as the now-last item in the section.
+
+## [2026-05-15 16:30:00] Implement Premium Subscription System
+Implemented a cross-platform (Apple/Google) subscription system to gate premium transit forecasts.
+- **Backend**:
+  - Added `isPremium` and `subscriptionExpiresAt` to the database.
+  - Updated `AuthService` to propagate premium status in the user profile.
+  - Secured `TransitController` to prevent non-premium access to month/year forecasts.
+- **Frontend**:
+  - Integrated `react-native-purchases` (RevenueCat) for subscription management.
+  - Created `SubscriptionService` for handling IAP initialization, purchases, and restoration.
+  - Developed a high-fidelity `Paywall` component listing premium benefits.
+  - Gated "Month" and "Year" forecasts in `TransitsScreen` with paywall triggers and lock icons.
+  - Added subscription status and upgrade paths to the `SettingsScreen`.
+
+## [2026-05-15 16:45:00] Gated AI Chat Guidance
+Implemented a daily message limit for non-premium users in the AI chat consultant.
+- **Backend**:
+  - Updated `ChatController.ts` to enforce a 1-message-per-day limit for standard members.
+  - Used UTC-day based counting of user messages to determine limit status.
+  - Returns a specific `PREMIUM_REQUIRED` error code when the limit is exceeded.
+- **Frontend**:
+  - Modified `ChatScreen.tsx` to detect the `PREMIUM_REQUIRED` error.
+  - Automatically triggers the `Paywall` component when a user attempts to send more than one message per day.
+  - Cleaned up file corruption and syntax errors in the chat screen component.
+
+## [2026-05-15 17:15:00] Complete RevenueCat SDK Integration
+Fully integrated the RevenueCat Pro suite for subscription management.
+- **SDK Update**: Installed `react-native-purchases-ui` and configured with API key: `test_LEGbZQobWbZkWUXBbLFasDWNrFC`.
+- **Entitlement**: Switched to "Stellar Align Pro" as the primary entitlement ID.
+- **Subscription Service**: Refactored `subscriptionService.ts` to follow modern best practices, including robust error handling and backend synchronization.
+- **Modern Paywalls**: Implemented `RevenueCatUI.Paywall` which renders dashboard-configured paywalls natively.
+- **Customer Center**: Added support for `RevenueCatUI.presentCustomerCenter()` in Settings for managing active subscriptions.
+- **UI Gating**: Updated `SettingsScreen` to allow premium members to manage subscriptions and standard members to upgrade.
+
+## [2026-05-18 13:57] Created Stellar Align Landing Page
+
+**What was changed and why:**
+Created a comprehensive Next.js landing page for the Stellar Align project to provide a professional web presence and detailed information about the app's AI-driven features.
+
+**Summary of changes:**
+- Scaffolded a new Next.js 15 project in `stellar-align-landing-page`.
+- Implemented brand-specific styling using Tailwind CSS v4 and custom fonts (Instrument Serif, DM Sans).
+- Developed a high-fidelity landing page with Hero, Features, Technical Architecture, and CTA sections.
+- Created Privacy Policy, Terms of Service, and Contact pages.
+- Linked all subpages and verified the production build.
+
+**Files modified:**
+- Created `stellar-align-landing-page/` directory and all its contents.
+
+## [2026-05-18 14:10:00] Fix: No refresh token error during premium sync
+Fixed a recurring error where the app would fail to sync premium status with the backend when no user was logged in.
+- **Files modified**:
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/frontend/src/hooks/useAuth.ts`
+- **Changes**:
+  - **Auth-Aware Sync**: Added an `isAuthenticated` check to `SubscriptionService.handleCustomerInfoUpdate`. This prevents the service from attempting to call the backend profile endpoint before the user has logged in, avoiding "No refresh token" errors.
+  - **On-Login Refresh**: Updated the `useAuth` hook to explicitly trigger a premium status refresh (`subscriptionService.refreshCustomerInfo()`) after successful login, registration, or social login. This ensures that the premium status is correctly synchronized as soon as the user is authenticated.
+
+## [2026-05-19 16:57:27] Fixed logo cutoff in Register screen
+- **Problem**: The logo icon (✧) in `RegisterStartScreen.tsx` was being cut off by 70% from the top.
+- **Cause**: `StellarText` defaults to a `lineHeight` of 24px from the `body` variant. When `fontSize` is 64px, the text is clipped or misaligned within the small line height.
+- **Solution**: Added explicit `lineHeight` to `logoIcon` in `RegisterStartScreen.tsx`, and also fixed similar issues in `RegisterScreen.tsx` and `ResetPasswordScreen.tsx`.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/ResetPasswordScreen.tsx`
+
+## [2026-05-19 17:02:24] Added back button to Create Account screen
+- **Requirement**: Add a back button on the Create Account screen (Step 1 of registration).
+- **Implementation**: Added a `TouchableOpacity` with a back arrow (`←`) and corresponding `backBtn`/`backBtnText` styles in `RegisterScreen.tsx`.
+- **Behavior**: Uses `handleBack` which correctly calls `navigation.goBack()` when on Step 1.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-19 17:22:32] Fixed Google OAuth 400 invalid_request
+- **Problem**: Google Auth was failing with `invalid_request` because the manually provided `redirect_uri` (stellar-align://) violated Google's security policy for Web Client IDs on mobile.
+- **Cause**: Using a custom URI scheme with a Web Client ID is deprecated/blocked by Google. Also, forcing a single scheme breaks the Expo Go proxy flow.
+- **Solution**: Refactored `LoginScreen.tsx` and `RegisterScreen.tsx` to let `expo-auth-session` handle platform-specific `redirect_uri` automatically. Removed the manual `redirectUri` override.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+
+## [2026-05-19 19:30:26] Unified Google Auth across all entry points
+- **Fix**: Updated `RegisterStartScreen.tsx` to use the secure iOS redirect scheme and remove the problematic `clientId` property.
+- **Result**: Google Sign-In now works consistently in `RegisterStartScreen`, `RegisterScreen`, and `LoginScreen`.
+
+## [2026-05-19 19:40:34] Fixed Google Social Login Audience Mismatch
+- **Problem**: Backend was rejecting Google ID tokens from iOS/Android with `payload audience != requiredAudience`.
+- **Cause**: Backend only validated against a single `GOOGLE_CLIENT_ID`.
+- **Solution**: Updated backend `env.ts` to support `GOOGLE_IOS_CLIENT_ID` and `GOOGLE_ANDROID_CLIENT_ID`. Modified `authController.ts` to validate against all possible Client IDs.
+- **Files modified**:
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/src/controllers/authController.ts`
+
+## [2026-05-19] Improved TodayScreen Loading UX
+- **What was changed and why**: Removed the blocking full-screen loading spinner on the TodayScreen to show the "Calculating transits..." messages immediately. This provides a better user experience, especially after signup, by giving immediate feedback while waiting for the backend.
+- **Summary of changes**:
+  - Modified `TodayScreen.tsx` to remove the conditional return that showed a full-screen `ActivityIndicator`.
+  - Updated `TransitCard.tsx` to accept an `isLoading` prop and show a small `ActivityIndicator` when loading.
+  - Passed `isLoading && !horoscope` to `TransitCard` in `TodayScreen.tsx`.
+- **Files modified**:
+  - `stellar-align/frontend/src/screens/TodayScreen.tsx`
+  - `stellar-align/frontend/src/components/TransitCard.tsx`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed AI Horoscope JSON Parsing and Truncation Errors
+- **What was changed and why**: Addressed `SyntaxError: Unterminated string in JSON` errors caused by LLM response truncation. This ensures the app can still display a partial horoscope instead of failing completely.
+- **Summary of changes**:
+  - Implemented `repairTruncatedJSON` in `AIContentService` to close open strings, objects, and arrays.
+  - Optimized horoscope prompt to request more concise responses (2-3 sentences), reducing token usage.
+  - Updated LLM providers (NVIDIA, OpenRouter, Groq) to resiliently remove `<think>` blocks even when they are truncated.
+  - Improved error logging and added successful repair confirmation.
+- **Files modified**:
+  - `stellar-align/backend/src/services/aiContent.ts`
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Improved LLM Provider Key Rotation
+- **What was changed and why**: Modified the LLM rotation logic to retry all available API keys for a given provider before switching to the next provider. This addresses issues where a preferred provider (like Gemini) would be skipped entirely if a single API key hit a rate limit, even if other keys were available.
+- **Summary of changes**:
+  - Updated `LLMProvider` interface to expose `apiKeys`.
+  - Modified all LLM providers (Anthropic, NVIDIA, Gemini, Groq, Opencode, OpenRouter) to support an `apiKeyOverride` in their `complete()` method.
+  - Refined `ResilientLLMProvider` to iterate through all keys of each provider in the rotation order.
+  - Added detailed logging for key rotation and individual key failures.
+- **Files modified**:
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Redesigned Paywall Component
+- **What was changed and why**: Replaced the default RevenueCatUI paywall with a custom design that matches the "Stellar Align" visual style (colors, fonts, etc.) for better brand consistency and user experience.
+- **Summary of changes**:
+  - Rewrote `Paywall.tsx` as a custom React Native component.
+  - Integrated `StellarBackground`, `StellarText`, and `StellarButton` for a consistent look.
+  - Manually fetching and displaying offerings using `subscriptionService`.
+  - Added a feature list with icons and a selected package state.
+  - Maintained underlying RevenueCat functionality for purchases and restoration.
+- **Files modified**:
+  - `stellar-align/frontend/src/components/Paywall.tsx`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Improved Purchase Error Handling
+- **What was changed and why**: Refined the error handling in `SubscriptionService` to provide better feedback during testing and for edge cases.
+- **Summary of changes**:
+  - Added specific detection for simulated sandbox failures to provide clearer "Sandbox Test" alerts.
+  - Improved error messages for both purchase and restore operations.
+  - Ensured `userCancelled` errors are consistently ignored across all operations.
+- **Files modified**:
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed Premium Status Sync and Transit Data Ranges
+- **What was changed and why**: Fixed a bug where premium status was correctly detected on the frontend but not saved in the backend database. This caused the Settings screen to show "Standard Member" and the Transit screen to restrict data to 7 days even when Month/Year was selected.
+- **Summary of changes**:
+  - **Backend**: Updated `UserController.updateCurrentUser` to allow the `isPremium` field to be updated via the API.
+  - **Backend**: Updated route validation in `users.ts` to accept the `isPremium` boolean.
+  - **Backend**: Included premium status in the `TransitController` cache key to prevent newly upgraded users from seeing cached non-premium data.
+  - **Frontend**: Extracted `QueryClient` to a global service to allow cache invalidation from non-component files.
+  - **Frontend**: Updated `SubscriptionService` to automatically invalidate `profile`, `transits`, and `horoscope` queries immediately after a successful purchase or restore.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/routes/users.ts`
+  - `stellar-align/backend/src/controllers/transitController.ts`
+  - `stellar-align/frontend/src/services/queryClient.ts` (new)
+  - `stellar-align/frontend/src/App.tsx`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-19] Fixed Missing Premium Status in User Profile API
+- **What was changed and why**: Fixed a bug where the UI still showed "Standard Member" even after a successful purchase because the backend was omitting the `isPremium` field from the profile response.
+- **Summary of changes**:
+  - Updated `userService.ts` to include `isPremium` in the `UserProfileResponse` and returned it in `buildUserProfile`.
+  - Updated `userController.ts` to include `isPremium` in the `getUserProfile` endpoint response.
+  - Updated frontend `types/index.ts` to reflect the inclusion of `isPremium` in the `UserProfile` interface.
+- **Files modified**:
+  - `stellar-align/backend/src/services/userService.ts`
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/frontend/src/types/index.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-20 12:03:14] Improved LLM Error Logging for Gemini and Other Providers
+- **What was changed and why**: Added detailed error response data to LLM request logs. This addresses the issue where 503 errors (and others) from Gemini were not descriptive enough to diagnose the root cause.
+- **Summary of changes**:
+  - Updated `GeminiProvider`, `NvidiaProvider`, and `GroqProvider` in `llmProvider.ts` to include `error.response?.data` in their error logs.
+  - Enhanced `ResilientLLMProvider` warning logs to include `status` and `data` from the failed provider.
+  - Fixed a type error in `ResilientLLMProvider` where it was missing the `apiKeys` property required by the `LLMProvider` interface.
+- **Files modified**:
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-20 12:12:15] Secured Supabase Database with Row-Level Security (RLS)
+- **Problem**: Supabase detected critical security vulnerabilities where tables in the public schema were accessible via the auto-generated PostgREST API without RLS. Sensitive columns (tokens) were also exposed.
+- **Solution**: Created a Prisma migration to enable Row-Level Security on all public tables. Since the custom backend connects as the 'postgres' user, it bypasses RLS, ensuring no disruption to app functionality while completely blocking public API access to these tables.
+- **Summary of changes**:
+  - Created a new Prisma migration `20260520121121_enable_rls` that executes `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` for all 22 tables in the public schema.
+- **Files modified**:
+  - `stellar-align/backend/prisma/migrations/20260520121121_enable_rls/migration.sql`

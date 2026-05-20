@@ -298,3 +298,38 @@ The backend server should be reloaded to pick up the changes.
 ### Fixed
 - **Post-Registration Vedic Calculation**: Fixed a bug where Vedic charts were not being calculated upon registration, leaving the Vedic tab empty for new users. Updated `AuthController.ts` to generate both Western and Vedic charts (including D1, D2, D4, D9, D10) immediately after signup.
 - **Logic Sync**: Synchronized `AuthController` calculation logic with the updated `UserController` patterns to ensure high-precision Swiss Ephemeris data is used from the start.
+
+## [2026-05-14] - Chat Context Enhancement
+### Added
+- **Detailed Chart Context in Chat**: Updated `chatController.ts` to include full natal or Vedic (D1) chart data in the LLM prompt.
+- **Personalized Context**: Chat prompts now include planetary positions, house cusps, and aspects for Western charts, or D1 placements, Nakshatras, and zodiac info for Vedic charts, based on user preferences.
+### Improved
+- **System Prompt**: Refined `ASTROLOGY_SYSTEM_PROMPT` to explicitly instruct the AI to use the provided full chart data for high-fidelity, personalized readings.
+
+## [2026-05-14] - Clear Chat Feature (Soft Delete)
+### Added
+- **Soft Delete for Chat Sessions**: Added `isCleared` field to `ChatSession` model to allow clearing chat history without deleting data from the DB.
+- **Clear Chat UI**: Implemented three-dots menu on Chat screen with confirmation pop-up.
+### Improved
+- **Chat Persistence**: Refactored `chatController.ts` to filter out cleared sessions in `getHistory` and `sendMessage`.
+- **User Experience**: Added permanent clearing warning to ensure users are aware of the "start fresh" action.
+
+## [2026-05-14] - Chat UI Refinements
+### Added
+- **Custom Dropdown Menu**: Replaced system alert menu with a custom-styled dropdown that appears right next to the three-dots icon.
+- **Empty State Restoration**: Re-introduced the "Start a Conversation" empty state with suggestions when the chat is cleared or empty.
+### Improved
+- **Visual Consistency**: Used project-specific fonts (Instrument Serif, DM Sans) and colors for the new UI elements.
+- **Interactions**: Added a backdrop (Pressable overlay) to close the custom menu when clicking outside.
+
+## [2026-05-14] - Fix Missing Imports
+### Fixed
+- **ChatScreen Hook Imports**: Fixed `ReferenceError: Property 'useState' doesn't exist` by restoring missing React hook imports.
+
+## [2026-05-14] - UI Fixes
+### Fixed
+- **Transits Screen Title**: Added 2px top padding to the header in `TransitsScreen.tsx` to prevent the "Transit forecast" title from being cut off.
+
+## [2026-05-14] - Refined UI Fix for Transits Screen
+### Fixed
+- **Title Clipping**: Reverted container padding and applied `lineHeight` and `paddingTop` directly to the `headerTitle` style in `TransitsScreen.tsx`. This ensures the larger font has enough space within its line box to prevent the top of the text from being cut off.

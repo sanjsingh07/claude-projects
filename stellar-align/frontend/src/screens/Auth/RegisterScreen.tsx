@@ -81,17 +81,24 @@ export const RegisterScreen: React.FC = () => {
   const { setUser, isAuthenticated, user } = useAuthStore();
   const route = useRoute<any>();
 
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: 'stellar-align',
+  const googleRedirectUri = AuthSession.makeRedirectUri({
+    scheme: Platform.OS === 'ios' 
+      ? 'com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof' 
+      : 'stellar-align',
   });
 
   const [request, response, promptAsync] = useIdTokenAuthRequest({
-    clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
-    redirectUri,
+    redirectUri: googleRedirectUri,
   });
+
+  useEffect(() => {
+    console.log('Google Auth Config (Register):', {
+      redirectUri: googleRedirectUri,
+    });
+  }, []);
 
   const initialStep = route.params?.step || 1;
   const socialUser = route.params?.socialUser || null;
@@ -459,6 +466,13 @@ export const RegisterScreen: React.FC = () => {
           <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
             {step === 1 ? (
             <View style={styles.step1Container}>
+              <TouchableOpacity 
+                style={styles.backBtn}
+                onPress={handleBack}
+              >
+                <StellarText style={styles.backBtnText}>←</StellarText>
+              </TouchableOpacity>
+
               <View style={styles.progressContainer}>
                 <View style={[styles.dot, styles.activeDot]} />
                 <View style={styles.line} />
@@ -953,6 +967,14 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingBottom: 60,
   },
+  backBtn: {
+    width: 40,
+    marginBottom: 5,
+  },
+  backBtnText: {
+    fontSize: 24,
+    color: colors.stellarFg,
+  },
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -990,6 +1012,7 @@ const styles = StyleSheet.create({
   },
   logoSym: {
     fontSize: 32,
+    lineHeight: 40,
     color: colors.stellarFg,
   },
   title: {

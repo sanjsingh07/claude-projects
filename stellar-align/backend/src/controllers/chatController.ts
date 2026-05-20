@@ -13,11 +13,14 @@ const ASTROLOGY_SYSTEM_PROMPT = `You are an expert astrologer and spiritual guid
 - Astrological aspects and their meanings
 - Birth chart synthesis and life path guidance
 
+You will be provided with the user's FULL natal chart context (either Western or Vedic D1 based on their preference). Use this detailed data (planet degrees, houses, and aspects) to provide highly specific and personalized readings.
+
 Your responses should be:
 - Insightful, compassionate, and empowering
 - Based on astrological principles but accessible to beginners
-- Personalized to the user's specific chart when relevant
+- Deeply personalized to the user's specific chart data provided
 - Balanced between practical advice and spiritual wisdom
+- WRITTEN AS PLAIN TEXT. Do NOT use JSON formatting or raw data structures.
 
 Keep responses concise (2-4 paragraphs max) unless detailed analysis is requested.`;
 
@@ -43,7 +46,7 @@ export class ChatController {
 
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
-        where: { userId },
+        where: { userId, isCleared: false },
         orderBy: { createdAt: 'desc' },
         include: {
           messages: {
@@ -100,19 +103,44 @@ export class ChatController {
         throw new ApiError(400, "Message is required");
       }
 
-      // Get user's natal chart for context
+      // Get user's natal chart and settings for context
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { natalChart: { include: FULL_NATAL_CHART_INCLUDE } },
+        include: { 
+          natalChart: { include: FULL_NATAL_CHART_INCLUDE },
+          settings: true
+        },
       });
 
       if (!user) {
         throw new ApiError(404, "User not found");
       }
 
+      // Security check: only 1 free message per day for non-premium users
+      if (!user.isPremium) {
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0);
+
+        const dailyMessageCount = await prisma.chatMessage.count({
+          where: {
+            role: ChatRole.USER,
+            createdAt: {
+              gte: startOfDay,
+            },
+            session: {
+              userId: userId,
+            },
+          },
+        });
+
+        if (dailyMessageCount >= 1) {
+          throw new ApiError(403, "Daily message limit reached. Upgrade to Premium for unlimited guidance.", "PREMIUM_REQUIRED");
+        }
+      }
+
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
-        where: { userId },
+        where: { userId, isCleared: false },
         orderBy: { createdAt: 'desc' },
       });
 
@@ -134,15 +162,53 @@ export class ChatController {
         },
       });
 
-      // Build context from natal chart
+      // Build context from natal chart based on settings
       let chartContext = '';
       if (user.profileCompleted && user.natalChart) {
-        chartContext = `
-User's Natal Chart Context:
-- Sun Sign: ${user.natalChart.sunSign}
-- Moon Sign: ${user.natalChart.moonSign}
-- Rising Sign: ${user.natalChart.risingSign}
+        const chartStyle = user.settings?.chartStyle || 'western';
+        
+        if (chartStyle === 'vedic') {
+          // Format Vedic D1 Chart
+          const d1 = user.natalChart.divisionalCharts.find(dc => dc.chartType === 'D1');
+          if (d1) {
+            const positions = d1.planetaryPositions.map(p => 
+              `- ${p.planet}: ${p.sign} ${Math.floor(p.degree)}° (House ${p.house})${p.retrograde ? ' [Rx]' : ''}`
+            ).join('\n');
+            
+            chartContext = `
+User's Vedic (D1) Chart Context:
+Ascendant: ${d1.ascendant} ${Math.floor(d1.ascendantDegree)}°
+Planetary Positions:
+${positions}
+- Nakshatra: ${user.natalChart.nakshatra} (Lord: ${user.natalChart.nakshatraLord})
+- Zodiac: Sidereal (${user.natalChart.ayanamsa})
 `;
+          }
+        } else {
+          // Format Western (Tropical) Chart
+          const positions = user.natalChart.planetaryPositions.map(p => 
+            `- ${p.planet}: ${p.sign} ${p.degree}°${p.minute}' (House ${p.house})${p.retrograde ? ' [Rx]' : ''}`
+          ).join('\n');
+          
+          const houses = user.natalChart.houses.map(h => 
+            `- House ${h.house}: ${h.sign} ${h.degree}°${h.minute}'`
+          ).join('\n');
+
+          const aspects = user.natalChart.aspects.slice(0, 10).map(a => 
+            `- ${a.planet1} ${a.type} ${a.planet2} (orb: ${a.orb.toFixed(2)}°)`
+          ).join('\n');
+
+          chartContext = `
+User's Western (Tropical) Natal Chart Context:
+Sun/Moon/Rising: ${user.natalChart.sunSign} / ${user.natalChart.moonSign} / ${user.natalChart.risingSign}
+Planetary Positions:
+${positions}
+House Cusps:
+${houses}
+Major Aspects:
+${aspects}
+`;
+        }
       } else if (!user.profileCompleted) {
         chartContext = "\nNOTE: The user has not completed their birth profile. Advise them to provide their birth date, time, and location in Settings for a personalized reading.";
       }
@@ -162,8 +228,10 @@ User's Natal Chart Context:
 
       try {
         const response = await llmProvider.complete(messages, {
-          maxTokens: 500,
+          maxTokens: 1500,
           temperature: 0.7,
+          purpose: "chat",
+          mappingId: chatSession.id,
         });
         responseText = response.text;
       } catch (error: any) {
@@ -208,7 +276,7 @@ User's Natal Chart Context:
     }
   }
 
-  // DELETE /chat/session - Clear chat history
+  // DELETE /chat/session - Clear chat history (Soft Delete)
   async clearHistory(
     req: Request,
     res: Response,
@@ -217,8 +285,10 @@ User's Natal Chart Context:
     try {
       const userId = req.userId!;
 
-      await prisma.chatSession.deleteMany({
-        where: { userId },
+      // Mark all user sessions as cleared instead of deleting them
+      await prisma.chatSession.updateMany({
+        where: { userId, isCleared: false },
+        data: { isCleared: true },
       });
 
       res.json({

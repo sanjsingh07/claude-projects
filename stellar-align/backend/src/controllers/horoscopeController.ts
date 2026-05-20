@@ -61,9 +61,16 @@ export class HoroscopeController {
         },
       });
 
-      if (horoscope && horoscope.generationVersion < 2 && user.natalChart) {
-        await prisma.dailyHoroscope.delete({ where: { id: horoscope.id } });
-        horoscope = null;
+      if (horoscope && user.natalChart) {
+        const isOutdated = horoscope.generationVersion < 2;
+        const isFallback = horoscope.generatedBy === "RULE_BASED";
+        
+        // If it's a fallback, we allow retrying if it's been at least 5 minutes
+        const shouldRetry = isOutdated || (isFallback && DateTime.fromJSDate(horoscope.createdAt).plus({ minutes: 5 }) < DateTime.now());
+
+        if (shouldRetry) {
+          horoscope = null;
+        }
       }
 
       if (!horoscope) {
@@ -209,9 +216,15 @@ export class HoroscopeController {
         },
       });
 
-      if (horoscope && horoscope.generationVersion < 2 && user.natalChart) {
-        await prisma.dailyHoroscope.delete({ where: { id: horoscope.id } });
-        horoscope = null;
+      if (horoscope && user.natalChart) {
+        const isOutdated = horoscope.generationVersion < 2;
+        const isFallback = horoscope.generatedBy === "RULE_BASED";
+        
+        const shouldRetry = isOutdated || (isFallback && DateTime.fromJSDate(horoscope.createdAt).plus({ minutes: 5 }) < DateTime.now());
+
+        if (shouldRetry) {
+          horoscope = null;
+        }
       }
 
       if (!horoscope) {

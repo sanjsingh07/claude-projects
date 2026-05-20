@@ -27,16 +27,22 @@ export class TransitController {
 
       const userTimezone = user.birthTimezone || "UTC";
       const requestedPeriod = (req.query.period as string) || "week";
-      const period = ["week", "month", "year"].includes(requestedPeriod)
+      let period = ["week", "month", "year"].includes(requestedPeriod)
         ? (requestedPeriod as "week" | "month" | "year")
         : "week";
+
+      // Security check: only premium users can access month and year forecasts
+      if (period !== "week" && !user.isPremium) {
+        period = "week";
+      }
+
       const startDateQuery = req.query.startDate as string;
       const startDate = startDateQuery 
         ? DateTime.fromISO(startDateQuery, { zone: userTimezone }).startOf("day").toJSDate()
         : DateTime.now().setZone(userTimezone).startOf("day").toJSDate();
       
       const chartContext = `${user.natalChart.zodiacType}:${user.natalChart.ayanamsa}:${user.natalChart.calculatedAt.toISOString()}`;
-      const cacheKey = `transits:v2:${userId}:${period}:${DateTime.fromJSDate(startDate, { zone: userTimezone }).toISODate()}:${userTimezone}:${chartContext}`;
+      const cacheKey = `transits:v3:${userId}:${period}:${user.isPremium ? 'premium' : 'standard'}:${DateTime.fromJSDate(startDate, { zone: userTimezone }).toISODate()}:${userTimezone}:${chartContext}`;
       const cached = await cache.get(cacheKey);
       if (cached) {
         res.json({ success: true, data: cached });

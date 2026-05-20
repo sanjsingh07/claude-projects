@@ -6,7 +6,7 @@ export const ProfileHero: React.FC<{
   name: string;
   avatarInitial: string;
   subtitle: string;
-  badges: Array<{ label: string; type: 'accent' | 'pink' | 'default' }>;
+  badges: Array<{ label: string; type: 'fire' | 'water' | 'earth' | 'air' }>;
   onSettingsPress: () => void;
 }> = ({ name, avatarInitial, subtitle, badges, onSettingsPress }) => {
   return (
@@ -23,14 +23,18 @@ export const ProfileHero: React.FC<{
               key={i} 
               style={[
                 styles.badge, 
-                badge.type === 'accent' && styles.badgeAccent,
-                badge.type === 'pink' && styles.badgePink
+                badge.type === 'fire' && styles.badgeFire,
+                badge.type === 'water' && styles.badgeWater,
+                badge.type === 'earth' && styles.badgeEarth,
+                badge.type === 'air' && styles.badgeAir
               ]}
             >
               <Text style={[
                 styles.badgeText,
-                badge.type === 'accent' && styles.badgeTextAccent,
-                badge.type === 'pink' && styles.badgeTextPink
+                badge.type === 'fire' && styles.badgeTextFire,
+                badge.type === 'water' && styles.badgeTextWater,
+                badge.type === 'earth' && styles.badgeTextEarth,
+                badge.type === 'air' && styles.badgeTextAir
               ]}>
                 {badge.label}
               </Text>
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.stellarViolet, // Simplified from gradient for now
+    backgroundColor: colors.stellarViolet,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -148,11 +152,17 @@ const styles = StyleSheet.create({
     marginRight: 6,
     marginBottom: 4,
   },
-  badgeAccent: {
+  badgeFire: {
     borderColor: colors.stellarViolet,
   },
-  badgePink: {
+  badgeWater: {
     borderColor: colors.stellarPink,
+  },
+  badgeEarth: {
+    borderColor: colors.stellarAmber,
+  },
+  badgeAir: {
+    borderColor: colors.gray400,
   },
   badgeText: {
     fontFamily: 'DMSans-Regular',
@@ -161,11 +171,17 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: colors.stellarMuted,
   },
-  badgeTextAccent: {
+  badgeTextFire: {
     color: colors.stellarViolet,
   },
-  badgeTextPink: {
+  badgeTextWater: {
     color: colors.stellarPink,
+  },
+  badgeTextEarth: {
+    color: colors.stellarAmber,
+  },
+  badgeTextAir: {
+    color: colors.gray300,
   },
   settingsBtn: {
     width: 36,

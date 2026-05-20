@@ -327,6 +327,8 @@ export class AuthService {
       bio: dbUser.bio || undefined,
       avatarUrl: dbUser.avatarUrl || undefined,
       profileCompleted: dbUser.profileCompleted || false,
+      isPremium: dbUser.isPremium || false,
+      subscriptionExpiresAt: dbUser.subscriptionExpiresAt || undefined,
       birthDateTime: dbUser.birthDateTime,
       birthTimeUnknown: dbUser.birthTimeUnknown || false,
       birthLocationName: dbUser.birthLocationName || undefined,

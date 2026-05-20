@@ -60,7 +60,7 @@ export function generateInterpretation(
   const action = aspectMap[type] || "influences";
   const natalRef = p2 === 'sun' ? `your ${formatSign(natalChart?.sunSign)} Sun` : p2 === 'moon' ? `your ${formatSign(natalChart?.moonSign)} Moon` : `your natal ${planet2}`;
   
-  return `${planet1} ${action} ${natalRef}${housePhrase}. <em>The contact is personal, not atmospheric.</em> Notice where the day asks for a more exact response from the part of you ruled by ${planet2}.`;
+  return `${planet1} ${action} ${natalRef}${housePhrase}. <em>The specific degrees matter here:</em> this contact asks for a precise response from the part of you ruled by ${planet2}. Watch how your ${formatSign(natalChart?.sunSign)} Sun navigates this pressure.`;
 }
 
 function findNatalHouse(natalChart: any, planet?: string): number | null {

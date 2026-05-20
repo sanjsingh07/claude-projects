@@ -667,7 +667,11 @@ export async function generateDailyHoroscope(
             planetaryPositions: true,
             houses: true,
             aspects: true,
-            divisionalCharts: true
+            divisionalCharts: {
+              include: {
+                planetaryPositions: true
+              }
+            }
           }
         } 
       },
@@ -682,13 +686,14 @@ export async function generateDailyHoroscope(
     // Calculate transits for today using the consolidated transit engine
     const userTimezone = user.birthTimezone || "UTC";
     const forecastData = await getTransitsForPeriod(user.natalChart, "week", date, userTimezone);
+    
     // Filter for transits happening exactly today (or very close)
     const todayISO = DateTime.fromJSDate(date, { zone: userTimezone }).toISODate();
-    const userTransits = forecastData.transits.filter(t => 
-      DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 1
+    const todayTransits = forecastData.transits.filter(t => 
+      DateTime.fromISO(t.date.iso, { zone: userTimezone }).toISODate() === todayISO || t.orb.value < 0.5
     );
 
-    // Get current planetary positions for moon sign/phase
+    // Get current planetary positions for moon sign/phase using the user's preferred zodiac system
     const transitPositions = await getPlanetaryPositions(
       date, 
       zodiacType === "SIDEREAL" ? ayanamsaType : undefined
@@ -698,17 +703,50 @@ export async function generateDailyHoroscope(
     const moonPos = transitPositions.moon as any;
     const moonPhase = getMoonPhase(sunPos.longitude, moonPos.longitude);
 
+    // Separate Personal (Natal) vs Mundane (Sky) transits for the generation meta
+    const personalTransits = todayTransits.filter(t => t.eventKind === "natal_aspect");
+    const mundaneTransits = todayTransits.filter(t => t.eventKind !== "natal_aspect");
+
     // Prepare Vedic data if applicable
     let vedicData = undefined;
+    let generationMeta: any = {
+      system: zodiacType === "SIDEREAL" ? "Vedic (Sidereal)" : "Western (Tropical)",
+      zodiacType,
+      ayanamsa: zodiacType === "SIDEREAL" ? ayanamsaType : null,
+      personalTransits: personalTransits.map(t => ({ title: t.title, symbols: t.symbols, description: t.description })),
+      mundaneTransits: mundaneTransits.map(t => ({ title: t.title, symbols: t.symbols, description: t.description })),
+    };
+
     if (zodiacType === "SIDEREAL") {
-      const { calculateNakshatra } = await import("./vedicAstrology");
+      const { calculateNakshatra, calculateVimshottariDasha, detectYogas } = await import("./vedicAstrology");
       const moonNak = calculateNakshatra(moonPos.longitude);
+      
+      // Calculate Dasha for the current date
+      const birthDate = user.birthDateTime;
+      const allDashas = calculateVimshottariDasha(
+        user.natalChart.planetaryPositions.find((p: any) => p.planet === "MOON")?.longitude || 0,
+        birthDate
+      );
+      const currentDasha = allDashas.find(d => d.startDate <= date && d.endDate >= date);
+
+      // Detect Yogas in Natal Chart (D1)
+      const d1 = user.natalChart.divisionalCharts.find((dc: any) => dc.chartType === "D1");
+      const yogas = d1 ? detectYogas(d1 as any) : [];
+
       vedicData = {
         nakshatra: moonNak.name,
         nakshatraPada: moonNak.pada,
         nakshatraLord: moonNak.lord,
         ayanamsa: ayanamsaType,
         divisionalCharts: user.natalChart.divisionalCharts,
+      };
+
+      generationMeta.vedicDetails = {
+        nakshatra: moonNak.name,
+        pada: moonNak.pada,
+        lord: moonNak.lord,
+        dasha: currentDasha ? currentDasha.planet : "Unknown",
+        yogas: yogas,
       };
     }
 
@@ -717,17 +755,33 @@ export async function generateDailyHoroscope(
       date,
       moonPos.sign,
       moonPhase,
-      userTransits,
+      todayTransits, // Keep the full list for DB storage
       vedicData
     );
 
-    const horoscope = await prisma.dailyHoroscope.create({
-      data: {
-        userId,
-        forDate: date,
+    // If it's a fallback, schedule a retry job for 5 minutes later
+    if (content.isFallback) {
+      const { horoscopeQueue } = await import("../config/queue");
+      await horoscopeQueue.add(
+        `retry-horoscope-${userId}-${date.toISOString()}`,
+        { userId, date },
+        { delay: 5 * 60 * 1000, jobId: `retry-${userId}-${date.toISOString()}` }
+      );
+      logger.info(`Scheduled horoscope retry for user ${userId} in 5 minutes`);
+    }
+
+    const horoscope = await prisma.dailyHoroscope.upsert({
+      where: {
+        userId_forDate: {
+          userId,
+          forDate: date,
+        },
+      },
+      update: {
         moonSign: moonPos.sign,
         moonPhase,
-        activeTransits: userTransits as any,
+        activeTransits: todayTransits as any,
+        generationMeta: generationMeta as any,
         energyScore: content.energyScore,
         moodAspects: content.moodAspects,
         primaryTransit: content.primaryTransit,
@@ -736,24 +790,58 @@ export async function generateDailyHoroscope(
         contentWork: content.work,
         contentLove: content.love,
         contentSocial: content.social,
-        generatedBy: llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED",
+        generatedBy: content.isFallback ? "RULE_BASED" : (llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED"),
+        generationVersion: 2,
+      },
+      create: {
+        userId,
+        forDate: date,
+        moonSign: moonPos.sign,
+        moonPhase,
+        activeTransits: todayTransits as any,
+        generationMeta: generationMeta as any,
+        energyScore: content.energyScore,
+        moodAspects: content.moodAspects,
+        primaryTransit: content.primaryTransit,
+        aspects: content.aspects,
+        contentSelf: content.self,
+        contentWork: content.work,
+        contentLove: content.love,
+        contentSocial: content.social,
+        generatedBy: content.isFallback ? "RULE_BASED" : (llmProvider.isAvailable ? "CLAUDE" : "RULE_BASED"),
         generationVersion: 2,
       },
     });
 
+    // Invalidate cache
+    try {
+      const { cache } = await import("../config/redis");
+      const dateISO = DateTime.fromJSDate(date, { zone: userTimezone }).toISODate();
+      const chartContext = user.natalChart
+        ? `${user.natalChart.zodiacType}:${user.natalChart.ayanamsa}:${user.natalChart.calculatedAt.toISOString()}`
+        : "no-chart";
+      const cacheKey = `horoscope:v2:${userId}:${dateISO}:${userTimezone}:${chartContext}`;
+      await cache.delete(cacheKey);
+      logger.info(`Invalidated horoscope cache for user ${userId} on ${dateISO}`);
+    } catch (cacheError) {
+      logger.warn("Failed to invalidate horoscope cache", { error: cacheError });
+    }
+
     // Notify user in background
-    (async () => {
-      try {
-        await notificationService.sendToUser(userId, {
-          title: "Your Daily Insight is Ready",
-          body: `Discover what the stars have in store for you today, ${user.displayName || "traveler"}.`,
-          type: "daily_horoscope",
-          data: { horoscopeId: horoscope.id },
-        });
-      } catch (err) {
-        logger.error("Failed to send horoscope notification", { err, userId });
-      }
-    })();
+    if (!content.isFallback) {
+      (async () => {
+        try {
+          await notificationService.sendToUser(userId, {
+            title: "Your Daily Insight is Ready",
+            body: `Discover what the stars have in store for you today, ${user.displayName || "traveler"}.`,
+            type: "daily_horoscope",
+            data: { horoscopeId: horoscope.id },
+          });
+        } catch (err) {
+          logger.error("Failed to send horoscope notification", { err, userId });
+        }
+      })();
+    }
 
     return horoscope;
   } catch (error) {

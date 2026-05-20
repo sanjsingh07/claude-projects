@@ -5,6 +5,8 @@ export interface User {
   bio?: string;
   avatarUrl?: string;
   profileCompleted: boolean;
+  isPremium: boolean;
+  subscriptionExpiresAt?: string;
   birthDateTime: string;
   birthTimeUnknown: boolean;
   birthTimezone: string;
@@ -60,6 +62,7 @@ export interface UserProfile {
   name: string;
   avatarInitial: string;
   bio?: string;
+  isPremium: boolean;
   birthData: {
     date: string;
     formattedDate: string;
@@ -85,7 +88,7 @@ export interface UserProfile {
     venus?: { sign: ZodiacSign; degree: number; label: string };
     mars?: { sign: ZodiacSign; degree: number; label: string };
   };
-  badges: Array<{ label: string; type: 'accent' | 'pink' | 'default' }>;
+  badges: Array<{ label: string; type: 'fire' | 'water' | 'earth' | 'air' }>;
 }
 
 export interface NatalChart {
@@ -150,6 +153,20 @@ export interface DailyHoroscope {
     description: string;
     quality: 'opposition' | 'trine' | 'square' | 'conjunction' | 'sextile' | 'quincunx' | 'quintile' | 'shadow';
   }[];
+  generationMeta?: {
+    system: string;
+    zodiacType: string;
+    ayanamsa?: string | null;
+    personalTransits: { title: string; symbols: string; description: string }[];
+    mundaneTransits: { title: string; symbols: string; description: string }[];
+    vedicDetails?: {
+      nakshatra: string;
+      pada: number;
+      lord: string;
+      dasha: string;
+      yogas: string[];
+    };
+  };
   contentSelf: string;
   contentWork: string;
   contentLove: string;

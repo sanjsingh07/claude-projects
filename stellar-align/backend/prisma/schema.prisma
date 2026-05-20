@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum AuthProvider {
@@ -108,6 +109,8 @@ model User {
   isActive              Boolean   @default(true)
   isDeleted             Boolean   @default(false)
   profileCompleted      Boolean   @default(false)
+  isPremium             Boolean   @default(false)
+  subscriptionExpiresAt DateTime?
   deletedAt             DateTime?
   requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
   addresseeCompat       CompatibilityReport[] @relation("AddresseeCompat")
@@ -276,6 +279,7 @@ model DailyHoroscope {
   moonSign            ZodiacSign?
   moonPhase           String?
   activeTransits      Json?
+  generationMeta      Json?     // Added to store system info, Vedic details, etc.
   energyScore         Int?
   moodAspects         Json?
   primaryTransit      Json?
@@ -440,6 +444,7 @@ model ChatSession {
   id        String   @id @default(uuid())
   userId    String
   title     String?
+  isCleared Boolean  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   messages  ChatMessage[]

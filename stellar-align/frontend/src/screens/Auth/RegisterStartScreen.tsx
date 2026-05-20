@@ -33,17 +33,24 @@ export const RegisterStartScreen: React.FC = () => {
   const { socialLogin } = useAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: 'stellar-align',
+  const googleRedirectUri = AuthSession.makeRedirectUri({
+    scheme: Platform.OS === 'ios' 
+      ? 'com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof' 
+      : 'stellar-align',
   });
 
   const [request, response, promptAsync] = useIdTokenAuthRequest({
-    clientId: GOOGLE_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
-    redirectUri,
+    redirectUri: googleRedirectUri,
   });
+
+  useEffect(() => {
+    console.log('Google Auth Config (Start):', {
+      redirectUri: googleRedirectUri,
+    });
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -218,6 +225,7 @@ const styles = StyleSheet.create({
   },
   logoIcon: {
     fontSize: 64,
+    lineHeight: 80,
     color: colors.stellarViolet,
     marginBottom: 16,
     textShadowColor: colors.stellarViolet,

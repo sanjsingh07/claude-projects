@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { StellarText } from './StellarCard';
 import { colors } from '@theme/theme';
 
@@ -9,6 +9,7 @@ interface TransitCardProps {
   planets: string;
   body: string;
   source: string;
+  isLoading?: boolean;
 }
 
 export const TransitCard: React.FC<TransitCardProps> = ({
@@ -17,6 +18,7 @@ export const TransitCard: React.FC<TransitCardProps> = ({
   planets,
   body,
   source,
+  isLoading,
 }) => {
   const badgeColor = 
     badge === 'major' ? colors.stellarPink :
@@ -27,18 +29,25 @@ export const TransitCard: React.FC<TransitCardProps> = ({
   const renderBody = (text: string) => {
     const parts = text.split(/(<em>.*?<\/em>)/g);
     return (
-      <StellarText style={styles.body}>
-        {parts.map((part, index) => {
-          if (part.startsWith('<em>') && part.endsWith('</em>')) {
-            return (
-              <StellarText key={index} style={[styles.bodyEm, { color: badgeColor }]}>
-                {part.slice(4, -5)}
-              </StellarText>
-            );
-          }
-          return part;
-        })}
-      </StellarText>
+      <View>
+        <StellarText style={styles.body}>
+          {parts.map((part, index) => {
+            if (part.startsWith('<em>') && part.endsWith('</em>')) {
+              return (
+                <StellarText key={index} style={[styles.bodyEm, { color: badgeColor }]}>
+                  {part.slice(4, -5)}
+                </StellarText>
+              );
+            }
+            return part;
+          })}
+        </StellarText>
+        {isLoading && (
+          <View style={styles.loadingIndicator}>
+            <ActivityIndicator size="small" color={badgeColor} />
+          </View>
+        )}
+      </View>
     );
   };
 
@@ -120,5 +129,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     color: colors.stellarMuted,
     fontFamily: 'DM Sans',
+  },
+  loadingIndicator: {
+    marginTop: 12,
+    alignItems: 'flex-start',
   },
 });

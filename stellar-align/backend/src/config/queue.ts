@@ -10,6 +10,7 @@ const connection: ConnectionOptions = {
 };
 
 export const HOROSCOPE_QUEUE_NAME = "horoscope-generation";
+export const CHART_QUEUE_NAME = "chart-generation";
 
 export const horoscopeQueue = new Queue(HOROSCOPE_QUEUE_NAME, {
   connection,
@@ -24,16 +25,41 @@ export const horoscopeQueue = new Queue(HOROSCOPE_QUEUE_NAME, {
   },
 });
 
+export const chartQueue = new Queue(CHART_QUEUE_NAME, {
+  connection,
+  defaultJobOptions: {
+    attempts: 5, // More attempts for critical chart generation
+    backoff: {
+      type: "exponential",
+      delay: 10000,
+    },
+    removeOnComplete: true,
+    removeOnFail: false,
+  },
+});
+
 export const horoscopeQueueEvents = new QueueEvents(HOROSCOPE_QUEUE_NAME, {
   connection,
 });
 
+export const chartQueueEvents = new QueueEvents(CHART_QUEUE_NAME, {
+  connection,
+});
+
 horoscopeQueueEvents.on("completed", ({ jobId }) => {
-  logger.info(`Job ${jobId} completed successfully`);
+  logger.info(`Horoscope Job ${jobId} completed successfully`);
 });
 
 horoscopeQueueEvents.on("failed", ({ jobId, failedReason }) => {
-  logger.error(`Job ${jobId} failed`, { failedReason });
+  logger.error(`Horoscope Job ${jobId} failed`, { failedReason });
+});
+
+chartQueueEvents.on("completed", ({ jobId }) => {
+  logger.info(`Chart Job ${jobId} completed successfully`);
+});
+
+chartQueueEvents.on("failed", ({ jobId, failedReason }) => {
+  logger.error(`Chart Job ${jobId} failed`, { failedReason });
 });
 
 export { connection };
