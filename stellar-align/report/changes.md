@@ -1169,3 +1169,10 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `frontend/assets/icon.png`: Updated with full icon design.
   - `frontend/assets/adaptive-icon.png`: Updated with transparent foreground for Android.
   - `frontend/app.json`: Updated Android adaptive icon background color to #000000.
+
+### App Icon Update (Refinement) - May 20, 2026
+- Removed the background glow circle to strictly match the requested aesthetic.
+- Design: '✧' logo floating on pure black background with a strong violet drop-shadow glow.
+- Files modified:
+  - `frontend/assets/icon.png`
+  - `frontend/assets/adaptive-icon.png`
