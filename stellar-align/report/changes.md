@@ -1176,3 +1176,8 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - Files modified:
   - `frontend/assets/icon.png`
   - `frontend/assets/adaptive-icon.png`
+
+### App Icon Update (Size Increase) - May 20, 2026
+- Increased the size of the '✧' symbol within the icon for better visibility.
+- Font size increased from 600 to 850.
+- Updated assets: `icon.png` and `adaptive-icon.png`.
