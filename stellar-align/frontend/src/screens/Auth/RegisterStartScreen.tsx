@@ -201,9 +201,9 @@ export const RegisterStartScreen: React.FC = () => {
       </SafeAreaView>
 
       {/* Subtle Glow Effect */}
-      <View style={styles.glow} pointerEvents="none" />
+      {/* <View style={styles.glow} pointerEvents="none" />
       
-      <View style={styles.indicator} />
+      <View style={styles.indicator} /> */}
 
       <LegalModal 
         visible={legalModal.visible}
@@ -246,14 +246,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   logoIcon: {
-    fontSize: 64,
-    lineHeight: 80,
-    color: colors.stellarViolet,
-    marginBottom: 16,
-    textShadowColor: colors.stellarViolet,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 20,
-  },
+  fontSize: 64,
+  lineHeight: 64,
+  textAlign: 'center',
+  color: colors.stellarViolet,
+  marginBottom: 16,
+  marginTop: 22,
+  textShadowColor: colors.stellarViolet,
+  textShadowOffset: { width: 0, height: 0 },
+  textShadowRadius: 13, // Reduced from 20 so it doesn't clip into a square shape
+},
   appName: {
     fontSize: 52,
     color: colors.stellarFg,
