@@ -1153,3 +1153,11 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/backend/src/services/llmProvider.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-20 12:12:15] Secured Supabase Database with Row-Level Security (RLS)
+- **Problem**: Supabase detected critical security vulnerabilities where tables in the public schema were accessible via the auto-generated PostgREST API without RLS. Sensitive columns (tokens) were also exposed.
+- **Solution**: Created a Prisma migration to enable Row-Level Security on all public tables. Since the custom backend connects as the 'postgres' user, it bypasses RLS, ensuring no disruption to app functionality while completely blocking public API access to these tables.
+- **Summary of changes**:
+  - Created a new Prisma migration `20260520121121_enable_rls` that executes `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` for all 22 tables in the public schema.
+- **Files modified**:
+  - `stellar-align/backend/prisma/migrations/20260520121121_enable_rls/migration.sql`
