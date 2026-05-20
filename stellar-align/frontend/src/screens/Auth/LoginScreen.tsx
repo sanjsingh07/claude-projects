@@ -43,11 +43,25 @@ export const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const googleRedirectUri = AuthSession.makeRedirectUri({
+    scheme: Platform.OS === 'ios' 
+      ? 'com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof' 
+      : 'stellar-align',
+  });
+
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
+    redirectUri: googleRedirectUri,
   });
+
+  useEffect(() => {
+    console.log('Google Auth Config:', {
+      redirectUri: googleRedirectUri,
+      iosClientId: GOOGLE_IOS_CLIENT_ID,
+    });
+  }, []);
 
   useEffect(() => {
     console.log('useEffect - auth check:', { isAuthenticated, profileCompleted: user?.profileCompleted });

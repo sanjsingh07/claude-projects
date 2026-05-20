@@ -81,11 +81,24 @@ export const RegisterScreen: React.FC = () => {
   const { setUser, isAuthenticated, user } = useAuthStore();
   const route = useRoute<any>();
 
+  const googleRedirectUri = AuthSession.makeRedirectUri({
+    scheme: Platform.OS === 'ios' 
+      ? 'com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof' 
+      : 'stellar-align',
+  });
+
   const [request, response, promptAsync] = useIdTokenAuthRequest({
     iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: GOOGLE_WEB_CLIENT_ID || undefined,
+    redirectUri: googleRedirectUri,
   });
+
+  useEffect(() => {
+    console.log('Google Auth Config (Register):', {
+      redirectUri: googleRedirectUri,
+    });
+  }, []);
 
   const initialStep = route.params?.step || 1;
   const socialUser = route.params?.socialUser || null;

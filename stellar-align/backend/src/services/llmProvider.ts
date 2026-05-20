@@ -128,6 +128,7 @@ class AnthropicProvider implements LLMProvider {
         key: maskKey(apiKey),
         error: error.message,
         status: error.status,
+        data: error.error, // Anthropic SDK puts response data in .error
       });
       throw error;
     }
@@ -211,6 +212,7 @@ class NvidiaProvider implements LLMProvider {
         error: error.message,
         code: error.code,
         status: error.response?.status,
+        data: error.response?.data,
       });
       throw error;
     }
@@ -294,6 +296,7 @@ class GeminiProvider implements LLMProvider {
         key: maskKey(apiKey),
         error: error.message,
         status: error.response?.status,
+        data: error.response?.data,
       });
       throw error;
     }
@@ -364,6 +367,7 @@ class GroqProvider implements LLMProvider {
         key: maskKey(apiKey),
         error: error.message,
         status: error.response?.status,
+        data: error.response?.data,
       });
       throw error;
     }
@@ -553,6 +557,7 @@ const availableProviders: LLMProvider[] = [
 
 class ResilientLLMProvider implements LLMProvider {
   name = "resilient-wrapper";
+  apiKeys: string[] = [];
   
   get isAvailable() {
     return availableProviders.length > 0;
@@ -625,6 +630,8 @@ class ResilientLLMProvider implements LLMProvider {
             key_index: `${keyIndex + 1}/${keysToTry.length}`,
             key: maskKey(key),
             error: error.message,
+            status: error.response?.status,
+            data: error.response?.data,
             purpose: opts?.purpose,
           });
           lastError = error;

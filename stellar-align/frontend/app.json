@@ -3,7 +3,10 @@
     "name": "Stellar Align",
     "owner": "nublet",
     "slug": "stellar-align",
-    "scheme": "stellar-align",
+    "scheme": [
+      "stellar-align",
+      "com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +19,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.stellaralign.app",
+      "appleTeamId": "U3C4PQ94A6",
       "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof"
+            ]
+          }
+        ],
         "NSAppTransportSecurity": {
           "AllowsArbitraryLoads": true
         }

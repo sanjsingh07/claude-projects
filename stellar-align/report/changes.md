@@ -1143,3 +1143,13 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/backend/src/controllers/userController.ts`
   - `stellar-align/frontend/src/types/index.ts`
   - `stellar-align/report/changes.md`
+
+## [2026-05-20 12:03:14] Improved LLM Error Logging for Gemini and Other Providers
+- **What was changed and why**: Added detailed error response data to LLM request logs. This addresses the issue where 503 errors (and others) from Gemini were not descriptive enough to diagnose the root cause.
+- **Summary of changes**:
+  - Updated `GeminiProvider`, `NvidiaProvider`, and `GroqProvider` in `llmProvider.ts` to include `error.response?.data` in their error logs.
+  - Enhanced `ResilientLLMProvider` warning logs to include `status` and `data` from the failed provider.
+  - Fixed a type error in `ResilientLLMProvider` where it was missing the `apiKeys` property required by the `LLMProvider` interface.
+- **Files modified**:
+  - `stellar-align/backend/src/services/llmProvider.ts`
+  - `stellar-align/report/changes.md`
