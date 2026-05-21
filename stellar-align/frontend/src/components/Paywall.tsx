@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +18,7 @@ import {
   StellarText, 
   StellarButton, 
   StellarBackground,
+  LegalModal,
 } from '@components';
 
 interface PaywallProps {
@@ -31,6 +33,10 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null);
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [legalModal, setLegalModal] = useState<{ visible: boolean; type: 'terms' | 'privacy' }>({
+    visible: false,
+    type: 'privacy',
+  });
 
   useEffect(() => {
     const checkConfig = async () => {
@@ -222,11 +228,31 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
 
           <View style={styles.footer}>
             <StellarText variant="caption" align="center" color={colors.stellarMuted} style={styles.footerText}>
-              Recurring billing. Cancel anytime in Store settings. 
-              By continuing, you agree to our Terms and Privacy Policy.
+              Recurring billing. Cancel anytime in Store settings.{'\n'}
+              By continuing, you agree to our{' '}
+              <StellarText 
+                variant="caption" 
+                color={colors.stellarViolet}
+                onPress={() => setLegalModal({ visible: true, type: 'terms' })}
+              >
+                Terms
+              </StellarText>{' '}
+              and{' '}
+              <StellarText 
+                variant="caption" 
+                color={colors.stellarViolet}
+                onPress={() => setLegalModal({ visible: true, type: 'privacy' })}
+              >
+                Privacy Policy
+              </StellarText>.
             </StellarText>
           </View>
         </ScrollView>
+        <LegalModal 
+          visible={legalModal.visible}
+          type={legalModal.type}
+          onClose={() => setLegalModal({ ...legalModal, visible: false })}
+        />
       </SafeAreaView>
     </Modal>
   );

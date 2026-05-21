@@ -7,6 +7,7 @@ import {
   StatusBar,
   Platform,
   Alert,
+  Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,7 +18,7 @@ import * as AuthSession from 'expo-auth-session';
 import { RootStackParamList } from '@navigation/RootNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { useAuthStore } from '@store/authStore';
-import { StellarText } from '@components/StellarCard';
+import { StellarText, LegalModal } from '@components';
 import { StellarBackground } from '@components/StellarBackground';
 import { colors, spacing } from '@theme/theme';
 
@@ -32,6 +33,10 @@ export const RegisterStartScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { socialLogin } = useAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const [legalModal, setLegalModal] = React.useState<{ visible: boolean; type: 'terms' | 'privacy' }>({
+    visible: false,
+    type: 'privacy',
+  });
 
   const googleRedirectUri = AuthSession.makeRedirectUri({
     scheme: Platform.OS === 'ios' 
@@ -177,17 +182,34 @@ export const RegisterStartScreen: React.FC = () => {
 
             <StellarText style={styles.legal}>
               By continuing, you agree to our{' '}
-              <StellarText style={styles.legalHighlight}>Terms of Service</StellarText> and{' '}
-              <StellarText style={styles.legalHighlight}>Privacy Policy</StellarText>.
+              <StellarText 
+                style={styles.legalHighlight}
+                onPress={() => setLegalModal({ visible: true, type: 'terms' })}
+              >
+                Terms of Service
+              </StellarText>{' '}
+              and{' '}
+              <StellarText 
+                style={styles.legalHighlight}
+                onPress={() => setLegalModal({ visible: true, type: 'privacy' })}
+              >
+                Privacy Policy
+              </StellarText>.
             </StellarText>
           </View>
         </View>
       </SafeAreaView>
 
       {/* Subtle Glow Effect */}
-      <View style={styles.glow} pointerEvents="none" />
+      {/* <View style={styles.glow} pointerEvents="none" />
       
-      <View style={styles.indicator} />
+      <View style={styles.indicator} /> */}
+
+      <LegalModal 
+        visible={legalModal.visible}
+        type={legalModal.type}
+        onClose={() => setLegalModal({ ...legalModal, visible: false })}
+      />
     </View>
   );
 };
@@ -224,14 +246,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   logoIcon: {
-    fontSize: 64,
-    lineHeight: 80,
-    color: colors.stellarViolet,
-    marginBottom: 16,
-    textShadowColor: colors.stellarViolet,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 20,
-  },
+  fontSize: 64,
+  lineHeight: 64,
+  textAlign: 'center',
+  color: colors.stellarViolet,
+  marginBottom: 16,
+  marginTop: 22,
+  textShadowColor: colors.stellarViolet,
+  textShadowOffset: { width: 0, height: 0 },
+  textShadowRadius: 13, // Reduced from 20 so it doesn't clip into a square shape
+},
   appName: {
     fontSize: 52,
     color: colors.stellarFg,

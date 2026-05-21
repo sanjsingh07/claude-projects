@@ -1161,3 +1161,41 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - Created a new Prisma migration `20260520121121_enable_rls` that executes `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` for all 22 tables in the public schema.
 - **Files modified**:
   - `stellar-align/backend/prisma/migrations/20260520121121_enable_rls/migration.sql`
+
+### App Icon Update - May 20, 2026
+- Replaced the purple square app icon with a new design matching the app's aesthetic.
+- Design: '✧' logo with a violet glow on a solid black background.
+- Files modified:
+  - `frontend/assets/icon.png`: Updated with full icon design.
+  - `frontend/assets/adaptive-icon.png`: Updated with transparent foreground for Android.
+  - `frontend/app.json`: Updated Android adaptive icon background color to #000000.
+
+### App Icon Update (Refinement) - May 20, 2026
+- Removed the background glow circle to strictly match the requested aesthetic.
+- Design: '✧' logo floating on pure black background with a strong violet drop-shadow glow.
+- Files modified:
+  - `frontend/assets/icon.png`
+  - `frontend/assets/adaptive-icon.png`
+
+### App Icon Update (Size Increase) - May 20, 2026
+- Increased the size of the '✧' symbol within the icon for better visibility.
+- Font size increased from 600 to 850.
+- Updated assets: `icon.png` and `adaptive-icon.png`.
+
+### App Icon Update (Final Refinement) - May 20, 2026
+- Increased '✧' size to 920.
+- Lowered vertical alignment for better centering.
+
+### App Store Compliance - Legal Links - May 20, 2026
+- Made 'Terms of Service' and 'Privacy Policy' links clickable across the app.
+- Modified `StellarText` in `StellarCard.tsx` to support `onPress` events.
+- Updated `RegisterStartScreen.tsx` with clickable legal footer.
+- Updated `Paywall.tsx` with clickable legal footer (critical for App Store review).
+- Added 'Terms of Service' and 'Privacy Policy' rows to `SettingsScreen.tsx` for easy access.
+- Used `https://stellaralign.com/terms` and `https://stellaralign.com/privacy` as destinations.
+
+### Legal Document Handling Update - May 20, 2026
+- Implemented a native `LegalModal` component to display Terms and Privacy content inside the app.
+- This avoids using unprofessional/unsecured IP links (`http://92.4.221.191:3000`) which are risky for App Store approval.
+- Updated `RegisterStartScreen.tsx`, `Paywall.tsx`, and `SettingsScreen.tsx` to use the internal modal.
+- Benefits: Works offline, faster UX, professional native look, and safer for Apple Review.

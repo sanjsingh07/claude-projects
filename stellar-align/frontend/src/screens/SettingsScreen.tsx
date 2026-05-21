@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableOpacity,
   Modal,
+  Linking,
 } from 'react-native';
 import axios from 'axios';
 import { DateTime } from 'luxon';
@@ -31,6 +32,7 @@ import {
   TextInputModal,
   TimezoneSelectionModal,
   Paywall,
+  LegalModal,
   showCustomerCenter,
   StellarText,
 } from '../components';
@@ -46,6 +48,10 @@ export const SettingsScreen: React.FC = () => {
 
   const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | 'timezone' | null>(null);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [legalModal, setLegalModal] = useState<{ visible: boolean; type: 'terms' | 'privacy' }>({
+    visible: false,
+    type: 'privacy',
+  });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDailyTimePicker, setShowDailyTimePicker] = useState(false);
@@ -392,6 +398,8 @@ export const SettingsScreen: React.FC = () => {
         <SettingsSection label="Support">
           <SettingsRow label="Rate Stellar Align" onPress={() => Alert.alert('Rate', 'Redirecting to App Store...')} />
           <SettingsRow label="Send feedback" onPress={() => Alert.alert('Feedback', 'Opening email client...')} />
+          <SettingsRow label="Terms of Service" onPress={() => setLegalModal({ visible: true, type: 'terms' })} />
+          <SettingsRow label="Privacy Policy" onPress={() => setLegalModal({ visible: true, type: 'privacy' })} />
           <SettingsRow
             label="About"
             right={<ValueBadge val="v1.0.0" />}
@@ -632,6 +640,11 @@ export const SettingsScreen: React.FC = () => {
         visible={showPaywall}
         onClose={() => setShowPaywall(false)}
         featureName="Premium Features"
+      />
+      <LegalModal 
+        visible={legalModal.visible}
+        type={legalModal.type}
+        onClose={() => setLegalModal({ ...legalModal, visible: false })}
       />
     </SafeAreaView>
   );

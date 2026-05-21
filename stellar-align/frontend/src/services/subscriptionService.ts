@@ -6,7 +6,8 @@ import { api } from './api';
 import { queryClient } from './queryClient';
 
 // RevenueCat Configuration
-const REVENUECAT_API_KEY = 'test_LEGbZQobWbZkWUXBbLFasDWNrFC';
+// const REVENUECAT_API_KEY = 'test_LEGbZQobWbZkWUXBbLFasDWNrFC'; // This is a public test key for the RevenueCat sandbox environment. It can be safely included in the app code. For production, you would use your actual API key, but it should still be safe to include in the app since it's not a secret key. The security of your RevenueCat account relies more on your backend and how you manage entitlements than on keeping the API key secret.
+const REVENUECAT_API_KEY = 'appl_AGVMGiUHvPhDlAwZGsuSAqfIlHV';
 const PRO_ENTITLEMENT_ID = 'Stellar Align Pro';
 
 class SubscriptionService {

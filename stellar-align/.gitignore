@@ -2,6 +2,10 @@
 node_modules/
 dist/
 
+.expo/
+android/
+ios/
+
 # Graphify output
 # mtime-based, breaks after git clone
 graphify-out/manifest.json

@@ -49,6 +49,7 @@ interface StellarTextProps {
   italic?: boolean;
   align?: 'auto' | 'left' | 'center' | 'right' | 'justify';
   numberOfLines?: number;
+  onPress?: () => void;
 }
 
 export const StellarText: React.FC<StellarTextProps> = ({
@@ -61,6 +62,7 @@ export const StellarText: React.FC<StellarTextProps> = ({
   italic = false,
   align = 'left',
   numberOfLines,
+  onPress,
 }) => {
   const getTextStyle = () => {
     switch (variant) {
@@ -98,6 +100,7 @@ export const StellarText: React.FC<StellarTextProps> = ({
         style,
       ]}
       numberOfLines={numberOfLines}
+      onPress={onPress}
     >
       {children}
     </Text>
