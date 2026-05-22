@@ -1,3 +1,5 @@
 .expo/
 android/
 ios/
+
+package-lock.json
