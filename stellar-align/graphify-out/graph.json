@@ -9,16 +9,16 @@
       "source_file": "frontend/src/App.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_tsx",
-      "community": 17,
+      "community": 8,
       "norm_label": "app.tsx"
     },
     {
       "label": "App()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L20",
+      "source_location": "L13",
       "id": "src_app_app",
-      "community": 17,
+      "community": 8,
       "norm_label": "app()"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "frontend/src/types/index.ts",
       "source_location": "L1",
       "id": "frontend_src_types_index_ts",
-      "community": 44,
+      "community": 52,
       "norm_label": "index.ts"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "frontend/src/navigation/MainNavigator.tsx",
       "source_location": "L1",
       "id": "frontend_src_navigation_mainnavigator_tsx",
-      "community": 45,
+      "community": 53,
       "norm_label": "mainnavigator.tsx"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "frontend/src/navigation/RootNavigator.tsx",
       "source_location": "L1",
       "id": "frontend_src_navigation_rootnavigator_tsx",
-      "community": 17,
+      "community": 8,
       "norm_label": "rootnavigator.tsx"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "frontend/src/navigation/RootNavigator.tsx",
       "source_location": "L22",
       "id": "navigation_rootnavigator_rootnavigator",
-      "community": 17,
+      "community": 8,
       "norm_label": "rootnavigator()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "frontend/src/utils/secureStorage.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_securestorage_ts",
-      "community": 46,
+      "community": 54,
       "norm_label": "securestorage.ts"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "frontend/src/utils/googleAuth.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_googleauth_ts",
-      "community": 47,
+      "community": 55,
       "norm_label": "googleauth.ts"
     },
     {
@@ -81,25 +81,25 @@
       "source_file": "frontend/src/utils/notifications.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_notifications_ts",
-      "community": 17,
+      "community": 8,
       "norm_label": "notifications.ts"
     },
     {
       "label": "configureForegroundNotifications()",
       "file_type": "code",
       "source_file": "frontend/src/utils/notifications.ts",
-      "source_location": "L9",
+      "source_location": "L10",
       "id": "utils_notifications_configureforegroundnotifications",
-      "community": 17,
+      "community": 8,
       "norm_label": "configureforegroundnotifications()"
     },
     {
       "label": "registerForPushNotificationsAsync()",
       "file_type": "code",
       "source_file": "frontend/src/utils/notifications.ts",
-      "source_location": "L22",
+      "source_location": "L25",
       "id": "utils_notifications_registerforpushnotificationsasync",
-      "community": 17,
+      "community": 8,
       "norm_label": "registerforpushnotificationsasync()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_astrology_ts",
-      "community": 3,
+      "community": 4,
       "norm_label": "astrology.ts"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L16",
       "id": "utils_astrology_getsignemoji",
-      "community": 3,
+      "community": 4,
       "norm_label": "getsignemoji()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "frontend/src/utils/astrology.ts",
       "source_location": "L22",
       "id": "utils_astrology_formatsignname",
-      "community": 3,
+      "community": 4,
       "norm_label": "formatsignname()"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "frontend/src/screens/ChatScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_chatscreen_tsx",
-      "community": 41,
+      "community": 35,
       "norm_label": "chatscreen.tsx"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "frontend/src/screens/TodayScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_todayscreen_tsx",
-      "community": 21,
+      "community": 26,
       "norm_label": "todayscreen.tsx"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_profilescreen_tsx",
-      "community": 3,
+      "community": 4,
       "norm_label": "profilescreen.tsx"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_chartscreen_tsx",
-      "community": 18,
+      "community": 21,
       "norm_label": "chartscreen.tsx"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L114",
       "id": "screens_chartscreen_handletogglevedic",
-      "community": 18,
+      "community": 21,
       "norm_label": "handletogglevedic()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L129",
       "id": "screens_chartscreen_handleselectchart",
-      "community": 18,
+      "community": 21,
       "norm_label": "handleselectchart()"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "frontend/src/screens/ChartScreen.tsx",
       "source_location": "L133",
       "id": "screens_chartscreen_handlerefresh",
-      "community": 18,
+      "community": 21,
       "norm_label": "handlerefresh()"
     },
     {
@@ -205,7 +205,7 @@
       "label": "getBirthDate()",
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L138",
+      "source_location": "L148",
       "id": "screens_settingsscreen_getbirthdate",
       "community": 11,
       "norm_label": "getbirthdate()"
@@ -214,7 +214,7 @@
       "label": "getBirthTimeDate()",
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L149",
+      "source_location": "L159",
       "id": "screens_settingsscreen_getbirthtimedate",
       "community": 11,
       "norm_label": "getbirthtimedate()"
@@ -223,7 +223,7 @@
       "label": "getDailyNotificationDate()",
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L166",
+      "source_location": "L176",
       "id": "screens_settingsscreen_getdailynotificationdate",
       "community": 11,
       "norm_label": "getdailynotificationdate()"
@@ -232,7 +232,7 @@
       "label": "handleLocationSelect()",
       "file_type": "code",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L186",
+      "source_location": "L196",
       "id": "screens_settingsscreen_handlelocationselect",
       "community": 11,
       "norm_label": "handlelocationselect()"
@@ -243,8 +243,17 @@
       "source_file": "frontend/src/screens/TransitsScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_transitsscreen_tsx",
-      "community": 48,
+      "community": 36,
       "norm_label": "transitsscreen.tsx"
+    },
+    {
+      "label": "handlePeriodChange()",
+      "file_type": "code",
+      "source_file": "frontend/src/screens/TransitsScreen.tsx",
+      "source_location": "L42",
+      "id": "screens_transitsscreen_handleperiodchange",
+      "community": 36,
+      "norm_label": "handleperiodchange()"
     },
     {
       "label": "RegisterStartScreen.tsx",
@@ -252,25 +261,25 @@
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_auth_registerstartscreen_tsx",
-      "community": 3,
+      "community": 4,
       "norm_label": "registerstartscreen.tsx"
     },
     {
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
-      "source_location": "L74",
+      "source_location": "L87",
       "id": "auth_registerstartscreen_handlegooglelogin",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlegooglelogin()"
     },
     {
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
-      "source_location": "L82",
+      "source_location": "L95",
       "id": "auth_registerstartscreen_handleapplelogin",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleapplelogin()"
     },
     {
@@ -286,7 +295,7 @@
       "label": "fetchLocations()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L145",
+      "source_location": "L153",
       "id": "auth_registerscreen_fetchlocations",
       "community": 9,
       "norm_label": "fetchlocations()"
@@ -295,7 +304,7 @@
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L212",
+      "source_location": "L220",
       "id": "auth_registerscreen_handlegooglelogin",
       "community": 9,
       "norm_label": "handlegooglelogin()"
@@ -304,7 +313,7 @@
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L220",
+      "source_location": "L228",
       "id": "auth_registerscreen_handleapplelogin",
       "community": 9,
       "norm_label": "handleapplelogin()"
@@ -313,7 +322,7 @@
       "label": "handleDateChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L243",
+      "source_location": "L251",
       "id": "auth_registerscreen_handledatechange",
       "community": 9,
       "norm_label": "handledatechange()"
@@ -322,7 +331,7 @@
       "label": "handleTimeChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L258",
+      "source_location": "L266",
       "id": "auth_registerscreen_handletimechange",
       "community": 9,
       "norm_label": "handletimechange()"
@@ -331,7 +340,7 @@
       "label": "handleLocationSelect()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L274",
+      "source_location": "L282",
       "id": "auth_registerscreen_handlelocationselect",
       "community": 9,
       "norm_label": "handlelocationselect()"
@@ -340,7 +349,7 @@
       "label": "handleLocationSearchChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L305",
+      "source_location": "L313",
       "id": "auth_registerscreen_handlelocationsearchchange",
       "community": 9,
       "norm_label": "handlelocationsearchchange()"
@@ -349,7 +358,7 @@
       "label": "validateStep1()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L310",
+      "source_location": "L318",
       "id": "auth_registerscreen_validatestep1",
       "community": 9,
       "norm_label": "validatestep1()"
@@ -358,7 +367,7 @@
       "label": "validateStep2()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L331",
+      "source_location": "L339",
       "id": "auth_registerscreen_validatestep2",
       "community": 9,
       "norm_label": "validatestep2()"
@@ -367,7 +376,7 @@
       "label": "handleNext()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L347",
+      "source_location": "L355",
       "id": "auth_registerscreen_handlenext",
       "community": 9,
       "norm_label": "handlenext()"
@@ -376,7 +385,7 @@
       "label": "handleBack()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L355",
+      "source_location": "L363",
       "id": "auth_registerscreen_handleback",
       "community": 9,
       "norm_label": "handleback()"
@@ -385,7 +394,7 @@
       "label": "handleSubmit()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L377",
+      "source_location": "L385",
       "id": "auth_registerscreen_handlesubmit",
       "community": 9,
       "norm_label": "handlesubmit()"
@@ -394,7 +403,7 @@
       "label": "formatDate()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L405",
+      "source_location": "L413",
       "id": "auth_registerscreen_formatdate",
       "community": 9,
       "norm_label": "formatdate()"
@@ -403,7 +412,7 @@
       "label": "formatTime()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L424",
+      "source_location": "L432",
       "id": "auth_registerscreen_formattime",
       "community": 9,
       "norm_label": "formattime()"
@@ -412,7 +421,7 @@
       "label": "handleOpenLocationModal()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L445",
+      "source_location": "L453",
       "id": "auth_registerscreen_handleopenlocationmodal",
       "community": 9,
       "norm_label": "handleopenlocationmodal()"
@@ -423,43 +432,43 @@
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
       "source_location": "L1",
       "id": "frontend_src_screens_auth_loginscreen_tsx",
-      "community": 3,
+      "community": 4,
       "norm_label": "loginscreen.tsx"
     },
     {
       "label": "handleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L94",
+      "source_location": "L101",
       "id": "auth_loginscreen_handlelogin",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlelogin()"
     },
     {
       "label": "handleForgotPassword()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L111",
+      "source_location": "L118",
       "id": "auth_loginscreen_handleforgotpassword",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleforgotpassword()"
     },
     {
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L125",
+      "source_location": "L132",
       "id": "auth_loginscreen_handlegooglelogin",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlegooglelogin()"
     },
     {
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L133",
+      "source_location": "L140",
       "id": "auth_loginscreen_handleapplelogin",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleapplelogin()"
     },
     {
@@ -468,7 +477,7 @@
       "source_file": "frontend/src/components/StarField.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_starfield_tsx",
-      "community": 31,
+      "community": 37,
       "norm_label": "starfield.tsx"
     },
     {
@@ -477,7 +486,7 @@
       "source_file": "frontend/src/components/StarField.tsx",
       "source_location": "L19",
       "id": "components_starfield_generatestars",
-      "community": 31,
+      "community": 37,
       "norm_label": "generatestars()"
     },
     {
@@ -486,7 +495,7 @@
       "source_file": "frontend/src/components/MoodRing.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_moodring_tsx",
-      "community": 32,
+      "community": 49,
       "norm_label": "moodring.tsx"
     },
     {
@@ -495,7 +504,7 @@
       "source_file": "frontend/src/components/TransitInfoModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitinfomodal_tsx",
-      "community": 49,
+      "community": 56,
       "norm_label": "transitinfomodal.tsx"
     },
     {
@@ -535,12 +544,21 @@
       "norm_label": "fetchlocations()"
     },
     {
+      "label": "LegalModal.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/LegalModal.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_legalmodal_tsx",
+      "community": 57,
+      "norm_label": "legalmodal.tsx"
+    },
+    {
       "label": "Card.tsx",
       "file_type": "code",
       "source_file": "frontend/src/components/Card.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_card_tsx",
-      "community": 50,
+      "community": 58,
       "norm_label": "card.tsx"
     },
     {
@@ -549,7 +567,7 @@
       "source_file": "frontend/src/components/SignIcon.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_signicon_tsx",
-      "community": 51,
+      "community": 59,
       "norm_label": "signicon.tsx"
     },
     {
@@ -558,7 +576,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_customscrollerpicker_tsx",
-      "community": 20,
+      "community": 23,
       "norm_label": "customscrollerpicker.tsx"
     },
     {
@@ -567,7 +585,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L43",
       "id": "components_customscrollerpicker_onmomentumscrollend",
-      "community": 20,
+      "community": 23,
       "norm_label": "onmomentumscrollend()"
     },
     {
@@ -576,7 +594,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L53",
       "id": "components_customscrollerpicker_handlelayout",
-      "community": 20,
+      "community": 23,
       "norm_label": "handlelayout()"
     },
     {
@@ -585,7 +603,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L138",
       "id": "components_customscrollerpicker_getdaysinmonth",
-      "community": 20,
+      "community": 23,
       "norm_label": "getdaysinmonth()"
     },
     {
@@ -594,7 +612,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L147",
       "id": "components_customscrollerpicker_handletimechange",
-      "community": 20,
+      "community": 23,
       "norm_label": "handletimechange()"
     },
     {
@@ -603,7 +621,7 @@
       "source_file": "frontend/src/components/CustomScrollerPicker.tsx",
       "source_location": "L154",
       "id": "components_customscrollerpicker_handledatechange",
-      "community": 20,
+      "community": 23,
       "norm_label": "handledatechange()"
     },
     {
@@ -612,16 +630,16 @@
       "source_file": "frontend/src/components/StellarCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_stellarcard_tsx",
-      "community": 33,
+      "community": 38,
       "norm_label": "stellarcard.tsx"
     },
     {
       "label": "getTextStyle()",
       "file_type": "code",
       "source_file": "frontend/src/components/StellarCard.tsx",
-      "source_location": "L65",
+      "source_location": "L67",
       "id": "components_stellarcard_gettextstyle",
-      "community": 33,
+      "community": 38,
       "norm_label": "gettextstyle()"
     },
     {
@@ -630,8 +648,44 @@
       "source_file": "frontend/src/components/MoonPhase.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_moonphase_tsx",
-      "community": 52,
+      "community": 60,
       "norm_label": "moonphase.tsx"
+    },
+    {
+      "label": "Paywall.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_paywall_tsx",
+      "community": 8,
+      "norm_label": "paywall.tsx"
+    },
+    {
+      "label": "checkConfig()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L42",
+      "id": "components_paywall_checkconfig",
+      "community": 8,
+      "norm_label": "checkconfig()"
+    },
+    {
+      "label": "handlePurchase()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L65",
+      "id": "components_paywall_handlepurchase",
+      "community": 8,
+      "norm_label": "handlepurchase()"
+    },
+    {
+      "label": "handleRestore()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L77",
+      "id": "components_paywall_handlerestore",
+      "community": 8,
+      "norm_label": "handlerestore()"
     },
     {
       "label": "CompatibilityRing.tsx",
@@ -639,7 +693,7 @@
       "source_file": "frontend/src/components/CompatibilityRing.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_compatibilityring_tsx",
-      "community": 34,
+      "community": 39,
       "norm_label": "compatibilityring.tsx"
     },
     {
@@ -648,7 +702,7 @@
       "source_file": "frontend/src/components/CompatibilityRing.tsx",
       "source_location": "L13",
       "id": "components_compatibilityring_compatibilityring",
-      "community": 34,
+      "community": 39,
       "norm_label": "compatibilityring()"
     },
     {
@@ -657,7 +711,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_vedicchartcard_tsx",
-      "community": 19,
+      "community": 20,
       "norm_label": "vedicchartcard.tsx"
     },
     {
@@ -666,7 +720,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L24",
       "id": "components_vedicchartcard_normalizesign",
-      "community": 19,
+      "community": 20,
       "norm_label": "normalizesign()"
     },
     {
@@ -675,7 +729,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L28",
       "id": "components_vedicchartcard_formatsign",
-      "community": 19,
+      "community": 20,
       "norm_label": "formatsign()"
     },
     {
@@ -684,7 +738,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L33",
       "id": "components_vedicchartcard_displayplanetname",
-      "community": 19,
+      "community": 20,
       "norm_label": "displayplanetname()"
     },
     {
@@ -693,7 +747,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L44",
       "id": "components_vedicchartcard_displayplanetlabel",
-      "community": 19,
+      "community": 20,
       "norm_label": "displayplanetlabel()"
     },
     {
@@ -702,7 +756,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L51",
       "id": "components_vedicchartcard_formatdegree",
-      "community": 19,
+      "community": 20,
       "norm_label": "formatdegree()"
     },
     {
@@ -711,7 +765,7 @@
       "source_file": "frontend/src/components/VedicChartCard.tsx",
       "source_location": "L65",
       "id": "components_vedicchartcard_renderplanetlist",
-      "community": 19,
+      "community": 20,
       "norm_label": "renderplanetlist()"
     },
     {
@@ -720,7 +774,7 @@
       "source_file": "frontend/src/components/AspectList.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_aspectlist_tsx",
-      "community": 53,
+      "community": 61,
       "norm_label": "aspectlist.tsx"
     },
     {
@@ -729,7 +783,7 @@
       "source_file": "frontend/src/components/ProfileComponents.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_profilecomponents_tsx",
-      "community": 54,
+      "community": 62,
       "norm_label": "profilecomponents.tsx"
     },
     {
@@ -738,7 +792,7 @@
       "source_file": "frontend/src/components/GenerationInfoModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_generationinfomodal_tsx",
-      "community": 55,
+      "community": 63,
       "norm_label": "generationinfomodal.tsx"
     },
     {
@@ -747,7 +801,7 @@
       "source_file": "frontend/src/components/index.ts",
       "source_location": "L1",
       "id": "frontend_src_components_index_ts",
-      "community": 56,
+      "community": 64,
       "norm_label": "index.ts"
     },
     {
@@ -756,17 +810,8 @@
       "source_file": "frontend/src/components/TransitCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitcard_tsx",
-      "community": 35,
+      "community": 48,
       "norm_label": "transitcard.tsx"
-    },
-    {
-      "label": "TransitCard()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/TransitCard.tsx",
-      "source_location": "L14",
-      "id": "components_transitcard_transitcard",
-      "community": 35,
-      "norm_label": "transitcard()"
     },
     {
       "label": "StellarButton.tsx",
@@ -774,7 +819,7 @@
       "source_file": "frontend/src/components/StellarButton.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_stellarbutton_tsx",
-      "community": 24,
+      "community": 32,
       "norm_label": "stellarbutton.tsx"
     },
     {
@@ -783,7 +828,7 @@
       "source_file": "frontend/src/components/StellarButton.tsx",
       "source_location": "L35",
       "id": "components_stellarbutton_getbuttonstyle",
-      "community": 24,
+      "community": 32,
       "norm_label": "getbuttonstyle()"
     },
     {
@@ -792,7 +837,7 @@
       "source_file": "frontend/src/components/StellarButton.tsx",
       "source_location": "L74",
       "id": "components_stellarbutton_gettextstyle",
-      "community": 24,
+      "community": 32,
       "norm_label": "gettextstyle()"
     },
     {
@@ -801,7 +846,7 @@
       "source_file": "frontend/src/components/TransitIndicator.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitindicator_tsx",
-      "community": 57,
+      "community": 65,
       "norm_label": "transitindicator.tsx"
     },
     {
@@ -810,7 +855,7 @@
       "source_file": "frontend/src/components/StellarBackground.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_stellarbackground_tsx",
-      "community": 36,
+      "community": 40,
       "norm_label": "stellarbackground.tsx"
     },
     {
@@ -819,7 +864,7 @@
       "source_file": "frontend/src/components/StellarBackground.tsx",
       "source_location": "L22",
       "id": "components_stellarbackground_generatestars",
-      "community": 36,
+      "community": 40,
       "norm_label": "generatestars()"
     },
     {
@@ -828,7 +873,7 @@
       "source_file": "frontend/src/theme/index.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_index_ts",
-      "community": 58,
+      "community": 66,
       "norm_label": "index.ts"
     },
     {
@@ -837,7 +882,7 @@
       "source_file": "frontend/src/theme/theme.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_theme_ts",
-      "community": 59,
+      "community": 67,
       "norm_label": "theme.ts"
     },
     {
@@ -846,16 +891,16 @@
       "source_file": "frontend/src/hooks/useAuth.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_useauth_ts",
-      "community": 3,
+      "community": 4,
       "norm_label": "useauth.ts"
     },
     {
       "label": "useAuth()",
       "file_type": "code",
       "source_file": "frontend/src/hooks/useAuth.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "hooks_useauth_useauth",
-      "community": 3,
+      "community": 4,
       "norm_label": "useauth()"
     },
     {
@@ -864,7 +909,7 @@
       "source_file": "frontend/src/hooks/useHoroscope.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usehoroscope_ts",
-      "community": 21,
+      "community": 26,
       "norm_label": "usehoroscope.ts"
     },
     {
@@ -873,7 +918,7 @@
       "source_file": "frontend/src/hooks/useHoroscope.ts",
       "source_location": "L7",
       "id": "hooks_usehoroscope_formatcategories",
-      "community": 21,
+      "community": 26,
       "norm_label": "formatcategories()"
     },
     {
@@ -882,7 +927,7 @@
       "source_file": "frontend/src/hooks/useHoroscope.ts",
       "source_location": "L16",
       "id": "hooks_usehoroscope_usehoroscope",
-      "community": 21,
+      "community": 26,
       "norm_label": "usehoroscope()"
     },
     {
@@ -891,7 +936,7 @@
       "source_file": "frontend/src/hooks/useVedicChart.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usevedicchart_ts",
-      "community": 18,
+      "community": 21,
       "norm_label": "usevedicchart.ts"
     },
     {
@@ -900,7 +945,7 @@
       "source_file": "frontend/src/hooks/useVedicChart.ts",
       "source_location": "L5",
       "id": "hooks_usevedicchart_usevedicchart",
-      "community": 18,
+      "community": 21,
       "norm_label": "usevedicchart()"
     },
     {
@@ -909,167 +954,167 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L1",
       "id": "frontend_src_services_api_ts",
-      "community": 29,
+      "community": 42,
       "norm_label": "api.ts"
     },
     {
       "label": "getApiUrl()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L13",
+      "source_location": "L10",
       "id": "services_api_getapiurl",
-      "community": 29,
+      "community": 42,
       "norm_label": "getapiurl()"
     },
     {
       "label": "ApiService",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L40",
+      "source_location": "L30",
       "id": "services_api_apiservice",
-      "community": 2,
+      "community": 0,
       "norm_label": "apiservice"
     },
     {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L44",
+      "source_location": "L34",
       "id": "services_api_apiservice_constructor",
-      "community": 30,
+      "community": 41,
       "norm_label": ".constructor()"
     },
     {
       "label": ".setupInterceptors()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L56",
+      "source_location": "L46",
       "id": "services_api_apiservice_setupinterceptors",
-      "community": 30,
+      "community": 41,
       "norm_label": ".setupinterceptors()"
     },
     {
       "label": ".refreshAccessToken()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L103",
+      "source_location": "L104",
       "id": "services_api_apiservice_refreshaccesstoken",
-      "community": 2,
+      "community": 0,
       "norm_label": ".refreshaccesstoken()"
     },
     {
       "label": ".handleError()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L158",
+      "source_location": "L159",
       "id": "services_api_apiservice_handleerror",
-      "community": 2,
+      "community": 0,
       "norm_label": ".handleerror()"
     },
     {
       "label": ".setTokens()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L175",
+      "source_location": "L176",
       "id": "services_api_apiservice_settokens",
-      "community": 22,
+      "community": 29,
       "norm_label": ".settokens()"
     },
     {
       "label": ".clearTokens()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L180",
+      "source_location": "L181",
       "id": "services_api_apiservice_cleartokens",
-      "community": 28,
+      "community": 43,
       "norm_label": ".cleartokens()"
     },
     {
       "label": ".login()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L187",
+      "source_location": "L188",
       "id": "services_api_apiservice_login",
-      "community": 22,
+      "community": 29,
       "norm_label": ".login()"
     },
     {
       "label": ".register()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L200",
+      "source_location": "L199",
       "id": "services_api_apiservice_register",
-      "community": 22,
+      "community": 29,
       "norm_label": ".register()"
     },
     {
       "label": ".logout()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L224",
+      "source_location": "L221",
       "id": "services_api_apiservice_logout",
-      "community": 28,
+      "community": 43,
       "norm_label": ".logout()"
     },
     {
       "label": ".socialLogin()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L232",
+      "source_location": "L229",
       "id": "services_api_apiservice_sociallogin",
-      "community": 22,
+      "community": 29,
       "norm_label": ".sociallogin()"
     },
     {
       "label": ".forgotPassword()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L242",
+      "source_location": "L239",
       "id": "services_api_apiservice_forgotpassword",
-      "community": 2,
+      "community": 0,
       "norm_label": ".forgotpassword()"
     },
     {
       "label": ".resetPassword()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L246",
+      "source_location": "L243",
       "id": "services_api_apiservice_resetpassword",
-      "community": 2,
+      "community": 0,
       "norm_label": ".resetpassword()"
     },
     {
       "label": ".changePassword()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L250",
+      "source_location": "L247",
       "id": "services_api_apiservice_changepassword",
-      "community": 2,
+      "community": 0,
       "norm_label": ".changepassword()"
     },
     {
       "label": ".getCurrentUser()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L256",
+      "source_location": "L253",
       "id": "services_api_apiservice_getcurrentuser",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getcurrentuser()"
     },
     {
       "label": ".updateUser()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L260",
+      "source_location": "L257",
       "id": "services_api_apiservice_updateuser",
-      "community": 2,
+      "community": 0,
       "norm_label": ".updateuser()"
     },
     {
       "label": ".updateProfile()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L264",
+      "source_location": "L261",
       "id": "services_api_apiservice_updateprofile",
       "community": 9,
       "norm_label": ".updateprofile()"
@@ -1078,253 +1123,361 @@
       "label": ".getSettings()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L268",
+      "source_location": "L265",
       "id": "services_api_apiservice_getsettings",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getsettings()"
     },
     {
       "label": ".updateSettings()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L272",
+      "source_location": "L269",
       "id": "services_api_apiservice_updatesettings",
-      "community": 2,
+      "community": 0,
       "norm_label": ".updatesettings()"
     },
     {
       "label": ".getUserProfile()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L276",
+      "source_location": "L273",
       "id": "services_api_apiservice_getuserprofile",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getuserprofile()"
     },
     {
       "label": ".getNatalChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L282",
+      "source_location": "L279",
       "id": "services_api_apiservice_getnatalchart",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getnatalchart()"
     },
     {
       "label": ".recalculateChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L286",
+      "source_location": "L283",
       "id": "services_api_apiservice_recalculatechart",
-      "community": 2,
+      "community": 0,
       "norm_label": ".recalculatechart()"
     },
     {
       "label": ".getTransits()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L290",
+      "source_location": "L287",
       "id": "services_api_apiservice_gettransits",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gettransits()"
     },
     {
       "label": ".calculateVedicChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L296",
+      "source_location": "L293",
       "id": "services_api_apiservice_calculatevedicchart",
-      "community": 2,
+      "community": 0,
       "norm_label": ".calculatevedicchart()"
     },
     {
       "label": ".getVedicChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L300",
+      "source_location": "L297",
       "id": "services_api_apiservice_getvedicchart",
-      "community": 18,
+      "community": 21,
       "norm_label": ".getvedicchart()"
     },
     {
       "label": ".getDivisionalChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L304",
+      "source_location": "L301",
       "id": "services_api_apiservice_getdivisionalchart",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getdivisionalchart()"
     },
     {
       "label": ".getNakshatra()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L308",
+      "source_location": "L305",
       "id": "services_api_apiservice_getnakshatra",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getnakshatra()"
     },
     {
       "label": ".recalculateVedicChart()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L312",
+      "source_location": "L309",
       "id": "services_api_apiservice_recalculatevedicchart",
-      "community": 2,
+      "community": 0,
       "norm_label": ".recalculatevedicchart()"
     },
     {
       "label": ".getTodayHoroscope()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L318",
+      "source_location": "L315",
       "id": "services_api_apiservice_gettodayhoroscope",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gettodayhoroscope()"
     },
     {
       "label": ".getHoroscopeByDate()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L322",
+      "source_location": "L319",
       "id": "services_api_apiservice_gethoroscopebydate",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gethoroscopebydate()"
     },
     {
       "label": ".getHoroscopeHistory()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L326",
+      "source_location": "L323",
       "id": "services_api_apiservice_gethoroscopehistory",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gethoroscopehistory()"
     },
     {
       "label": ".bookmarkHoroscope()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L330",
+      "source_location": "L327",
       "id": "services_api_apiservice_bookmarkhoroscope",
-      "community": 2,
+      "community": 0,
       "norm_label": ".bookmarkhoroscope()"
     },
     {
       "label": ".shareHoroscope()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L334",
+      "source_location": "L331",
       "id": "services_api_apiservice_sharehoroscope",
-      "community": 2,
+      "community": 0,
       "norm_label": ".sharehoroscope()"
     },
     {
       "label": ".getFriends()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L340",
+      "source_location": "L337",
       "id": "services_api_apiservice_getfriends",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getfriends()"
     },
     {
       "label": ".getFriendRequests()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L344",
+      "source_location": "L341",
       "id": "services_api_apiservice_getfriendrequests",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getfriendrequests()"
     },
     {
       "label": ".sendFriendRequest()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L348",
+      "source_location": "L345",
       "id": "services_api_apiservice_sendfriendrequest",
-      "community": 2,
+      "community": 0,
       "norm_label": ".sendfriendrequest()"
     },
     {
       "label": ".acceptFriendRequest()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L352",
+      "source_location": "L349",
       "id": "services_api_apiservice_acceptfriendrequest",
-      "community": 2,
+      "community": 0,
       "norm_label": ".acceptfriendrequest()"
     },
     {
       "label": ".rejectFriendRequest()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L356",
+      "source_location": "L353",
       "id": "services_api_apiservice_rejectfriendrequest",
-      "community": 2,
+      "community": 0,
       "norm_label": ".rejectfriendrequest()"
     },
     {
       "label": ".removeFriend()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L360",
+      "source_location": "L357",
       "id": "services_api_apiservice_removefriend",
-      "community": 2,
+      "community": 0,
       "norm_label": ".removefriend()"
     },
     {
       "label": ".getCompatibility()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L366",
+      "source_location": "L363",
       "id": "services_api_apiservice_getcompatibility",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getcompatibility()"
     },
     {
       "label": ".getTimezone()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L372",
+      "source_location": "L369",
       "id": "services_api_apiservice_gettimezone",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gettimezone()"
     },
     {
       "label": ".getTimezones()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L376",
+      "source_location": "L373",
       "id": "services_api_apiservice_gettimezones",
-      "community": 2,
+      "community": 0,
       "norm_label": ".gettimezones()"
     },
     {
       "label": ".registerPushToken()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L382",
+      "source_location": "L379",
       "id": "services_api_apiservice_registerpushtoken",
-      "community": 2,
+      "community": 0,
       "norm_label": ".registerpushtoken()"
     },
     {
       "label": ".getNotificationHistory()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L386",
+      "source_location": "L383",
       "id": "services_api_apiservice_getnotificationhistory",
-      "community": 2,
+      "community": 0,
       "norm_label": ".getnotificationhistory()"
     },
     {
       "label": ".markNotificationAsRead()",
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
-      "source_location": "L390",
+      "source_location": "L387",
       "id": "services_api_apiservice_marknotificationasread",
-      "community": 2,
+      "community": 0,
       "norm_label": ".marknotificationasread()"
+    },
+    {
+      "label": "subscriptionService.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L1",
+      "id": "frontend_src_services_subscriptionservice_ts",
+      "community": 8,
+      "norm_label": "subscriptionservice.ts"
+    },
+    {
+      "label": "SubscriptionService",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L13",
+      "id": "services_subscriptionservice_subscriptionservice",
+      "community": 8,
+      "norm_label": "subscriptionservice"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L17",
+      "id": "services_subscriptionservice_subscriptionservice_constructor",
+      "community": 8,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".getInstance()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L19",
+      "id": "services_subscriptionservice_subscriptionservice_getinstance",
+      "community": 8,
+      "norm_label": ".getinstance()"
+    },
+    {
+      "label": ".initialize()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L29",
+      "id": "services_subscriptionservice_subscriptionservice_initialize",
+      "community": 8,
+      "norm_label": ".initialize()"
+    },
+    {
+      "label": ".refreshCustomerInfo()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L59",
+      "id": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
+      "community": 8,
+      "norm_label": ".refreshcustomerinfo()"
+    },
+    {
+      "label": ".getOfferings()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L74",
+      "id": "services_subscriptionservice_subscriptionservice_getofferings",
+      "community": 8,
+      "norm_label": ".getofferings()"
+    },
+    {
+      "label": ".purchasePackage()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L91",
+      "id": "services_subscriptionservice_subscriptionservice_purchasepackage",
+      "community": 8,
+      "norm_label": ".purchasepackage()"
+    },
+    {
+      "label": ".restorePurchases()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L120",
+      "id": "services_subscriptionservice_subscriptionservice_restorepurchases",
+      "community": 8,
+      "norm_label": ".restorepurchases()"
+    },
+    {
+      "label": ".checkEntitlement()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L147",
+      "id": "services_subscriptionservice_subscriptionservice_checkentitlement",
+      "community": 8,
+      "norm_label": ".checkentitlement()"
+    },
+    {
+      "label": ".handleCustomerInfoUpdate()",
+      "file_type": "code",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L154",
+      "id": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "community": 8,
+      "norm_label": ".handlecustomerinfoupdate()"
+    },
+    {
+      "label": "queryClient.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/services/queryClient.ts",
+      "source_location": "L1",
+      "id": "frontend_src_services_queryclient_ts",
+      "community": 68,
+      "norm_label": "queryclient.ts"
     },
     {
       "label": "transitStore.ts",
@@ -1332,7 +1485,7 @@
       "source_file": "frontend/src/store/transitStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_transitstore_ts",
-      "community": 60,
+      "community": 69,
       "norm_label": "transitstore.ts"
     },
     {
@@ -1341,7 +1494,7 @@
       "source_file": "frontend/src/store/vedicChartStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_vedicchartstore_ts",
-      "community": 61,
+      "community": 70,
       "norm_label": "vedicchartstore.ts"
     },
     {
@@ -1350,7 +1503,7 @@
       "source_file": "frontend/src/store/authStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_authstore_ts",
-      "community": 62,
+      "community": 71,
       "norm_label": "authstore.ts"
     },
     {
@@ -1359,7 +1512,7 @@
       "source_file": "frontend/src/store/horoscopeStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_horoscopestore_ts",
-      "community": 63,
+      "community": 72,
       "norm_label": "horoscopestore.ts"
     },
     {
@@ -1386,7 +1539,7 @@
       "source_file": "backend/src/app.ts",
       "source_location": "L1",
       "id": "backend_src_app_ts",
-      "community": 15,
+      "community": 17,
       "norm_label": "app.ts"
     },
     {
@@ -1395,43 +1548,43 @@
       "source_file": "backend/src/index.ts",
       "source_location": "L1",
       "id": "backend_src_index_ts",
-      "community": 14,
+      "community": 18,
       "norm_label": "index.ts"
     },
     {
       "label": "gracefulShutdown()",
       "file_type": "code",
       "source_file": "backend/src/index.ts",
-      "source_location": "L13",
+      "source_location": "L14",
       "id": "src_index_gracefulshutdown",
-      "community": 14,
+      "community": 18,
       "norm_label": "gracefulshutdown()"
     },
     {
       "label": "runHealthCheck()",
       "file_type": "code",
       "source_file": "backend/src/index.ts",
-      "source_location": "L41",
+      "source_location": "L44",
       "id": "src_index_runhealthcheck",
-      "community": 14,
+      "community": 18,
       "norm_label": "runhealthcheck()"
     },
     {
       "label": "initJobs()",
       "file_type": "code",
       "source_file": "backend/src/index.ts",
-      "source_location": "L56",
+      "source_location": "L59",
       "id": "src_index_initjobs",
-      "community": 14,
+      "community": 18,
       "norm_label": "initjobs()"
     },
     {
       "label": "startServer()",
       "file_type": "code",
       "source_file": "backend/src/index.ts",
-      "source_location": "L81",
+      "source_location": "L84",
       "id": "src_index_startserver",
-      "community": 14,
+      "community": 18,
       "norm_label": "startserver()"
     },
     {
@@ -1458,7 +1611,7 @@
       "source_file": "backend/src/middleware/profiler.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_profiler_ts",
-      "community": 15,
+      "community": 17,
       "norm_label": "profiler.ts"
     },
     {
@@ -1467,7 +1620,7 @@
       "source_file": "backend/src/middleware/profiler.ts",
       "source_location": "L13",
       "id": "middleware_profiler_profilermiddleware",
-      "community": 15,
+      "community": 17,
       "norm_label": "profilermiddleware()"
     },
     {
@@ -1476,7 +1629,7 @@
       "source_file": "backend/src/middleware/requestId.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_requestid_ts",
-      "community": 15,
+      "community": 17,
       "norm_label": "requestid.ts"
     },
     {
@@ -1485,7 +1638,7 @@
       "source_file": "backend/src/middleware/requestId.ts",
       "source_location": "L14",
       "id": "middleware_requestid_requestidmiddleware",
-      "community": 15,
+      "community": 17,
       "norm_label": "requestidmiddleware()"
     },
     {
@@ -1494,7 +1647,7 @@
       "source_file": "backend/src/middleware/errorHandler.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_errorhandler_ts",
-      "community": 15,
+      "community": 17,
       "norm_label": "errorhandler.ts"
     },
     {
@@ -1503,7 +1656,7 @@
       "source_file": "backend/src/middleware/errorHandler.ts",
       "source_location": "L6",
       "id": "middleware_errorhandler_errorhandler",
-      "community": 15,
+      "community": 17,
       "norm_label": "errorhandler()"
     },
     {
@@ -1512,7 +1665,7 @@
       "source_file": "backend/src/middleware/errorHandler.ts",
       "source_location": "L141",
       "id": "middleware_errorhandler_notfoundhandler",
-      "community": 15,
+      "community": 17,
       "norm_label": "notfoundhandler()"
     },
     {
@@ -1521,34 +1674,34 @@
       "source_file": "backend/src/middleware/auth.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_auth_ts",
-      "community": 0,
+      "community": 15,
       "norm_label": "auth.ts"
     },
     {
       "label": "authMiddleware()",
       "file_type": "code",
       "source_file": "backend/src/middleware/auth.ts",
-      "source_location": "L19",
+      "source_location": "L20",
       "id": "middleware_auth_authmiddleware",
-      "community": 0,
+      "community": 15,
       "norm_label": "authmiddleware()"
     },
     {
       "label": "optionalAuthMiddleware()",
       "file_type": "code",
       "source_file": "backend/src/middleware/auth.ts",
-      "source_location": "L72",
+      "source_location": "L90",
       "id": "middleware_auth_optionalauthmiddleware",
-      "community": 0,
+      "community": 15,
       "norm_label": "optionalauthmiddleware()"
     },
     {
       "label": "requireAuth()",
       "file_type": "code",
       "source_file": "backend/src/middleware/auth.ts",
-      "source_location": "L101",
+      "source_location": "L127",
       "id": "middleware_auth_requireauth",
-      "community": 0,
+      "community": 15,
       "norm_label": "requireauth()"
     },
     {
@@ -1557,7 +1710,7 @@
       "source_file": "backend/src/middleware/validator.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_validator_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "validator.ts"
     },
     {
@@ -1566,7 +1719,7 @@
       "source_file": "backend/src/middleware/validator.ts",
       "source_location": "L5",
       "id": "middleware_validator_validaterequest",
-      "community": 0,
+      "community": 14,
       "norm_label": "validaterequest()"
     },
     {
@@ -1575,7 +1728,7 @@
       "source_file": "backend/src/types/astronomia.d.ts",
       "source_location": "L1",
       "id": "backend_src_types_astronomia_d_ts",
-      "community": 37,
+      "community": 44,
       "norm_label": "astronomia.d.ts"
     },
     {
@@ -1584,7 +1737,7 @@
       "source_file": "backend/src/types/astronomia.d.ts",
       "source_location": "L55",
       "id": "types_astronomia_d_planet",
-      "community": 37,
+      "community": 44,
       "norm_label": "planet"
     },
     {
@@ -1593,7 +1746,7 @@
       "source_file": "backend/src/types/api.ts",
       "source_location": "L1",
       "id": "backend_src_types_api_ts",
-      "community": 64,
+      "community": 73,
       "norm_label": "api.ts"
     },
     {
@@ -1602,7 +1755,7 @@
       "source_file": "backend/src/types/astrology.ts",
       "source_location": "L1",
       "id": "backend_src_types_astrology_ts",
-      "community": 65,
+      "community": 74,
       "norm_label": "astrology.ts"
     },
     {
@@ -1611,7 +1764,7 @@
       "source_file": "backend/src/types/index.ts",
       "source_location": "L1",
       "id": "backend_src_types_index_ts",
-      "community": 66,
+      "community": 75,
       "norm_label": "index.ts"
     },
     {
@@ -1620,7 +1773,7 @@
       "source_file": "backend/src/types/user.ts",
       "source_location": "L1",
       "id": "backend_src_types_user_ts",
-      "community": 67,
+      "community": 76,
       "norm_label": "user.ts"
     },
     {
@@ -1629,7 +1782,7 @@
       "source_file": "backend/src/config/redis.ts",
       "source_location": "L1",
       "id": "backend_src_config_redis_ts",
-      "community": 68,
+      "community": 77,
       "norm_label": "redis.ts"
     },
     {
@@ -1638,7 +1791,7 @@
       "source_file": "backend/src/config/logger.ts",
       "source_location": "L1",
       "id": "backend_src_config_logger_ts",
-      "community": 69,
+      "community": 78,
       "norm_label": "logger.ts"
     },
     {
@@ -1647,7 +1800,7 @@
       "source_file": "backend/src/config/database.ts",
       "source_location": "L1",
       "id": "backend_src_config_database_ts",
-      "community": 14,
+      "community": 18,
       "norm_label": "database.ts"
     },
     {
@@ -1656,7 +1809,7 @@
       "source_file": "backend/src/config/database.ts",
       "source_location": "L20",
       "id": "config_database_disconnectdatabase",
-      "community": 14,
+      "community": 18,
       "norm_label": "disconnectdatabase()"
     },
     {
@@ -1665,7 +1818,7 @@
       "source_file": "backend/src/config/database.ts",
       "source_location": "L26",
       "id": "config_database_checkdatabasehealth",
-      "community": 14,
+      "community": 18,
       "norm_label": "checkdatabasehealth()"
     },
     {
@@ -1674,7 +1827,7 @@
       "source_file": "backend/src/config/env.ts",
       "source_location": "L1",
       "id": "backend_src_config_env_ts",
-      "community": 70,
+      "community": 79,
       "norm_label": "env.ts"
     },
     {
@@ -1683,7 +1836,7 @@
       "source_file": "backend/src/config/queue.ts",
       "source_location": "L1",
       "id": "backend_src_config_queue_ts",
-      "community": 71,
+      "community": 80,
       "norm_label": "queue.ts"
     },
     {
@@ -1737,7 +1890,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L1",
       "id": "backend_src_utils_errors_ts",
-      "community": 0,
+      "community": 13,
       "norm_label": "errors.ts"
     },
     {
@@ -1746,7 +1899,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L3",
       "id": "utils_errors_apierror",
-      "community": 0,
+      "community": 14,
       "norm_label": "apierror"
     },
     {
@@ -1755,7 +1908,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L8",
       "id": "utils_errors_apierror_constructor",
-      "community": 0,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -1764,7 +1917,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L22",
       "id": "utils_errors_validationerror",
-      "community": 0,
+      "community": 13,
       "norm_label": "validationerror"
     },
     {
@@ -1773,7 +1926,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L23",
       "id": "utils_errors_validationerror_constructor",
-      "community": 0,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
@@ -1782,7 +1935,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L28",
       "id": "utils_errors_notfounderror",
-      "community": 0,
+      "community": 22,
       "norm_label": "notfounderror"
     },
     {
@@ -1791,7 +1944,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L29",
       "id": "utils_errors_notfounderror_constructor",
-      "community": 0,
+      "community": 22,
       "norm_label": ".constructor()"
     },
     {
@@ -1800,7 +1953,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L34",
       "id": "utils_errors_unauthorizederror",
-      "community": 0,
+      "community": 13,
       "norm_label": "unauthorizederror"
     },
     {
@@ -1809,7 +1962,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L35",
       "id": "utils_errors_unauthorizederror_constructor",
-      "community": 0,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
@@ -1818,7 +1971,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L40",
       "id": "utils_errors_forbiddenerror",
-      "community": 0,
+      "community": 13,
       "norm_label": "forbiddenerror"
     },
     {
@@ -1827,7 +1980,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L41",
       "id": "utils_errors_forbiddenerror_constructor",
-      "community": 0,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
@@ -1836,7 +1989,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L46",
       "id": "utils_errors_conflicterror",
-      "community": 0,
+      "community": 13,
       "norm_label": "conflicterror"
     },
     {
@@ -1845,7 +1998,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L47",
       "id": "utils_errors_conflicterror_constructor",
-      "community": 0,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
@@ -1854,7 +2007,7 @@
       "source_file": "backend/src/utils/chart.ts",
       "source_location": "L1",
       "id": "backend_src_utils_chart_ts",
-      "community": 0,
+      "community": 15,
       "norm_label": "chart.ts"
     },
     {
@@ -1863,7 +2016,7 @@
       "source_file": "backend/src/utils/chart.ts",
       "source_location": "L6",
       "id": "utils_chart_transformplanetarypositions",
-      "community": 0,
+      "community": 15,
       "norm_label": "transformplanetarypositions()"
     },
     {
@@ -1872,7 +2025,7 @@
       "source_file": "backend/src/models/natalChart.ts",
       "source_location": "L1",
       "id": "backend_src_models_natalchart_ts",
-      "community": 72,
+      "community": 81,
       "norm_label": "natalchart.ts"
     },
     {
@@ -1881,7 +2034,7 @@
       "source_file": "backend/src/scripts/downloadEphe.ts",
       "source_location": "L1",
       "id": "backend_src_scripts_downloadephe_ts",
-      "community": 25,
+      "community": 33,
       "norm_label": "downloadephe.ts"
     },
     {
@@ -1890,7 +2043,7 @@
       "source_file": "backend/src/scripts/downloadEphe.ts",
       "source_location": "L15",
       "id": "scripts_downloadephe_downloadfile",
-      "community": 25,
+      "community": 33,
       "norm_label": "downloadfile()"
     },
     {
@@ -1899,7 +2052,7 @@
       "source_file": "backend/src/scripts/downloadEphe.ts",
       "source_location": "L39",
       "id": "scripts_downloadephe_run",
-      "community": 25,
+      "community": 33,
       "norm_label": "run()"
     },
     {
@@ -1908,7 +2061,7 @@
       "source_file": "backend/src/scripts/migrateData.ts",
       "source_location": "L1",
       "id": "backend_src_scripts_migratedata_ts",
-      "community": 38,
+      "community": 45,
       "norm_label": "migratedata.ts"
     },
     {
@@ -1917,8 +2070,17 @@
       "source_file": "backend/src/scripts/migrateData.ts",
       "source_location": "L8",
       "id": "scripts_migratedata_migrate",
-      "community": 38,
+      "community": 45,
       "norm_label": "migrate()"
+    },
+    {
+      "label": "chartWorker.ts",
+      "file_type": "code",
+      "source_file": "backend/src/jobs/chartWorker.ts",
+      "source_location": "L1",
+      "id": "backend_src_jobs_chartworker_ts",
+      "community": 82,
+      "norm_label": "chartworker.ts"
     },
     {
       "label": "horoscopeWorker.ts",
@@ -1926,7 +2088,7 @@
       "source_file": "backend/src/jobs/horoscopeWorker.ts",
       "source_location": "L1",
       "id": "backend_src_jobs_horoscopeworker_ts",
-      "community": 39,
+      "community": 46,
       "norm_label": "horoscopeworker.ts"
     },
     {
@@ -1935,7 +2097,7 @@
       "source_file": "backend/src/jobs/horoscopeWorker.ts",
       "source_location": "L51",
       "id": "jobs_horoscopeworker_enqueuedailyhoroscopes",
-      "community": 39,
+      "community": 46,
       "norm_label": "enqueuedailyhoroscopes()"
     },
     {
@@ -1944,7 +2106,7 @@
       "source_file": "backend/src/controllers/transitController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_transitcontroller_ts",
-      "community": 0,
+      "community": 30,
       "norm_label": "transitcontroller.ts"
     },
     {
@@ -1953,7 +2115,7 @@
       "source_file": "backend/src/controllers/transitController.ts",
       "source_location": "L9",
       "id": "controllers_transitcontroller_transitcontroller",
-      "community": 0,
+      "community": 30,
       "norm_label": "transitcontroller"
     },
     {
@@ -1962,7 +2124,7 @@
       "source_file": "backend/src/controllers/transitController.ts",
       "source_location": "L11",
       "id": "controllers_transitcontroller_transitcontroller_gettransits",
-      "community": 0,
+      "community": 30,
       "norm_label": ".gettransits()"
     },
     {
@@ -1980,7 +2142,7 @@
       "source_file": "backend/src/controllers/SettingsController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_settingscontroller_ts",
-      "community": 0,
+      "community": 27,
       "norm_label": "settingscontroller.ts"
     },
     {
@@ -1989,7 +2151,7 @@
       "source_file": "backend/src/controllers/SettingsController.ts",
       "source_location": "L4",
       "id": "controllers_settingscontroller_settingscontroller",
-      "community": 0,
+      "community": 27,
       "norm_label": "settingscontroller"
     },
     {
@@ -1998,7 +2160,7 @@
       "source_file": "backend/src/controllers/SettingsController.ts",
       "source_location": "L5",
       "id": "controllers_settingscontroller_settingscontroller_getsettings",
-      "community": 0,
+      "community": 27,
       "norm_label": ".getsettings()"
     },
     {
@@ -2007,7 +2169,7 @@
       "source_file": "backend/src/controllers/SettingsController.ts",
       "source_location": "L17",
       "id": "controllers_settingscontroller_settingscontroller_updatesettings",
-      "community": 0,
+      "community": 27,
       "norm_label": ".updatesettings()"
     },
     {
@@ -2016,7 +2178,7 @@
       "source_file": "backend/src/controllers/userController.spec.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_usercontroller_spec_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "usercontroller.spec.ts"
     },
     {
@@ -2025,14 +2187,14 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_authcontroller_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "authcontroller.ts"
     },
     {
       "label": "AuthController",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L15",
+      "source_location": "L11",
       "id": "controllers_authcontroller_authcontroller",
       "community": 12,
       "norm_label": "authcontroller"
@@ -2041,7 +2203,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L16",
+      "source_location": "L12",
       "id": "controllers_authcontroller_authcontroller_constructor",
       "community": 12,
       "norm_label": ".constructor()"
@@ -2050,7 +2212,7 @@
       "label": ".register()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L30",
+      "source_location": "L23",
       "id": "controllers_authcontroller_authcontroller_register",
       "community": 12,
       "norm_label": ".register()"
@@ -2059,7 +2221,7 @@
       "label": ".login()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L111",
+      "source_location": "L99",
       "id": "controllers_authcontroller_authcontroller_login",
       "community": 12,
       "norm_label": ".login()"
@@ -2068,7 +2230,7 @@
       "label": ".refreshToken()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L128",
+      "source_location": "L116",
       "id": "controllers_authcontroller_authcontroller_refreshtoken",
       "community": 12,
       "norm_label": ".refreshtoken()"
@@ -2077,7 +2239,7 @@
       "label": ".logout()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L148",
+      "source_location": "L136",
       "id": "controllers_authcontroller_authcontroller_logout",
       "community": 12,
       "norm_label": ".logout()"
@@ -2086,7 +2248,7 @@
       "label": ".forgotPassword()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L165",
+      "source_location": "L153",
       "id": "controllers_authcontroller_authcontroller_forgotpassword",
       "community": 12,
       "norm_label": ".forgotpassword()"
@@ -2095,7 +2257,7 @@
       "label": ".resetPassword()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L184",
+      "source_location": "L172",
       "id": "controllers_authcontroller_authcontroller_resetpassword",
       "community": 12,
       "norm_label": ".resetpassword()"
@@ -2104,55 +2266,19 @@
       "label": ".changePassword()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L202",
+      "source_location": "L190",
       "id": "controllers_authcontroller_authcontroller_changepassword",
       "community": 12,
       "norm_label": ".changepassword()"
     },
     {
-      "label": ".googleAuth()",
-      "file_type": "code",
-      "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L225",
-      "id": "controllers_authcontroller_authcontroller_googleauth",
-      "community": 12,
-      "norm_label": ".googleauth()"
-    },
-    {
-      "label": ".googleCallback()",
-      "file_type": "code",
-      "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L234",
-      "id": "controllers_authcontroller_authcontroller_googlecallback",
-      "community": 12,
-      "norm_label": ".googlecallback()"
-    },
-    {
-      "label": ".appleAuth()",
-      "file_type": "code",
-      "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L248",
-      "id": "controllers_authcontroller_authcontroller_appleauth",
-      "community": 12,
-      "norm_label": ".appleauth()"
-    },
-    {
       "label": ".socialLogin()",
       "file_type": "code",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L256",
+      "source_location": "L213",
       "id": "controllers_authcontroller_authcontroller_sociallogin",
       "community": 12,
       "norm_label": ".sociallogin()"
-    },
-    {
-      "label": ".calculateUserChart()",
-      "file_type": "code",
-      "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L335",
-      "id": "controllers_authcontroller_authcontroller_calculateuserchart",
-      "community": 12,
-      "norm_label": ".calculateuserchart()"
     },
     {
       "label": "notificationController.ts",
@@ -2160,7 +2286,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_notificationcontroller_ts",
-      "community": 0,
+      "community": 22,
       "norm_label": "notificationcontroller.ts"
     },
     {
@@ -2169,7 +2295,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L6",
       "id": "controllers_notificationcontroller_notificationcontroller",
-      "community": 0,
+      "community": 25,
       "norm_label": "notificationcontroller"
     },
     {
@@ -2178,7 +2304,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L10",
       "id": "controllers_notificationcontroller_notificationcontroller_registertoken",
-      "community": 0,
+      "community": 25,
       "norm_label": ".registertoken()"
     },
     {
@@ -2187,7 +2313,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L33",
       "id": "controllers_notificationcontroller_notificationcontroller_unregistertoken",
-      "community": 0,
+      "community": 25,
       "norm_label": ".unregistertoken()"
     },
     {
@@ -2196,7 +2322,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L55",
       "id": "controllers_notificationcontroller_notificationcontroller_gethistory",
-      "community": 0,
+      "community": 25,
       "norm_label": ".gethistory()"
     },
     {
@@ -2205,7 +2331,7 @@
       "source_file": "backend/src/controllers/notificationController.ts",
       "source_location": "L91",
       "id": "controllers_notificationcontroller_notificationcontroller_markasread",
-      "community": 0,
+      "community": 25,
       "norm_label": ".markasread()"
     },
     {
@@ -2214,43 +2340,43 @@
       "source_file": "backend/src/controllers/chatController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_chatcontroller_ts",
-      "community": 0,
+      "community": 24,
       "norm_label": "chatcontroller.ts"
     },
     {
       "label": "ChatController",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L25",
+      "source_location": "L27",
       "id": "controllers_chatcontroller_chatcontroller",
-      "community": 0,
+      "community": 24,
       "norm_label": "chatcontroller"
     },
     {
       "label": ".getHistory()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L27",
+      "source_location": "L29",
       "id": "controllers_chatcontroller_chatcontroller_gethistory",
-      "community": 0,
+      "community": 24,
       "norm_label": ".gethistory()"
     },
     {
       "label": ".sendMessage()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L91",
+      "source_location": "L93",
       "id": "controllers_chatcontroller_chatcontroller_sendmessage",
-      "community": 0,
+      "community": 24,
       "norm_label": ".sendmessage()"
     },
     {
       "label": ".clearHistory()",
       "file_type": "code",
       "source_file": "backend/src/controllers/chatController.ts",
-      "source_location": "L215",
+      "source_location": "L280",
       "id": "controllers_chatcontroller_chatcontroller_clearhistory",
-      "community": 0,
+      "community": 24,
       "norm_label": ".clearhistory()"
     },
     {
@@ -2259,7 +2385,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_horoscopecontroller_ts",
-      "community": 0,
+      "community": 22,
       "norm_label": "horoscopecontroller.ts"
     },
     {
@@ -2268,7 +2394,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L11",
       "id": "controllers_horoscopecontroller_horoscopecontroller",
-      "community": 13,
+      "community": 16,
       "norm_label": "horoscopecontroller"
     },
     {
@@ -2277,7 +2403,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L12",
       "id": "controllers_horoscopecontroller_horoscopecontroller_constructor",
-      "community": 13,
+      "community": 16,
       "norm_label": ".constructor()"
     },
     {
@@ -2286,7 +2412,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L22",
       "id": "controllers_horoscopecontroller_horoscopecontroller_gettoday",
-      "community": 13,
+      "community": 16,
       "norm_label": ".gettoday()"
     },
     {
@@ -2295,7 +2421,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L165",
       "id": "controllers_horoscopecontroller_horoscopecontroller_getbydate",
-      "community": 13,
+      "community": 16,
       "norm_label": ".getbydate()"
     },
     {
@@ -2304,7 +2430,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L294",
       "id": "controllers_horoscopecontroller_horoscopecontroller_gethistory",
-      "community": 13,
+      "community": 16,
       "norm_label": ".gethistory()"
     },
     {
@@ -2313,7 +2439,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L335",
       "id": "controllers_horoscopecontroller_horoscopecontroller_togglebookmark",
-      "community": 13,
+      "community": 16,
       "norm_label": ".togglebookmark()"
     },
     {
@@ -2322,7 +2448,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L363",
       "id": "controllers_horoscopecontroller_horoscopecontroller_sharehoroscope",
-      "community": 13,
+      "community": 16,
       "norm_label": ".sharehoroscope()"
     },
     {
@@ -2331,7 +2457,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L395",
       "id": "controllers_horoscopecontroller_horoscopecontroller_getinsights",
-      "community": 13,
+      "community": 16,
       "norm_label": ".getinsights()"
     },
     {
@@ -2340,7 +2466,7 @@
       "source_file": "backend/src/controllers/horoscopeController.ts",
       "source_location": "L442",
       "id": "controllers_horoscopecontroller_horoscopecontroller_calculatestreak",
-      "community": 13,
+      "community": 16,
       "norm_label": ".calculatestreak()"
     },
     {
@@ -2437,7 +2563,7 @@
       "label": ".deleteAccount()",
       "file_type": "code",
       "source_file": "backend/src/controllers/userController.ts",
-      "source_location": "L605",
+      "source_location": "L606",
       "id": "controllers_usercontroller_usercontroller_deleteaccount",
       "community": 10,
       "norm_label": ".deleteaccount()"
@@ -2446,7 +2572,7 @@
       "label": ".getSettings()",
       "file_type": "code",
       "source_file": "backend/src/controllers/userController.ts",
-      "source_location": "L633",
+      "source_location": "L634",
       "id": "controllers_usercontroller_usercontroller_getsettings",
       "community": 10,
       "norm_label": ".getsettings()"
@@ -2455,7 +2581,7 @@
       "label": ".updateSettings()",
       "file_type": "code",
       "source_file": "backend/src/controllers/userController.ts",
-      "source_location": "L670",
+      "source_location": "L671",
       "id": "controllers_usercontroller_usercontroller_updatesettings",
       "community": 10,
       "norm_label": ".updatesettings()"
@@ -2464,7 +2590,7 @@
       "label": ".registerPushToken()",
       "file_type": "code",
       "source_file": "backend/src/controllers/userController.ts",
-      "source_location": "L707",
+      "source_location": "L708",
       "id": "controllers_usercontroller_usercontroller_registerpushtoken",
       "community": 10,
       "norm_label": ".registerpushtoken()"
@@ -2475,7 +2601,7 @@
       "source_file": "backend/src/routes/vedicChart.ts",
       "source_location": "L1",
       "id": "backend_src_routes_vedicchart_ts",
-      "community": 0,
+      "community": 15,
       "norm_label": "vedicchart.ts"
     },
     {
@@ -2484,7 +2610,7 @@
       "source_file": "backend/src/routes/notifications.ts",
       "source_location": "L1",
       "id": "backend_src_routes_notifications_ts",
-      "community": 0,
+      "community": 25,
       "norm_label": "notifications.ts"
     },
     {
@@ -2502,7 +2628,7 @@
       "source_file": "backend/src/routes/chat.ts",
       "source_location": "L1",
       "id": "backend_src_routes_chat_ts",
-      "community": 0,
+      "community": 24,
       "norm_label": "chat.ts"
     },
     {
@@ -2511,7 +2637,7 @@
       "source_file": "backend/src/routes/horoscope.ts",
       "source_location": "L1",
       "id": "backend_src_routes_horoscope_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "horoscope.ts"
     },
     {
@@ -2520,7 +2646,7 @@
       "source_file": "backend/src/routes/transits.ts",
       "source_location": "L1",
       "id": "backend_src_routes_transits_ts",
-      "community": 0,
+      "community": 30,
       "norm_label": "transits.ts"
     },
     {
@@ -2529,7 +2655,7 @@
       "source_file": "backend/src/routes/chart.ts",
       "source_location": "L1",
       "id": "backend_src_routes_chart_ts",
-      "community": 0,
+      "community": 15,
       "norm_label": "chart.ts"
     },
     {
@@ -2538,7 +2664,7 @@
       "source_file": "backend/src/routes/users.ts",
       "source_location": "L1",
       "id": "backend_src_routes_users_ts",
-      "community": 0,
+      "community": 27,
       "norm_label": "users.ts"
     },
     {
@@ -2547,7 +2673,7 @@
       "source_file": "backend/src/routes/index.ts",
       "source_location": "L1",
       "id": "backend_src_routes_index_ts",
-      "community": 73,
+      "community": 83,
       "norm_label": "index.ts"
     },
     {
@@ -2556,7 +2682,7 @@
       "source_file": "backend/src/routes/friends.ts",
       "source_location": "L1",
       "id": "backend_src_routes_friends_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "friends.ts"
     },
     {
@@ -2565,7 +2691,7 @@
       "source_file": "backend/src/routes/compatibility.ts",
       "source_location": "L1",
       "id": "backend_src_routes_compatibility_ts",
-      "community": 0,
+      "community": 15,
       "norm_label": "compatibility.ts"
     },
     {
@@ -2574,7 +2700,7 @@
       "source_file": "backend/src/routes/auth.ts",
       "source_location": "L1",
       "id": "backend_src_routes_auth_ts",
-      "community": 0,
+      "community": 14,
       "norm_label": "auth.ts"
     },
     {
@@ -2592,7 +2718,7 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L68",
       "id": "services_aicontent_aicontentservice",
-      "community": 4,
+      "community": 3,
       "norm_label": "aicontentservice"
     },
     {
@@ -2601,179 +2727,188 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L70",
       "id": "services_aicontent_aicontentservice_generatedailyhoroscope",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generatedailyhoroscope()"
     },
     {
       "label": ".generateChartInterpretation()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L141",
+      "source_location": "L149",
       "id": "services_aicontent_aicontentservice_generatechartinterpretation",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generatechartinterpretation()"
     },
     {
       "label": ".generateCompatibilityInterpretation()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L178",
+      "source_location": "L186",
       "id": "services_aicontent_aicontentservice_generatecompatibilityinterpretation",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generatecompatibilityinterpretation()"
     },
     {
       "label": ".shouldGenerateHoroscopes()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L226",
+      "source_location": "L234",
       "id": "services_aicontent_aicontentservice_shouldgeneratehoroscopes",
-      "community": 4,
+      "community": 3,
       "norm_label": ".shouldgeneratehoroscopes()"
     },
     {
       "label": ".markGenerationComplete()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L236",
+      "source_location": "L244",
       "id": "services_aicontent_aicontentservice_markgenerationcomplete",
-      "community": 4,
+      "community": 3,
       "norm_label": ".markgenerationcomplete()"
     },
     {
       "label": ".buildHoroscopePrompt()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L249",
+      "source_location": "L257",
       "id": "services_aicontent_aicontentservice_buildhoroscopeprompt",
-      "community": 4,
+      "community": 3,
       "norm_label": ".buildhoroscopeprompt()"
     },
     {
       "label": ".generateRuleBasedHoroscope()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L366",
+      "source_location": "L374",
       "id": "services_aicontent_aicontentservice_generaterulebasedhoroscope",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generaterulebasedhoroscope()"
     },
     {
       "label": ".formatTransitSummary()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L411",
+      "source_location": "L419",
       "id": "services_aicontent_aicontentservice_formattransitsummary",
-      "community": 4,
+      "community": 3,
       "norm_label": ".formattransitsummary()"
     },
     {
       "label": ".normalizeDailyContent()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L425",
+      "source_location": "L433",
       "id": "services_aicontent_aicontentservice_normalizedailycontent",
-      "community": 4,
+      "community": 3,
       "norm_label": ".normalizedailycontent()"
     },
     {
       "label": ".transitToAspectEntry()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L465",
+      "source_location": "L473",
       "id": "services_aicontent_aicontentservice_transittoaspectentry",
-      "community": 4,
+      "community": 3,
       "norm_label": ".transittoaspectentry()"
     },
     {
       "label": ".normalizeBadge()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L475",
+      "source_location": "L483",
       "id": "services_aicontent_aicontentservice_normalizebadge",
-      "community": 4,
+      "community": 3,
       "norm_label": ".normalizebadge()"
     },
     {
       "label": ".normalizeQuality()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L481",
+      "source_location": "L489",
       "id": "services_aicontent_aicontentservice_normalizequality",
-      "community": 4,
+      "community": 3,
       "norm_label": ".normalizequality()"
     },
     {
       "label": ".requiredText()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L487",
+      "source_location": "L495",
       "id": "services_aicontent_aicontentservice_requiredtext",
-      "community": 4,
+      "community": 3,
       "norm_label": ".requiredtext()"
     },
     {
       "label": ".shortStatus()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L492",
+      "source_location": "L500",
       "id": "services_aicontent_aicontentservice_shortstatus",
-      "community": 4,
+      "community": 3,
       "norm_label": ".shortstatus()"
     },
     {
       "label": ".clampScore()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L496",
+      "source_location": "L504",
       "id": "services_aicontent_aicontentservice_clampscore",
-      "community": 4,
+      "community": 3,
       "norm_label": ".clampscore()"
     },
     {
       "label": ".transitOrbValue()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L502",
+      "source_location": "L510",
       "id": "services_aicontent_aicontentservice_transitorbvalue",
-      "community": 4,
+      "community": 3,
       "norm_label": ".transitorbvalue()"
     },
     {
       "label": ".transitImportance()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L508",
+      "source_location": "L516",
       "id": "services_aicontent_aicontentservice_transitimportance",
-      "community": 4,
+      "community": 3,
       "norm_label": ".transitimportance()"
     },
     {
       "label": ".generateRuleBasedChartInterpretation()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L514",
+      "source_location": "L522",
       "id": "services_aicontent_aicontentservice_generaterulebasedchartinterpretation",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generaterulebasedchartinterpretation()"
     },
     {
       "label": ".generateRuleBasedCompatibility()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L533",
+      "source_location": "L541",
       "id": "services_aicontent_aicontentservice_generaterulebasedcompatibility",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generaterulebasedcompatibility()"
     },
     {
       "label": ".sanitizeJSON()",
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
-      "source_location": "L572",
+      "source_location": "L580",
       "id": "services_aicontent_aicontentservice_sanitizejson",
-      "community": 4,
+      "community": 3,
       "norm_label": ".sanitizejson()"
+    },
+    {
+      "label": ".repairTruncatedJSON()",
+      "file_type": "code",
+      "source_file": "backend/src/services/aiContent.ts",
+      "source_location": "L620",
+      "id": "services_aicontent_aicontentservice_repairtruncatedjson",
+      "community": 3,
+      "norm_label": ".repairtruncatedjson()"
     },
     {
       "label": "astrologyFormatter.ts",
@@ -2956,6 +3091,42 @@
       "norm_label": ".mapdbusertouser()"
     },
     {
+      "label": "chart.service.ts",
+      "file_type": "code",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L1",
+      "id": "backend_src_services_chart_service_ts",
+      "community": 2,
+      "norm_label": "chart.service.ts"
+    },
+    {
+      "label": "ChartService",
+      "file_type": "code",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L9",
+      "id": "services_chart_service_chartservice",
+      "community": 2,
+      "norm_label": "chartservice"
+    },
+    {
+      "label": ".enqueueChartCalculation()",
+      "file_type": "code",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L13",
+      "id": "services_chart_service_chartservice_enqueuechartcalculation",
+      "community": 2,
+      "norm_label": ".enqueuechartcalculation()"
+    },
+    {
+      "label": ".calculateAllChartsForUser()",
+      "file_type": "code",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L24",
+      "id": "services_chart_service_chartservice_calculateallchartsforuser",
+      "community": 2,
+      "norm_label": ".calculateallchartsforuser()"
+    },
+    {
       "label": "llmProvider.ts",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
@@ -2968,7 +3139,7 @@
       "label": "selectApiKey()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L37",
+      "source_location": "L38",
       "id": "services_llmprovider_selectapikey",
       "community": 7,
       "norm_label": "selectapikey()"
@@ -2977,7 +3148,7 @@
       "label": "maskKey()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L57",
+      "source_location": "L58",
       "id": "services_llmprovider_maskkey",
       "community": 7,
       "norm_label": "maskkey()"
@@ -2986,7 +3157,7 @@
       "label": "AnthropicProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L67",
+      "source_location": "L68",
       "id": "services_llmprovider_anthropicprovider",
       "community": 7,
       "norm_label": "anthropicprovider"
@@ -2995,7 +3166,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L73",
+      "source_location": "L74",
       "id": "services_llmprovider_anthropicprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3004,7 +3175,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L79",
+      "source_location": "L80",
       "id": "services_llmprovider_anthropicprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3013,7 +3184,7 @@
       "label": "NvidiaProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L141",
+      "source_location": "L142",
       "id": "services_llmprovider_nvidiaprovider",
       "community": 7,
       "norm_label": "nvidiaprovider"
@@ -3022,7 +3193,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L148",
+      "source_location": "L149",
       "id": "services_llmprovider_nvidiaprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3031,7 +3202,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L155",
+      "source_location": "L156",
       "id": "services_llmprovider_nvidiaprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3040,7 +3211,7 @@
       "label": "GeminiProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L222",
+      "source_location": "L226",
       "id": "services_llmprovider_geminiprovider",
       "community": 7,
       "norm_label": "geminiprovider"
@@ -3049,7 +3220,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L228",
+      "source_location": "L232",
       "id": "services_llmprovider_geminiprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3058,7 +3229,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L234",
+      "source_location": "L238",
       "id": "services_llmprovider_geminiprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3067,7 +3238,7 @@
       "label": "GroqProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L304",
+      "source_location": "L310",
       "id": "services_llmprovider_groqprovider",
       "community": 7,
       "norm_label": "groqprovider"
@@ -3076,7 +3247,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L310",
+      "source_location": "L316",
       "id": "services_llmprovider_groqprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3085,7 +3256,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L316",
+      "source_location": "L322",
       "id": "services_llmprovider_groqprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3094,7 +3265,7 @@
       "label": "OpencodeProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L371",
+      "source_location": "L381",
       "id": "services_llmprovider_opencodeprovider",
       "community": 7,
       "norm_label": "opencodeprovider"
@@ -3103,7 +3274,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L378",
+      "source_location": "L388",
       "id": "services_llmprovider_opencodeprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3112,7 +3283,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L385",
+      "source_location": "L395",
       "id": "services_llmprovider_opencodeprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3121,7 +3292,7 @@
       "label": "OpenRouterProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L459",
+      "source_location": "L470",
       "id": "services_llmprovider_openrouterprovider",
       "community": 7,
       "norm_label": "openrouterprovider"
@@ -3130,7 +3301,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L466",
+      "source_location": "L477",
       "id": "services_llmprovider_openrouterprovider_constructor",
       "community": 7,
       "norm_label": ".constructor()"
@@ -3139,7 +3310,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L473",
+      "source_location": "L484",
       "id": "services_llmprovider_openrouterprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3148,7 +3319,7 @@
       "label": "ResilientLLMProvider",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L544",
+      "source_location": "L558",
       "id": "services_llmprovider_resilientllmprovider",
       "community": 7,
       "norm_label": "resilientllmprovider"
@@ -3157,7 +3328,7 @@
       "label": ".isAvailable()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L547",
+      "source_location": "L562",
       "id": "services_llmprovider_resilientllmprovider_isavailable",
       "community": 7,
       "norm_label": ".isavailable()"
@@ -3166,7 +3337,7 @@
       "label": ".complete()",
       "file_type": "code",
       "source_file": "backend/src/services/llmProvider.ts",
-      "source_location": "L551",
+      "source_location": "L566",
       "id": "services_llmprovider_resilientllmprovider_complete",
       "community": 7,
       "norm_label": ".complete()"
@@ -3177,7 +3348,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L1",
       "id": "backend_src_services_vedicastrology_ts",
-      "community": 8,
+      "community": 2,
       "norm_label": "vedicastrology.ts"
     },
     {
@@ -3186,7 +3357,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L39",
       "id": "services_vedicastrology_sanitizenumber",
-      "community": 8,
+      "community": 2,
       "norm_label": "sanitizenumber()"
     },
     {
@@ -3195,7 +3366,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L46",
       "id": "services_vedicastrology_normalizeangle",
-      "community": 8,
+      "community": 2,
       "norm_label": "normalizeangle()"
     },
     {
@@ -3204,7 +3375,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L51",
       "id": "services_vedicastrology_getsignfromlongitude",
-      "community": 8,
+      "community": 2,
       "norm_label": "getsignfromlongitude()"
     },
     {
@@ -3213,7 +3384,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L58",
       "id": "services_vedicastrology_getsignindex",
-      "community": 8,
+      "community": 2,
       "norm_label": "getsignindex()"
     },
     {
@@ -3222,7 +3393,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L63",
       "id": "services_vedicastrology_getdegreeinsign",
-      "community": 8,
+      "community": 2,
       "norm_label": "getdegreeinsign()"
     },
     {
@@ -3231,7 +3402,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L68",
       "id": "services_vedicastrology_getangulardistance",
-      "community": 8,
+      "community": 2,
       "norm_label": "getangulardistance()"
     },
     {
@@ -3249,7 +3420,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L97",
       "id": "services_vedicastrology_tosidereallongitude",
-      "community": 8,
+      "community": 2,
       "norm_label": "tosidereallongitude()"
     },
     {
@@ -3258,7 +3429,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L101",
       "id": "services_vedicastrology_calculatenakshatra",
-      "community": 8,
+      "community": 2,
       "norm_label": "calculatenakshatra()"
     },
     {
@@ -3267,7 +3438,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L120",
       "id": "services_vedicastrology_getsegmentindex",
-      "community": 8,
+      "community": 2,
       "norm_label": "getsegmentindex()"
     },
     {
@@ -3276,7 +3447,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L125",
       "id": "services_vedicastrology_getdivisionaldegree",
-      "community": 8,
+      "community": 2,
       "norm_label": "getdivisionaldegree()"
     },
     {
@@ -3285,7 +3456,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L131",
       "id": "services_vedicastrology_gethorasign",
-      "community": 8,
+      "community": 2,
       "norm_label": "gethorasign()"
     },
     {
@@ -3294,7 +3465,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L143",
       "id": "services_vedicastrology_getchaturthamsasign",
-      "community": 8,
+      "community": 2,
       "norm_label": "getchaturthamsasign()"
     },
     {
@@ -3303,7 +3474,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L149",
       "id": "services_vedicastrology_getnavamsasign",
-      "community": 8,
+      "community": 2,
       "norm_label": "getnavamsasign()"
     },
     {
@@ -3312,7 +3483,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L161",
       "id": "services_vedicastrology_getdasamsasign",
-      "community": 8,
+      "community": 2,
       "norm_label": "getdasamsasign()"
     },
     {
@@ -3321,7 +3492,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L168",
       "id": "services_vedicastrology_getdivisionalsign",
-      "community": 8,
+      "community": 2,
       "norm_label": "getdivisionalsign()"
     },
     {
@@ -3330,7 +3501,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L177",
       "id": "services_vedicastrology_getdivisionaldegreeforchart",
-      "community": 8,
+      "community": 2,
       "norm_label": "getdivisionaldegreeforchart()"
     },
     {
@@ -3339,7 +3510,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L186",
       "id": "services_vedicastrology_iscombust",
-      "community": 8,
+      "community": 2,
       "norm_label": "iscombust()"
     },
     {
@@ -3348,7 +3519,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L200",
       "id": "services_vedicastrology_createhouses",
-      "community": 8,
+      "community": 2,
       "norm_label": "createhouses()"
     },
     {
@@ -3357,7 +3528,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L207",
       "id": "services_vedicastrology_calculatedivisional",
-      "community": 8,
+      "community": 2,
       "norm_label": "calculatedivisional()"
     },
     {
@@ -3366,7 +3537,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L263",
       "id": "services_vedicastrology_calculatevimshottaridasha",
-      "community": 8,
+      "community": 2,
       "norm_label": "calculatevimshottaridasha()"
     },
     {
@@ -3375,7 +3546,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L307",
       "id": "services_vedicastrology_detectyogas",
-      "community": 8,
+      "community": 2,
       "norm_label": "detectyogas()"
     },
     {
@@ -3384,7 +3555,7 @@
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L332",
       "id": "services_vedicastrology_calculatevedicchart",
-      "community": 8,
+      "community": 2,
       "norm_label": "calculatevedicchart()"
     },
     {
@@ -3393,7 +3564,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_notification_service_ts",
-      "community": 16,
+      "community": 19,
       "norm_label": "notification.service.ts"
     },
     {
@@ -3402,7 +3573,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L6",
       "id": "services_notification_service_notificationservice",
-      "community": 16,
+      "community": 19,
       "norm_label": "notificationservice"
     },
     {
@@ -3411,7 +3582,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L9",
       "id": "services_notification_service_notificationservice_constructor",
-      "community": 16,
+      "community": 19,
       "norm_label": ".constructor()"
     },
     {
@@ -3420,7 +3591,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L16",
       "id": "services_notification_service_notificationservice_registertoken",
-      "community": 16,
+      "community": 19,
       "norm_label": ".registertoken()"
     },
     {
@@ -3429,7 +3600,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L49",
       "id": "services_notification_service_notificationservice_deactivatetoken",
-      "community": 16,
+      "community": 19,
       "norm_label": ".deactivatetoken()"
     },
     {
@@ -3438,7 +3609,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L59",
       "id": "services_notification_service_notificationservice_sendtouser",
-      "community": 16,
+      "community": 19,
       "norm_label": ".sendtouser()"
     },
     {
@@ -3447,7 +3618,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L115",
       "id": "services_notification_service_notificationservice_handletickets",
-      "community": 16,
+      "community": 19,
       "norm_label": ".handletickets()"
     },
     {
@@ -3456,7 +3627,7 @@
       "source_file": "backend/src/services/notification.service.ts",
       "source_location": "L134",
       "id": "services_notification_service_notificationservice_broadcast",
-      "community": 16,
+      "community": 19,
       "norm_label": ".broadcast()"
     },
     {
@@ -3472,7 +3643,7 @@
       "label": "buildUserProfile()",
       "file_type": "code",
       "source_file": "backend/src/services/userService.ts",
-      "source_location": "L38",
+      "source_location": "L39",
       "id": "services_userservice_builduserprofile",
       "community": 10,
       "norm_label": "builduserprofile()"
@@ -3483,34 +3654,43 @@
       "source_file": "backend/src/services/email.service.ts",
       "source_location": "L1",
       "id": "backend_src_services_email_service_ts",
-      "community": 23,
+      "community": 28,
       "norm_label": "email.service.ts"
     },
     {
       "label": "EmailService",
       "file_type": "code",
       "source_file": "backend/src/services/email.service.ts",
-      "source_location": "L11",
+      "source_location": "L12",
       "id": "services_email_service_emailservice",
-      "community": 23,
+      "community": 28,
       "norm_label": "emailservice"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "backend/src/services/email.service.ts",
+      "source_location": "L15",
+      "id": "services_email_service_emailservice_constructor",
+      "community": 28,
+      "norm_label": ".constructor()"
     },
     {
       "label": ".sendPasswordResetEmail()",
       "file_type": "code",
       "source_file": "backend/src/services/email.service.ts",
-      "source_location": "L15",
+      "source_location": "L26",
       "id": "services_email_service_emailservice_sendpasswordresetemail",
-      "community": 23,
+      "community": 28,
       "norm_label": ".sendpasswordresetemail()"
     },
     {
       "label": ".sendEmail()",
       "file_type": "code",
       "source_file": "backend/src/services/email.service.ts",
-      "source_location": "L45",
+      "source_location": "L55",
       "id": "services_email_service_emailservice_sendemail",
-      "community": 23,
+      "community": 28,
       "norm_label": ".sendemail()"
     },
     {
@@ -3591,7 +3771,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L313",
       "id": "services_astrology_getorb",
-      "community": 1,
+      "community": 5,
       "norm_label": "getorb()"
     },
     {
@@ -3600,7 +3780,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L323",
       "id": "services_astrology_isaspectapplying",
-      "community": 1,
+      "community": 5,
       "norm_label": "isaspectapplying()"
     },
     {
@@ -3699,7 +3879,7 @@
       "source_file": "backend/src/services/astrology.ts",
       "source_location": "L964",
       "id": "services_astrology_calculateusertransits",
-      "community": 1,
+      "community": 5,
       "norm_label": "calculateusertransits()"
     },
     {
@@ -3726,7 +3906,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L1",
       "id": "backend_src_services_vedicastrology_test_ts",
-      "community": 5,
+      "community": 31,
       "norm_label": "vedicastrology.test.ts"
     },
     {
@@ -3735,7 +3915,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L11",
       "id": "services_vedicastrology_test_tropicalfromsidereal",
-      "community": 5,
+      "community": 31,
       "norm_label": "tropicalfromsidereal()"
     },
     {
@@ -3744,7 +3924,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L15",
       "id": "services_vedicastrology_test_position",
-      "community": 5,
+      "community": 31,
       "norm_label": "position()"
     },
     {
@@ -3753,7 +3933,7 @@
       "source_file": "backend/src/services/vedicAstrology.test.ts",
       "source_location": "L31",
       "id": "services_vedicastrology_test_planet",
-      "community": 5,
+      "community": 31,
       "norm_label": "planet()"
     },
     {
@@ -3762,7 +3942,7 @@
       "source_file": "backend/src/services/astrology.test.ts",
       "source_location": "L1",
       "id": "backend_src_services_astrology_test_ts",
-      "community": 1,
+      "community": 5,
       "norm_label": "astrology.test.ts"
     },
     {
@@ -3771,7 +3951,7 @@
       "source_file": "backend/src/services/astrology.test.ts",
       "source_location": "L5",
       "id": "services_astrology_test_position",
-      "community": 1,
+      "community": 5,
       "norm_label": "position()"
     },
     {
@@ -3780,25 +3960,25 @@
       "source_file": "backend/src/services/settingsService.ts",
       "source_location": "L1",
       "id": "backend_src_services_settingsservice_ts",
-      "community": 26,
+      "community": 22,
       "norm_label": "settingsservice.ts"
     },
     {
       "label": "getUserSettings()",
       "file_type": "code",
       "source_file": "backend/src/services/settingsService.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "id": "services_settingsservice_getusersettings",
-      "community": 26,
+      "community": 22,
       "norm_label": "getusersettings()"
     },
     {
       "label": "updateUserSettings()",
       "file_type": "code",
       "source_file": "backend/src/services/settingsService.ts",
-      "source_location": "L52",
+      "source_location": "L62",
       "id": "services_settingsservice_updateusersettings",
-      "community": 26,
+      "community": 22,
       "norm_label": "updateusersettings()"
     },
     {
@@ -3834,7 +4014,7 @@
       "source_file": "backend/src/services/transits/orbCalculator.ts",
       "source_location": "L1",
       "id": "backend_src_services_transits_orbcalculator_ts",
-      "community": 40,
+      "community": 47,
       "norm_label": "orbcalculator.ts"
     },
     {
@@ -3843,7 +4023,7 @@
       "source_file": "backend/src/services/transits/orbCalculator.ts",
       "source_location": "L6",
       "id": "transits_orbcalculator_calculateorb",
-      "community": 40,
+      "community": 47,
       "norm_label": "calculateorb()"
     },
     {
@@ -3991,19 +4171,10 @@
       "norm_label": "upsertpersistentevent()"
     },
     {
-      "label": "upsertClosestEvent()",
-      "file_type": "code",
-      "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L406",
-      "id": "transits_transitengine_upsertclosestevent",
-      "community": 1,
-      "norm_label": "upsertclosestevent()"
-    },
-    {
       "label": "formatEventDate()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L413",
+      "source_location": "L415",
       "id": "transits_transitengine_formateventdate",
       "community": 1,
       "norm_label": "formateventdate()"
@@ -4012,7 +4183,7 @@
       "label": "natalPlanetLabel()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L422",
+      "source_location": "L424",
       "id": "transits_transitengine_natalplanetlabel",
       "community": 1,
       "norm_label": "natalplanetlabel()"
@@ -4021,7 +4192,7 @@
       "label": "aspectVerb()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L431",
+      "source_location": "L433",
       "id": "transits_transitengine_aspectverb",
       "community": 1,
       "norm_label": "aspectverb()"
@@ -4030,7 +4201,7 @@
       "label": "aspectTitleSymbol()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L445",
+      "source_location": "L447",
       "id": "transits_transitengine_aspecttitlesymbol",
       "community": 1,
       "norm_label": "aspecttitlesymbol()"
@@ -4039,7 +4210,7 @@
       "label": "formatPosition()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L450",
+      "source_location": "L452",
       "id": "transits_transitengine_formatposition",
       "community": 1,
       "norm_label": "formatposition()"
@@ -4048,7 +4219,7 @@
       "label": "isOuterPlanet()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L456",
+      "source_location": "L458",
       "id": "transits_transitengine_isouterplanet",
       "community": 1,
       "norm_label": "isouterplanet()"
@@ -4057,17 +4228,71 @@
       "label": "generateSkyAspectInterpretation()",
       "file_type": "code",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L460",
+      "source_location": "L462",
       "id": "transits_transitengine_generateskyaspectinterpretation",
       "community": 1,
       "norm_label": "generateskyaspectinterpretation()"
+    },
+    {
+      "label": "TransitCard()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/TransitCard.tsx",
+      "source_location": "L14",
+      "community": 48,
+      "norm_label": "transitcard()",
+      "id": "components_transitcard_transitcard"
+    },
+    {
+      "label": ".googleAuth()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L225",
+      "community": 12,
+      "norm_label": ".googleauth()",
+      "id": "controllers_authcontroller_authcontroller_googleauth"
+    },
+    {
+      "label": ".googleCallback()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L234",
+      "community": 12,
+      "norm_label": ".googlecallback()",
+      "id": "controllers_authcontroller_authcontroller_googlecallback"
+    },
+    {
+      "label": ".appleAuth()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L248",
+      "community": 12,
+      "norm_label": ".appleauth()",
+      "id": "controllers_authcontroller_authcontroller_appleauth"
+    },
+    {
+      "label": ".calculateUserChart()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L335",
+      "community": 12,
+      "norm_label": ".calculateuserchart()",
+      "id": "controllers_authcontroller_authcontroller_calculateuserchart"
+    },
+    {
+      "label": "upsertClosestEvent()",
+      "file_type": "code",
+      "source_file": "backend/src/services/transits/transitEngine.ts",
+      "source_location": "L406",
+      "community": 1,
+      "norm_label": "upsertclosestevent()",
+      "id": "transits_transitengine_upsertclosestevent"
     },
     {
       "label": "handleSend()",
       "file_type": "code",
       "source_file": "frontend/src/screens/ChatScreen.tsx",
       "source_location": "L81",
-      "community": 41,
+      "community": 35,
       "norm_label": "handlesend()",
       "id": "screens_chatscreen_handlesend"
     },
@@ -4085,7 +4310,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/MoodRing.tsx",
       "source_location": "L17",
-      "community": 32,
+      "community": 49,
       "norm_label": "moodring()",
       "id": "components_moodring_moodring"
     },
@@ -4094,7 +4319,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarBackground.tsx",
       "source_location": "L1",
-      "community": 42,
+      "community": 50,
       "norm_label": "costarbackground.tsx",
       "id": "frontend_src_components_costarbackground_tsx"
     },
@@ -4103,7 +4328,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarBackground.tsx",
       "source_location": "L22",
-      "community": 42,
+      "community": 50,
       "norm_label": "generatestars()",
       "id": "components_costarbackground_generatestars"
     },
@@ -4112,7 +4337,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarCard.tsx",
       "source_location": "L1",
-      "community": 43,
+      "community": 51,
       "norm_label": "costarcard.tsx",
       "id": "frontend_src_components_costarcard_tsx"
     },
@@ -4121,7 +4346,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarCard.tsx",
       "source_location": "L65",
-      "community": 43,
+      "community": 51,
       "norm_label": "gettextstyle()",
       "id": "components_costarcard_gettextstyle"
     },
@@ -4130,7 +4355,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarButton.tsx",
       "source_location": "L1",
-      "community": 27,
+      "community": 34,
       "norm_label": "costarbutton.tsx",
       "id": "frontend_src_components_costarbutton_tsx"
     },
@@ -4139,7 +4364,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarButton.tsx",
       "source_location": "L35",
-      "community": 27,
+      "community": 34,
       "norm_label": "getbuttonstyle()",
       "id": "components_costarbutton_getbuttonstyle"
     },
@@ -4148,7 +4373,7 @@
       "file_type": "code",
       "source_file": "frontend/src/components/CostarButton.tsx",
       "source_location": "L74",
-      "community": 27,
+      "community": 34,
       "norm_label": "gettextstyle()",
       "id": "components_costarbutton_gettextstyle"
     },
@@ -4184,7 +4409,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/vedicAstrology.ts",
       "source_location": "L147",
-      "community": 8,
+      "community": 2,
       "norm_label": "getrudramsasign()",
       "id": "services_vedicastrology_getrudramsasign"
     },
@@ -4220,7 +4445,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/TodayScreen.tsx",
       "source_location": "L43",
-      "community": 21,
+      "community": 26,
       "norm_label": "getcontentforcategory()",
       "id": "screens_todayscreen_getcontentforcategory"
     },
@@ -4229,7 +4454,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L93",
-      "community": 3,
+      "community": 4,
       "norm_label": "fetchlocations()",
       "id": "screens_profilescreen_fetchlocations"
     },
@@ -4238,7 +4463,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L148",
-      "community": 3,
+      "community": 4,
       "norm_label": "handledatechange()",
       "id": "screens_profilescreen_handledatechange"
     },
@@ -4247,7 +4472,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L158",
-      "community": 3,
+      "community": 4,
       "norm_label": "handletimechange()",
       "id": "screens_profilescreen_handletimechange"
     },
@@ -4256,7 +4481,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L170",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleopentimepicker()",
       "id": "screens_profilescreen_handleopentimepicker"
     },
@@ -4265,7 +4490,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L181",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleopendatepicker()",
       "id": "screens_profilescreen_handleopendatepicker"
     },
@@ -4274,7 +4499,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L190",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlelocationselect()",
       "id": "screens_profilescreen_handlelocationselect"
     },
@@ -4283,7 +4508,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L202",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlesave()",
       "id": "screens_profilescreen_handlesave"
     },
@@ -4292,7 +4517,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L219",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlecancel()",
       "id": "screens_profilescreen_handlecancel"
     },
@@ -4301,7 +4526,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L231",
-      "community": 3,
+      "community": 4,
       "norm_label": "getzodiacsign()",
       "id": "screens_profilescreen_getzodiacsign"
     },
@@ -4310,7 +4535,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L255",
-      "community": 3,
+      "community": 4,
       "norm_label": "formatdate()",
       "id": "screens_profilescreen_formatdate"
     },
@@ -4319,7 +4544,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L265",
-      "community": 3,
+      "community": 4,
       "norm_label": "formattime()",
       "id": "screens_profilescreen_formattime"
     },
@@ -4328,7 +4553,7 @@
       "file_type": "code",
       "source_file": "frontend/src/screens/ProfileScreen.tsx",
       "source_location": "L290",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlelogout()",
       "id": "screens_profilescreen_handlelogout"
     },
@@ -4337,7 +4562,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L355",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getelement()",
       "id": "services_aicontent_aicontentservice_getelement"
     },
@@ -4346,7 +4571,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L368",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getmoonphaseadvice()",
       "id": "services_aicontent_aicontentservice_getmoonphaseadvice"
     },
@@ -4355,7 +4580,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L382",
-      "community": 4,
+      "community": 3,
       "norm_label": ".gettheme()",
       "id": "services_aicontent_aicontentservice_gettheme"
     },
@@ -4364,7 +4589,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L395",
-      "community": 4,
+      "community": 3,
       "norm_label": ".generateluckynumbers()",
       "id": "services_aicontent_aicontentservice_generateluckynumbers"
     },
@@ -4373,7 +4598,7 @@
       "file_type": "code",
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L409",
-      "community": 4,
+      "community": 3,
       "norm_label": ".hashstring()",
       "id": "services_aicontent_aicontentservice_hashstring"
     }
@@ -4411,6 +4636,17 @@
       "confidence_score": 1.0,
       "source": "frontend_src_app_tsx",
       "target": "utils_notifications_registerforpushnotificationsasync"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "services_subscriptionservice_subscriptionservice",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -4709,28 +4945,6 @@
       "target": "services_api_apiservice_getvedicchart"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "frontend_src_screens_settingsscreen_tsx",
-      "target": "components_settingscomponents_settingsheader"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/screens/SettingsScreen.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "frontend_src_screens_settingsscreen_tsx",
-      "target": "components_settingscomponents_settingssection"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
@@ -4769,6 +4983,28 @@
       "confidence_score": 1.0,
       "source": "frontend_src_screens_settingsscreen_tsx",
       "target": "screens_settingsscreen_handlelocationselect"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/SettingsScreen.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_screens_settingsscreen_tsx",
+      "target": "components_settingscomponents_settingsheader"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/SettingsScreen.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_screens_settingsscreen_tsx",
+      "target": "components_settingscomponents_settingssection"
     },
     {
       "relation": "contains",
@@ -4829,6 +5065,16 @@
       "confidence_score": 1.0,
       "source": "frontend_src_screens_settingsscreen_tsx",
       "target": "screens_settingsscreen_handledailytimechange"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/TransitsScreen.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "frontend_src_screens_transitsscreen_tsx",
+      "target": "screens_transitsscreen_handleperiodchange",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -5249,6 +5495,47 @@
       "target": "components_stellarcard_gettextstyle"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "frontend_src_components_paywall_tsx",
+      "target": "services_subscriptionservice_subscriptionservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "frontend_src_components_paywall_tsx",
+      "target": "components_paywall_checkconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "frontend_src_components_paywall_tsx",
+      "target": "components_paywall_handlepurchase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Paywall.tsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "frontend_src_components_paywall_tsx",
+      "target": "components_paywall_handlerestore",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/CompatibilityRing.tsx",
@@ -5379,6 +5666,17 @@
       "confidence_score": 1.0,
       "source": "frontend_src_components_stellarbackground_tsx",
       "target": "components_stellarbackground_generatestars"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useAuth.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_src_hooks_useauth_ts",
+      "target": "services_subscriptionservice_subscriptionservice",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -5934,6 +6232,172 @@
       "confidence_score": 1.0,
       "source": "services_api_apiservice_logout",
       "target": "services_api_apiservice_cleartokens"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_src_services_subscriptionservice_ts",
+      "target": "services_subscriptionservice_subscriptionservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_getinstance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_initialize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_getofferings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_purchasepackage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_restorepurchases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice",
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_initialize",
+      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_purchasepackage",
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_restorepurchases",
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_restorepurchases",
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/services/subscriptionService.ts",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -6819,6 +7283,17 @@
       "target": "utils_errors_notfounderror"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/settingsService.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_services_settingsservice_ts",
+      "target": "utils_errors_notfounderror",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/utils/errors.ts",
@@ -7048,6 +7523,16 @@
       "target": "controllers_usercontroller_usercontroller"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_controllers_authcontroller_ts",
+      "target": "controllers_authcontroller_authcontroller"
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -7057,16 +7542,6 @@
       "confidence_score": 1.0,
       "source": "backend_src_controllers_authcontroller_ts",
       "target": "services_vedicastrology_calculatevedicchart"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "backend_src_controllers_authcontroller_ts",
-      "target": "controllers_authcontroller_authcontroller"
     },
     {
       "relation": "method",
@@ -7152,6 +7627,27 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/controllers/authController.ts",
+      "source_location": "L204",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "controllers_authcontroller_authcontroller",
+      "target": "controllers_authcontroller_authcontroller_sociallogin"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_routes_auth_ts",
+      "target": "controllers_authcontroller_authcontroller"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L173",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -7182,32 +7678,11 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/controllers/authController.ts",
-      "source_location": "L204",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "controllers_authcontroller_authcontroller",
-      "target": "controllers_authcontroller_authcontroller_sociallogin"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L263",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "controllers_authcontroller_authcontroller",
       "target": "controllers_authcontroller_authcontroller_calculateuserchart"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/routes/auth.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "backend_src_routes_auth_ts",
-      "target": "controllers_authcontroller_authcontroller"
     },
     {
       "relation": "calls",
@@ -7906,6 +8381,16 @@
       "target": "services_aicontent_aicontentservice_sanitizejson"
     },
     {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/aiContent.ts",
+      "source_location": "L620",
+      "weight": 1.0,
+      "source": "services_aicontent_aicontentservice",
+      "target": "services_aicontent_aicontentservice_repairtruncatedjson",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -7998,6 +8483,17 @@
       "confidence_score": 1.0,
       "source": "services_aicontent_aicontentservice_generatedailyhoroscope",
       "target": "services_aicontent_aicontentservice_sanitizejson"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/aiContent.ts",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "services_aicontent_aicontentservice_generatedailyhoroscope",
+      "target": "services_aicontent_aicontentservice_repairtruncatedjson",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -8543,6 +9039,47 @@
       "target": "services_auth_service_authservice_parseduration"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_src_services_chart_service_ts",
+      "target": "services_vedicastrology_calculatevedicchart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_src_services_chart_service_ts",
+      "target": "services_chart_service_chartservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "services_chart_service_chartservice",
+      "target": "services_chart_service_chartservice_enqueuechartcalculation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/chart.service.ts",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "services_chart_service_chartservice",
+      "target": "services_chart_service_chartservice_calculateallchartsforuser",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/services/llmProvider.ts",
@@ -8703,6 +9240,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/services/llmProvider.ts",
+      "source_location": "L600",
+      "weight": 1.0,
+      "source": "services_llmprovider_resilientllmprovider_complete",
+      "target": "services_llmprovider_selectapikey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/llmProvider.ts",
       "source_location": "L112",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -8763,6 +9311,17 @@
       "confidence_score": 1.0,
       "source": "services_llmprovider_openrouterprovider_complete",
       "target": "services_llmprovider_maskkey"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/llmProvider.ts",
+      "source_location": "L616",
+      "weight": 1.0,
+      "source": "services_llmprovider_resilientllmprovider_complete",
+      "target": "services_llmprovider_maskkey",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -9805,6 +10364,16 @@
       "confidence_score": 1.0,
       "source": "backend_src_services_email_service_ts",
       "target": "services_email_service_emailservice"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/email.service.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "services_email_service_emailservice",
+      "target": "services_email_service_emailservice_constructor",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -10898,16 +11467,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/src/services/transits/transitEngine.ts",
-      "source_location": "L228",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "backend_src_services_transits_transitengine_ts",
-      "target": "transits_transitengine_upsertclosestevent"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/src/services/transits/transitEngine.ts",
       "source_location": "L235",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -10973,6 +11532,16 @@
       "confidence_score": 1.0,
       "source": "backend_src_services_transits_transitengine_ts",
       "target": "transits_transitengine_generateskyaspectinterpretation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/transits/transitEngine.ts",
+      "source_location": "L228",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "backend_src_services_transits_transitengine_ts",
+      "target": "transits_transitengine_upsertclosestevent"
     },
     {
       "relation": "calls",
@@ -11170,5 +11739,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0ae140461dcdda8915c77441414657cf29e5b83e"
+  "built_at_commit": "4bbc80886e5a60320ae7dd41d5a7e5f4722e2f8c"
 }

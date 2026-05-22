@@ -2,6 +2,7 @@
 node_modules/
 dist/
 **/package-lock.json
+*.ipa
 
 # Graphify output
 graphify-out/manifest.json    # mtime-based, breaks after git clone

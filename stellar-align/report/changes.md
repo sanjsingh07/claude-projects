@@ -1199,3 +1199,22 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - This avoids using unprofessional/unsecured IP links (`http://92.4.221.191:3000`) which are risky for App Store approval.
 - Updated `RegisterStartScreen.tsx`, `Paywall.tsx`, and `SettingsScreen.tsx` to use the internal modal.
 - Benefits: Works offline, faster UX, professional native look, and safer for Apple Review.
+
+## [Fri May 22 22:26:35 IST 2026] Fixed TestFlight Startup Crash Path
+- **What was changed and why**: Fixed a release-only startup crash path where EAS/TestFlight builds could render the auth screens without local `.env` Google client IDs. Expo AuthSession throws when platform client IDs are `undefined`, which can crash immediately on launch in cloud-built binaries.
+- **Summary of changes**:
+  - Updated login and registration auth screens to pass stable fallback Google client ID strings into `useIdTokenAuthRequest` instead of `undefined`.
+  - Kept the existing Google sign-in guard so missing Google configuration still shows the fallback alert instead of attempting sign-in.
+  - Cleaned iOS Expo config by removing manual duplicated `CFBundleURLTypes` and relying on the top-level Expo `scheme` entries.
+  - Made the EAS production profile explicitly use the `production` environment.
+  - Preserved the SDK-compatible DateTimePicker pin and explicit `babel-preset-expo` dependency already present in the working tree.
+  - Ignored local `.ipa` build artifacts so downloaded TestFlight/export files are not committed.
+- **Files modified**:
+  - `.gitignore`
+  - `stellar-align/frontend/app.json`
+  - `stellar-align/frontend/eas.json`
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/report/changes.md`

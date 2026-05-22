@@ -21,16 +21,10 @@
       "bundleIdentifier": "com.stellaralign.app",
       "appleTeamId": "U3C4PQ94A6",
       "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof"
-            ]
-          }
-        ],
         "NSAppTransportSecurity": {
           "AllowsArbitraryLoads": true
-        }
+        },
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
