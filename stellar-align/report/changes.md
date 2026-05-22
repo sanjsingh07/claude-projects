@@ -1218,3 +1218,20 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
   - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
   - `stellar-align/report/changes.md`
+
+## [Sat May 23 00:05:16 IST 2026] Enabled Google Sign-In in EAS Builds
+- **What was changed and why**: Added checked-in fallback Google OAuth client IDs so TestFlight/EAS builds can start Google sign-in even when local `.env` values are not available to the cloud build worker. These client IDs are public OAuth identifiers, not secrets.
+- **Summary of changes**:
+  - Added a shared `googleAuth.ts` config module with public Google client IDs and the iOS redirect scheme.
+  - Updated login and registration screens to use the shared Google auth config instead of reading environment variables directly.
+  - Kept environment variable overrides in the config module for future dev/staging OAuth clients.
+  - Added the `@config` alias to Metro, Babel, and TypeScript configuration.
+- **Files modified**:
+  - `stellar-align/frontend/src/config/googleAuth.ts`
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/frontend/metro.config.js`
+  - `stellar-align/frontend/babel.config.js`
+  - `stellar-align/frontend/tsconfig.json`
+  - `stellar-align/report/changes.md`

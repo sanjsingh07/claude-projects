@@ -1,16 +1,16 @@
-# Graph Report - stellar-align  (2026-05-22)
+# Graph Report - stellar-align  (2026-05-23)
 
 ## Corpus Check
-- 118 files · ~63,381 words
+- 119 files · ~63,313 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 511 nodes · 684 edges · 33 communities detected
+- 512 nodes · 684 edges · 33 communities detected
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4bbc8088`
+- Built from commit: `759e96e6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -73,7 +73,7 @@
 - `calculateTransits()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
 
-## Communities (84 total, 19 thin omitted)
+## Communities (85 total, 19 thin omitted)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.11
@@ -111,7 +111,7 @@ Nodes (4): handleNext(), handleSubmit(), validateStep1(), validateStep2()
 Cohesion: 0.15
 Nodes (4): UserController, formatPlacement(), getSignBadgeType(), buildUserProfile()
 
-### Community 13 - "Community 13"
+### Community 14 - "Community 14"
 Cohesion: 0.22
 Nodes (4): ConflictError, ForbiddenError, UnauthorizedError, ValidationError
 
@@ -139,12 +139,12 @@ Nodes (3): getUserSettings(), updateUserSettings(), NotFoundError
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `calculateVedicChart()` connect `Community 2` to `Community 5`, `Community 6`, `Community 14`, `Community 15`, `Community 31`?**
+- **Why does `calculateVedicChart()` connect `Community 2` to `Community 5`, `Community 6`, `Community 13`, `Community 15`, `Community 31`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Why does `getTransitsForPeriod()` connect `Community 1` to `Community 5`, `Community 30`?**
   _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `AIContentService` connect `Community 3` to `Community 1`, `Community 5`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
   _`getTransitsForPeriod()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Planet` to the rest of the system?**

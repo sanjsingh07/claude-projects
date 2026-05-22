@@ -7,6 +7,10 @@
     "mtime": 1779216737.8849878,
     "hash": "8907df6d6fd5a1710502ffdcb2f31dde"
   },
+  "/Users/jayyy/claude-projects/stellar-align/frontend/src/config/googleAuth.ts": {
+    "mtime": 1779474852.2001836,
+    "hash": "1eccf79f6e6a02d956d2204027dc52b1"
+  },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/navigation/MainNavigator.tsx": {
     "mtime": 1779191253.0119565,
     "hash": "1e7b78f9cd46704086e617c0adb55bf8"
@@ -56,16 +60,16 @@
     "hash": "4e0c27f8e5e67f05da7e4a741a97a727"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx": {
-    "mtime": 1779468923.139943,
-    "hash": "d494cda671f37578272def47325be361"
+    "mtime": 1779474852.2040527,
+    "hash": "dc58ac9c3bd3e7ab0f9505b0ac17ccf5"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx": {
-    "mtime": 1779468923.138407,
-    "hash": "68cef6440f20d20f3937432e4d7eeee6"
+    "mtime": 1779474852.2030308,
+    "hash": "5b2bfa5b98fa30feb652dbb39ce8f806"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/LoginScreen.tsx": {
-    "mtime": 1779468923.136531,
-    "hash": "7d35da421f1cb8f5e6df045ece7f629e"
+    "mtime": 1779474852.2013707,
+    "hash": "61fe3606b994ceb7a6e24b45d9584800"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/StarField.tsx": {
     "mtime": 1776763543.6425853,

@@ -25,14 +25,9 @@ import { StellarButton } from '@components/StellarButton';
 import { StellarBackground } from '@components/StellarBackground';
 import { SignIcon } from '@components/SignIcon';
 import { colors, spacing } from '@theme/theme';
+import { GOOGLE_AUTH, isGoogleAuthConfigured } from '@config/googleAuth';
 
 WebBrowser.maybeCompleteAuthSession();
-
-const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '';
-const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || '';
-const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || '';
-const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '';
-const FALLBACK_GOOGLE_CLIENT_ID = GOOGLE_CLIENT_ID || '';
 
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Login'>>();
@@ -45,22 +40,20 @@ export const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState('');
 
   const googleRedirectUri = AuthSession.makeRedirectUri({
-    scheme: Platform.OS === 'ios' 
-      ? 'com.googleusercontent.apps.945791078641-ena3npefg2g7e4fs6vhsna4e0qkfouof' 
-      : 'stellar-align',
+    scheme: Platform.OS === 'ios' ? GOOGLE_AUTH.iosRedirectScheme : 'stellar-align',
   });
 
   const [request, response, promptAsync] = useIdTokenAuthRequest({
-    iosClientId: GOOGLE_IOS_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID,
-    androidClientId: GOOGLE_ANDROID_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID,
-    webClientId: GOOGLE_WEB_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID,
+    iosClientId: GOOGLE_AUTH.iosClientId,
+    androidClientId: GOOGLE_AUTH.androidClientId,
+    webClientId: GOOGLE_AUTH.webClientId,
     redirectUri: googleRedirectUri,
   });
 
   useEffect(() => {
     console.log('Google Auth Config:', {
       redirectUri: googleRedirectUri,
-      iosClientId: GOOGLE_IOS_CLIENT_ID,
+      iosClientId: GOOGLE_AUTH.iosClientId,
     });
   }, []);
 
@@ -130,7 +123,7 @@ export const LoginScreen: React.FC = () => {
   };
 
   const handleGoogleLogin = async () => {
-    if (!GOOGLE_CLIENT_ID && !GOOGLE_IOS_CLIENT_ID && !GOOGLE_ANDROID_CLIENT_ID && !GOOGLE_WEB_CLIENT_ID) {
+    if (!isGoogleAuthConfigured) {
       Alert.alert('Coming Soon', 'Google Sign-In requires configuration. Please use email/password for now.');
       return;
     }

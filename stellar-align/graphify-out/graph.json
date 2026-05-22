@@ -31,12 +31,21 @@
       "norm_label": "index.ts"
     },
     {
+      "label": "googleAuth.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/config/googleAuth.ts",
+      "source_location": "L1",
+      "id": "frontend_src_config_googleauth_ts",
+      "community": 53,
+      "norm_label": "googleauth.ts"
+    },
+    {
       "label": "MainNavigator.tsx",
       "file_type": "code",
       "source_file": "frontend/src/navigation/MainNavigator.tsx",
       "source_location": "L1",
       "id": "frontend_src_navigation_mainnavigator_tsx",
-      "community": 53,
+      "community": 54,
       "norm_label": "mainnavigator.tsx"
     },
     {
@@ -63,7 +72,7 @@
       "source_file": "frontend/src/utils/secureStorage.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_securestorage_ts",
-      "community": 54,
+      "community": 55,
       "norm_label": "securestorage.ts"
     },
     {
@@ -72,7 +81,7 @@
       "source_file": "frontend/src/utils/googleAuth.ts",
       "source_location": "L1",
       "id": "frontend_src_utils_googleauth_ts",
-      "community": 55,
+      "community": 56,
       "norm_label": "googleauth.ts"
     },
     {
@@ -268,7 +277,7 @@
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
-      "source_location": "L87",
+      "source_location": "L80",
       "id": "auth_registerstartscreen_handlegooglelogin",
       "community": 4,
       "norm_label": "handlegooglelogin()"
@@ -277,7 +286,7 @@
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterStartScreen.tsx",
-      "source_location": "L95",
+      "source_location": "L88",
       "id": "auth_registerstartscreen_handleapplelogin",
       "community": 4,
       "norm_label": "handleapplelogin()"
@@ -295,7 +304,7 @@
       "label": "fetchLocations()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L153",
+      "source_location": "L146",
       "id": "auth_registerscreen_fetchlocations",
       "community": 9,
       "norm_label": "fetchlocations()"
@@ -304,7 +313,7 @@
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L220",
+      "source_location": "L213",
       "id": "auth_registerscreen_handlegooglelogin",
       "community": 9,
       "norm_label": "handlegooglelogin()"
@@ -313,7 +322,7 @@
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L228",
+      "source_location": "L221",
       "id": "auth_registerscreen_handleapplelogin",
       "community": 9,
       "norm_label": "handleapplelogin()"
@@ -322,7 +331,7 @@
       "label": "handleDateChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L251",
+      "source_location": "L244",
       "id": "auth_registerscreen_handledatechange",
       "community": 9,
       "norm_label": "handledatechange()"
@@ -331,7 +340,7 @@
       "label": "handleTimeChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L266",
+      "source_location": "L259",
       "id": "auth_registerscreen_handletimechange",
       "community": 9,
       "norm_label": "handletimechange()"
@@ -340,7 +349,7 @@
       "label": "handleLocationSelect()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L282",
+      "source_location": "L275",
       "id": "auth_registerscreen_handlelocationselect",
       "community": 9,
       "norm_label": "handlelocationselect()"
@@ -349,7 +358,7 @@
       "label": "handleLocationSearchChange()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L313",
+      "source_location": "L306",
       "id": "auth_registerscreen_handlelocationsearchchange",
       "community": 9,
       "norm_label": "handlelocationsearchchange()"
@@ -358,7 +367,7 @@
       "label": "validateStep1()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L318",
+      "source_location": "L311",
       "id": "auth_registerscreen_validatestep1",
       "community": 9,
       "norm_label": "validatestep1()"
@@ -367,7 +376,7 @@
       "label": "validateStep2()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L339",
+      "source_location": "L332",
       "id": "auth_registerscreen_validatestep2",
       "community": 9,
       "norm_label": "validatestep2()"
@@ -376,7 +385,7 @@
       "label": "handleNext()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L355",
+      "source_location": "L348",
       "id": "auth_registerscreen_handlenext",
       "community": 9,
       "norm_label": "handlenext()"
@@ -385,7 +394,7 @@
       "label": "handleBack()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L363",
+      "source_location": "L356",
       "id": "auth_registerscreen_handleback",
       "community": 9,
       "norm_label": "handleback()"
@@ -394,7 +403,7 @@
       "label": "handleSubmit()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L385",
+      "source_location": "L378",
       "id": "auth_registerscreen_handlesubmit",
       "community": 9,
       "norm_label": "handlesubmit()"
@@ -403,7 +412,7 @@
       "label": "formatDate()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L413",
+      "source_location": "L406",
       "id": "auth_registerscreen_formatdate",
       "community": 9,
       "norm_label": "formatdate()"
@@ -412,7 +421,7 @@
       "label": "formatTime()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L432",
+      "source_location": "L425",
       "id": "auth_registerscreen_formattime",
       "community": 9,
       "norm_label": "formattime()"
@@ -421,7 +430,7 @@
       "label": "handleOpenLocationModal()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/RegisterScreen.tsx",
-      "source_location": "L453",
+      "source_location": "L446",
       "id": "auth_registerscreen_handleopenlocationmodal",
       "community": 9,
       "norm_label": "handleopenlocationmodal()"
@@ -439,7 +448,7 @@
       "label": "handleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L101",
+      "source_location": "L94",
       "id": "auth_loginscreen_handlelogin",
       "community": 4,
       "norm_label": "handlelogin()"
@@ -448,7 +457,7 @@
       "label": "handleForgotPassword()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L118",
+      "source_location": "L111",
       "id": "auth_loginscreen_handleforgotpassword",
       "community": 4,
       "norm_label": "handleforgotpassword()"
@@ -457,7 +466,7 @@
       "label": "handleGoogleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L132",
+      "source_location": "L125",
       "id": "auth_loginscreen_handlegooglelogin",
       "community": 4,
       "norm_label": "handlegooglelogin()"
@@ -466,7 +475,7 @@
       "label": "handleAppleLogin()",
       "file_type": "code",
       "source_file": "frontend/src/screens/Auth/LoginScreen.tsx",
-      "source_location": "L140",
+      "source_location": "L133",
       "id": "auth_loginscreen_handleapplelogin",
       "community": 4,
       "norm_label": "handleapplelogin()"
@@ -504,7 +513,7 @@
       "source_file": "frontend/src/components/TransitInfoModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitinfomodal_tsx",
-      "community": 56,
+      "community": 57,
       "norm_label": "transitinfomodal.tsx"
     },
     {
@@ -549,7 +558,7 @@
       "source_file": "frontend/src/components/LegalModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_legalmodal_tsx",
-      "community": 57,
+      "community": 58,
       "norm_label": "legalmodal.tsx"
     },
     {
@@ -558,7 +567,7 @@
       "source_file": "frontend/src/components/Card.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_card_tsx",
-      "community": 58,
+      "community": 59,
       "norm_label": "card.tsx"
     },
     {
@@ -567,7 +576,7 @@
       "source_file": "frontend/src/components/SignIcon.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_signicon_tsx",
-      "community": 59,
+      "community": 60,
       "norm_label": "signicon.tsx"
     },
     {
@@ -648,7 +657,7 @@
       "source_file": "frontend/src/components/MoonPhase.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_moonphase_tsx",
-      "community": 60,
+      "community": 61,
       "norm_label": "moonphase.tsx"
     },
     {
@@ -774,7 +783,7 @@
       "source_file": "frontend/src/components/AspectList.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_aspectlist_tsx",
-      "community": 61,
+      "community": 62,
       "norm_label": "aspectlist.tsx"
     },
     {
@@ -783,7 +792,7 @@
       "source_file": "frontend/src/components/ProfileComponents.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_profilecomponents_tsx",
-      "community": 62,
+      "community": 63,
       "norm_label": "profilecomponents.tsx"
     },
     {
@@ -792,7 +801,7 @@
       "source_file": "frontend/src/components/GenerationInfoModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_generationinfomodal_tsx",
-      "community": 63,
+      "community": 64,
       "norm_label": "generationinfomodal.tsx"
     },
     {
@@ -801,7 +810,7 @@
       "source_file": "frontend/src/components/index.ts",
       "source_location": "L1",
       "id": "frontend_src_components_index_ts",
-      "community": 64,
+      "community": 65,
       "norm_label": "index.ts"
     },
     {
@@ -846,7 +855,7 @@
       "source_file": "frontend/src/components/TransitIndicator.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_transitindicator_tsx",
-      "community": 65,
+      "community": 66,
       "norm_label": "transitindicator.tsx"
     },
     {
@@ -873,7 +882,7 @@
       "source_file": "frontend/src/theme/index.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_index_ts",
-      "community": 66,
+      "community": 67,
       "norm_label": "index.ts"
     },
     {
@@ -882,7 +891,7 @@
       "source_file": "frontend/src/theme/theme.ts",
       "source_location": "L1",
       "id": "frontend_src_theme_theme_ts",
-      "community": 67,
+      "community": 68,
       "norm_label": "theme.ts"
     },
     {
@@ -954,7 +963,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L1",
       "id": "frontend_src_services_api_ts",
-      "community": 42,
+      "community": 41,
       "norm_label": "api.ts"
     },
     {
@@ -963,7 +972,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L10",
       "id": "services_api_getapiurl",
-      "community": 42,
+      "community": 41,
       "norm_label": "getapiurl()"
     },
     {
@@ -981,7 +990,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L34",
       "id": "services_api_apiservice_constructor",
-      "community": 41,
+      "community": 42,
       "norm_label": ".constructor()"
     },
     {
@@ -990,7 +999,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L46",
       "id": "services_api_apiservice_setupinterceptors",
-      "community": 41,
+      "community": 42,
       "norm_label": ".setupinterceptors()"
     },
     {
@@ -1476,7 +1485,7 @@
       "source_file": "frontend/src/services/queryClient.ts",
       "source_location": "L1",
       "id": "frontend_src_services_queryclient_ts",
-      "community": 68,
+      "community": 69,
       "norm_label": "queryclient.ts"
     },
     {
@@ -1485,7 +1494,7 @@
       "source_file": "frontend/src/store/transitStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_transitstore_ts",
-      "community": 69,
+      "community": 70,
       "norm_label": "transitstore.ts"
     },
     {
@@ -1494,7 +1503,7 @@
       "source_file": "frontend/src/store/vedicChartStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_vedicchartstore_ts",
-      "community": 70,
+      "community": 71,
       "norm_label": "vedicchartstore.ts"
     },
     {
@@ -1503,7 +1512,7 @@
       "source_file": "frontend/src/store/authStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_authstore_ts",
-      "community": 71,
+      "community": 72,
       "norm_label": "authstore.ts"
     },
     {
@@ -1512,7 +1521,7 @@
       "source_file": "frontend/src/store/horoscopeStore.ts",
       "source_location": "L1",
       "id": "frontend_src_store_horoscopestore_ts",
-      "community": 72,
+      "community": 73,
       "norm_label": "horoscopestore.ts"
     },
     {
@@ -1710,7 +1719,7 @@
       "source_file": "backend/src/middleware/validator.ts",
       "source_location": "L1",
       "id": "backend_src_middleware_validator_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "validator.ts"
     },
     {
@@ -1719,7 +1728,7 @@
       "source_file": "backend/src/middleware/validator.ts",
       "source_location": "L5",
       "id": "middleware_validator_validaterequest",
-      "community": 14,
+      "community": 13,
       "norm_label": "validaterequest()"
     },
     {
@@ -1746,7 +1755,7 @@
       "source_file": "backend/src/types/api.ts",
       "source_location": "L1",
       "id": "backend_src_types_api_ts",
-      "community": 73,
+      "community": 74,
       "norm_label": "api.ts"
     },
     {
@@ -1755,7 +1764,7 @@
       "source_file": "backend/src/types/astrology.ts",
       "source_location": "L1",
       "id": "backend_src_types_astrology_ts",
-      "community": 74,
+      "community": 75,
       "norm_label": "astrology.ts"
     },
     {
@@ -1764,7 +1773,7 @@
       "source_file": "backend/src/types/index.ts",
       "source_location": "L1",
       "id": "backend_src_types_index_ts",
-      "community": 75,
+      "community": 76,
       "norm_label": "index.ts"
     },
     {
@@ -1773,7 +1782,7 @@
       "source_file": "backend/src/types/user.ts",
       "source_location": "L1",
       "id": "backend_src_types_user_ts",
-      "community": 76,
+      "community": 77,
       "norm_label": "user.ts"
     },
     {
@@ -1782,7 +1791,7 @@
       "source_file": "backend/src/config/redis.ts",
       "source_location": "L1",
       "id": "backend_src_config_redis_ts",
-      "community": 77,
+      "community": 78,
       "norm_label": "redis.ts"
     },
     {
@@ -1791,7 +1800,7 @@
       "source_file": "backend/src/config/logger.ts",
       "source_location": "L1",
       "id": "backend_src_config_logger_ts",
-      "community": 78,
+      "community": 79,
       "norm_label": "logger.ts"
     },
     {
@@ -1827,7 +1836,7 @@
       "source_file": "backend/src/config/env.ts",
       "source_location": "L1",
       "id": "backend_src_config_env_ts",
-      "community": 79,
+      "community": 80,
       "norm_label": "env.ts"
     },
     {
@@ -1836,7 +1845,7 @@
       "source_file": "backend/src/config/queue.ts",
       "source_location": "L1",
       "id": "backend_src_config_queue_ts",
-      "community": 80,
+      "community": 81,
       "norm_label": "queue.ts"
     },
     {
@@ -1890,7 +1899,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L1",
       "id": "backend_src_utils_errors_ts",
-      "community": 13,
+      "community": 14,
       "norm_label": "errors.ts"
     },
     {
@@ -1899,7 +1908,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L3",
       "id": "utils_errors_apierror",
-      "community": 14,
+      "community": 13,
       "norm_label": "apierror"
     },
     {
@@ -1908,7 +1917,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L8",
       "id": "utils_errors_apierror_constructor",
-      "community": 14,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
@@ -1917,7 +1926,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L22",
       "id": "utils_errors_validationerror",
-      "community": 13,
+      "community": 14,
       "norm_label": "validationerror"
     },
     {
@@ -1926,7 +1935,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L23",
       "id": "utils_errors_validationerror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -1953,7 +1962,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L34",
       "id": "utils_errors_unauthorizederror",
-      "community": 13,
+      "community": 14,
       "norm_label": "unauthorizederror"
     },
     {
@@ -1962,7 +1971,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L35",
       "id": "utils_errors_unauthorizederror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -1971,7 +1980,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L40",
       "id": "utils_errors_forbiddenerror",
-      "community": 13,
+      "community": 14,
       "norm_label": "forbiddenerror"
     },
     {
@@ -1980,7 +1989,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L41",
       "id": "utils_errors_forbiddenerror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -1989,7 +1998,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L46",
       "id": "utils_errors_conflicterror",
-      "community": 13,
+      "community": 14,
       "norm_label": "conflicterror"
     },
     {
@@ -1998,7 +2007,7 @@
       "source_file": "backend/src/utils/errors.ts",
       "source_location": "L47",
       "id": "utils_errors_conflicterror_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -2025,7 +2034,7 @@
       "source_file": "backend/src/models/natalChart.ts",
       "source_location": "L1",
       "id": "backend_src_models_natalchart_ts",
-      "community": 81,
+      "community": 82,
       "norm_label": "natalchart.ts"
     },
     {
@@ -2079,7 +2088,7 @@
       "source_file": "backend/src/jobs/chartWorker.ts",
       "source_location": "L1",
       "id": "backend_src_jobs_chartworker_ts",
-      "community": 82,
+      "community": 83,
       "norm_label": "chartworker.ts"
     },
     {
@@ -2178,7 +2187,7 @@
       "source_file": "backend/src/controllers/userController.spec.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_usercontroller_spec_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "usercontroller.spec.ts"
     },
     {
@@ -2187,7 +2196,7 @@
       "source_file": "backend/src/controllers/authController.ts",
       "source_location": "L1",
       "id": "backend_src_controllers_authcontroller_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "authcontroller.ts"
     },
     {
@@ -2637,7 +2646,7 @@
       "source_file": "backend/src/routes/horoscope.ts",
       "source_location": "L1",
       "id": "backend_src_routes_horoscope_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "horoscope.ts"
     },
     {
@@ -2673,7 +2682,7 @@
       "source_file": "backend/src/routes/index.ts",
       "source_location": "L1",
       "id": "backend_src_routes_index_ts",
-      "community": 83,
+      "community": 84,
       "norm_label": "index.ts"
     },
     {
@@ -2682,7 +2691,7 @@
       "source_file": "backend/src/routes/friends.ts",
       "source_location": "L1",
       "id": "backend_src_routes_friends_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "friends.ts"
     },
     {
@@ -2700,7 +2709,7 @@
       "source_file": "backend/src/routes/auth.ts",
       "source_location": "L1",
       "id": "backend_src_routes_auth_ts",
-      "community": 14,
+      "community": 13,
       "norm_label": "auth.ts"
     },
     {
@@ -4644,9 +4653,9 @@
       "source_file": "frontend/src/App.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_app_tsx",
-      "target": "services_subscriptionservice_subscriptionservice",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice"
     },
     {
       "relation": "contains",
@@ -5072,9 +5081,9 @@
       "source_file": "frontend/src/screens/TransitsScreen.tsx",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_screens_transitsscreen_tsx",
-      "target": "screens_transitsscreen_handleperiodchange",
-      "confidence_score": 1.0
+      "target": "screens_transitsscreen_handleperiodchange"
     },
     {
       "relation": "imports",
@@ -5501,9 +5510,9 @@
       "source_file": "frontend/src/components/Paywall.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_components_paywall_tsx",
-      "target": "services_subscriptionservice_subscriptionservice",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice"
     },
     {
       "relation": "contains",
@@ -5511,9 +5520,9 @@
       "source_file": "frontend/src/components/Paywall.tsx",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_components_paywall_tsx",
-      "target": "components_paywall_checkconfig",
-      "confidence_score": 1.0
+      "target": "components_paywall_checkconfig"
     },
     {
       "relation": "contains",
@@ -5521,9 +5530,9 @@
       "source_file": "frontend/src/components/Paywall.tsx",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_components_paywall_tsx",
-      "target": "components_paywall_handlepurchase",
-      "confidence_score": 1.0
+      "target": "components_paywall_handlepurchase"
     },
     {
       "relation": "contains",
@@ -5531,9 +5540,9 @@
       "source_file": "frontend/src/components/Paywall.tsx",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_components_paywall_tsx",
-      "target": "components_paywall_handlerestore",
-      "confidence_score": 1.0
+      "target": "components_paywall_handlerestore"
     },
     {
       "relation": "contains",
@@ -5674,9 +5683,9 @@
       "source_file": "frontend/src/hooks/useAuth.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_hooks_useauth_ts",
-      "target": "services_subscriptionservice_subscriptionservice",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice"
     },
     {
       "relation": "contains",
@@ -6239,9 +6248,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_src_services_subscriptionservice_ts",
-      "target": "services_subscriptionservice_subscriptionservice",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice"
     },
     {
       "relation": "method",
@@ -6249,9 +6258,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_constructor",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_constructor"
     },
     {
       "relation": "method",
@@ -6259,9 +6268,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_getinstance",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_getinstance"
     },
     {
       "relation": "method",
@@ -6269,9 +6278,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_initialize",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_initialize"
     },
     {
       "relation": "method",
@@ -6279,9 +6288,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo"
     },
     {
       "relation": "method",
@@ -6289,9 +6298,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_getofferings",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_getofferings"
     },
     {
       "relation": "method",
@@ -6299,9 +6308,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_purchasepackage",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_purchasepackage"
     },
     {
       "relation": "method",
@@ -6309,9 +6318,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L120",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_restorepurchases",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_restorepurchases"
     },
     {
       "relation": "method",
@@ -6319,9 +6328,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L147",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement"
     },
     {
       "relation": "method",
@@ -6329,9 +6338,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L154",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice",
-      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate"
     },
     {
       "relation": "calls",
@@ -6340,9 +6349,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_initialize",
-      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo"
     },
     {
       "relation": "calls",
@@ -6351,9 +6360,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
-      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate"
     },
     {
       "relation": "calls",
@@ -6362,9 +6371,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L99",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_purchasepackage",
-      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate"
     },
     {
       "relation": "calls",
@@ -6373,9 +6382,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_restorepurchases",
-      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement"
     },
     {
       "relation": "calls",
@@ -6384,9 +6393,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L133",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_restorepurchases",
-      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate"
     },
     {
       "relation": "calls",
@@ -6395,9 +6404,9 @@
       "source_file": "frontend/src/services/subscriptionService.ts",
       "source_location": "L155",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
-      "target": "services_subscriptionservice_subscriptionservice_checkentitlement",
-      "confidence_score": 1.0
+      "target": "services_subscriptionservice_subscriptionservice_checkentitlement"
     },
     {
       "relation": "imports",
@@ -7289,9 +7298,9 @@
       "source_file": "backend/src/services/settingsService.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_src_services_settingsservice_ts",
-      "target": "utils_errors_notfounderror",
-      "confidence_score": 1.0
+      "target": "utils_errors_notfounderror"
     },
     {
       "relation": "method",
@@ -8386,9 +8395,9 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L620",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_aicontent_aicontentservice",
-      "target": "services_aicontent_aicontentservice_repairtruncatedjson",
-      "confidence_score": 1.0
+      "target": "services_aicontent_aicontentservice_repairtruncatedjson"
     },
     {
       "relation": "imports",
@@ -8491,9 +8500,9 @@
       "source_file": "backend/src/services/aiContent.ts",
       "source_location": "L116",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_aicontent_aicontentservice_generatedailyhoroscope",
-      "target": "services_aicontent_aicontentservice_repairtruncatedjson",
-      "confidence_score": 1.0
+      "target": "services_aicontent_aicontentservice_repairtruncatedjson"
     },
     {
       "relation": "calls",
@@ -9045,9 +9054,9 @@
       "source_file": "backend/src/services/chart.service.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_src_services_chart_service_ts",
-      "target": "services_vedicastrology_calculatevedicchart",
-      "confidence_score": 1.0
+      "target": "services_vedicastrology_calculatevedicchart"
     },
     {
       "relation": "contains",
@@ -9055,9 +9064,9 @@
       "source_file": "backend/src/services/chart.service.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_src_services_chart_service_ts",
-      "target": "services_chart_service_chartservice",
-      "confidence_score": 1.0
+      "target": "services_chart_service_chartservice"
     },
     {
       "relation": "method",
@@ -9065,9 +9074,9 @@
       "source_file": "backend/src/services/chart.service.ts",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_chart_service_chartservice",
-      "target": "services_chart_service_chartservice_enqueuechartcalculation",
-      "confidence_score": 1.0
+      "target": "services_chart_service_chartservice_enqueuechartcalculation"
     },
     {
       "relation": "method",
@@ -9075,9 +9084,9 @@
       "source_file": "backend/src/services/chart.service.ts",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_chart_service_chartservice",
-      "target": "services_chart_service_chartservice_calculateallchartsforuser",
-      "confidence_score": 1.0
+      "target": "services_chart_service_chartservice_calculateallchartsforuser"
     },
     {
       "relation": "contains",
@@ -9242,9 +9251,9 @@
       "source_file": "backend/src/services/llmProvider.ts",
       "source_location": "L600",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_resilientllmprovider_complete",
-      "target": "services_llmprovider_selectapikey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_selectapikey"
     },
     {
       "relation": "calls",
@@ -9319,9 +9328,9 @@
       "source_file": "backend/src/services/llmProvider.ts",
       "source_location": "L616",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_llmprovider_resilientllmprovider_complete",
-      "target": "services_llmprovider_maskkey",
-      "confidence_score": 1.0
+      "target": "services_llmprovider_maskkey"
     },
     {
       "relation": "method",
@@ -10371,9 +10380,9 @@
       "source_file": "backend/src/services/email.service.ts",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "services_email_service_emailservice",
-      "target": "services_email_service_emailservice_constructor",
-      "confidence_score": 1.0
+      "target": "services_email_service_emailservice_constructor"
     },
     {
       "relation": "method",
@@ -11739,5 +11748,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4bbc80886e5a60320ae7dd41d5a7e5f4722e2f8c"
+  "built_at_commit": "759e96e6e3bbc1f6ab6d25fc6ff948b93e1a1091"
 }

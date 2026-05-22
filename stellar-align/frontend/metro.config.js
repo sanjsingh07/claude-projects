@@ -14,6 +14,7 @@ config.resolver.alias = {
   '@types': path.resolve(__dirname, 'src/types'),
   '@utils': path.resolve(__dirname, 'src/utils'),
   '@constants': path.resolve(__dirname, 'src/constants'),
+  '@config': path.resolve(__dirname, 'src/config'),
   '@navigation': path.resolve(__dirname, 'src/navigation'),
   'expo-auth-session/providers/Google': path.resolve(
     __dirname,
