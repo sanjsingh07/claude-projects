@@ -5,6 +5,7 @@ dist/
 .expo/
 android/
 ios/
+crash-logs/
 
 # Graphify output
 # mtime-based, breaks after git clone

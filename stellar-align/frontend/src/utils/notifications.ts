@@ -9,9 +9,11 @@ import { api } from '@services/api';
 export function configureForegroundNotifications() {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
-      shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: true,
+      shouldShowAlert: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
     }),
   });
 }
