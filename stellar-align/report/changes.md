@@ -1245,3 +1245,19 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/app.json`
   - `stellar-align/report/changes.md`
+
+## [Sat May 23 14:26:33 IST 2026] Add Production API URL Fallback
+- **What was changed and why**: Added a checked-in fallback for the public API URL so native production builds no longer depend on `EXPO_PUBLIC_API_URL` being injected correctly. Environment variables still override the fallback for dev or staging builds.
+- **Summary of changes**:
+  - Added `frontend/src/config/runtime.ts` with the production Oracle VM API URL fallback.
+  - Updated `ApiService` to import the resolved API URL from shared runtime config instead of reading `process.env` directly.
+  - Removed unused Expo Constants and React Native Platform imports from the API service.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Files modified**:
+  - `stellar-align/frontend/src/config/runtime.ts`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`

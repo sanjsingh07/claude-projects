@@ -1,23 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import Constants from 'expo-constants';
-import { Platform } from 'react-native';
 import { User, AyanamsaType, DivisionalChartType } from '@types';
+import { API_URL } from '@config/runtime';
 import { secureStorage } from '@utils/secureStorage';
-
-// API URL configuration
-const DEFAULT_API_URL = process.env.EXPO_PUBLIC_API_URL;
-
-const getApiUrl = () => {
-  // Check if we have a custom URL in app.json
-  // const configUrl = Constants.expoConfig?.extra?.apiUrl;
-  // if (configUrl) {
-  //   return configUrl;
-  // }
-
-  return DEFAULT_API_URL;
-};
-
-const API_URL = getApiUrl();
 
 console.log(`API URL: ${API_URL}`);
 

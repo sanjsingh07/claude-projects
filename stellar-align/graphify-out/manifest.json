@@ -11,6 +11,10 @@
     "mtime": 1779474852.2001836,
     "hash": "1eccf79f6e6a02d956d2204027dc52b1"
   },
+  "/Users/jayyy/claude-projects/stellar-align/frontend/src/config/runtime.ts": {
+    "mtime": 1779526566.3027377,
+    "hash": "3be815ad21059be9f4984836d9c32fa3"
+  },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/navigation/MainNavigator.tsx": {
     "mtime": 1779191253.0119565,
     "hash": "1e7b78f9cd46704086e617c0adb55bf8"
@@ -176,8 +180,8 @@
     "hash": "332fc0995fbb79c21a8d8d3bdbe0de1c"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/services/api.ts": {
-    "mtime": 1779191253.0166929,
-    "hash": "7472b7fb2dcff33876010adf3468bac4"
+    "mtime": 1779526571.731219,
+    "hash": "6ca698f4411b413cb088b1b2d81d4e95"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/services/subscriptionService.ts": {
     "mtime": 1779455865.5634508,
