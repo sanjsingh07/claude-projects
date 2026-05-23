@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import { api } from '@services/api';
+import Constants from 'expo-constants';
 
 /**
  * Configures how notifications are handled when they are received while the app is foregrounded
@@ -9,9 +10,11 @@ import { api } from '@services/api';
 export function configureForegroundNotifications() {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
-      shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: true,
+      shouldShowAlert: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
     }),
   });
 }
@@ -41,7 +44,7 @@ export async function registerForPushNotificationsAsync(userId: string) {
   }
 
   token = (await Notifications.getExpoPushTokenAsync({
-    projectId: 'your-expo-project-id', // Should be replaced with actual projectId from app.json
+    projectId: Constants.expoConfig?.extra?.eas?.projectId ?? '225aeb82-3b52-4134-bcff-729b3ab00c5b',
   })).data;
 
   if (token) {

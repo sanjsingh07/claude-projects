@@ -1199,3 +1199,49 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - This avoids using unprofessional/unsecured IP links (`http://92.4.221.191:3000`) which are risky for App Store approval.
 - Updated `RegisterStartScreen.tsx`, `Paywall.tsx`, and `SettingsScreen.tsx` to use the internal modal.
 - Benefits: Works offline, faster UX, professional native look, and safer for Apple Review.
+
+## [Fri May 22 22:26:35 IST 2026] Fixed TestFlight Startup Crash Path
+- **What was changed and why**: Fixed a release-only startup crash path where EAS/TestFlight builds could render the auth screens without local `.env` Google client IDs. Expo AuthSession throws when platform client IDs are `undefined`, which can crash immediately on launch in cloud-built binaries.
+- **Summary of changes**:
+  - Updated login and registration auth screens to pass stable fallback Google client ID strings into `useIdTokenAuthRequest` instead of `undefined`.
+  - Kept the existing Google sign-in guard so missing Google configuration still shows the fallback alert instead of attempting sign-in.
+  - Cleaned iOS Expo config by removing manual duplicated `CFBundleURLTypes` and relying on the top-level Expo `scheme` entries.
+  - Made the EAS production profile explicitly use the `production` environment.
+  - Preserved the SDK-compatible DateTimePicker pin and explicit `babel-preset-expo` dependency already present in the working tree.
+  - Ignored local `.ipa` build artifacts so downloaded TestFlight/export files are not committed.
+- **Files modified**:
+  - `.gitignore`
+  - `stellar-align/frontend/app.json`
+  - `stellar-align/frontend/eas.json`
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/report/changes.md`
+
+## [Sat May 23 00:05:16 IST 2026] Enabled Google Sign-In in EAS Builds
+- **What was changed and why**: Added checked-in fallback Google OAuth client IDs so TestFlight/EAS builds can start Google sign-in even when local `.env` values are not available to the cloud build worker. These client IDs are public OAuth identifiers, not secrets.
+- **Summary of changes**:
+  - Added a shared `googleAuth.ts` config module with public Google client IDs and the iOS redirect scheme.
+  - Updated login and registration screens to use the shared Google auth config instead of reading environment variables directly.
+  - Kept environment variable overrides in the config module for future dev/staging OAuth clients.
+  - Added the `@config` alias to Metro, Babel, and TypeScript configuration.
+- **Files modified**:
+  - `stellar-align/frontend/src/config/googleAuth.ts`
+  - `stellar-align/frontend/src/screens/Auth/LoginScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterStartScreen.tsx`
+  - `stellar-align/frontend/metro.config.js`
+  - `stellar-align/frontend/babel.config.js`
+  - `stellar-align/frontend/tsconfig.json`
+  - `stellar-align/report/changes.md`
+
+## [Sat May 23 12:08:10 IST 2026] Allow Mobile App HTTP API Access
+- **What was changed and why**: Fixed native transport-security configuration so the app can connect to the Oracle VM backend at `http://84.8.251.208:3000/api`. The iOS App Transport Security key was missing the required `NS` prefix, and Android did not explicitly allow cleartext HTTP traffic.
+- **Summary of changes**:
+  - Replaced the invalid iOS `AllowsArbitraryLoads` plist key with `NSAllowsArbitraryLoads` in Expo config.
+  - Enabled Android `usesCleartextTraffic` for the current HTTP backend.
+  - Verified the backend host is reachable and that Expo resolves the updated native config.
+- **Files modified**:
+  - `stellar-align/frontend/app.json`
+  - `stellar-align/report/changes.md`

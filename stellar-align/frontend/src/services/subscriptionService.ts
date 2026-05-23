@@ -164,7 +164,8 @@ class SubscriptionService {
 
       // 2. Sync with Backend API - only if authenticated
       if (isAuthenticated) {
-        await api.client.patch('/users/profile', { isPremium });
+        // await api.client.patch('/users/profile', { isPremium });
+        await api.updateProfile({ isPremium });
         
         // 3. Invalidate relevant queries to refresh UI
         queryClient.invalidateQueries({ queryKey: ['profile'] });
