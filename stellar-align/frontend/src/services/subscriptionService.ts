@@ -2,7 +2,6 @@ import Purchases, { LOG_LEVEL, PurchasesPackage, CustomerInfo } from 'react-nati
 import { Platform, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { useAuthStore } from '../store/authStore';
-import { api } from './api';
 import { queryClient } from './queryClient';
 
 // RevenueCat Configuration
@@ -152,31 +151,27 @@ class SubscriptionService {
    * Synchronize RevenueCat status with local State and Remote Backend
    */
   private async handleCustomerInfoUpdate(customerInfo: CustomerInfo): Promise<boolean> {
-    const isPremium = this.checkEntitlement(customerInfo);
+    const hasRevenueCatPremium = this.checkEntitlement(customerInfo);
     
     try {
-      // 1. Update local Zustand store
       const { user, isAuthenticated } = useAuthStore.getState();
+      const hasBackendPremium = Boolean(user?.isPremium);
+      const hasPremiumAccess = hasBackendPremium || hasRevenueCatPremium;
       
-      if (user && user.isPremium !== isPremium) {
-        useAuthStore.getState().setUser({ ...user, isPremium });
+      if (user && user.isPremium !== hasPremiumAccess) {
+        useAuthStore.getState().setUser({ ...user, isPremium: hasPremiumAccess });
       }
 
-      // 2. Sync with Backend API - only if authenticated
       if (isAuthenticated) {
-        // await api.client.patch('/users/profile', { isPremium });
-        await api.updateProfile({ isPremium });
-        
-        // 3. Invalidate relevant queries to refresh UI
         queryClient.invalidateQueries({ queryKey: ['profile'] });
         queryClient.invalidateQueries({ queryKey: ['transits'] });
         queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       }
       
-      return isPremium;
+      return hasPremiumAccess;
     } catch (e) {
       console.error('Failed to sync premium status with backend', e);
-      return isPremium;
+      return hasRevenueCatPremium;
     }
   }
 }

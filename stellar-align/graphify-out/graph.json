@@ -972,7 +972,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L1",
       "id": "frontend_src_services_api_ts",
-      "community": 33,
+      "community": 34,
       "norm_label": "api.ts"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L18",
       "id": "services_api_apiservice_constructor",
-      "community": 34,
+      "community": 33,
       "norm_label": ".constructor()"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L30",
       "id": "services_api_apiservice_setupinterceptors",
-      "community": 34,
+      "community": 33,
       "norm_label": ".setupinterceptors()"
     },
     {
@@ -1393,7 +1393,7 @@
       "label": "SubscriptionService",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L13",
+      "source_location": "L12",
       "id": "services_subscriptionservice_subscriptionservice",
       "community": 9,
       "norm_label": "subscriptionservice"
@@ -1402,7 +1402,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L17",
+      "source_location": "L16",
       "id": "services_subscriptionservice_subscriptionservice_constructor",
       "community": 9,
       "norm_label": ".constructor()"
@@ -1411,7 +1411,7 @@
       "label": ".getInstance()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L19",
+      "source_location": "L18",
       "id": "services_subscriptionservice_subscriptionservice_getinstance",
       "community": 9,
       "norm_label": ".getinstance()"
@@ -1420,7 +1420,7 @@
       "label": ".initialize()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L29",
+      "source_location": "L28",
       "id": "services_subscriptionservice_subscriptionservice_initialize",
       "community": 9,
       "norm_label": ".initialize()"
@@ -1429,7 +1429,7 @@
       "label": ".refreshCustomerInfo()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L59",
+      "source_location": "L58",
       "id": "services_subscriptionservice_subscriptionservice_refreshcustomerinfo",
       "community": 9,
       "norm_label": ".refreshcustomerinfo()"
@@ -1438,7 +1438,7 @@
       "label": ".getOfferings()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L74",
+      "source_location": "L73",
       "id": "services_subscriptionservice_subscriptionservice_getofferings",
       "community": 9,
       "norm_label": ".getofferings()"
@@ -1447,7 +1447,7 @@
       "label": ".purchasePackage()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L91",
+      "source_location": "L90",
       "id": "services_subscriptionservice_subscriptionservice_purchasepackage",
       "community": 9,
       "norm_label": ".purchasepackage()"
@@ -1456,7 +1456,7 @@
       "label": ".restorePurchases()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L120",
+      "source_location": "L119",
       "id": "services_subscriptionservice_subscriptionservice_restorepurchases",
       "community": 9,
       "norm_label": ".restorepurchases()"
@@ -1465,7 +1465,7 @@
       "label": ".checkEntitlement()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L147",
+      "source_location": "L146",
       "id": "services_subscriptionservice_subscriptionservice_checkentitlement",
       "community": 9,
       "norm_label": ".checkentitlement()"
@@ -1474,7 +1474,7 @@
       "label": ".handleCustomerInfoUpdate()",
       "file_type": "code",
       "source_file": "frontend/src/services/subscriptionService.ts",
-      "source_location": "L154",
+      "source_location": "L153",
       "id": "services_subscriptionservice_subscriptionservice_handlecustomerinfoupdate",
       "community": 9,
       "norm_label": ".handlecustomerinfoupdate()"
@@ -4247,7 +4247,7 @@
       "file_type": "code",
       "source_file": "frontend/src/services/api.ts",
       "source_location": "L10",
-      "community": 33,
+      "community": 34,
       "norm_label": "getapiurl()",
       "id": "services_api_getapiurl"
     },
@@ -11757,5 +11757,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "09ff9167e737ee3b5c697e796fcdc6c9f11952c9"
+  "built_at_commit": "5afc4d294de22afc8cd32dbf91cc5f0b5b3e2103"
 }

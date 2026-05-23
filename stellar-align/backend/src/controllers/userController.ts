@@ -136,8 +136,8 @@ export class UserController {
         processedData.birthDateTime = new Date(Date.UTC(year, month, day, hours, minutes, 0, 0));
       }
 
-      // Copy other fields
-      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude", "birthTimeUnknown", "isPremium"].forEach(field => {
+      // Copy user-editable profile fields only. Premium status is managed outside profile edits.
+      ["displayName", "bio", "birthLocationName", "birthTimezone", "birthLatitude", "birthLongitude", "birthTimeUnknown"].forEach(field => {
         if (updateData[field] !== undefined) {
           processedData[field] = updateData[field];
         }

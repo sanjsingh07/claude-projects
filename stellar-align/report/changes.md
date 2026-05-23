@@ -1261,3 +1261,23 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/graphify-out/graph.json`
   - `stellar-align/graphify-out/manifest.json`
   - `stellar-align/report/changes.md`
+
+## [Sat May 23 23:40:10 IST 2026] Protect Reviewer Premium Access
+- **What was changed and why**: Prevented RevenueCat refreshes from downgrading manually granted backend premium access, which is needed for the App Review test account. Also removed premium status from generic user profile updates so normal profile PATCH calls cannot change subscription state.
+- **Summary of changes**:
+  - Updated subscription refresh handling to preserve backend/manual premium status when RevenueCat has no active entitlement.
+  - Removed the automatic `api.updateProfile({ isPremium })` sync from RevenueCat customer info refresh.
+  - Removed `isPremium` validation and copying from `/users/me` and `/users/profile` update paths.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/routes/users.ts`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
