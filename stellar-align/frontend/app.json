@@ -22,7 +22,7 @@
       "appleTeamId": "U3C4PQ94A6",
       "infoPlist": {
         "NSAppTransportSecurity": {
-          "AllowsArbitraryLoads": true
+          "NSAllowsArbitraryLoads": true
         },
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -32,6 +32,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
+      "usesCleartextTraffic": true,
       "package": "com.stellaralign.app"
     },
     "web": {

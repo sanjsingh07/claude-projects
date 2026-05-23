@@ -1235,3 +1235,13 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/frontend/babel.config.js`
   - `stellar-align/frontend/tsconfig.json`
   - `stellar-align/report/changes.md`
+
+## [Sat May 23 12:08:10 IST 2026] Allow Mobile App HTTP API Access
+- **What was changed and why**: Fixed native transport-security configuration so the app can connect to the Oracle VM backend at `http://84.8.251.208:3000/api`. The iOS App Transport Security key was missing the required `NS` prefix, and Android did not explicitly allow cleartext HTTP traffic.
+- **Summary of changes**:
+  - Replaced the invalid iOS `AllowsArbitraryLoads` plist key with `NSAllowsArbitraryLoads` in Expo config.
+  - Enabled Android `usesCleartextTraffic` for the current HTTP backend.
+  - Verified the backend host is reachable and that Expo resolves the updated native config.
+- **Files modified**:
+  - `stellar-align/frontend/app.json`
+  - `stellar-align/report/changes.md`
