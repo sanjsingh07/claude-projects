@@ -33,7 +33,6 @@ import {
   TimezoneSelectionModal,
   Paywall,
   LegalModal,
-  showCustomerCenter,
   StellarText,
 } from '../components';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';

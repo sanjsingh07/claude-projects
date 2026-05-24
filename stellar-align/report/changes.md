@@ -1337,3 +1337,30 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/graphify-out/graph.json`
   - `stellar-align/graphify-out/manifest.json`
   - `stellar-align/report/changes.md`
+
+## [Sun May 24 14:59:19 IST 2026] Fix Frontend Typecheck
+- **What was changed and why**: Fixed frontend TypeScript errors so `npm run typecheck` passes and the app has typed wrappers instead of reaching into private API client internals.
+- **Summary of changes**:
+  - Added the missing `@expo/vector-icons` dependency used by multiple screens and components.
+  - Typed legal modal content sections so optional lists are accepted safely.
+  - Replaced unsupported `StellarText` `bold` props with explicit text styles.
+  - Added typed chat API methods and updated Chat screen to avoid accessing the private Axios client.
+  - Fixed register timezone response handling and added the missing Android picker indicator style.
+  - Removed an unused missing `showCustomerCenter` import from Settings.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Frontend `npm run typecheck` passes.
+  - Backend `npm run typecheck` passes.
+- **Files modified**:
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/frontend/src/components/LegalModal.tsx`
+  - `stellar-align/frontend/src/components/Paywall.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+  - `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`

@@ -320,6 +320,20 @@ class ApiService {
     return this.client.post(`/horoscope/${id}/share`);
   }
 
+  // ==================== CHAT ====================
+
+  async getChatHistory() {
+    return this.client.get('/chat/history');
+  }
+
+  async sendChatMessage(message: string) {
+    return this.client.post('/chat/message', { message });
+  }
+
+  async clearChatSession() {
+    return this.client.delete('/chat/session');
+  }
+
   // ==================== FRIENDS ====================
 
   async getFriends() {

@@ -1,16 +1,16 @@
 # Graph Report - stellar-align  (2026-05-24)
 
 ## Corpus Check
-- 122 files · ~63,923 words
+- 122 files · ~63,977 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 522 nodes · 703 edges · 32 communities detected
+- 525 nodes · 706 edges · 33 communities detected
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0cb13548`
+- Built from commit: `9e25c33b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,11 +45,12 @@
 - [[_COMMUNITY_Community 27|Community 27]]
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 33|Community 33]]
 - [[_COMMUNITY_Community 43|Community 43]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `ApiService` - 46 edges
+1. `ApiService` - 49 edges
 2. `AIContentService` - 28 edges
 3. `getTransitsForPeriod()` - 27 edges
 4. `AuthController` - 16 edges
@@ -65,22 +66,22 @@
   backend/src/test-transits.ts → backend/src/services/transits/transitEngine.ts
 - `investigate()` --calls--> `getTransitsForPeriod()`  [INFERRED]
   backend/src/investigate_may_11.ts → backend/src/services/transits/transitEngine.ts
-- `calculateNatalChart()` --calls--> `getAyanamsa()`  [INFERRED]
+- `calculateNatalChart()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
-- `getPlanetaryPositions()` --calls--> `getAyanamsa()`  [INFERRED]
+- `getPlanetaryPositions()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
-- `calculateTransits()` --calls--> `getAyanamsa()`  [INFERRED]
+- `calculateTransits()` --calls--> `toSiderealLongitude()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
 
-## Communities (85 total, 17 thin omitted)
+## Communities (86 total, 20 thin omitted)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.14
-Nodes (28): generateDailyHoroscope(), ChartService, calculateDivisional(), calculateNakshatra(), calculateVedicChart(), calculateVimshottariDasha(), createHouses(), detectYogas() (+20 more)
+Cohesion: 0.1
+Nodes (27): calculateUserTransits(), getOrb(), isAspectApplying(), investigate(), main(), findNatalHouse(), formatSign(), generateInterpretation() (+19 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.11
-Nodes (24): investigate(), main(), findNatalHouse(), formatSign(), generateInterpretation(), ordinal(), computeTransitProgress(), classifyTransitType() (+16 more)
+Cohesion: 0.17
+Nodes (24): ChartService, calculateDivisional(), calculateNakshatra(), calculateVedicChart(), calculateVimshottariDasha(), createHouses(), detectYogas(), getAngularDistance() (+16 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.11
@@ -91,40 +92,32 @@ Cohesion: 0.08
 Nodes (3): useAuth(), formatSignName(), getSignEmoji()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.13
-Nodes (4): RootNavigator(), SubscriptionService, configureForegroundNotifications(), registerForPushNotificationsAsync()
+Cohesion: 0.18
+Nodes (20): assignHouses(), calcHouses(), calcPlanetPosition(), calculateAspects(), calculateCurrentTransits(), calculateForecast(), calculateNatalChart(), calculateTransits() (+12 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.13
-Nodes (9): AnthropicProvider, GeminiProvider, GroqProvider, maskKey(), NvidiaProvider, OpencodeProvider, OpenRouterProvider, ResilientLLMProvider (+1 more)
+Nodes (4): RootNavigator(), SubscriptionService, configureForegroundNotifications(), registerForPushNotificationsAsync()
 
 ### Community 8 - "Community 8"
-Cohesion: 0.19
-Nodes (19): assignHouses(), calcHouses(), calcPlanetPosition(), calculateAspects(), calculateCurrentTransits(), calculateForecast(), calculateNatalChart(), calculateTransits() (+11 more)
+Cohesion: 0.13
+Nodes (9): AnthropicProvider, GeminiProvider, GroqProvider, maskKey(), NvidiaProvider, OpencodeProvider, OpenRouterProvider, ResilientLLMProvider (+1 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.13
 Nodes (4): handleNext(), handleSubmit(), validateStep1(), validateStep2()
 
-### Community 13 - "Community 13"
-Cohesion: 0.18
-Nodes (3): TransitController, validateRequest(), ApiError
-
-### Community 15 - "Community 15"
-Cohesion: 0.25
-Nodes (3): parseRevenueCatDate(), SubscriptionService, NotFoundError
-
-### Community 16 - "Community 16"
+### Community 14 - "Community 14"
 Cohesion: 0.22
 Nodes (4): ConflictError, ForbiddenError, UnauthorizedError, ValidationError
 
 ### Community 18 - "Community 18"
-Cohesion: 0.43
-Nodes (6): checkDatabaseHealth(), disconnectDatabase(), gracefulShutdown(), initJobs(), runHealthCheck(), startServer()
-
-### Community 19 - "Community 19"
 Cohesion: 0.29
 Nodes (4): errorHandler(), notFoundHandler(), profilerMiddleware(), requestIdMiddleware()
+
+### Community 19 - "Community 19"
+Cohesion: 0.43
+Nodes (6): checkDatabaseHealth(), disconnectDatabase(), gracefulShutdown(), initJobs(), runHealthCheck(), startServer()
 
 ### Community 21 - "Community 21"
 Cohesion: 0.38
@@ -137,22 +130,22 @@ Nodes (3): formatSettings(), getUserSettings(), updateUserSettings()
 ## Knowledge Gaps
 - **1 isolated node(s):** `Planet`
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `calculateVedicChart()` connect `Community 1` to `Community 3`, `Community 13`, `Community 14`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
-- **Why does `getTransitsForPeriod()` connect `Community 2` to `Community 8`, `Community 1`, `Community 13`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Why does `NotFoundError` connect `Community 15` to `Community 16`, `Community 3`, `Community 13`, `Community 30`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+- **Why does `calculateVedicChart()` connect `Community 2` to `Community 16`, `Community 3`, `Community 6`, `Community 15`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `getTransitsForPeriod()` connect `Community 1` to `Community 17`, `Community 6`?**
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
+- **Why does `NotFoundError` connect `Community 17` to `Community 3`, `Community 30`, `Community 14`, `Community 31`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
   _`getTransitsForPeriod()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Planet` to the rest of the system?**
   _1 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._

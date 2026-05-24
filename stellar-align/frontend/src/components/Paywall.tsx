@@ -112,7 +112,7 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
               Subscription features require a development build to interact with the App Store or Google Play. 
               {"\n\n"}
               Please run the app using:{"\n"}
-              <StellarText variant="body" bold color={colors.stellarViolet}>npx expo run:ios</StellarText> or <StellarText variant="body" bold color={colors.stellarViolet}>android</StellarText>
+              <StellarText variant="body" color={colors.stellarViolet} style={styles.boldText}>npx expo run:ios</StellarText> or <StellarText variant="body" color={colors.stellarViolet} style={styles.boldText}>android</StellarText>
             </StellarText>
             <StellarButton variant="primary" onPress={onClose} fullWidth>
               Return to App
@@ -190,7 +190,7 @@ export const Paywall: React.FC<PaywallProps> = ({ visible, onClose, featureName 
                     </StellarText>
                     {pkg.packageType === 'ANNUAL' && (
                       <View style={styles.bestValueBadge}>
-                        <StellarText variant="caption" color={colors.black} bold>Best Value</StellarText>
+                        <StellarText variant="caption" color={colors.black} style={styles.boldText}>Best Value</StellarText>
                       </View>
                     )}
                   </View>
@@ -396,5 +396,8 @@ const styles = StyleSheet.create({
   emptyPackages: {
     padding: 40,
     alignItems: 'center',
+  },
+  boldText: {
+    fontWeight: '700',
   }
 });

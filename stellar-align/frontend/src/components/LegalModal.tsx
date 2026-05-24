@@ -18,6 +18,16 @@ interface LegalModalProps {
   type: 'terms' | 'privacy';
 }
 
+interface LegalSection {
+  title: string;
+  content: string;
+  list?: string[];
+}
+
+interface LegalContent {
+  sections: LegalSection[];
+}
+
 export const LegalModal: React.FC<LegalModalProps> = ({ visible, onClose, type }) => {
   const content = type === 'privacy' ? privacyPolicy : termsOfService;
   const title = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
@@ -82,7 +92,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ visible, onClose, type }
   );
 };
 
-const privacyPolicy = {
+const privacyPolicy: LegalContent = {
   sections: [
     {
       title: '1. Information We Collect',
@@ -112,7 +122,7 @@ const privacyPolicy = {
   ]
 };
 
-const termsOfService = {
+const termsOfService: LegalContent = {
   sections: [
     {
       title: '1. Acceptance of Terms',
