@@ -1407,3 +1407,15 @@ Fixed a bug where user information persisted after signing out and signing back 
 - `stellar-align/frontend/src/hooks/useAuth.ts`
 - `stellar-align/frontend/src/services/api.ts`
 - `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+
+## [2026-05-24] - Improve chat efficiency for free users
+
+### Summary
+Optimized the chat experience for free users by implementing a client-side check for the 1-question limit. This prevents unnecessary API calls to the backend when a free user attempts to send a second message, instead showing the Paywall immediately.
+
+### Changes
+- **ChatScreen**: Updated `handleSend` to check the user's premium status and previous message count from `chatHistory` before allowing the mutation to proceed.
+- **ChatScreen**: Added `isHistoryLoading` check to `handleSend` to ensure accurate limit enforcement.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`

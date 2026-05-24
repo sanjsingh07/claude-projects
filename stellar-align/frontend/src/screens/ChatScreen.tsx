@@ -44,7 +44,7 @@ export const ChatScreen: React.FC = () => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch chat history
-  const { data: chatHistory, refetch } = useQuery({
+  const { data: chatHistory, refetch, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['chatHistory', user?.id],
     queryFn: async () => {
       const response = await api.getChatHistory();
@@ -87,7 +87,17 @@ export const ChatScreen: React.FC = () => {
   });
 
   const handleSend = () => {
-    if (!input.trim() || sendMessageMutation.isPending) return;
+    if (!input.trim() || sendMessageMutation.isPending || isHistoryLoading) return;
+
+    // Local check for free tier limit (1 question)
+    const isPremium = user?.isPremium;
+    const previousMessages = chatHistory?.filter(m => m.role === 'user').length || 0;
+
+    if (!isPremium && previousMessages >= 1) {
+      setShowPaywall(true);
+      return;
+    }
+
     sendMessageMutation.mutate(input);
   };
 
