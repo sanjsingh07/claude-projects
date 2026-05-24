@@ -1390,3 +1390,20 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - `frontend/src/App.tsx`
 - `frontend/package.json` (via npm install)
 - `frontend/ios/Podfile.lock` (via pod install)
+
+## [2026-05-24] - Fix persistent user info bug
+
+### Summary
+Fixed a bug where user information persisted after signing out and signing back in with a different account. This was caused by several stores (horoscope, transit, vedic chart) not being cleared during the logout process, and some components bypassing the centralized logout logic.
+
+### Changes
+- **TransitStore**: Added a `clear()` method to reset filters to defaults.
+- **useAuth Hook**: Updated the `logout` function to call `clear()` on `useHoroscopeStore`, `useTransitStore`, and `useVedicChartStore`, and clear the React Query cache.
+- **ApiService**: Added a `forceLogout()` helper to clear all stores and the React Query cache upon receiving a 401 error or failing to refresh the access token.
+- **SettingsScreen**: Updated to use the `logout` function from the `useAuth` hook instead of directly calling the auth store's logout method.
+
+### Files Modified
+- `stellar-align/frontend/src/store/transitStore.ts`
+- `stellar-align/frontend/src/hooks/useAuth.ts`
+- `stellar-align/frontend/src/services/api.ts`
+- `stellar-align/frontend/src/screens/SettingsScreen.tsx`

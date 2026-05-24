@@ -23,6 +23,7 @@ interface TransitState {
   filters: TransitFilters;
   setFilter: (key: keyof TransitFilters, value: boolean) => void;
   toggleFilter: (key: keyof TransitFilters) => void;
+  clear: () => void;
 }
 
 export const useTransitStore = create<TransitState>()(
@@ -45,6 +46,18 @@ export const useTransitStore = create<TransitState>()(
         set((state) => ({
           filters: { ...state.filters, [key]: !state.filters[key] },
         })),
+      clear: () =>
+        set({
+          filters: {
+            showShadow: true,
+            showMajor: true,
+            showMinor: true,
+            showRealTime: true,
+            showPersonal: true,
+            showVedic: true,
+            showWestern: true,
+          },
+        }),
     }),
     {
       name: 'transit-store',
