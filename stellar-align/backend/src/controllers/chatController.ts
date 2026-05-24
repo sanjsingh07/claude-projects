@@ -25,6 +25,23 @@ Your responses should be:
 Keep responses concise (2-4 paragraphs max) unless detailed analysis is requested.`;
 
 export class ChatController {
+  private async getDailyMessageCount(userId: string): Promise<number> {
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    return prisma.chatMessage.count({
+      where: {
+        role: ChatRole.USER,
+        createdAt: {
+          gte: startOfDay,
+        },
+        session: {
+          userId: userId,
+        },
+      },
+    });
+  }
+
   // GET /chat/history - Get chat history
   async getHistory(
     req: Request,
@@ -43,6 +60,9 @@ export class ChatController {
       if (!user) {
         throw new ApiError(404, "User not found");
       }
+
+      // Get total messages today for limit enforcement
+      const dailyMessageCount = await this.getDailyMessageCount(userId);
 
       // Get or create chat session
       let chatSession = await prisma.chatSession.findFirst({
@@ -76,6 +96,8 @@ export class ChatController {
           content: msg.content,
           timestamp: msg.createdAt,
         })),
+        dailyMessageCount,
+        isPremium: user.isPremium,
         chartContext: user.natalChart
           ? {
               sunSign: user.natalChart.sunSign,
@@ -118,20 +140,7 @@ export class ChatController {
 
       // Security check: only 1 free message per day for non-premium users
       if (!user.isPremium) {
-        const startOfDay = new Date();
-        startOfDay.setUTCHours(0, 0, 0, 0);
-
-        const dailyMessageCount = await prisma.chatMessage.count({
-          where: {
-            role: ChatRole.USER,
-            createdAt: {
-              gte: startOfDay,
-            },
-            session: {
-              userId: userId,
-            },
-          },
-        });
+        const dailyMessageCount = await this.getDailyMessageCount(userId);
 
         if (dailyMessageCount >= 1) {
           throw new ApiError(403, "Daily message limit reached. Upgrade to Premium for unlimited guidance.", "PREMIUM_REQUIRED");

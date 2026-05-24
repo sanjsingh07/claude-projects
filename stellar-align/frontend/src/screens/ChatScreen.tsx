@@ -44,14 +44,17 @@ export const ChatScreen: React.FC = () => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch chat history
-  const { data: chatHistory, refetch, isLoading: isHistoryLoading } = useQuery({
+  const { data: chatResponse, refetch, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['chatHistory', user?.id],
     queryFn: async () => {
       const response = await api.getChatHistory();
-      return response.data as Message[];
+      return response as any;
     },
     enabled: !!user?.id,
   });
+
+  const chatHistory = chatResponse?.data as Message[];
+  const dailyMessageCount = chatResponse?.dailyMessageCount || 0;
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -89,15 +92,10 @@ export const ChatScreen: React.FC = () => {
   const handleSend = () => {
     if (!input.trim() || sendMessageMutation.isPending || isHistoryLoading) return;
 
-    // Local check for free tier limit (1 question per day)
-    const isPremium = user?.isPremium;
-    const today = DateTime.now().toISODate(); // 'YYYY-MM-DD'
-    const previousMessagesToday = chatHistory?.filter(m => 
-      m.role === 'user' && 
-      DateTime.fromISO(m.timestamp).toISODate() === today
-    ).length || 0;
+    // Use backend-provided daily count for accuracy (handles cleared sessions too)
+    const isPremium = user?.isPremium || chatResponse?.isPremium;
 
-    if (!isPremium && previousMessagesToday >= 1) {
+    if (!isPremium && dailyMessageCount >= 1) {
       setShowPaywall(true);
       return;
     }

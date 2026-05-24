@@ -1430,3 +1430,16 @@ Refined the chat limit logic to allow free users one question per day instead of
 
 ### Files Modified
 - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Fix chat limit discrepancy and improve efficiency
+
+### Summary
+Resolved an inefficiency and logic discrepancy in the chat question limit. The backend now provides the authoritative daily message count, and the frontend uses this count to enforce the 1-question-per-day limit even if the local chat history has been cleared.
+
+### Changes
+- **Backend (ChatController)**: Refactored message count logic and updated the `getHistory` endpoint to return `dailyMessageCount` and `isPremium` status.
+- **Frontend (ChatScreen)**: Updated `useQuery` to capture the full backend response and switched the `handleSend` check to use the backend-provided `dailyMessageCount`. This ensures the limit is correctly enforced across all sessions (including cleared ones) without making redundant API calls.
+
+### Files Modified
+- `stellar-align/backend/src/controllers/chatController.ts`
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`
