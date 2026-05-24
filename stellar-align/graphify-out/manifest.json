@@ -1,7 +1,7 @@
 {
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/App.tsx": {
-    "mtime": 1779456141.24738,
-    "hash": "51bd4090d8bd07a5b4daa32c788a072d"
+    "mtime": 1779604533.996576,
+    "hash": "abdd2c0aefea3b356c3fb71957f782ab"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/types/index.ts": {
     "mtime": 1779216737.8849878,
@@ -10,6 +10,10 @@
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/config/googleAuth.ts": {
     "mtime": 1779474852.2001836,
     "hash": "1eccf79f6e6a02d956d2204027dc52b1"
+  },
+  "/Users/jayyy/claude-projects/stellar-align/frontend/src/config/runtime.ts": {
+    "mtime": 1779526566.3027377,
+    "hash": "3be815ad21059be9f4984836d9c32fa3"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/navigation/MainNavigator.tsx": {
     "mtime": 1779191253.0119565,
@@ -36,24 +40,24 @@
     "hash": "818fbba9167a8141bcda70c0a51e65eb"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/ChatScreen.tsx": {
-    "mtime": 1779191253.014352,
-    "hash": "ff8f66f81ee2a898b5dd70f47e6846f2"
+    "mtime": 1779614794.6729019,
+    "hash": "e5fccec907cf7c54454752511b51c2f1"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/TodayScreen.tsx": {
     "mtime": 1779200561.0416965,
     "hash": "0a6d2cd433bdd9f9f1e84b941a17ae6f"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/ProfileScreen.tsx": {
-    "mtime": 1779191253.014654,
-    "hash": "b0c43b85c1335fec99d1bf1dda1f3ed9"
+    "mtime": 1779611815.4139657,
+    "hash": "b62255ca54aa5fafd8ea0bdc4b74f26c"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/ChartScreen.tsx": {
     "mtime": 1779191253.0139647,
     "hash": "91d44da010df79cab38c4d8ebcab7e0f"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/SettingsScreen.tsx": {
-    "mtime": 1779293395.470414,
-    "hash": "d9f6b7a0e04dfcab09549ff611cb6d2c"
+    "mtime": 1779614822.6378398,
+    "hash": "4190f4dc5291b8dbe2b514c7048f6d5c"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/TransitsScreen.tsx": {
     "mtime": 1779191253.0162556,
@@ -64,8 +68,8 @@
     "hash": "dc58ac9c3bd3e7ab0f9505b0ac17ccf5"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx": {
-    "mtime": 1779474852.2030308,
-    "hash": "5b2bfa5b98fa30feb652dbb39ce8f806"
+    "mtime": 1779614806.107281,
+    "hash": "0594c304738c0afeb33221f7e637fc29"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/screens/Auth/LoginScreen.tsx": {
     "mtime": 1779474852.2013707,
@@ -88,8 +92,8 @@
     "hash": "2246ffbef41d6ca544a95272901d2ffe"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/LegalModal.tsx": {
-    "mtime": 1779293318.4464467,
-    "hash": "93a627d194214babaf3982b101130922"
+    "mtime": 1779614762.2431297,
+    "hash": "329cd3e3cddf93fdebb2ca5f0baa7159"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/Card.tsx": {
     "mtime": 1776627456.21839,
@@ -112,8 +116,8 @@
     "hash": "2e4e843ae1a2aed793aa60c2ab89840e"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/Paywall.tsx": {
-    "mtime": 1779368988.3529541,
-    "hash": "9ca6df59decbbb56092ad24ddbfe2578"
+    "mtime": 1779614782.9715486,
+    "hash": "15c9ca6bc77272f3878668c5be280a53"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/components/CompatibilityRing.tsx": {
     "mtime": 1779191253.006954,
@@ -164,8 +168,8 @@
     "hash": "a13466e3fa98383f27858615fe0b0c94"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/hooks/useAuth.ts": {
-    "mtime": 1779191253.0116858,
-    "hash": "4c2908c25d2752d6133b5c78a517df7f"
+    "mtime": 1779604545.7418637,
+    "hash": "2c4e695207a339a58013c976a5a201e7"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/hooks/useHoroscope.ts": {
     "mtime": 1776627526.1542084,
@@ -176,12 +180,12 @@
     "hash": "332fc0995fbb79c21a8d8d3bdbe0de1c"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/services/api.ts": {
-    "mtime": 1779191253.0166929,
-    "hash": "7472b7fb2dcff33876010adf3468bac4"
+    "mtime": 1779614788.7826786,
+    "hash": "9e80b3d5f66a3970ab8d87b8fb9170ce"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/services/subscriptionService.ts": {
-    "mtime": 1779455865.5634508,
-    "hash": "9afd535aa5af637f07215122922ebe1c"
+    "mtime": 1779604705.110908,
+    "hash": "1249636da9b12e5059deb67fa72682a5"
   },
   "/Users/jayyy/claude-projects/stellar-align/frontend/src/services/queryClient.ts": {
     "mtime": 1779215293.540592,
@@ -232,8 +236,8 @@
     "hash": "81f6cc05dd1ca0d4e5fe669bef300f7d"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/middleware/auth.ts": {
-    "mtime": 1779191252.9940572,
-    "hash": "9162e8db4a29838a533c89d137b21c07"
+    "mtime": 1779611719.9079664,
+    "hash": "663b49545d0fc4f338aa25604441f5f6"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/middleware/validator.ts": {
     "mtime": 1776598646.887892,
@@ -272,8 +276,8 @@
     "hash": "b00657a85e7ca50430226a82b2510570"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/config/env.ts": {
-    "mtime": 1779199816.1765666,
-    "hash": "81784b5b355289a1b720126fcdce8639"
+    "mtime": 1779604452.3688512,
+    "hash": "696714cd21e0e4c647835b7a7bc286d9"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/config/queue.ts": {
     "mtime": 1779191252.9906738,
@@ -348,8 +352,8 @@
     "hash": "641e7821b4671515a69011342df188eb"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/controllers/userController.ts": {
-    "mtime": 1779216756.0263922,
-    "hash": "5cb3b2e4f8a7c444a0034e96bd231fd1"
+    "mtime": 1779611771.9177809,
+    "hash": "a3eab5158c17f085d55f40505d996e48"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/routes/vedicChart.ts": {
     "mtime": 1779191252.997057,
@@ -379,13 +383,17 @@
     "mtime": 1779191252.9950387,
     "hash": "7c099cb2ee653c33d9916b518c83bd04"
   },
+  "/Users/jayyy/claude-projects/stellar-align/backend/src/routes/subscriptions.ts": {
+    "mtime": 1779604724.3537066,
+    "hash": "bd988370802648f95bfd2fe29fbd02bf"
+  },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/routes/users.ts": {
-    "mtime": 1779215284.8928304,
-    "hash": "f5d7c3283bc3e1d63d67e590708026f0"
+    "mtime": 1779559675.7219825,
+    "hash": "415193ee252c469eab85c03141605523"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/routes/index.ts": {
-    "mtime": 1779191252.9961064,
-    "hash": "93df0770b625d9c554b33b740d652ec0"
+    "mtime": 1779604491.576366,
+    "hash": "5765b275aa3707570036d6734ad784cd"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/routes/friends.ts": {
     "mtime": 1779191252.9957573,
@@ -406,6 +414,10 @@
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/astrologyFormatter.ts": {
     "mtime": 1779191252.9979372,
     "hash": "0907d9d3c3621f7e4bdf5a2c8bac7604"
+  },
+  "/Users/jayyy/claude-projects/stellar-align/backend/src/services/subscription.service.ts": {
+    "mtime": 1779604567.755406,
+    "hash": "bfd76b3fcd6ea9d3399ea5a5817f4139"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/auth.service.ts": {
     "mtime": 1779191252.9982786,
@@ -448,8 +460,8 @@
     "hash": "b07dc6502455f7f7c126983fc4126650"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/settingsService.ts": {
-    "mtime": 1779191252.9997184,
-    "hash": "6bcfb194b217be1f7334c1fa96e31a1c"
+    "mtime": 1779611734.8451326,
+    "hash": "c99a869899c504134909189bdf14541c"
   },
   "/Users/jayyy/claude-projects/stellar-align/backend/src/services/transits/transitClassifier.ts": {
     "mtime": 1778074801.8061466,

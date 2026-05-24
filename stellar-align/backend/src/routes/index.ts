@@ -10,6 +10,7 @@ import vedicChartRoutes from "./vedicChart";
 import transitRoutes from "./transits";
 import utilsRoutes from "./utils";
 import notificationRoutes from "./notifications";
+import subscriptionRoutes from "./subscriptions";
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use("/vedic", vedicChartRoutes);
 router.use("/transits", transitRoutes);
 router.use("/utils", utilsRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/subscriptions", subscriptionRoutes);
 
 export default router;

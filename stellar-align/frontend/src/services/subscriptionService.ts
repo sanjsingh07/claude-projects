@@ -13,6 +13,7 @@ const PRO_ENTITLEMENT_ID = 'Stellar Align Pro';
 class SubscriptionService {
   private static instance: SubscriptionService;
   private isInitialized = false;
+  private currentRevenueCatUserId: string | null = null;
 
   private constructor() {}
 
@@ -37,13 +38,15 @@ class SubscriptionService {
 
     try {
       Purchases.setLogLevel(LOG_LEVEL.DEBUG); // Use DEBUG for integration phase
+      const userId = useAuthStore.getState().user?.id;
       
       await Purchases.configure({ 
         apiKey: REVENUECAT_API_KEY,
-        // appUserID: useAuthStore.getState().user?.id // Optional: link to your own DB ID
+        appUserID: userId,
       });
 
       this.isInitialized = true;
+      this.currentRevenueCatUserId = userId || null;
       console.log('SubscriptionService: Configured successfully');
       
       // Initial check of customer info
@@ -53,6 +56,33 @@ class SubscriptionService {
     }
   }
 
+  public async identifyCurrentUser(): Promise<void> {
+    if (Constants.appOwnership === 'expo') return;
+
+    const userId = useAuthStore.getState().user?.id;
+    if (!userId) return;
+
+    if (!this.isInitialized) {
+      await this.initialize();
+    }
+
+    if (!this.isInitialized || this.currentRevenueCatUserId === userId) {
+      return;
+    }
+
+    try {
+      const { customerInfo } = await Purchases.logIn(userId);
+      this.currentRevenueCatUserId = userId;
+      await this.handleCustomerInfoUpdate(customerInfo);
+    } catch (e) {
+      console.error('Failed to identify RevenueCat user', e);
+    }
+  }
+
+  public async logOut(): Promise<void> {
+    this.currentRevenueCatUserId = null;
+  }
+
   /**
    * Check current subscription status and sync with local store and backend
    */
@@ -60,6 +90,7 @@ class SubscriptionService {
     if (!this.isInitialized) return false;
 
     try {
+      await this.identifyCurrentUser();
       const customerInfo = await Purchases.getCustomerInfo();
       return this.handleCustomerInfoUpdate(customerInfo);
     } catch (e) {
@@ -95,6 +126,7 @@ class SubscriptionService {
     }
 
     try {
+      await this.identifyCurrentUser();
       const { customerInfo } = await Purchases.purchasePackage(pkg);
       return this.handleCustomerInfoUpdate(customerInfo);
     } catch (e: any) {
@@ -121,6 +153,7 @@ class SubscriptionService {
     if (!this.isInitialized) return false;
 
     try {
+      await this.identifyCurrentUser();
       const customerInfo = await Purchases.restorePurchases();
       const isPro = this.checkEntitlement(customerInfo);
       
@@ -152,31 +185,35 @@ class SubscriptionService {
    * Synchronize RevenueCat status with local State and Remote Backend
    */
   private async handleCustomerInfoUpdate(customerInfo: CustomerInfo): Promise<boolean> {
-    const isPremium = this.checkEntitlement(customerInfo);
+    const hasRevenueCatPremium = this.checkEntitlement(customerInfo);
     
     try {
-      // 1. Update local Zustand store
       const { user, isAuthenticated } = useAuthStore.getState();
+      const hasBackendPremium = Boolean(user?.isPremium);
+      const hasPremiumAccess = hasBackendPremium || hasRevenueCatPremium;
       
-      if (user && user.isPremium !== isPremium) {
-        useAuthStore.getState().setUser({ ...user, isPremium });
+      if (user && user.isPremium !== hasPremiumAccess) {
+        useAuthStore.getState().setUser({ ...user, isPremium: hasPremiumAccess });
       }
 
-      // 2. Sync with Backend API - only if authenticated
-      if (isAuthenticated) {
-        // await api.client.patch('/users/profile', { isPremium });
-        await api.updateProfile({ isPremium });
-        
-        // 3. Invalidate relevant queries to refresh UI
+      if (isAuthenticated && user) {
+        const response: any = await api.syncSubscription();
+        const syncedUser = {
+          ...user,
+          isPremium: response.data?.isPremium ?? hasPremiumAccess,
+          subscriptionExpiresAt: response.data?.subscriptionExpiresAt,
+        };
+        useAuthStore.getState().setUser(syncedUser);
+
         queryClient.invalidateQueries({ queryKey: ['profile'] });
         queryClient.invalidateQueries({ queryKey: ['transits'] });
         queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       }
       
-      return isPremium;
+      return hasPremiumAccess;
     } catch (e) {
       console.error('Failed to sync premium status with backend', e);
-      return isPremium;
+      return hasRevenueCatPremium;
     }
   }
 }

@@ -1245,3 +1245,148 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/app.json`
   - `stellar-align/report/changes.md`
+
+## [Sat May 23 14:26:33 IST 2026] Add Production API URL Fallback
+- **What was changed and why**: Added a checked-in fallback for the public API URL so native production builds no longer depend on `EXPO_PUBLIC_API_URL` being injected correctly. Environment variables still override the fallback for dev or staging builds.
+- **Summary of changes**:
+  - Added `frontend/src/config/runtime.ts` with the production Oracle VM API URL fallback.
+  - Updated `ApiService` to import the resolved API URL from shared runtime config instead of reading `process.env` directly.
+  - Removed unused Expo Constants and React Native Platform imports from the API service.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Files modified**:
+  - `stellar-align/frontend/src/config/runtime.ts`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
+
+## [Sat May 23 23:40:10 IST 2026] Protect Reviewer Premium Access
+- **What was changed and why**: Prevented RevenueCat refreshes from downgrading manually granted backend premium access, which is needed for the App Review test account. Also removed premium status from generic user profile updates so normal profile PATCH calls cannot change subscription state.
+- **Summary of changes**:
+  - Updated subscription refresh handling to preserve backend/manual premium status when RevenueCat has no active entitlement.
+  - Removed the automatic `api.updateProfile({ isPremium })` sync from RevenueCat customer info refresh.
+  - Removed `isPremium` validation and copying from `/users/me` and `/users/profile` update paths.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/routes/users.ts`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
+
+## [Sun May 24 12:10:46 IST 2026] Add Verified RevenueCat Subscription Sync
+- **What was changed and why**: Added backend-owned subscription syncing so real RevenueCat purchases update the database while manually granted reviewer premium access remains protected from downgrades.
+- **Summary of changes**:
+  - Added a `manualPremiumOverride` user flag and migration that preserves existing premium users with no subscription expiration as manual overrides.
+  - Added backend RevenueCat verification service using the server-side RevenueCat REST API key.
+  - Added authenticated `POST /api/subscriptions/sync` for immediate post-purchase and restore synchronization.
+  - Added `POST /api/subscriptions/revenuecat/webhook` for renewal, cancellation, and expiration events while the app is not open.
+  - Updated the mobile app to identify RevenueCat users with the backend user ID and sync subscription status after login, purchase, restore, and customer info refresh.
+  - Documented the required RevenueCat backend environment variables.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Ran Prisma client generation successfully.
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/README.md`
+  - `stellar-align/backend/prisma/schema.prisma`
+  - `stellar-align/backend/prisma/migrations/20260524000100_add_manual_premium_override/migration.sql`
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/src/routes/index.ts`
+  - `stellar-align/backend/src/routes/subscriptions.ts`
+  - `stellar-align/backend/src/services/subscription.service.ts`
+  - `stellar-align/frontend/src/App.tsx`
+  - `stellar-align/frontend/src/hooks/useAuth.ts`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
+
+## [Sun May 24 14:09:02 IST 2026] Optimize Profile And Settings Latency
+- **What was changed and why**: Reduced avoidable backend work on the authenticated profile/settings path after hosted API calls felt sluggish compared with local development.
+- **Summary of changes**:
+  - Added short-lived auth user caching so repeated authenticated requests do not hit the database just to verify the same JWT user.
+  - Reduced `/users/me` profile query payload by selecting only the user, settings, and chart fields needed by the profile UI instead of loading full chart houses, aspects, and all divisional chart details.
+  - Simplified settings retrieval with a single upsert and removed the redundant user lookup already covered by auth middleware.
+  - Made settings updates return the updated settings object directly instead of re-querying the settings endpoint.
+  - Added Profile screen React Query staleness settings to avoid refetching profile/settings on every quick remount.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Hosted health check measured about 0.31s by raw IP and 0.63s through the domain from this machine, so basic network reachability is not the whole 4-7s delay.
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/middleware/auth.ts`
+  - `stellar-align/backend/src/services/settingsService.ts`
+  - `stellar-align/frontend/src/screens/ProfileScreen.tsx`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
+
+## [Sun May 24 14:59:19 IST 2026] Fix Frontend Typecheck
+- **What was changed and why**: Fixed frontend TypeScript errors so `npm run typecheck` passes and the app has typed wrappers instead of reaching into private API client internals.
+- **Summary of changes**:
+  - Added the missing `@expo/vector-icons` dependency used by multiple screens and components.
+  - Typed legal modal content sections so optional lists are accepted safely.
+  - Replaced unsupported `StellarText` `bold` props with explicit text styles.
+  - Added typed chat API methods and updated Chat screen to avoid accessing the private Axios client.
+  - Fixed register timezone response handling and added the missing Android picker indicator style.
+  - Removed an unused missing `showCustomerCenter` import from Settings.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Frontend `npm run typecheck` passes.
+  - Backend `npm run typecheck` passes.
+- **Files modified**:
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/frontend/src/components/LegalModal.tsx`
+  - `stellar-align/frontend/src/components/Paywall.tsx`
+  - `stellar-align/frontend/src/screens/Auth/RegisterScreen.tsx`
+  - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+  - `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`
+
+## [Sun May 24 15:28:16 IST 2026] Fix Expo Font Native Module Crash
+- **What was changed and why**: Added the missing `expo-font` dependency required by `@expo/vector-icons`, resolving the native runtime error `Cannot find native module 'ExpoFontLoader'`.
+- **Summary of changes**:
+  - Declared `expo-font` as a direct frontend dependency so native builds include the font loader module.
+  - Verified Expo dependency versions are up to date for the current SDK.
+- **Verification**:
+  - Frontend `npm run typecheck` passes.
+  - `npx expo install --check` reports dependencies are up to date.
+- **Files modified**:
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/report/changes.md`
+
+## [2026-05-24] - Fix ExpoFontLoader and Font Loading
+### Fixed
+- **Missing Native Module**: Resolved 'ExpoFontLoader' crash by running `pod install` to properly link the `expo-font` native module which was recently added to `package.json` but not linked.
+- **Font Loading**: Implemented font loading logic in `App.tsx` using `useFonts` from `expo-font`.
+- **Custom Fonts**: Integrated `@expo-google-fonts/dm-sans` and `@expo-google-fonts/instrument-serif` to provide the project-specific fonts without requiring local assets.
+- **Splash Screen**: Added `expo-splash-screen` management to prevent flicker or unstyled text during font load.
+### Added
+- **Configuration**: Added `expo-font` to the `plugins` array in `app.json` for better autolinking support.
+### Files Modified
+- `frontend/app.json`
+- `frontend/src/App.tsx`
+- `frontend/package.json` (via npm install)
+- `frontend/ios/Podfile.lock` (via pod install)

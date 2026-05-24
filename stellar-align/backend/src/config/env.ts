@@ -76,6 +76,11 @@ const envSchema = z.object({
   FIREBASE_CLIENT_EMAIL: z.string().optional(),
   EXPO_ACCESS_TOKEN: z.string().optional(),
 
+  // RevenueCat
+  REVENUECAT_REST_API_KEY: z.string().optional(),
+  REVENUECAT_ENTITLEMENT_ID: z.string().default("Stellar Align Pro"),
+  REVENUECAT_WEBHOOK_AUTH_TOKEN: z.string().optional(),
+
   // App
   APP_URL: z.string().default("http://localhost:3000"),
   API_URL: z.string().default("http://localhost:3000"),

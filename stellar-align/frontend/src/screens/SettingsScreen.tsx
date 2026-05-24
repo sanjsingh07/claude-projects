@@ -33,7 +33,6 @@ import {
   TimezoneSelectionModal,
   Paywall,
   LegalModal,
-  showCustomerCenter,
   StellarText,
 } from '../components';
 import { CustomScrollerPicker } from '../components/CustomScrollerPicker';
@@ -397,7 +396,7 @@ export const SettingsScreen: React.FC = () => {
         {/* Support */}
         <SettingsSection label="Support">
           <SettingsRow label="Rate Stellar Align" onPress={() => Alert.alert('Rate', 'Redirecting to App Store...')} />
-          <SettingsRow label="Send feedback" onPress={() => Alert.alert('Feedback', 'Opening email client...')} />
+          {/* <SettingsRow label="Send feedback" onPress={() => Alert.alert('Feedback', 'Opening email client...')} /> */}
           <SettingsRow label="Terms of Service" onPress={() => setLegalModal({ visible: true, type: 'terms' })} />
           <SettingsRow label="Privacy Policy" onPress={() => setLegalModal({ visible: true, type: 'privacy' })} />
           <SettingsRow
@@ -433,7 +432,7 @@ export const SettingsScreen: React.FC = () => {
 
         <View style={styles.footer}>
           <Text style={styles.ver}>STELLAR ALIGN V1.0.0 (BETA)</Text>
-          <Text style={styles.copy}>© 2026 STELLAR ALIGN INC.</Text>
+          <Text style={styles.copy}>© 2026 Evercrest Foundation (Sanjay Muchhal).</Text>
         </View>
         <View style={{ height: 40 }} />
       </ScrollView>

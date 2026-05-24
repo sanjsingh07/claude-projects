@@ -47,7 +47,7 @@ export const ChatScreen: React.FC = () => {
   const { data: chatHistory, refetch } = useQuery({
     queryKey: ['chatHistory', user?.id],
     queryFn: async () => {
-      const response = await api.client.get('/chat/history');
+      const response = await api.getChatHistory();
       return response.data as Message[];
     },
     enabled: !!user?.id,
@@ -63,7 +63,7 @@ export const ChatScreen: React.FC = () => {
       const newUserMsg: Message = { id: userMessageId, role: 'user', content: message, timestamp: now };
       setPendingMessages(prev => [...prev, newUserMsg]);
 
-      const response = await api.client.post('/chat/message', { message });
+      const response = await api.sendChatMessage(message);
       return response.data as ChatResponse;
     },
     onMutate: () => {
@@ -94,7 +94,7 @@ export const ChatScreen: React.FC = () => {
   const handleClearChat = async () => {
     try {
       setMenuVisible(false);
-      await api.client.delete('/chat/session');
+      await api.clearChatSession();
       refetch();
     } catch (error) {
       console.error('Failed to clear chat:', error);

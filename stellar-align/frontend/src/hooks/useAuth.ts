@@ -23,7 +23,7 @@ export function useAuth() {
     },
     onSuccess: (userData) => {
       setUser(userData);
-      subscriptionService.refreshCustomerInfo();
+      subscriptionService.identifyCurrentUser();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });
@@ -57,7 +57,7 @@ export function useAuth() {
     },
     onSuccess: (userData) => {
       setUser(userData);
-      subscriptionService.refreshCustomerInfo();
+      subscriptionService.identifyCurrentUser();
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
@@ -70,6 +70,7 @@ export function useAuth() {
     try {
       await api.logout();
     } finally {
+      subscriptionService.logOut();
       storeLogout();
       queryClient.clear();
     }
@@ -87,7 +88,7 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      subscriptionService.refreshCustomerInfo();
+      subscriptionService.identifyCurrentUser();
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['horoscope'] });
       queryClient.invalidateQueries({ queryKey: ['chart'] });

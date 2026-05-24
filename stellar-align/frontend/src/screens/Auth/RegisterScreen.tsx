@@ -283,13 +283,14 @@ export const RegisterScreen: React.FC = () => {
     setIsLoadingLocations(true);
     try {
       const response = await api.getTimezone(location.lat, location.lon);
-      if (response.success && response.data?.timezone) {
+      const data = (response as any).data;
+      if (data?.timezone) {
         setBirthData(prev => ({
           ...prev,
           locationName: location.displayName,
           latitude: parseFloat(location.lat),
           longitude: parseFloat(location.lon),
-          timezone: response.data.timezone,
+          timezone: data.timezone,
         }));
       }
     } catch (error) {
@@ -1010,7 +1011,7 @@ const styles = StyleSheet.create({
     color: colors.stellarFg,
   },
   title: {
-    fontSize: 36,
+    fontSize: 38,
     color: colors.stellarFg,
     lineHeight: 40,
     marginBottom: 8,
@@ -1315,6 +1316,9 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     marginTop: spacing.md,
+  },
+  indicator: {
+    height: 0,
   },
 });
 

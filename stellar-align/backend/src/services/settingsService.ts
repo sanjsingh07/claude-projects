@@ -1,33 +1,7 @@
 import { prisma } from "../config/database";
 import logger from "../config/logger";
-import { NotFoundError } from "../utils/errors";
 
-export const getUserSettings = async (userId: string) => {
-  // Verify user exists first to avoid orphaned token issues and foreign key violations
-  const user = await prisma.user.findUnique({
-    where: { id: userId }
-  });
-
-  if (!user) {
-    throw new NotFoundError("User not found");
-  }
-
-  let settings = await prisma.userSettings.findUnique({
-    where: { userId }
-  });
-
-  if (!settings) {
-    // Create default settings if not exists
-    settings = await prisma.userSettings.create({
-      data: {
-        userId,
-        chartStyle: "western",
-        darkMode: true,
-        accentColor: "violet"
-      }
-    });
-  }
-
+const formatSettings = (settings: any) => {
   return {
     display: {
       chartStyle: settings.chartStyle,
@@ -57,6 +31,21 @@ export const getUserSettings = async (userId: string) => {
       analytics: settings.analyticsEnabled
     }
   };
+};
+
+export const getUserSettings = async (userId: string) => {
+  const settings = await prisma.userSettings.upsert({
+    where: { userId },
+    update: {},
+    create: {
+      userId,
+      chartStyle: "western",
+      darkMode: true,
+      accentColor: "violet"
+    }
+  });
+
+  return formatSettings(settings);
 };
 
 export const updateUserSettings = async (userId: string, patch: any) => {
@@ -92,7 +81,7 @@ export const updateUserSettings = async (userId: string, patch: any) => {
     if (patch.privacy.analytics !== undefined) updateData.analyticsEnabled = patch.privacy.analytics;
   }
 
-  await prisma.userSettings.update({
+  const settings = await prisma.userSettings.update({
     where: { userId },
     data: updateData
   });
@@ -107,5 +96,5 @@ export const updateUserSettings = async (userId: string, patch: any) => {
     logger.info(`Synced zodiacType to ${zodiacType} for user ${userId} based on chartStyle change`);
   }
 
-  return getUserSettings(userId);
+  return formatSettings(settings);
 };

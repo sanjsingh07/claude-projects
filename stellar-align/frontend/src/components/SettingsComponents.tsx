@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'InstrumentSerif-Italic',
-    fontSize: 22,
+    fontSize: 30,
     color: colors.stellarFg,
   },
   section: {
