@@ -1443,3 +1443,16 @@ Resolved an inefficiency and logic discrepancy in the chat question limit. The b
 ### Files Modified
 - `stellar-align/backend/src/controllers/chatController.ts`
 - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Optimize chat limit enforcement and fix Paywall trigger
+
+### Summary
+Fixed an issue where the chat Paywall was bypassed or failed to trigger correctly. Introduced optimistic counting to prevent rapid-fire requests and corrected the error path to properly detect backend-enforced limits.
+
+### Changes
+- **ChatScreen**: Added `optimisticCount` state to track pending messages and enforce the limit immediately on the client side.
+- **ChatScreen**: Fixed `onError` to correctly parse the unwrapped error body from `api.ts`, ensuring the `PREMIUM_REQUIRED` code triggers the Paywall modal.
+- **ChatScreen**: Improved `handleSend` to combine backend data, local history, and optimistic state for robust limit enforcement.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`
