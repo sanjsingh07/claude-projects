@@ -16,7 +16,7 @@ export const ProfileHero: React.FC<{
       </View>
       <View style={styles.info}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        {/* <Text style={styles.subtitle}>{subtitle}</Text> */}
         <View style={styles.badges}>
           {badges.map((badge, i) => (
             <View 
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   badges: {
     flexDirection: 'row',
-    marginTop: 8,
+    marginTop: 1,
     flexWrap: 'wrap',
   },
   badge: {
