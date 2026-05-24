@@ -1281,3 +1281,35 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/graphify-out/graph.json`
   - `stellar-align/graphify-out/manifest.json`
   - `stellar-align/report/changes.md`
+
+## [Sun May 24 12:10:46 IST 2026] Add Verified RevenueCat Subscription Sync
+- **What was changed and why**: Added backend-owned subscription syncing so real RevenueCat purchases update the database while manually granted reviewer premium access remains protected from downgrades.
+- **Summary of changes**:
+  - Added a `manualPremiumOverride` user flag and migration that preserves existing premium users with no subscription expiration as manual overrides.
+  - Added backend RevenueCat verification service using the server-side RevenueCat REST API key.
+  - Added authenticated `POST /api/subscriptions/sync` for immediate post-purchase and restore synchronization.
+  - Added `POST /api/subscriptions/revenuecat/webhook` for renewal, cancellation, and expiration events while the app is not open.
+  - Updated the mobile app to identify RevenueCat users with the backend user ID and sync subscription status after login, purchase, restore, and customer info refresh.
+  - Documented the required RevenueCat backend environment variables.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Ran Prisma client generation successfully.
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/README.md`
+  - `stellar-align/backend/prisma/schema.prisma`
+  - `stellar-align/backend/prisma/migrations/20260524000100_add_manual_premium_override/migration.sql`
+  - `stellar-align/backend/src/config/env.ts`
+  - `stellar-align/backend/src/routes/index.ts`
+  - `stellar-align/backend/src/routes/subscriptions.ts`
+  - `stellar-align/backend/src/services/subscription.service.ts`
+  - `stellar-align/frontend/src/App.tsx`
+  - `stellar-align/frontend/src/hooks/useAuth.ts`
+  - `stellar-align/frontend/src/services/api.ts`
+  - `stellar-align/frontend/src/services/subscriptionService.ts`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`

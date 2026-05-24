@@ -85,6 +85,11 @@ ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
 
 # Frontend
 EXPO_PUBLIC_API_URL=http://localhost:3000/api
+
+# RevenueCat backend verification
+REVENUECAT_REST_API_KEY=your_revenuecat_secret_api_key
+REVENUECAT_ENTITLEMENT_ID="Stellar Align Pro"
+REVENUECAT_WEBHOOK_AUTH_TOKEN=your_random_webhook_auth_token
 ```
 
 ## Getting Started

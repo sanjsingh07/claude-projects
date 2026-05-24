@@ -1,16 +1,16 @@
-# Graph Report - stellar-align  (2026-05-23)
+# Graph Report - stellar-align  (2026-05-24)
 
 ## Corpus Check
-- 120 files · ~63,248 words
+- 122 files · ~63,836 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 513 nodes · 684 edges · 24 communities detected
+- 521 nodes · 700 edges · 33 communities detected
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5afc4d29`
+- Built from commit: `2b9bdaa5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,106 +37,115 @@
 - [[_COMMUNITY_Community 19|Community 19]]
 - [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
+- [[_COMMUNITY_Community 22|Community 22]]
+- [[_COMMUNITY_Community 23|Community 23]]
 - [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 25|Community 25]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 44|Community 44]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `ApiService` - 45 edges
+1. `ApiService` - 46 edges
 2. `AIContentService` - 28 edges
 3. `getTransitsForPeriod()` - 27 edges
 4. `AuthController` - 16 edges
-5. `UserController` - 15 edges
-6. `AuthService` - 15 edges
-7. `SubscriptionService` - 13 edges
+5. `SubscriptionService` - 15 edges
+6. `UserController` - 15 edges
+7. `AuthService` - 15 edges
 8. `calculateVedicChart()` - 13 edges
-9. `getPlanetaryPositions()` - 12 edges
-10. `ApiError` - 11 edges
+9. `ApiError` - 12 edges
+10. `getPlanetaryPositions()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `main()` --calls--> `getTransitsForPeriod()`  [INFERRED]
   backend/src/test-transits.ts → backend/src/services/transits/transitEngine.ts
 - `investigate()` --calls--> `getTransitsForPeriod()`  [INFERRED]
   backend/src/investigate_may_11.ts → backend/src/services/transits/transitEngine.ts
-- `calculateNatalChart()` --calls--> `toSiderealLongitude()`  [INFERRED]
+- `calculateNatalChart()` --calls--> `getAyanamsa()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
-- `getPlanetaryPositions()` --calls--> `toSiderealLongitude()`  [INFERRED]
+- `getPlanetaryPositions()` --calls--> `getAyanamsa()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
-- `calculateTransits()` --calls--> `toSiderealLongitude()`  [INFERRED]
+- `calculateTransits()` --calls--> `getAyanamsa()`  [INFERRED]
   backend/src/services/astrology.ts → backend/src/services/vedicAstrology.ts
 
-## Communities (77 total, 11 thin omitted)
+## Communities (86 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.05
-Nodes (10): HoroscopeController, NotificationController, SettingsController, TransitController, authMiddleware(), validateRequest(), getUserSettings(), updateUserSettings() (+2 more)
-
-### Community 1 - "Community 1"
-Cohesion: 0.07
-Nodes (11): ChatController, AuthService, ApiError, ConflictError, ForbiddenError, UnauthorizedError, ValidationError, getAllTimezones() (+3 more)
-
-### Community 2 - "Community 2"
 Cohesion: 0.1
 Nodes (27): calculateUserTransits(), getOrb(), isAspectApplying(), investigate(), main(), findNatalHouse(), formatSign(), generateInterpretation() (+19 more)
 
-### Community 4 - "Community 4"
-Cohesion: 0.17
-Nodes (24): ChartService, calculateDivisional(), calculateNakshatra(), calculateVedicChart(), calculateVimshottariDasha(), createHouses(), detectYogas(), getAngularDistance() (+16 more)
+### Community 2 - "Community 2"
+Cohesion: 0.14
+Nodes (27): ChartService, calculateDivisional(), calculateNakshatra(), calculateVedicChart(), calculateVimshottariDasha(), createHouses(), detectYogas(), getAngularDistance() (+19 more)
 
-### Community 6 - "Community 6"
+### Community 3 - "Community 3"
+Cohesion: 0.11
+Nodes (8): UserController, formatPlacement(), getSignBadgeType(), buildUserProfile(), getAllTimezones(), getTimezoneFromCoords(), getTimezoneOffset(), validateTimezone()
+
+### Community 5 - "Community 5"
 Cohesion: 0.08
 Nodes (3): useAuth(), formatSignName(), getSignEmoji()
 
-### Community 7 - "Community 7"
-Cohesion: 0.18
-Nodes (20): assignHouses(), calcHouses(), calcPlanetPosition(), calculateAspects(), calculateCurrentTransits(), calculateForecast(), calculateNatalChart(), calculateTransits() (+12 more)
+### Community 6 - "Community 6"
+Cohesion: 0.13
+Nodes (4): RootNavigator(), SubscriptionService, configureForegroundNotifications(), registerForPushNotificationsAsync()
 
-### Community 8 - "Community 8"
+### Community 7 - "Community 7"
 Cohesion: 0.13
 Nodes (9): AnthropicProvider, GeminiProvider, GroqProvider, maskKey(), NvidiaProvider, OpencodeProvider, OpenRouterProvider, ResilientLLMProvider (+1 more)
 
-### Community 9 - "Community 9"
-Cohesion: 0.12
-Nodes (4): RootNavigator(), SubscriptionService, configureForegroundNotifications(), registerForPushNotificationsAsync()
+### Community 8 - "Community 8"
+Cohesion: 0.24
+Nodes (17): assignHouses(), calcHouses(), calcPlanetPosition(), calculateAspects(), calculateCurrentTransits(), calculateForecast(), calculateNatalChart(), calculateTransits() (+9 more)
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.13
 Nodes (4): handleNext(), handleSubmit(), validateStep1(), validateStep2()
 
-### Community 11 - "Community 11"
-Cohesion: 0.15
-Nodes (4): UserController, formatPlacement(), getSignBadgeType(), buildUserProfile()
-
-### Community 14 - "Community 14"
-Cohesion: 0.29
-Nodes (4): errorHandler(), notFoundHandler(), profilerMiddleware(), requestIdMiddleware()
-
 ### Community 15 - "Community 15"
+Cohesion: 0.22
+Nodes (4): ConflictError, ForbiddenError, UnauthorizedError, ValidationError
+
+### Community 17 - "Community 17"
 Cohesion: 0.43
 Nodes (6): checkDatabaseHealth(), disconnectDatabase(), gracefulShutdown(), initJobs(), runHealthCheck(), startServer()
 
-### Community 17 - "Community 17"
+### Community 18 - "Community 18"
+Cohesion: 0.29
+Nodes (4): errorHandler(), notFoundHandler(), profilerMiddleware(), requestIdMiddleware()
+
+### Community 20 - "Community 20"
 Cohesion: 0.38
 Nodes (4): displayPlanetLabel(), displayPlanetName(), formatSign(), normalizeSign()
+
+### Community 22 - "Community 22"
+Cohesion: 0.33
+Nodes (3): getUserSettings(), updateUserSettings(), NotFoundError
 
 ## Knowledge Gaps
 - **1 isolated node(s):** `Planet`
   These have ≤1 connection - possible missing edges or undocumented components.
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `calculateVedicChart()` connect `Community 4` to `Community 0`, `Community 1`, `Community 7`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `getTransitsForPeriod()` connect `Community 2` to `Community 0`, `Community 7`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
-- **Why does `AIContentService` connect `Community 5` to `Community 2`, `Community 7`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+- **Why does `calculateVedicChart()` connect `Community 2` to `Community 16`, `Community 3`, `Community 13`?**
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+- **Why does `getTransitsForPeriod()` connect `Community 0` to `Community 8`, `Community 30`?**
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+- **Why does `NotFoundError` connect `Community 22` to `Community 3`, `Community 15`, `Community 24`, `Community 30`, `Community 31`?**
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `getTransitsForPeriod()` (e.g. with `main()` and `investigate()`) actually correct?**
   _`getTransitsForPeriod()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Planet` to the rest of the system?**
   _1 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.07 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06 - nodes in this community are weakly interconnected._

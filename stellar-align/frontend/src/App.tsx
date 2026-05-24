@@ -22,6 +22,7 @@ export default function App() {
 
   useEffect(() => {
     if (isAuthenticated && user?.id) {
+      subscriptionService.identifyCurrentUser();
       registerForPushNotificationsAsync(user.id);
     }
   }, [isAuthenticated, user?.id]);

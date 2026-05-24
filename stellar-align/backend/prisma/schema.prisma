@@ -110,6 +110,7 @@ model User {
   isDeleted             Boolean   @default(false)
   profileCompleted      Boolean   @default(false)
   isPremium             Boolean   @default(false)
+  manualPremiumOverride Boolean   @default(false)
   subscriptionExpiresAt DateTime?
   deletedAt             DateTime?
   requestedCompat       CompatibilityReport[] @relation("RequesterCompat")
@@ -463,4 +464,3 @@ model ChatMessage {
   @@index([sessionId])
   @@index([createdAt])
 }
-

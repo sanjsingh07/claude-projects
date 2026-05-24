@@ -246,6 +246,10 @@ class ApiService {
     return this.client.patch('/users/profile', data);
   }
 
+  async syncSubscription() {
+    return this.client.post('/subscriptions/sync');
+  }
+
   async getSettings() {
     return this.client.get('/users/settings');
   }
