@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   dayText: {
-    fontSize: 10,
+    fontSize: 11,
     letterSpacing: 2,
     textTransform: 'uppercase',
     color: colors.stellarMuted,
@@ -155,8 +155,9 @@ const styles = StyleSheet.create({
     fontFamily: 'DM Sans',
   },
   fullDateText: {
-    fontSize: 18,
+    fontSize: 19,
     color: colors.stellarFg,
+    // textAlign: 'center',
     fontFamily: 'Instrument Serif',
   },
   loadingContainer: {

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontFamily: 'InstrumentSerif-Italic',
-    fontSize: 26,
+    fontSize: 40,
     color: colors.stellarFg,
   },
   info: {
@@ -128,9 +128,9 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: 'InstrumentSerif-Italic',
-    fontSize: 24,
+    fontSize: 30,
     color: colors.stellarFg,
-    lineHeight: 28,
+    lineHeight: 31,
   },
   subtitle: {
     fontFamily: 'DMSans-Regular',

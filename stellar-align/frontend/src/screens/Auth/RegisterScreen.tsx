@@ -1011,7 +1011,7 @@ const styles = StyleSheet.create({
     color: colors.stellarFg,
   },
   title: {
-    fontSize: 36,
+    fontSize: 38,
     color: colors.stellarFg,
     lineHeight: 40,
     marginBottom: 8,

@@ -125,7 +125,7 @@ export const RegisterStartScreen: React.FC = () => {
         <View style={styles.content}>
           <View style={styles.logoArea}>
             <StellarText style={styles.logoIcon}>✧</StellarText>
-            <StellarText variant="heading1" serif italic style={styles.appName}>
+            <StellarText serif italic style={styles.appName}>
               Stellar Align
             </StellarText>
             <StellarText style={styles.tagline}>
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   textShadowRadius: 13, // Reduced from 20 so it doesn't clip into a square shape
 },
   appName: {
-    fontSize: 52,
+    fontSize: 58,
     color: colors.stellarFg,
     lineHeight: 60,
   },

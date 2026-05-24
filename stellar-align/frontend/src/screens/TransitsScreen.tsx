@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Instrument Serif',
     fontStyle: 'italic',
     lineHeight: 27,
-    // paddingTop: 2,
+    paddingTop: 2,
   },
   headerSubtitle: {
     fontSize: 12,
