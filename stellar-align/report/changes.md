@@ -1364,3 +1364,15 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/graphify-out/graph.json`
   - `stellar-align/graphify-out/manifest.json`
   - `stellar-align/report/changes.md`
+
+## [Sun May 24 15:28:16 IST 2026] Fix Expo Font Native Module Crash
+- **What was changed and why**: Added the missing `expo-font` dependency required by `@expo/vector-icons`, resolving the native runtime error `Cannot find native module 'ExpoFontLoader'`.
+- **Summary of changes**:
+  - Declared `expo-font` as a direct frontend dependency so native builds include the font loader module.
+  - Verified Expo dependency versions are up to date for the current SDK.
+- **Verification**:
+  - Frontend `npm run typecheck` passes.
+  - `npx expo install --check` reports dependencies are up to date.
+- **Files modified**:
+  - `stellar-align/frontend/package.json`
+  - `stellar-align/report/changes.md`
