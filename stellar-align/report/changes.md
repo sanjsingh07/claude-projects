@@ -1419,3 +1419,14 @@ Optimized the chat experience for free users by implementing a client-side check
 
 ### Files Modified
 - `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Refine chat limit to daily reset
+
+### Summary
+Refined the chat limit logic to allow free users one question per day instead of a lifetime limit. This ensures the client-side check aligns with the intended product policy while maintaining the optimization that avoids unnecessary API calls.
+
+### Changes
+- **ChatScreen**: Updated `handleSend` to filter `chatHistory` by the current date when counting previous user messages for the free tier limit check.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`

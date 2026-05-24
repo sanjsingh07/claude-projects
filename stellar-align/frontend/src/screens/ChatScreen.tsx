@@ -89,11 +89,15 @@ export const ChatScreen: React.FC = () => {
   const handleSend = () => {
     if (!input.trim() || sendMessageMutation.isPending || isHistoryLoading) return;
 
-    // Local check for free tier limit (1 question)
+    // Local check for free tier limit (1 question per day)
     const isPremium = user?.isPremium;
-    const previousMessages = chatHistory?.filter(m => m.role === 'user').length || 0;
+    const today = DateTime.now().toISODate(); // 'YYYY-MM-DD'
+    const previousMessagesToday = chatHistory?.filter(m => 
+      m.role === 'user' && 
+      DateTime.fromISO(m.timestamp).toISODate() === today
+    ).length || 0;
 
-    if (!isPremium && previousMessages >= 1) {
+    if (!isPremium && previousMessagesToday >= 1) {
       setShowPaywall(true);
       return;
     }
