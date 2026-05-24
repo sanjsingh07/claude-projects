@@ -1376,3 +1376,17 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - **Files modified**:
   - `stellar-align/frontend/package.json`
   - `stellar-align/report/changes.md`
+
+## [2026-05-24] - Fix ExpoFontLoader and Font Loading
+### Fixed
+- **Missing Native Module**: Resolved 'ExpoFontLoader' crash by running `pod install` to properly link the `expo-font` native module which was recently added to `package.json` but not linked.
+- **Font Loading**: Implemented font loading logic in `App.tsx` using `useFonts` from `expo-font`.
+- **Custom Fonts**: Integrated `@expo-google-fonts/dm-sans` and `@expo-google-fonts/instrument-serif` to provide the project-specific fonts without requiring local assets.
+- **Splash Screen**: Added `expo-splash-screen` management to prevent flicker or unstyled text during font load.
+### Added
+- **Configuration**: Added `expo-font` to the `plugins` array in `app.json` for better autolinking support.
+### Files Modified
+- `frontend/app.json`
+- `frontend/src/App.tsx`
+- `frontend/package.json` (via npm install)
+- `frontend/ios/Podfile.lock` (via pod install)
