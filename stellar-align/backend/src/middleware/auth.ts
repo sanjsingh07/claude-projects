@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 import { JwtPayload } from "../types/api";
 import { prisma } from "../config/database";
+import { cache } from "../config/redis";
 
 // Extend Express Request
 declare global {
@@ -39,12 +40,32 @@ export async function authMiddleware(
 
   try {
     const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    const cacheKey = `auth_user:${payload.userId}`;
 
-    // Verify user exists in DB to prevent issues with orphaned tokens from deleted users
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: { id: true, email: true, isActive: true, isDeleted: true },
-    });
+    let user: {
+      id: string;
+      email: string;
+      isActive: boolean;
+      isDeleted: boolean;
+    } | null = null;
+
+    try {
+      user = await cache.get<typeof user>(cacheKey);
+    } catch {
+      user = null;
+    }
+
+    if (!user) {
+      // Verify user exists in DB to prevent issues with orphaned tokens from deleted users.
+      user = await prisma.user.findUnique({
+        where: { id: payload.userId },
+        select: { id: true, email: true, isActive: true, isDeleted: true },
+      });
+
+      if (user && user.isActive && !user.isDeleted) {
+        cache.set(cacheKey, user, 300).catch(() => undefined);
+      }
+    }
 
     if (!user || !user.isActive || user.isDeleted) {
       res.status(401).json({

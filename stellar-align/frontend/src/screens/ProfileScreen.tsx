@@ -38,6 +38,8 @@ export const ProfileScreen: React.FC = () => {
       const response = await api.getCurrentUser();
       return response.data as UserProfile;
     },
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: settings, isLoading: isSettingsLoading } = useQuery({
@@ -46,6 +48,8 @@ export const ProfileScreen: React.FC = () => {
       const response = await api.getSettings();
       return response.data;
     },
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
   });
 
   const updateSettingsMutation = useMutation({

@@ -1313,3 +1313,27 @@ Fixed a recurring error where the app would fail to sync premium status with the
   - `stellar-align/graphify-out/graph.json`
   - `stellar-align/graphify-out/manifest.json`
   - `stellar-align/report/changes.md`
+
+## [Sun May 24 14:09:02 IST 2026] Optimize Profile And Settings Latency
+- **What was changed and why**: Reduced avoidable backend work on the authenticated profile/settings path after hosted API calls felt sluggish compared with local development.
+- **Summary of changes**:
+  - Added short-lived auth user caching so repeated authenticated requests do not hit the database just to verify the same JWT user.
+  - Reduced `/users/me` profile query payload by selecting only the user, settings, and chart fields needed by the profile UI instead of loading full chart houses, aspects, and all divisional chart details.
+  - Simplified settings retrieval with a single upsert and removed the redundant user lookup already covered by auth middleware.
+  - Made settings updates return the updated settings object directly instead of re-querying the settings endpoint.
+  - Added Profile screen React Query staleness settings to avoid refetching profile/settings on every quick remount.
+  - Refreshed the graphify knowledge graph after modifying code.
+- **Verification**:
+  - Hosted health check measured about 0.31s by raw IP and 0.63s through the domain from this machine, so basic network reachability is not the whole 4-7s delay.
+  - Backend `npm run typecheck` passes.
+  - Frontend `npm run typecheck` still fails on pre-existing unrelated errors around `@expo/vector-icons`, component props, and private API client access.
+- **Files modified**:
+  - `stellar-align/backend/src/controllers/userController.ts`
+  - `stellar-align/backend/src/middleware/auth.ts`
+  - `stellar-align/backend/src/services/settingsService.ts`
+  - `stellar-align/frontend/src/screens/ProfileScreen.tsx`
+  - `stellar-align/graphify-out/GRAPH_REPORT.md`
+  - `stellar-align/graphify-out/graph.html`
+  - `stellar-align/graphify-out/graph.json`
+  - `stellar-align/graphify-out/manifest.json`
+  - `stellar-align/report/changes.md`

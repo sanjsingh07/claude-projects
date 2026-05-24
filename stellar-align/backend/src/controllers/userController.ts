@@ -11,6 +11,41 @@ import { HouseSystem, AyanamsaType, ZodiacType, DivisionalChartType, FriendshipS
 import { buildUserProfile } from "../services/userService";
 import { FULL_NATAL_CHART_INCLUDE } from "../models/natalChart";
 
+const CURRENT_USER_PROFILE_SELECT = {
+  id: true,
+  displayName: true,
+  bio: true,
+  birthDateTime: true,
+  birthTimeUnknown: true,
+  birthLocationName: true,
+  birthLatitude: true,
+  birthLongitude: true,
+  birthTimezone: true,
+  birthUtcOffset: true,
+  isPremium: true,
+  settings: {
+    select: {
+      chartStyle: true,
+    },
+  },
+  natalChart: {
+    select: {
+      sunSign: true,
+      moonSign: true,
+      risingSign: true,
+      planetaryPositions: true,
+      divisionalCharts: {
+        where: { chartType: DivisionalChartType.D1 },
+        select: {
+          chartType: true,
+          ascendant: true,
+          planetaryPositions: true,
+        },
+      },
+    },
+  },
+};
+
 export class UserController {
   constructor() {
     this.getCurrentUser = this.getCurrentUser.bind(this);
@@ -32,10 +67,7 @@ export class UserController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.userId },
-        include: { 
-          natalChart: { include: FULL_NATAL_CHART_INCLUDE },
-          settings: true
-        },
+        select: CURRENT_USER_PROFILE_SELECT,
       });
 
       if (!user) {
@@ -177,6 +209,7 @@ export class UserController {
 
       // Invalidate cache
       await cache.delete(`user:${req.userId}`);
+      await cache.delete(`user_profile:${req.userId}`);
 
       // If birth data was updated, trigger recalculation of both Western and Vedic charts
       const birthDataUpdated = !!(updateData.birthDate || updateData.birthTime || updateData.birthLatitude !== undefined || updateData.birthLongitude !== undefined);
@@ -620,6 +653,8 @@ export class UserController {
 
       // Clear all tokens
       await cache.delete(`push_tokens:${req.userId}`);
+      await cache.delete(`auth_user:${req.userId}`);
+      await cache.delete(`user_profile:${req.userId}`);
 
       res.json({
         success: true,
