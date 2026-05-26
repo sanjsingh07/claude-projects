@@ -19,6 +19,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { colors } from '@theme/theme';
 import { useAuthStore } from '@store/authStore';
+import { useAuth } from '../hooks/useAuth';
 import {
   SettingsHeader,
   SettingsSection,
@@ -42,7 +43,7 @@ import { useTransitStore } from '@store/transitStore';
 export const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
-  const logout = useAuthStore((state) => state.logout);
+  const { logout } = useAuth();
   const { filters: transitFilters, toggleFilter: toggleTransitFilter } = useTransitStore();
 
   const [activeModal, setActiveModal] = useState<'chartStyle' | 'divisionalChart' | 'accentColor' | 'location' | 'birthData' | 'name' | 'bio' | 'alertLevel' | 'compFreq' | 'timezone' | null>(null);

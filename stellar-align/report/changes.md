@@ -1390,3 +1390,69 @@ Fixed a recurring error where the app would fail to sync premium status with the
 - `frontend/src/App.tsx`
 - `frontend/package.json` (via npm install)
 - `frontend/ios/Podfile.lock` (via pod install)
+
+## [2026-05-24] - Fix persistent user info bug
+
+### Summary
+Fixed a bug where user information persisted after signing out and signing back in with a different account. This was caused by several stores (horoscope, transit, vedic chart) not being cleared during the logout process, and some components bypassing the centralized logout logic.
+
+### Changes
+- **TransitStore**: Added a `clear()` method to reset filters to defaults.
+- **useAuth Hook**: Updated the `logout` function to call `clear()` on `useHoroscopeStore`, `useTransitStore`, and `useVedicChartStore`, and clear the React Query cache.
+- **ApiService**: Added a `forceLogout()` helper to clear all stores and the React Query cache upon receiving a 401 error or failing to refresh the access token.
+- **SettingsScreen**: Updated to use the `logout` function from the `useAuth` hook instead of directly calling the auth store's logout method.
+
+### Files Modified
+- `stellar-align/frontend/src/store/transitStore.ts`
+- `stellar-align/frontend/src/hooks/useAuth.ts`
+- `stellar-align/frontend/src/services/api.ts`
+- `stellar-align/frontend/src/screens/SettingsScreen.tsx`
+
+## [2026-05-24] - Improve chat efficiency for free users
+
+### Summary
+Optimized the chat experience for free users by implementing a client-side check for the 1-question limit. This prevents unnecessary API calls to the backend when a free user attempts to send a second message, instead showing the Paywall immediately.
+
+### Changes
+- **ChatScreen**: Updated `handleSend` to check the user's premium status and previous message count from `chatHistory` before allowing the mutation to proceed.
+- **ChatScreen**: Added `isHistoryLoading` check to `handleSend` to ensure accurate limit enforcement.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Refine chat limit to daily reset
+
+### Summary
+Refined the chat limit logic to allow free users one question per day instead of a lifetime limit. This ensures the client-side check aligns with the intended product policy while maintaining the optimization that avoids unnecessary API calls.
+
+### Changes
+- **ChatScreen**: Updated `handleSend` to filter `chatHistory` by the current date when counting previous user messages for the free tier limit check.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Fix chat limit discrepancy and improve efficiency
+
+### Summary
+Resolved an inefficiency and logic discrepancy in the chat question limit. The backend now provides the authoritative daily message count, and the frontend uses this count to enforce the 1-question-per-day limit even if the local chat history has been cleared.
+
+### Changes
+- **Backend (ChatController)**: Refactored message count logic and updated the `getHistory` endpoint to return `dailyMessageCount` and `isPremium` status.
+- **Frontend (ChatScreen)**: Updated `useQuery` to capture the full backend response and switched the `handleSend` check to use the backend-provided `dailyMessageCount`. This ensures the limit is correctly enforced across all sessions (including cleared ones) without making redundant API calls.
+
+### Files Modified
+- `stellar-align/backend/src/controllers/chatController.ts`
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`
+
+## [2026-05-24] - Optimize chat limit enforcement and fix Paywall trigger
+
+### Summary
+Fixed an issue where the chat Paywall was bypassed or failed to trigger correctly. Introduced optimistic counting to prevent rapid-fire requests and corrected the error path to properly detect backend-enforced limits.
+
+### Changes
+- **ChatScreen**: Added `optimisticCount` state to track pending messages and enforce the limit immediately on the client side.
+- **ChatScreen**: Fixed `onError` to correctly parse the unwrapped error body from `api.ts`, ensuring the `PREMIUM_REQUIRED` code triggers the Paywall modal.
+- **ChatScreen**: Improved `handleSend` to combine backend data, local history, and optimistic state for robust limit enforcement.
+
+### Files Modified
+- `stellar-align/frontend/src/screens/ChatScreen.tsx`

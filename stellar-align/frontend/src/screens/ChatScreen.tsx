@@ -41,17 +41,21 @@ export const ChatScreen: React.FC = () => {
   const [pendingMessages, setPendingMessages] = useState<Message[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [optimisticCount, setOptimisticCount] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch chat history
-  const { data: chatHistory, refetch } = useQuery({
+  const { data: chatResponse, refetch, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['chatHistory', user?.id],
     queryFn: async () => {
       const response = await api.getChatHistory();
-      return response.data as Message[];
+      return response as any;
     },
     enabled: !!user?.id,
   });
+
+  const chatHistory = chatResponse?.data as Message[];
+  const dailyMessageCount = chatResponse?.dailyMessageCount || 0;
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -62,6 +66,7 @@ export const ChatScreen: React.FC = () => {
       // Immediately add user message to UI
       const newUserMsg: Message = { id: userMessageId, role: 'user', content: message, timestamp: now };
       setPendingMessages(prev => [...prev, newUserMsg]);
+      setOptimisticCount(prev => prev + 1);
 
       const response = await api.sendChatMessage(message);
       return response.data as ChatResponse;
@@ -71,23 +76,46 @@ export const ChatScreen: React.FC = () => {
     },
     onSuccess: () => {
       setPendingMessages([]);
+      setOptimisticCount(0);
       refetch();
     },
     onError: (error: any) => {
       console.error('Chat error:', error);
       setPendingMessages([]);
+      setOptimisticCount(0);
 
-      // Check for premium required error
-      if (error.response?.status === 403 && error.response?.data?.errorCode === 'PREMIUM_REQUIRED') {
+      // handle the unwrapped error body from api.ts
+      const backendError = error?.error;
+      const errorCode = backendError?.code;
+
+      if (errorCode === 'PREMIUM_REQUIRED') {
         setShowPaywall(true);
       } else {
-        Alert.alert('Error', error.response?.data?.message || 'Failed to send message. Please try again.');
+        Alert.alert('Error', backendError?.message || 'Failed to send message. Please try again.');
       }
     },
   });
 
   const handleSend = () => {
-    if (!input.trim() || sendMessageMutation.isPending) return;
+    if (!input.trim() || sendMessageMutation.isPending || isHistoryLoading) return;
+
+    // Local check for free tier limit (1 question per day)
+    const isPremium = user?.isPremium || chatResponse?.isPremium;
+    
+    // Check both the backend count, current history, and our optimistic count
+    const historyCount = chatHistory?.filter(m => {
+      if (m.role !== 'user') return false;
+      const msgDate = DateTime.fromISO(m.timestamp).toISODate();
+      return msgDate === DateTime.now().toISODate();
+    }).length || 0;
+    
+    const effectiveCount = Math.max(dailyMessageCount, historyCount) + optimisticCount;
+
+    if (!isPremium && effectiveCount >= 1) {
+      setShowPaywall(true);
+      return;
+    }
+
     sendMessageMutation.mutate(input);
   };
 

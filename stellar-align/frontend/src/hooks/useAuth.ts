@@ -2,12 +2,18 @@ import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { useAuthStore } from '@store/authStore';
+import { useHoroscopeStore } from '@store/horoscopeStore';
+import { useTransitStore } from '@store/transitStore';
+import { useVedicChartStore } from '@store/vedicChartStore';
 import { subscriptionService } from '@services/subscriptionService';
 import { User } from '@types';
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const { user, isAuthenticated, isLoading: storeLoading, setUser, logout: storeLogout } = useAuthStore();
+  const clearHoroscope = useHoroscopeStore((state) => state.clear);
+  const clearTransit = useTransitStore((state) => state.clear);
+  const clearVedicChart = useVedicChartStore((state) => state.clear);
 
   // Login mutation
   const loginMutation = useMutation({
@@ -72,9 +78,12 @@ export function useAuth() {
     } finally {
       subscriptionService.logOut();
       storeLogout();
+      clearHoroscope();
+      clearTransit();
+      clearVedicChart();
       queryClient.clear();
     }
-  }, [storeLogout, queryClient]);
+  }, [storeLogout, clearHoroscope, clearTransit, clearVedicChart, queryClient]);
 
   // Social login mutation
   const socialLoginMutation = useMutation({

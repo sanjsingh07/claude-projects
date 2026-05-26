@@ -27,6 +27,20 @@ class ApiService {
     this.setupInterceptors();
   }
 
+  private async forceLogout(): Promise<void> {
+    const { useAuthStore } = await import('@store/authStore');
+    const { useHoroscopeStore } = await import('@store/horoscopeStore');
+    const { useTransitStore } = await import('@store/transitStore');
+    const { useVedicChartStore } = await import('@store/vedicChartStore');
+    const { queryClient } = await import('./queryClient');
+
+    useAuthStore.getState().logout();
+    useHoroscopeStore.getState().clear();
+    useTransitStore.getState().clear();
+    useVedicChartStore.getState().clear();
+    queryClient.clear();
+  }
+
   private setupInterceptors(): void {
     // Request interceptor - add auth token
     this.client.interceptors.request.use(
@@ -67,8 +81,7 @@ class ApiService {
           } catch (refreshError) {
             // If refresh fails with 401, it means the refresh token is also invalid or user is gone
             // In this case we MUST force logout to clear the stuck state
-            const { useAuthStore } = await import('@store/authStore');
-            useAuthStore.getState().logout();
+            await this.forceLogout();
             return Promise.reject(refreshError);
           }
         }
@@ -76,8 +89,7 @@ class ApiService {
         // If we get a 401 and it's either an auth endpoint or a second attempt
         // it means the session is completely dead
         if (error.response?.status === 401) {
-          const { useAuthStore } = await import('@store/authStore');
-          useAuthStore.getState().logout();
+          await this.forceLogout();
         }
 
         return Promise.reject(this.handleError(error));
