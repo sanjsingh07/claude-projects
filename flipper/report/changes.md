@@ -118,3 +118,19 @@ Fixed an iOS build compilation failure where `folly/coro/Coroutine.h` could not 
 ### Files Modified/Created
 - `flipper/AIFlipper/ios/Podfile` (Modified)
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Mon Jun 22 15:42:17 +07 2026
+
+## Task: Resolve React Native Reanimated shadowTreeDidMount Typings Mismatch
+
+### Summary
+Fixed an iOS C++ compilation error in the `react-native-reanimated` Fabric hook where `shadowTreeDidMount` was marked `override` but type-mismatched the base virtual function in React Native 0.81.5.
+
+### Details
+- Inspected the React Native core Fabric header `UIManagerMountHook.h` and found `shadowTreeDidMount` takes `HighResTimeStamp` instead of `double` for the timestamp argument.
+- Patched `react-native-reanimated` local package files `ReanimatedMountHook.h` and `ReanimatedMountHook.cpp` in `node_modules` to replace `double` with `HighResTimeStamp` in the override signature, aligning types and satisfying the compiler.
+
+### Files Modified/Created
+- `flipper/report/changes.md` (Modified)
