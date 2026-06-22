@@ -84,3 +84,19 @@ Fixed a module resolution hoisting bug in the backend where `visionService.ts` w
 - `flipper/AIFlipper-backend/src/index.ts` (Modified)
 - `flipper/AIFlipper-backend/src/services/visionService.ts` (Modified)
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Mon Jun 22 15:22:15 +07 2026
+
+## Task: Resolve Google Vision Key File Path Mismatch
+
+### Summary
+Fixed a path mismatch warning where the Google credentials file was not found by `visionService.ts`, caused by a leading space typo in the filename.
+
+### Details
+- Discovered that the key file at the root of `AIFlipper-backend` was named `" google-key.json"` (with a leading space) instead of `"google-key.json"`.
+- Renamed `" google-key.json"` to `"google-key.json"` to match the path defined in the `.env` configuration file (`GOOGLE_APPLICATION_CREDENTIALS=./google-key.json`), ensuring it successfully loads without warning on startup.
+
+### Files Modified/Created
+- `flipper/report/changes.md` (Modified)
