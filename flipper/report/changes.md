@@ -100,3 +100,21 @@ Fixed a path mismatch warning where the Google credentials file was not found by
 
 ### Files Modified/Created
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Mon Jun 22 15:33:56 +07 2026
+
+## Task: Resolve Folly Coroutines Compilation Error on iOS Build
+
+### Summary
+Fixed an iOS build compilation failure where `folly/coro/Coroutine.h` could not be found while compiling React Native Reanimated inside the iOS project workspace.
+
+### Details
+- Configured the iOS `Podfile` `post_install` hook to disable Folly coroutines (`-DFOLLY_CFG_NO_COROUTINES=1`) for all Xcode project build configurations.
+- Handled `OTHER_CPLUSPLUSFLAGS` safely as either an Array or String structure to comply with Cocoapods' internal configurations and prevent type conversion syntax errors.
+- Ran `pod install` successfully in the `flipper/AIFlipper/ios` folder, updating the generated workspace.
+
+### Files Modified/Created
+- `flipper/AIFlipper/ios/Podfile` (Modified)
+- `flipper/report/changes.md` (Modified)
