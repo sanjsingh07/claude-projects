@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#794810",
+                    "on-primary-fixed-variant": "#005226",
+                    "primary-fixed-dim": "#00e475",
+                    "outline": "#859585",
+                    "tertiary-fixed-dim": "#fdb878",
+                    "on-background": "#dbe5d9",
+                    "on-surface-variant": "#bacbb9",
+                    "on-primary": "#003918",
+                    "primary-container": "#00e676",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-container": "#00612e",
+                    "on-secondary": "#002d6e",
+                    "primary-fixed": "#62ff96",
+                    "on-tertiary-fixed-variant": "#6a3c03",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#2d1600",
+                    "on-surface": "#dbe5d9",
+                    "surface-tint": "#00e475",
+                    "secondary-fixed": "#d9e2ff",
+                    "inverse-on-surface": "#29332a",
+                    "surface-container": "#19221a",
+                    "on-secondary-fixed-variant": "#00429b",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "surface-container-highest": "#2e372e",
+                    "surface-container-high": "#232c24",
+                    "tertiary": "#ffdec4",
+                    "on-secondary-container": "#f2f3ff",
+                    "error-container": "#93000a",
+                    "surface-bright": "#323c33",
+                    "tertiary-fixed": "#ffdcbf",
+                    "inverse-primary": "#006d35",
+                    "surface-container-low": "#151e16",
+                    "on-secondary-fixed": "#001945",
+                    "primary": "#75ff9e",
+                    "surface-variant": "#2e372e",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#0068ed",
+                    "background": "#0d150e",
+                    "surface-container-lowest": "#081009",
+                    "inverse-surface": "#dbe5d9",
+                    "on-primary-fixed": "#00210b",
+                    "on-tertiary": "#4b2800",
+                    "surface": "#0d150e",
+                    "outline-variant": "#3b4a3d",
+                    "surface-dim": "#0d150e",
+                    "secondary": "#b0c6ff",
+                    "tertiary-container": "#ffba79"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "container-margin": "20px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "gutter": "12px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Space Grotesk"],
+                    "data-mono": ["Inter"],
+                    "display-profit": ["Space Grotesk"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "display-profit": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .profit-glow {
+            text-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+        }
+        body {
+            background-color: #0d150e;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-[#121212]/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center w-full px-5 h-16">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#00E676] cursor-pointer active:scale-95 transition-transform" data-icon="menu">menu</span>
+<h1 class="font-['Space_Grotesk'] font-black text-xl tracking-widest text-[#00E676]">AI FLIPPER</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-white/20">
+<img alt="User profile" data-alt="A high-quality professional studio portrait of a modern tech entrepreneur with clean lighting. The aesthetic is sophisticated and minimalist, using a deep charcoal background that aligns with a high-contrast dark mode UI. The lighting is soft and directional, highlighting facial features with a professional, sharp focus characteristic of premium digital platforms." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6HeP0YBwIf3qIHKQ7wLhbTW1JlEdNaOvb3aqGq8UVoLEfbfC9BnW3_TpB_swQggMiC6YBKvqXRr9iyxzSAMMyHa9v0X1TZUgHEUbvBTryiW5FSSi1sIc5MYtq8lm4O6z5hJxljAckxaGMClNdzbikuxxlgiJRrCaUwegqAC3vIbYFH9RcCIgiLpPrgIYz9k_hjKSU_pYxHltZFXW28FTawdCOfM52IG1VR6rfKJus-Qve_4CM0eAQW6pgS0nyNQrYwhcUlleZqjlq"/>
+</div>
+</header>
+<main class="pt-20 px-container-margin max-w-5xl mx-auto">
+<!-- Search and Global Stats Summary -->
+<section class="mb-lg">
+<div class="flex flex-col gap-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40" data-icon="search">search</span>
+<input class="w-full bg-black border-none ring-1 ring-white/10 focus:ring-2 focus:ring-secondary-container rounded-xl py-4 pl-12 pr-4 text-body-md font-body-md placeholder:text-white/20" placeholder="Search inventory..." type="text"/>
+</div>
+<div class="flex gap-sm overflow-x-auto pb-2 no-scrollbar">
+<button class="flex-shrink-0 px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-label-bold text-label-bold">All Items</button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Listed</button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Sold</button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Pending</button>
+<div class="w-px bg-white/10 self-stretch mx-2"></div>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Electronics</button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Collectibles</button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-white/60 font-label-bold text-label-bold hover:bg-white/10 transition-colors">Apparel</button>
+</div>
+</div>
+</section>
+<!-- Inventory Grid/List -->
+<div class="space-y-base">
+<!-- Table Header (Desktop Only) -->
+<div class="hidden md:grid grid-cols-12 px-md py-sm text-white/40 font-label-bold text-xs uppercase tracking-widest">
+<div class="col-span-5">Product Details</div>
+<div class="col-span-2 text-center">Cost</div>
+<div class="col-span-2 text-center">Status</div>
+<div class="col-span-3 text-right">Profit / ROI</div>
+</div>
+<!-- Inventory Row 1 -->
+<div class="glass-card rounded-xl p-md md:grid md:grid-cols-12 md:items-center gap-md group hover:border-[#00E676]/30 transition-all duration-300">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/5">
+<img alt="Product" data-alt="A cinematic close-up of a high-end limited edition video game console box, resting on a reflective dark slate surface. The lighting is dramatic and moody, with neon green accents highlighting the sharp edges of the packaging. The background is a soft-focus bokeh of technical hardware, emphasizing a high-performance, AI-driven flipping environment with a futuristic glassmorphic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXkQGXGNbQ8s-sOCJ2ys0XgJcPSv1tdkBSGAx2BplbMEK0vbU4ZNZlmk4PmlnkhggI8LgEnoXfEx4yNpUb2xCtrhqo2xn9SyNUWKSf-u6ckbPQ8xCL_fhRoozM-DrDRy-557VUI4MWAIesWToU2Fsdf5jqZ3rHOZZNlE2OluyYX_xF8CsyP14EnJOAxJxElCculxEkvKky0SZbUfR-MhGAd5qlhwW93kZQpKgc6ooJ460PJ83vsDkloYPeqKAbombNery1d475Wi75"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-headline-md text-body-md text-white truncate group-hover:text-[#00E676] transition-colors">PlayStation 5 Pro - Limited</h3>
+<p class="text-xs text-white/40 font-body-md">Added: 2h ago • Electronics</p>
+</div>
+</div>
+<div class="col-span-2 text-center mt-md md:mt-0">
+<span class="md:hidden text-xs text-white/40 block mb-1">Buy Price</span>
+<span class="font-data-mono text-white">$699.00</span>
+</div>
+<div class="col-span-2 flex justify-center mt-md md:mt-0">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter bg-secondary-container/20 text-secondary border border-secondary/30">Listed</span>
+</div>
+<div class="col-span-3 text-right mt-md md:mt-0 flex flex-col items-end">
+<span class="md:hidden text-xs text-white/40 block mb-1">Est. Profit</span>
+<span class="font-headline-md text-primary profit-glow">+$340.50</span>
+<span class="text-xs font-label-bold text-primary-fixed-dim">48.7% ROI</span>
+</div>
+</div>
+<!-- Inventory Row 2 -->
+<div class="glass-card rounded-xl p-md md:grid md:grid-cols-12 md:items-center gap-md group hover:border-[#00E676]/30 transition-all duration-300">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/5">
+<img alt="Product" data-alt="A professional studio product photograph of vibrant red performance sneakers isolated against a deep, dark grey gradient background. The lighting is sharp, catching the texture of the fabric and the gloss of the sole, creating a luxury retail vibe. The image uses a high-contrast style that fits perfectly within a futuristic, dark-mode professional reselling application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVptgiffCOMFh_rVkrJsgqsWdp6fEJeCX2Hv1fnfiZwmpT4IGNKBfAhaKkA2LLuCm-eWBnnRMcHFIMyFVTuJBJzXiquTdQmL7buN9YHkLFqKdvjN8tqj3fD9UF7OksFjZ62b-B417upRXn_aYGtPMOTkpHKQnkc6MILeDiZ3_yfK7KffLWQDn2G2rSV7s88-VM_7LsNskvYtr7TpCHBLH2XZaSyqFG3u_n6ALOL0q3181_SiqOIsGnM_aswDbuQjioh10dEd9SsaQo"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-headline-md text-body-md text-white truncate group-hover:text-[#00E676] transition-colors">Nike Air Jordan Retro 4</h3>
+<p class="text-xs text-white/40 font-body-md">Added: 1d ago • Apparel</p>
+</div>
+</div>
+<div class="col-span-2 text-center mt-md md:mt-0">
+<span class="md:hidden text-xs text-white/40 block mb-1">Buy Price</span>
+<span class="font-data-mono text-white">$210.00</span>
+</div>
+<div class="col-span-2 flex justify-center mt-md md:mt-0">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter bg-primary-container/20 text-[#00E676] border border-[#00E676]/30">Sold</span>
+</div>
+<div class="col-span-3 text-right mt-md md:mt-0 flex flex-col items-end">
+<span class="md:hidden text-xs text-white/40 block mb-1">Total Profit</span>
+<span class="font-headline-md text-primary profit-glow">+$185.00</span>
+<span class="text-xs font-label-bold text-primary-fixed-dim">88.1% ROI</span>
+</div>
+</div>
+<!-- Inventory Row 3 -->
+<div class="glass-card rounded-xl p-md md:grid md:grid-cols-12 md:items-center gap-md group hover:border-[#00E676]/30 transition-all duration-300">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/5">
+<img alt="Product" data-alt="A highly detailed macro shot of a vintage mechanical wristwatch displaying intricate internal gears and a polished silver casing. The lighting is surgical, using high-key highlights to emphasize precision and craftsmanship. The aesthetic is ultra-modern and fast-paced, suggesting high-value collectible trading within a sophisticated, AI-enhanced reselling dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6BMTXLmR8VmuebYiEImspShZsgKQeCccSduSIzoX3ZpFMMSvIFkLQTUV7q_a_9RcR-PdT5J5GBTQzDdBer2jqHAeG8IeeVjOgkagI_S6gvTXJksjJhOPbCMCqyAnGgS3qEKkKAEBfPFONmCuC9-XRMD0AOwSIjmxCwmfQMcrayA6shGY3R8jkyhEOonQiGfrDb7yXMsMgogAcz4puNB_uvHS1vohcj74AyzmvO1TjFjUBKX9nuRK3ebFn6GyUcDD-XOcThcs0auwt"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-headline-md text-body-md text-white truncate group-hover:text-[#00E676] transition-colors">Vintage Seiko Chronograph</h3>
+<p class="text-xs text-white/40 font-body-md">Added: 3d ago • Collectibles</p>
+</div>
+</div>
+<div class="col-span-2 text-center mt-md md:mt-0">
+<span class="md:hidden text-xs text-white/40 block mb-1">Buy Price</span>
+<span class="font-data-mono text-white">$85.00</span>
+</div>
+<div class="col-span-2 flex justify-center mt-md md:mt-0">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter bg-on-tertiary-container/20 text-tertiary-fixed-dim border border-tertiary-fixed-dim/30">Pending</span>
+</div>
+<div class="col-span-3 text-right mt-md md:mt-0 flex flex-col items-end">
+<span class="md:hidden text-xs text-white/40 block mb-1">Est. Profit</span>
+<span class="font-headline-md text-primary profit-glow">+$115.00</span>
+<span class="text-xs font-label-bold text-primary-fixed-dim">135.3% ROI</span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="glass-card rounded-xl p-md md:grid md:grid-cols-12 md:items-center gap-md group hover:border-[#00E676]/30 transition-all duration-300 opacity-60">
+<div class="col-span-5 flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-black flex-shrink-0 border border-white/5">
+<img alt="Product" data-alt="A crisp, minimal product shot of a luxury computer peripheral in matte black, set against a dark, textured carbon fiber background. Subtle green LED lighting illuminates the contours of the device. The composition is surgical and clean, embodying the 'competitive edge' brand personality of a professional AI-driven reselling tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBguY0cWJ7l37XuflNDA4LnsMGQxHH4z9yXAXakKjW-FnyXxMdLf4_U0fwmiYSXY8BJ1jmhp4mIC8Lu7yg5mZZvniTLlaclPhnHcGFEzxKiUkQ6UNVUGDlO2ZSMlIXxUk32QBHFWQTSPOFSU6qUfZHN1zTAmKRQm8bMQMn-G5hrV9pzRKzN6DBW8ilNLZqYhVZk1EmiK5mOnV5fTVlaz7wYpaRDuzueJzBxkvkma_BpcsixPuSFwgBM75XS43QZ67q3nu8NCo79gXTj"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-headline-md text-body-md text-white truncate group-hover:text-[#00E676] transition-colors">Logitech G Pro Keyboard</h3>
+<p class="text-xs text-white/40 font-body-md">Added: 1w ago • Electronics</p>
+</div>
+</div>
+<div class="col-span-2 text-center mt-md md:mt-0">
+<span class="md:hidden text-xs text-white/40 block mb-1">Buy Price</span>
+<span class="font-data-mono text-white">$45.00</span>
+</div>
+<div class="col-span-2 flex justify-center mt-md md:mt-0">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter bg-primary-container/20 text-[#00E676] border border-[#00E676]/30">Sold</span>
+</div>
+<div class="col-span-3 text-right mt-md md:mt-0 flex flex-col items-end">
+<span class="md:hidden text-xs text-white/40 block mb-1">Total Profit</span>
+<span class="font-headline-md text-primary profit-glow">+$35.00</span>
+<span class="text-xs font-label-bold text-primary-fixed-dim">77.8% ROI</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#000000]/90 backdrop-blur-2xl rounded-t-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,230,118,0.1)]">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest">Dash</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#00E676] bg-[#00E676]/10 rounded-xl px-3 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="inventory_2">inventory_2</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest">Vault</span>
+</a>
+<!-- Scan Button Placeholder for Layout (The Scan component usually maps to its own primary action) -->
+<button class="w-14 h-14 -mt-10 bg-primary-container text-on-primary-container rounded-full shadow-[0_0_20px_rgba(0,230,118,0.5)] flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="center_focus_strong" style="font-variation-settings: 'FILL' 1;">center_focus_strong</span>
+</button>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="insights">insights</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest">User</span>
+</a>
+</nav>
+</body></html>

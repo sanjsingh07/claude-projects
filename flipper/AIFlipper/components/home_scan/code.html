@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI FLIPPER - Professional Reselling Tool</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#794810",
+                        "on-primary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#00e475",
+                        "outline": "#859585",
+                        "tertiary-fixed-dim": "#fdb878",
+                        "on-background": "#dbe5d9",
+                        "on-surface-variant": "#bacbb9",
+                        "on-primary": "#003918",
+                        "primary-container": "#00e676",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#00612e",
+                        "on-secondary": "#002d6e",
+                        "primary-fixed": "#62ff96",
+                        "on-tertiary-fixed-variant": "#6a3c03",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-surface": "#dbe5d9",
+                        "surface-tint": "#00e475",
+                        "secondary-fixed": "#d9e2ff",
+                        "inverse-on-surface": "#29332a",
+                        "surface-container": "#19221a",
+                        "on-secondary-fixed-variant": "#00429b",
+                        "secondary-fixed-dim": "#b0c6ff",
+                        "surface-container-highest": "#2e372e",
+                        "surface-container-high": "#232c24",
+                        "tertiary": "#ffdec4",
+                        "on-secondary-container": "#f2f3ff",
+                        "error-container": "#93000a",
+                        "surface-bright": "#323c33",
+                        "tertiary-fixed": "#ffdcbf",
+                        "inverse-primary": "#006d35",
+                        "surface-container-low": "#151e16",
+                        "on-secondary-fixed": "#001945",
+                        "primary": "#75ff9e",
+                        "surface-variant": "#2e372e",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#0068ed",
+                        "background": "#0d150e",
+                        "surface-container-lowest": "#081009",
+                        "inverse-surface": "#dbe5d9",
+                        "on-primary-fixed": "#00210b",
+                        "on-tertiary": "#4b2800",
+                        "surface": "#0d150e",
+                        "outline-variant": "#3b4a3d",
+                        "surface-dim": "#0d150e",
+                        "secondary": "#b0c6ff",
+                        "tertiary-container": "#ffba79"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "container-margin": "20px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "data-mono": ["Inter"],
+                        "display-profit": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "display-profit": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .profit-glow {
+            box-shadow: 0 0 15px 0px rgba(0, 230, 118, 0.2);
+        }
+        .scanner-viewport::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            right: 10%;
+            bottom: 40%;
+            border: 2px solid rgba(0, 230, 118, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 0 0 2000px rgba(13, 21, 14, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 z-50 flex justify-between items-center w-full px-5 h-16 bg-[#121212]/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#00E676] active:scale-95 transition-transform cursor-pointer">menu</span>
+<h1 class="text-xl font-black text-[#00E676] tracking-widest font-['Space_Grotesk']">AI FLIPPER</h1>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-[#00E676]/30 overflow-hidden active:scale-95 transition-transform cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A close-up professional portrait of a tech-savvy male entrepreneur in a dark, moody environment with subtle neon green lighting reflecting off his glasses. The visual style is sharp and high-contrast, echoing a futuristic and high-performance brand identity. The background is a blurred metropolitan setting at night, utilizing a deep black and profit green color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx4gvBpwW8eEKrho4d68kURxcOKfZyYltaGeB-qNVsiK_JdQRchTSw-cBwnXL0BeFrJvsW15oU51NcpWva0O9ySDvKOlaHwHhsuEA7yiNNdu9XbiG4RbVvFciDqFGHVWK1_I_Y_X5gU210se6_VOlbi9iikKpNWAvu8wx-y8Y814PnVvBH8azyGr2GJ0-veX2eNmCFpNj_s-M7L-VVW3WmfMB9swmgUnVeWErRR3X6BeRENKhT5u-uzUPbiinj-5rtOUBiRnzJ9XSL"/>
+</div>
+</header>
+<main class="pt-16">
+<!-- Hero Scanning Section -->
+<section class="relative w-full h-[530px] scanner-viewport overflow-hidden">
+<img alt="Camera Viewfinder" class="w-full h-full object-cover grayscale-[0.2]" data-alt="A first-person view of a high-tech retail scanning interface. The camera focuses on a premium limited-edition sneaker sitting on a store shelf. Digital data overlays, including price charts and profit margins, are rendered in glowing green and blue interface elements. The scene is lit by professional store lighting with a cinematic, high-performance feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUArI6o1BzN4jLpep8UoPsHQoC4MPJiXNDBWudgUEnnzdNhRQP0LHwf8SGw2YNPJQV2-PipmJoLhikEtZEtpI5EvpVQicSyoC7LnYGYatmn45s_pb4tUp_tHpy2sHN7XGucPCN2PpeojymmAvWt4H1qVe-fYoUcc8vNvyjQAgZwRK8jFZRucQTjyCDgO-xb787E_lH0xUoJGT3Fw-YEyxg0iGBIwmDaQQ_kXDHXQeDq2IgTpfUL0Kh7LM2hnq3dHemJLu95zyO3cLY"/>
+<div class="absolute inset-0 flex flex-col items-center justify-end pb-12 z-10 px-container-margin">
+<button class="w-full max-w-sm py-5 rounded-2xl bg-primary-container text-on-primary-container font-headline-md flex items-center justify-center gap-3 profit-glow active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">center_focus_strong</span>
+                    SCAN ITEM
+                </button>
+<p class="mt-4 text-white/60 font-label-bold uppercase tracking-widest text-[10px]">Ready for capture</p>
+</div>
+</section>
+<!-- Quick Inventory Summary -->
+<section class="px-container-margin -mt-8 relative z-20">
+<div class="glass-card rounded-2xl p-lg flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-white/40 font-label-bold uppercase text-[10px] tracking-widest mb-1">Total Est. Profit</p>
+<h2 class="text-display-profit font-display-profit text-primary-container">$12,482.00</h2>
+</div>
+<div class="bg-primary-container/10 p-3 rounded-xl">
+<span class="material-symbols-outlined text-primary-container text-3xl">trending_up</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-white/5 rounded-xl p-md border border-white/5">
+<p class="text-white/40 font-label-bold uppercase text-[10px] tracking-widest mb-1">Items Listed</p>
+<p class="text-headline-md font-headline-md text-on-surface">142</p>
+</div>
+<div class="bg-white/5 rounded-xl p-md border border-white/5">
+<p class="text-white/40 font-label-bold uppercase text-[10px] tracking-widest mb-1">Sell-Through</p>
+<p class="text-headline-md font-headline-md text-secondary">84%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Scans Carousel -->
+<section class="mt-xl pl-container-margin">
+<div class="flex justify-between items-end pr-container-margin mb-md">
+<h3 class="text-headline-md font-headline-md text-on-surface">Recent Scans</h3>
+<span class="text-primary-container font-label-bold text-xs cursor-pointer">VIEW ALL</span>
+</div>
+<div class="flex overflow-x-auto gap-md pb-4 no-scrollbar">
+<!-- Scan Card 1 -->
+<div class="flex-shrink-0 w-44 glass-card rounded-xl overflow-hidden active:scale-95 transition-transform duration-200">
+<div class="h-32 w-full relative">
+<img alt="Sneaker" class="w-full h-full object-cover" data-alt="A detailed product shot of a vibrant red Nike sneaker against a minimalist dark grey background. The lighting is sharp, highlighting the textures of the fabric and the sleek design. The visual style is commercial and high-end, perfectly suited for an elite reselling application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBac8rmg57Y7P9mgj1bQRMJac7fHfGHFt6mYKtbR97dYNKg4UGSaFH-n7CzzkAS3SduRKjZ8TMCleW8Hly2LQiK0C1DnHb1fuiobDT32M9Q7Bp0xMBeB5UfiPKaAEJ4TUXk9VSssQBUNsmP7v5P9vB9ARICJ11P-Lwe0npSaR4qKOGN85aLx8mtd2VwOdW8gMuNB7FAwjp0cIPIekJvfwRXLzIZR9BtG6ydDyeHLL0WNnDbTqmsO9a0kcsGRkL_queW0sJvoYiITWDn"/>
+<span class="absolute top-2 right-2 bg-primary-container/90 text-on-primary-container px-2 py-1 rounded-full text-[10px] font-bold">+$45.20</span>
+</div>
+<div class="p-3">
+<p class="text-xs font-bold truncate text-on-surface">Nike Air Zoom</p>
+<p class="text-[10px] text-white/40 mt-1 uppercase">2m ago</p>
+</div>
+</div>
+<!-- Scan Card 2 -->
+<div class="flex-shrink-0 w-44 glass-card rounded-xl overflow-hidden active:scale-95 transition-transform duration-200">
+<div class="h-32 w-full relative">
+<img alt="Smartphone" class="w-full h-full object-cover" data-alt="A sleek smartphone photographed on a dark reflective surface. Subtle blue rim lighting defines the device's silhouette, creating a high-tech and sophisticated mood. The overall composition is clean and professional, focusing on electronics in a premium dark-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_cPsR8O_BGUCRZJ2aJ62jmj9iC-oIYlLD486FInP56zHZSyv3HvFQzWReVlg5zj2E-1CDDI_sAVXwIlTIDrcvgdLFbVRmsvkfZy-PJu5mlBFavWvczv3oHsMpC_QVAJQ1ZzFTW7tTKLXUfjnD93zXS7ujOhmiqJfhF38mo4nDOqQ1CMqKdSGRW0c4JDCWS2GoiCdaWHJn35EDk3VEBKbpUVm4ek0a7qUVzc_Zdmv8fY27G_tegIWPSBXVLE-43lB0EPkl-oc8Frzx"/>
+<span class="absolute top-2 right-2 bg-primary-container/90 text-on-primary-container px-2 py-1 rounded-full text-[10px] font-bold">+$120.00</span>
+</div>
+<div class="p-3">
+<p class="text-xs font-bold truncate text-on-surface">iPhone 13 Pro Max</p>
+<p class="text-[10px] text-white/40 mt-1 uppercase">15m ago</p>
+</div>
+</div>
+<!-- Scan Card 3 -->
+<div class="flex-shrink-0 w-44 glass-card rounded-xl overflow-hidden active:scale-95 transition-transform duration-200">
+<div class="h-32 w-full relative">
+<img alt="Headphones" class="w-full h-full object-cover" data-alt="A pair of premium black headphones positioned in a dynamic, floating composition. Soft side lighting reveals the high-quality materials and metallic accents. The background is a deep, textured black, reinforcing the surgical and authoritative brand personality of the reselling tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsuLgRwRd2lMPSN_xqsiZSH0I4n9zw3Q9AhyRudFGgoZzmqxJv9-nsV3zh4eNWuoN2THJ0AsWDlpsCT6vdHdz2jEMYT6QGtJBcIy6WddXV3ZF0dLY-kHthIB2kgmZmzNzZqeP7sT36W7ryJxbr_Vpt_vJz2aK64zi8ZQP2TrKYr680iewDd2-IqlTh4UfOJbCpGjfQwWj7aR9EQCzNhXvMuGJs7cffPVdK1HsnGRJWChlVVxF_x04HNRfETIF6Gxhc77IVTcEwtg6f"/>
+<span class="absolute top-2 right-2 bg-error-container/90 text-on-error-container px-2 py-1 rounded-full text-[10px] font-bold">-$12.00</span>
+</div>
+<div class="p-3">
+<p class="text-xs font-bold truncate text-on-surface">Bose QC45</p>
+<p class="text-[10px] text-white/40 mt-1 uppercase">1h ago</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#000000]/90 backdrop-blur-2xl rounded-t-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,230,118,0.1)]">
+<!-- Dash -->
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Dash</span>
+</a>
+<!-- Scan (Active) -->
+<a class="flex flex-col items-center justify-center text-[#00E676] bg-[#00E676]/10 rounded-xl px-3 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">center_focus_strong</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Scan</span>
+</a>
+<!-- Vault -->
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Vault</span>
+</a>
+<!-- Stats -->
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Stats</span>
+</a>
+</nav>
+<style>
+        /* Custom hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

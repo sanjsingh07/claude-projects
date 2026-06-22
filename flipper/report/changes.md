@@ -1,0 +1,68 @@
+# Changes Report - June 18, 2026
+
+## Task: Initialize FlipAI - AI Flipper Pricing Assistant
+
+### Summary
+Scaffolded a complete MVP for a mobile flipping assistant app. The project includes a high-performance backend and a visually rich mobile frontend based on the provided "Velocity Dark" design system.
+
+### Details
+- **Backend**:
+  - Initialized Node.js project with TypeScript.
+  - Implemented `visionService` using Google Vision and OpenAI for product identification.
+  - Implemented `priceService` with mock eBay pricing logic.
+  - Implemented `analysisService` for real-time ROI and buy-price recommendations.
+  - Set up Supabase integration for inventory management.
+- **Mobile (Frontend)**:
+  - Scaffolded Expo React Native project.
+  - Implemented a Glassmorphic design system using `expo-blur` and custom theme tokens.
+  - Created five core screens: Home, Scan (with camera), Result (with AI analysis), Inventory, and Analytics.
+  - Integrated `lucide-react-native` for high-quality iconography.
+- **Documentation**:
+  - Created `flipper/README.md` with setup instructions.
+  - Added `.env.example` for backend configuration.
+
+### Files Modified/Created
+- `flipper/backend/*` (Scaffolded backend)
+- `flipper/mobile/*` (Scaffolded React Native app)
+- `flipper/README.md`
+- `report/changes.md`
+
+---
+
+# Changes Report - Mon Jun 22 15:12:56 +07 2026
+
+## Task: Full-Fidelity 1:1 Design Refinements & Backend Sync Integration
+
+### Summary
+Iterated over the designs to align the React Native frontend screens 1:1 with the mockups (`home_scan`, `scan_result`, `item_details`, `inventory_tracker`, `profit_analytics`, `settings_targets`). Replaced all hardcoded local storage routines with a database-driven backend sync framework, and added the dynamic copy listing copywriting generator integration.
+
+### Details
+- **Backend Enhancements**:
+  - Implemented database-driven inventory endpoints (`GET`, `POST`, `DELETE` /api/inventory) using dynamic JSON database file persistence seeded with the design mockup items.
+  - Implemented dynamic calculation logic in `analyticsService` summing statistics directly from the database seeded with the design base totals.
+  - Updated `calculatorService` to consume live fee & ROI configuration thresholds from settings.
+  - Built an AI copywriting listing copywriting generator endpoint (`POST` /api/generate-listing) returning suggested tags, titles, and descriptions.
+- **Frontend Refinements**:
+  - Added centralized configuration in `constants/Config.ts`.
+  - Fixed typography and color references inside `LoginScreen.tsx` resolving compiler bugs.
+  - Created high-fidelity Verdict box, KPI grid, and 90d Price Trend sparkline elements inside `ResultScreen.tsx` to match the designs.
+  - Connected the `GENERATE LISTING` button to fetch and render the AI listing copywriter copywriting in a modal.
+  - Linked database operations (`db.ts`) directly with the backend, falling back gracefully to AsyncStorage.
+  - Allowed inventory items to be clickable inside `InventoryScreen.tsx`, navigating operators to details where they can delete items or change status flags.
+  - Integrated settings and analytics pages to pull/push state changes in real time.
+
+### Files Modified/Created
+- `flipper/AIFlipper/constants/Config.ts` (Created)
+- `flipper/AIFlipper/database/db.ts` (Modified)
+- `flipper/AIFlipper/screens/CaptureScreen.tsx` (Modified)
+- `flipper/AIFlipper/screens/LoginScreen.tsx` (Modified)
+- `flipper/AIFlipper/screens/SettingsScreen.tsx` (Modified)
+- `flipper/AIFlipper/screens/AnalyticsScreen.tsx` (Modified)
+- `flipper/AIFlipper/screens/ResultScreen.tsx` (Modified)
+- `flipper/AIFlipper/screens/InventoryScreen.tsx` (Modified)
+- `flipper/AIFlipper-backend/src/services/inventoryService.ts` (Created)
+- `flipper/AIFlipper-backend/src/services/listingService.ts` (Created)
+- `flipper/AIFlipper-backend/src/services/calculatorService.ts` (Modified)
+- `flipper/AIFlipper-backend/src/services/analyticsService.ts` (Modified)
+- `flipper/AIFlipper-backend/src/routes.ts` (Modified)
+- `flipper/report/changes.md` (Modified)

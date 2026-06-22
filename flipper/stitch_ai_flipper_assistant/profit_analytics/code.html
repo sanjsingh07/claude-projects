@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "on-tertiary-container": "#794810",
+                  "on-primary-fixed-variant": "#005226",
+                  "primary-fixed-dim": "#00e475",
+                  "outline": "#859585",
+                  "tertiary-fixed-dim": "#fdb878",
+                  "on-background": "#dbe5d9",
+                  "on-surface-variant": "#bacbb9",
+                  "on-primary": "#003918",
+                  "primary-container": "#00e676",
+                  "on-error-container": "#ffdad6",
+                  "on-primary-container": "#00612e",
+                  "on-secondary": "#002d6e",
+                  "primary-fixed": "#62ff96",
+                  "on-tertiary-fixed-variant": "#6a3c03",
+                  "on-error": "#690005",
+                  "on-tertiary-fixed": "#2d1600",
+                  "on-surface": "#dbe5d9",
+                  "surface-tint": "#00e475",
+                  "secondary-fixed": "#d9e2ff",
+                  "inverse-on-surface": "#29332a",
+                  "surface-container": "#19221a",
+                  "on-secondary-fixed-variant": "#00429b",
+                  "secondary-fixed-dim": "#b0c6ff",
+                  "surface-container-highest": "#2e372e",
+                  "surface-container-high": "#232c24",
+                  "tertiary": "#ffdec4",
+                  "on-secondary-container": "#f2f3ff",
+                  "error-container": "#93000a",
+                  "surface-bright": "#323c33",
+                  "tertiary-fixed": "#ffdcbf",
+                  "inverse-primary": "#006d35",
+                  "surface-container-low": "#151e16",
+                  "on-secondary-fixed": "#001945",
+                  "primary": "#75ff9e",
+                  "surface-variant": "#2e372e",
+                  "error": "#ffb4ab",
+                  "secondary-container": "#0068ed",
+                  "background": "#0d150e",
+                  "surface-container-lowest": "#081009",
+                  "inverse-surface": "#dbe5d9",
+                  "on-primary-fixed": "#00210b",
+                  "on-tertiary": "#4b2800",
+                  "surface": "#0d150e",
+                  "outline-variant": "#3b4a3d",
+                  "surface-dim": "#0d150e",
+                  "secondary": "#b0c6ff",
+                  "tertiary-container": "#ffba79"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "sm": "8px",
+                  "xl": "32px",
+                  "md": "16px",
+                  "xs": "4px",
+                  "container-margin": "20px",
+                  "lg": "24px",
+                  "base": "4px",
+                  "gutter": "12px"
+          },
+          "fontFamily": {
+                  "headline-md": ["Space Grotesk"],
+                  "data-mono": ["Inter"],
+                  "display-profit": ["Space Grotesk"],
+                  "body-lg": ["Inter"],
+                  "body-md": ["Inter"],
+                  "label-bold": ["Inter"],
+                  "headline-lg": ["Space Grotesk"]
+          },
+          "fontSize": {
+                  "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                  "data-mono": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                  "display-profit": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                  "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                  "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                  "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .profit-glow {
+      box-shadow: 0 0 20px 0 rgba(0, 230, 118, 0.15);
+    }
+    .data-blue-glow {
+      box-shadow: 0 0 20px 0 rgba(0, 104, 237, 0.15);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 h-16 bg-[#121212]/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-5">
+<div class="flex items-center gap-4">
+<button class="text-[#00E676] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-xl font-black text-[#00E676] tracking-widest font-['Space_Grotesk']">AI FLIPPER</h1>
+</div>
+<div class="w-10 h-10 rounded-full border border-[#00E676]/30 overflow-hidden active:scale-95 transition-transform cursor-pointer">
+<img alt="User profile" data-alt="A high-quality 3D render of a futuristic user avatar profile picture. The character has sleek, tech-oriented features and is set against a dark, minimalist background with subtle neon green highlights. The lighting is dramatic, focusing on the character's face with a soft glow that matches the AI Flipper brand aesthetic. The overall mood is professional and advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0427Gci3ZN7Tl0XZznvqYYgAcbBcwYt4j3gGjdAH2qZQBqhn0Wmv2imZ2E6v1oCaZKbp0s0JHCI629KQj2WdeETsMSIhIsvc538w0CTGVOn1vS4kGCRprkmKFerDUisbapCBkoGSDRSz5JnyKGM3ayMmW4qP1NnjY_jVFRWcYUPPbsO3Cs_BPGuP_n386ADw3kBA9G6JOzBTs-XikPFSRFq-64HiPR04yenbXSaVt8o4_bHxQsmdsZyEReTHbVrwjSpfOOZ3u_8GQ"/>
+</div>
+</header>
+<main class="pt-24 px-container-margin max-w-5xl mx-auto space-y-lg">
+<!-- Hero KPI Section: Total Profit -->
+<section class="glass-card rounded-2xl p-lg profit-glow">
+<div class="flex justify-between items-start mb-md">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest">Total Profit</p>
+<h2 class="font-display-profit text-display-profit text-primary-container">$12,842</h2>
+</div>
+<div class="bg-primary/10 text-primary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-data-mono text-data-mono">+24.5%</span>
+</div>
+</div>
+<div class="h-16 w-full flex items-end gap-1">
+<!-- Mock Sparkline -->
+<div class="flex-1 bg-primary-container/20 h-[30%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/20 h-[45%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/20 h-[35%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/20 h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/20 h-[50%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/40 h-[75%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container/60 h-[90%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary-container h-full rounded-t-sm"></div>
+</div>
+</section>
+<!-- Secondary Stats Bento Grid -->
+<section class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<div class="glass-card rounded-xl p-md flex flex-col justify-between aspect-square md:aspect-auto md:h-32">
+<span class="material-symbols-outlined text-secondary text-2xl">inventory_2</span>
+<div>
+<p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest">Gross Inv Value</p>
+<p class="font-headline-md text-headline-md text-on-surface">$45.2K</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-md flex flex-col justify-between aspect-square md:aspect-auto md:h-32">
+<span class="material-symbols-outlined text-primary-container text-2xl">speed</span>
+<div>
+<p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest">Avg ROI (%)</p>
+<p class="font-headline-md text-headline-md text-on-surface">142%</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-md flex flex-col justify-between col-span-2 md:col-span-1 aspect-auto h-32">
+<span class="material-symbols-outlined text-tertiary-container text-2xl">shopping_cart_checkout</span>
+<div>
+<p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest">Sell-through Rate</p>
+<p class="font-headline-md text-headline-md text-on-surface">88.4%</p>
+</div>
+</div>
+</section>
+<!-- Charts Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Profit by Category (Bar Chart) -->
+<div class="glass-card rounded-2xl p-lg data-blue-glow">
+<h3 class="font-headline-md text-headline-md mb-lg text-on-surface">Profit by Category</h3>
+<div class="space-y-md">
+<div class="space-y-base">
+<div class="flex justify-between font-label-bold text-xs uppercase text-on-surface-variant">
+<span>Electronics</span>
+<span>$6,420</span>
+</div>
+<div class="w-full bg-white/5 h-3 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[65%] rounded-full shadow-[0_0_10px_rgba(0,104,237,0.4)]"></div>
+</div>
+</div>
+<div class="space-y-base">
+<div class="flex justify-between font-label-bold text-xs uppercase text-on-surface-variant">
+<span>Clothing</span>
+<span>$4,110</span>
+</div>
+<div class="w-full bg-white/5 h-3 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[45%] rounded-full shadow-[0_0_10px_rgba(0,104,237,0.4)]"></div>
+</div>
+</div>
+<div class="space-y-base">
+<div class="flex justify-between font-label-bold text-xs uppercase text-on-surface-variant">
+<span>Collectibles</span>
+<span>$1,850</span>
+</div>
+<div class="w-full bg-white/5 h-3 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[20%] rounded-full shadow-[0_0_10px_rgba(0,104,237,0.4)]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sourcing Heatmap (List version for clarity) -->
+<div class="glass-card rounded-2xl p-lg">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">Top Sourcing</h3>
+<span class="material-symbols-outlined text-on-surface-variant">map</span>
+</div>
+<div class="space-y-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary-container">01</div>
+<div class="flex-1">
+<p class="font-label-bold text-on-surface">Los Angeles, CA</p>
+<p class="text-xs text-on-surface-variant">42 Active Pickups</p>
+</div>
+<p class="font-data-mono text-primary-container">+$2.1K</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary-container">02</div>
+<div class="flex-1">
+<p class="font-label-bold text-on-surface">Austin, TX</p>
+<p class="text-xs text-on-surface-variant">18 Active Pickups</p>
+</div>
+<p class="font-data-mono text-primary-container">+$1.4K</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary-container">03</div>
+<div class="flex-1">
+<p class="font-label-bold text-on-surface">Miami, FL</p>
+<p class="text-xs text-on-surface-variant">12 Active Pickups</p>
+</div>
+<p class="font-data-mono text-primary-container">+$0.9K</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity Section -->
+<section class="glass-card rounded-2xl p-lg mb-8">
+<h3 class="font-headline-md text-headline-md mb-lg text-on-surface">High-Margin Flips</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="border-b border-white/10">
+<tr class="text-on-surface-variant font-label-bold text-[10px] uppercase tracking-widest">
+<th class="pb-md">Product</th>
+<th class="pb-md">Margin</th>
+<th class="pb-md">Trend</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr>
+<td class="py-md flex items-center gap-md">
+<div class="w-10 h-10 rounded-md bg-white/5 overflow-hidden">
+<img alt="Nike Sneakers" data-alt="A professional studio product shot of limited edition sneakers with vibrant colors. The lighting is high-contrast, featuring deep shadows and sharp highlights that emphasize the textures and sleek design of the shoe. The background is a dark, matte surface that allows the product to stand out, maintaining the high-performance, premium aesthetic of the AI Flipper brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8HLCEd7qV6zA0ljTxSSGqtOh9bDGPtXOyd-fQix0XYw9OZMwFCBJU6TO38RAmlMlNuAoh7YSS1GZtaX4Fu32PjX6ZldhQCq5ozgF8s_ujijH82p6MLxvsc3gyBWC7k9tE5aX3_waZQscCh9B7MonMr97VBWrCFxYgXWUboShPKg9oyRuyGZ21uxxYqlePtj31Us45UP12ekQKbt6kpezZGKt6YI3aSIJWCBdmaOOzQKl4jIZWnvwXsJyZJurlOacEjJApZTXoo_kb"/>
+</div>
+<span class="font-body-md">Vintage Nike Air</span>
+</td>
+<td class="py-md font-data-mono text-primary-container">62%</td>
+<td class="py-md">
+<span class="material-symbols-outlined text-primary-container">trending_up</span>
+</td>
+</tr>
+<tr>
+<td class="py-md flex items-center gap-md">
+<div class="w-10 h-10 rounded-md bg-white/5 overflow-hidden">
+<img alt="White Watch" data-alt="A luxurious, minimalist white wristwatch captured in a sharp, high-end commercial style. The watch is placed on a reflective dark glass surface, with dramatic rim lighting that highlights its clean lines and metallic accents. The overall color palette is monochrome with subtle silver reflections, evoking a sense of precision and advanced technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzsyCn9VkuIskGCUJLfHL1E-0WOT9w-Z3sSTfp6fhrxhiK5dhLFrQfgci95PfWMLgQYcRDUb4G9HDcffjGWWFNX5DZDwMzIfZaqCK5vp0aKEBDgFdS012rsL-XwhI1IsQva4UOaTJPbFXHdIIrsbQv2I5QtmQL9K9pBni5pv_F92Eei2BGi1pa-Nf3WocGRGIjT3E6ItX5mtCTGbaWuU62h2fwORWbtRWe4fUqR409cXrF3HzDGPZmKW3U6Kc1RiZQQ0KDD0kdmFkr"/>
+</div>
+<span class="font-body-md">Casio Classic Oak</span>
+</td>
+<td class="py-md font-data-mono text-primary-container">48%</td>
+<td class="py-md">
+<span class="material-symbols-outlined text-primary-container">trending_up</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- FAB: Scan Button -->
+<button class="fixed right-6 bottom-28 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-[0_0_20px_rgba(0,230,118,0.4)] flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">center_focus_strong</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#000000]/90 backdrop-blur-2xl rounded-t-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,230,118,0.1)]">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Dash</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">center_focus_strong</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Vault</span>
+</a>
+<!-- Stats is Active -->
+<a class="flex flex-col items-center justify-center text-[#00E676] bg-[#00E676]/10 rounded-xl px-3 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-widest mt-1">Stats</span>
+</a>
+</nav>
+</body></html>

@@ -12,6 +12,8 @@ graphify-out/cache/**         # optional: commit for speed, skip to keep repo sm
 
 stellar-align/graphify-out/cache/          # optional: commit for speed, skip to keep repo small
 
+*google-key.json
+
 #llm
 .gemini/
 .claude/
