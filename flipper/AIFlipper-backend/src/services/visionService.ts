@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import vision from '@google-cloud/vision';
 import path from 'path';
 import fs from 'fs';

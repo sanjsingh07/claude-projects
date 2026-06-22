@@ -66,3 +66,21 @@ Iterated over the designs to align the React Native frontend screens 1:1 with th
 - `flipper/AIFlipper-backend/src/services/analyticsService.ts` (Modified)
 - `flipper/AIFlipper-backend/src/routes.ts` (Modified)
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Mon Jun 22 15:20:08 +07 2026
+
+## Task: Fix Environmental Variables Hoisting Load Order
+
+### Summary
+Fixed a module resolution hoisting bug in the backend where `visionService.ts` was evaluated before `dotenv.config()` ran in `index.ts`, resulting in `GOOGLE_APPLICATION_CREDENTIALS` being undefined.
+
+### Details
+- Moved `dotenv` environment loading to an immediate `import 'dotenv/config'` statement at the very top of `index.ts` to ensure all environmental keys are resolved before other imports are evaluated.
+- Added `import 'dotenv/config'` to the top of `visionService.ts` to guarantee it safely retrieves the Google Vision key path even when run in standalone scripts or tests.
+
+### Files Modified/Created
+- `flipper/AIFlipper-backend/src/index.ts` (Modified)
+- `flipper/AIFlipper-backend/src/services/visionService.ts` (Modified)
+- `flipper/report/changes.md` (Modified)
