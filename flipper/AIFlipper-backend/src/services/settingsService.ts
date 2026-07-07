@@ -15,7 +15,9 @@ const initSettings = () => {
       mercariActive: false,
       defaultFee: 13.5,
       targetRoi: 45.0,
-    }));
+      priceDrops: true,
+      highDemand: true,
+    }, null, 2));
   }
 };
 

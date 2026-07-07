@@ -152,3 +152,23 @@ Fixed an issue where the iOS camera indicator (green light) remained active on t
 ### Files Modified/Created
 - `flipper/AIFlipper/screens/CaptureScreen.tsx` (Modified)
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Tue Jul  7 15:45:50 +07 2026
+
+## Task: Align Frontend Client-Side Deal Calculation with Backend Settings
+
+### Summary
+Aligned the frontend client-side dynamically recalculated profit, ROI, and verdict calculations on the `ResultScreen` 1:1 with the user's active backend Settings parameters.
+
+### Details
+- Updated the backend `settingsService.ts` to include missing default settings fields (`priceDrops: true` and `highDemand: true`) in default parameters initialization to match frontend defaults.
+- Modified the frontend `ResultScreen.tsx` to dynamically fetch active settings parameters (`defaultFee` and `targetRoi`) from the backend on mount.
+- Aligned the frontend dynamic client-side recalculation formulas (triggered when changing the purchase cost or item condition) to use the fetched fee percentage and target ROI thresholds, matching the backend `calculatorService` formulas and logic.
+- Configured robust fallback defaults in the UI in case backend settings service calls are unavailable.
+
+### Files Modified/Created
+- `flipper/AIFlipper-backend/src/services/settingsService.ts` (Modified)
+- `flipper/AIFlipper/screens/ResultScreen.tsx` (Modified)
+- `flipper/report/changes.md` (Modified)

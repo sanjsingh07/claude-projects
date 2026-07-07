@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, Image, ActivityIndicator, Modal, TextInput } from 'react-native';
 import { saveItem, deleteItem, InventoryItem } from '../database/db';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/Theme';
@@ -16,20 +16,39 @@ const ResultScreen = ({ route, navigation }: any) => {
   const [copyModalVisible, setCopyModalVisible] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const [defaultFee, setDefaultFee] = useState(13.5);
+  const [targetRoi, setTargetRoi] = useState(45.0);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(`${Config.API_URL}/settings`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.defaultFee !== undefined) setDefaultFee(data.defaultFee);
+          if (data.targetRoi !== undefined) setTargetRoi(data.targetRoi);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch settings for local calculation:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   // Recalculate analysis when condition or purchase cost changes
   const currentAvgSold = marketData?.avgSoldPrice || result.avgSoldPrice || 240.00;
   const currentBuyCost = parseFloat(purchaseCost) || 0;
   
   // Calculate dynamic deal on client side if purchase cost changes
-  const defaultFeePercent = 0.129; // 12.9% eBay fee
+  const defaultFeePercent = defaultFee / 100; // Loaded dynamically from backend settings
   const estShipping = 20.90;
   const fees = currentAvgSold * defaultFeePercent;
   const netRevenue = currentAvgSold - fees - estShipping;
   const estProfit = netRevenue - currentBuyCost;
   const currentRoi = currentBuyCost > 0 ? (estProfit / currentBuyCost) * 100 : 0;
   
-  const currentVerdict = estProfit > 0 && currentRoi >= 45 ? 'BUY' : estProfit > 0 ? 'RISKY' : 'PASS';
-  const currentConfidence = currentRoi >= 60 ? 'Strong' : currentRoi >= 10 ? 'Medium' : 'Weak';
+  const currentVerdict = estProfit > 0 && currentRoi >= targetRoi ? 'BUY' : estProfit > 0 ? 'RISKY' : 'PASS';
+  const currentConfidence = currentRoi >= (targetRoi + 15) ? 'Strong' : currentRoi >= 10 ? 'Medium' : 'Weak';
   
   const getVerdictStyle = (verdict: string) => {
     switch (verdict) {

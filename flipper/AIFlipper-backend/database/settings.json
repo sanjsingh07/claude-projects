@@ -1,1 +1,9 @@
-{"ebayActive":true,"amazonActive":true,"mercariActive":false,"defaultFee":13.5,"targetRoi":45}
+{
+  "ebayActive": true,
+  "amazonActive": true,
+  "mercariActive": false,
+  "defaultFee": 13.5,
+  "targetRoi": 45,
+  "priceDrops": true,
+  "highDemand": true
+}
