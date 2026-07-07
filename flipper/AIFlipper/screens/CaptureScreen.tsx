@@ -86,25 +86,31 @@ export default function CaptureScreen({ navigation }: any) {
         
         {/* Hero Scanning Section */}
         <View style={styles.scannerViewport}>
-          <CameraView style={styles.camera} ref={cameraRef}>
-            <View style={styles.overlay}>
-              {/* Target Outline */}
-              <View style={styles.targetOutline} />
-              
-              <View style={styles.scanActionContainer}>
-                {isScanning ? (
-                  <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={Colors.primaryContainer} />
-                  </View>
-                ) : (
-                  <TouchableOpacity style={styles.scanButton} onPress={performSearch}>
-                    <Text style={[styles.scanButtonText, Typography.headlineMd]}>⦿ SCAN ITEM</Text>
-                  </TouchableOpacity>
-                )}
-                <Text style={[styles.scanHint, Typography.labelBold]}>READY FOR CAPTURE</Text>
+          {isFocused ? (
+            <CameraView style={styles.camera} ref={cameraRef}>
+              <View style={styles.overlay}>
+                {/* Target Outline */}
+                <View style={styles.targetOutline} />
+                
+                <View style={styles.scanActionContainer}>
+                  {isScanning ? (
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator size="large" color={Colors.primaryContainer} />
+                    </View>
+                  ) : (
+                    <TouchableOpacity style={styles.scanButton} onPress={performSearch}>
+                      <Text style={[styles.scanButtonText, Typography.headlineMd]}>⦿ SCAN ITEM</Text>
+                    </TouchableOpacity>
+                  )}
+                  <Text style={[styles.scanHint, Typography.labelBold]}>READY FOR CAPTURE</Text>
+                </View>
               </View>
+            </CameraView>
+          ) : (
+            <View style={[styles.camera, { backgroundColor: '#050c06', justifyContent: 'center', alignItems: 'center' }]}>
+              <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant }]}>Camera paused</Text>
             </View>
-          </CameraView>
+          )}
         </View>
 
         {/* Quick Inventory Summary */}

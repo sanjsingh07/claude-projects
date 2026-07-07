@@ -134,3 +134,21 @@ Fixed an iOS C++ compilation error in the `react-native-reanimated` Fabric hook 
 
 ### Files Modified/Created
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Tue Jul  7 15:00:30 +07 2026
+
+## Task: Resolve Camera Greenlight Indicator Active in Background
+
+### Summary
+Fixed an issue where the iOS camera indicator (green light) remained active on the device even after navigating away from the scanner screen in the Expo app.
+
+### Details
+- Configured conditional rendering of the `<CameraView>` in `CaptureScreen.tsx` using the `useIsFocused` hook from `@react-navigation/native`.
+- When the `CaptureScreen` is focused, `<CameraView>` is mounted. When the user navigates away, `<CameraView>` is unmounted, properly releasing the camera hardware and disabling the device's green light.
+- Implemented a dark placeholder view when the screen is unfocused to maintain layout stability without visual layout shift.
+
+### Files Modified/Created
+- `flipper/AIFlipper/screens/CaptureScreen.tsx` (Modified)
+- `flipper/report/changes.md` (Modified)

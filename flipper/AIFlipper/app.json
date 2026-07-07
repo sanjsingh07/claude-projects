@@ -5,6 +5,9 @@
     "version": "1.0.0",
     "ios": {
       "bundleIdentifier": "com.nublet.AIFlipper"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

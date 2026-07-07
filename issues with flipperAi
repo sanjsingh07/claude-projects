@@ -1,0 +1,7 @@
+in frontend:
+
+when scanner is on, even tho we move between different screens we still get greenlight on device indicating the camera usage.
+
+backend is not confirgured or finished at all or not integrated at all to frontend.
+
+the app feels more like a empty template/prototype than an actual app.
