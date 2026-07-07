@@ -172,3 +172,21 @@ Aligned the frontend client-side dynamically recalculated profit, ROI, and verdi
 - `flipper/AIFlipper-backend/src/services/settingsService.ts` (Modified)
 - `flipper/AIFlipper/screens/ResultScreen.tsx` (Modified)
 - `flipper/report/changes.md` (Modified)
+
+---
+
+# Changes Report - Tue Jul  7 15:56:50 +07 2026
+
+## Task: Update Frontend API URL Configuration to Match Host Local IP
+
+### Summary
+Updated the frontend configuration file `Config.ts` to use the host computer's active local IP address (`172.16.0.32`) instead of `localhost`.
+
+### Details
+- Discovered that when building and running the Expo application targeting a physical iOS device (such as the user's `Jayyy’s iPhone`), the device cannot resolve network requests to `localhost`.
+- Obtained the Mac host's active local network IP address (`172.16.0.32`).
+- Replaced the hardcoded API URL target in `Config.ts` with the active IP address to restore 1:1 network connectivity and full endpoint configuration between the physical iOS device and the backend server.
+
+### Files Modified/Created
+- `flipper/AIFlipper/constants/Config.ts` (Modified)
+- `flipper/report/changes.md` (Modified)
