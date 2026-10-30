@@ -4,9 +4,8 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/Theme';
 import { getDashboardStats } from '../database/db';
-import { Config } from '../constants/Config';
-
-const API_URL = Config.API_URL; 
+import { api, ApiError } from '../services/ApiClient';
+import { formatCurrency, formatProfit, formatDate, formatPercent, isLoss } from '../utils/format';
 
 export default function CaptureScreen({ navigation }: any) {
   const [permission, requestPermission] = useCameraPermissions();
@@ -22,8 +21,14 @@ export default function CaptureScreen({ navigation }: any) {
   }, [isFocused]);
 
   const loadStats = async () => {
-    const data = await getDashboardStats();
-    setStats(data);
+    try {
+      const data = await getDashboardStats();
+      setStats(data);
+    } catch (error) {
+      // getDashboardStats already falls back to a local calc, but never let a
+      // stats failure take down the camera — it's the screen's primary job.
+      console.warn('Failed to load dashboard stats:', error);
+    }
   };
 
   const performSearch = async () => {
@@ -34,22 +39,11 @@ export default function CaptureScreen({ navigation }: any) {
         base64: true,
       });
 
-      const response = await fetch(`${API_URL}/identify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: photo.base64 }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        navigation.navigate('Result', { result: data });
-      } else {
-        Alert.alert("Error", data.error || "Failed to research item");
-      }
+      const data = await api.post<any>('/identify', { image: photo.base64 });
+      navigation.navigate('Result', { result: data });
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "Could not connect to the server");
+      Alert.alert('Error', error instanceof ApiError ? error.message : 'Could not connect to the server');
     } finally {
       setIsScanning(false);
     }
@@ -72,9 +66,7 @@ export default function CaptureScreen({ navigation }: any) {
       {/* TopAppBar */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity>
-             <Text style={[styles.menuIcon, { color: Colors.primaryContainer }]}>☰</Text>
-          </TouchableOpacity>
+          <Text style={[styles.menuIcon, { color: Colors.primaryContainer }]}>☰</Text>
           <Text style={[styles.logoText, Typography.headlineMd, { color: Colors.primaryContainer }]}>AI FLIPPER</Text>
         </View>
         <View style={styles.profilePicContainer}>
@@ -119,7 +111,7 @@ export default function CaptureScreen({ navigation }: any) {
             <View style={styles.summaryTop}>
               <View>
                 <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 10, textTransform: 'uppercase', marginBottom: 4 }]}>Total Est. Profit</Text>
-                <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>${stats.totalProfit.toFixed(2)}</Text>
+                <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>{formatCurrency(stats.totalProfit)}</Text>
               </View>
               <View style={styles.trendBadge}>
                  <Text style={{ fontSize: 24, color: Colors.primaryContainer }}>↗</Text>
@@ -132,7 +124,7 @@ export default function CaptureScreen({ navigation }: any) {
               </View>
               <View style={styles.summaryBox}>
                 <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 10, textTransform: 'uppercase', marginBottom: 4 }]}>Sell-Through</Text>
-                <Text style={[Typography.headlineMd, { color: Colors.secondary }]}>{stats.sellThrough}%</Text>
+                <Text style={[Typography.headlineMd, { color: Colors.secondary }]}>{formatPercent(stats.sellThrough, '0%')}</Text>
               </View>
             </View>
           </View>
@@ -156,16 +148,16 @@ export default function CaptureScreen({ navigation }: any) {
                   ) : (
                      <View style={[styles.recentImage, { backgroundColor: '#222' }]} />
                   )}
-                  <View style={item.estimatedProfit >= 0 ? styles.recentBadgeProfit : styles.recentBadgeLoss}>
-                    <Text style={{ color: item.estimatedProfit >= 0 ? Colors.onPrimaryContainer : Colors.onErrorContainer, fontSize: 10, fontWeight: 'bold' }}>
-                      {item.estimatedProfit >= 0 ? '+' : '-'}${Math.abs(item.estimatedProfit).toFixed(2)}
+                  <View style={isLoss(item.estimatedProfit) ? styles.recentBadgeLoss : styles.recentBadgeProfit}>
+                    <Text style={{ color: isLoss(item.estimatedProfit) ? Colors.onErrorContainer : Colors.onPrimaryContainer, fontSize: 10, fontWeight: 'bold' }}>
+                      {formatProfit(item.estimatedProfit)}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.recentDetails}>
                   <Text style={[Typography.labelBold, { color: Colors.onSurface, fontSize: 12 }]} numberOfLines={1}>{item.productName}</Text>
                   <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 10, marginTop: 4 }]}>
-                    {new Date(item.createdAt).toLocaleDateString()}
+                    {formatDate(item.createdAt)}
                   </Text>
                 </View>
               </View>

@@ -1,0 +1,19 @@
+{
+  "name": "@flipper/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Domain types and deal math shared by the AIFlipper client and backend.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepare": "tsc",
+    "test": "node --import tsx --test src/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "tsx": "^4.20.6",
+    "typescript": "^6.0.3"
+  }
+}

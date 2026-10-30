@@ -3,11 +3,37 @@
     "name": "AIFlipper",
     "slug": "AIFlipper",
     "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "light",
     "ios": {
-      "bundleIdentifier": "com.nublet.AIFlipper"
+      "bundleIdentifier": "com.nublet.AIFlipper",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan items for identification and pricing.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos to identify items you've already photographed.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    },
+    "android": {
+      "package": "com.nublet.AIFlipper",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET"
+      ]
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan items for identification and pricing."
+        }
+      ]
     ]
   }
 }

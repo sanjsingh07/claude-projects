@@ -1,0 +1,21 @@
+# Secrets — these must never be committed.
+# `flipper/` sits inside a larger git repo whose root is two levels up, so this
+# directory's protection must travel with it if the backend is ever extracted.
+.env
+.env.local
+.env.*.local
+google-key.json
+*google-key.json
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# Local database files (until the Postgres migration lands)
+database/*.json
+
+# OS
+.DS_Store
+*.log

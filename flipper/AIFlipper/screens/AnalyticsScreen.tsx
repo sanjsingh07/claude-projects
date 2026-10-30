@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/Theme';
-import { Config } from '../constants/Config';
+import { api } from '../services/ApiClient';
 import { useIsFocused } from '@react-navigation/native';
+import { percentWidth, formatCompactCurrency, formatPercent } from '../utils/format';
 
 interface AnalyticsData {
   hero: {
@@ -36,7 +37,7 @@ interface AnalyticsData {
 
 const AnalyticsScreen = () => {
   const [data, setData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -47,26 +48,50 @@ const AnalyticsScreen = () => {
 
   const fetchAnalytics = async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`${Config.API_URL}/analytics`);
-      if (response.ok) {
-        const json = await response.json();
-        setData(json);
-      }
+      setLoadState('loading');
+      const json = await api.get<AnalyticsData>('/analytics');
+      setData(json);
+      setLoadState('ready');
     } catch (error) {
+      // A failed load used to leave this screen spinning forever, identical to a
+      // slow network — the user could never tell the backend was unreachable.
       console.warn('Failed to load analytics from backend:', error);
-    } finally {
-      setLoading(false);
+      setLoadState('error');
     }
   };
 
-  if (loading || !data) {
+  if (loadState === 'loading') {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View style={[styles.container, styles.centerFill]}>
         <ActivityIndicator color={Colors.primaryContainer} size="large" />
       </View>
     );
   }
+
+  if (loadState === 'error' || !data) {
+    return (
+      <View style={[styles.container, styles.centerFill, { paddingHorizontal: Spacing.lg }]}>
+        <Text style={[Typography.headlineMd, { color: Colors.error }]}>CAN'T REACH SERVER</Text>
+        <Text style={[Typography.bodyMd, { color: Colors.outline, marginTop: 8, textAlign: 'center' }]}>
+          Analytics couldn't be loaded. This is a connection problem, not a lack of data.
+        </Text>
+        <TouchableOpacity style={styles.retryButton} onPress={fetchAnalytics}>
+          <Text style={[Typography.labelBold, { color: Colors.onPrimary }]}>RETRY</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // Distinguish "connected, but nothing sold yet" from "can't reach server". A
+  // new account has no realized profit, no sold_at history, no category or
+  // sourcing data — every derived series is empty. That is the honest state, and
+  // showing it plainly is what makes the numbers trustworthy once they appear,
+  // rather than the old dashboard that seeded $12,842 on day one.
+  const hasSales = (data.hero?.totalProfit ?? 0) !== 0 || (data.hero?.sparkline?.length ?? 0) > 0;
+  const hasAnyData =
+    hasSales ||
+    (data.secondary?.grossInventoryValue ?? 0) > 0 ||
+    (data.profitByCategory?.length ?? 0) > 0;
 
   return (
     <View style={styles.container}>
@@ -88,26 +113,37 @@ const AnalyticsScreen = () => {
           <View style={styles.heroHeader}>
             <View>
               <Text style={styles.heroLabel}>TOTAL PROFIT</Text>
-              <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>${data.hero.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+              <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>${(Number.isFinite(data.hero?.totalProfit) ? data.hero.totalProfit : 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
             </View>
-            <View style={styles.heroBadge}>
-              <Text style={styles.heroBadgeText}>+{data.hero.trendPercentage}%</Text>
+            {hasSales && (data.hero?.trendPercentage ?? 0) !== 0 && (
+              <View style={[styles.heroBadge, (data.hero?.trendPercentage ?? 0) < 0 && styles.heroBadgeDown]}>
+                <Text style={[styles.heroBadgeText, (data.hero?.trendPercentage ?? 0) < 0 && { color: Colors.error }]}>
+                  {(data.hero?.trendPercentage ?? 0) > 0 ? '+' : ''}{formatPercent(data.hero?.trendPercentage, '0.0%')}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {(data.hero?.sparkline?.length ?? 0) > 0 ? (
+            <View style={styles.sparklineContainer}>
+               {(data.hero?.sparkline ?? []).map((val, idx, arr) => {
+                 // Bar height is a percentage of the chart max; an out-of-range or
+                 // non-finite value used to produce "NaN%", which RN rejects as a
+                 // style value and logs as a hard error.
+                 let bgStyle = 'rgba(0,230,118,0.2)';
+                 if (idx === arr.length - 3) bgStyle = 'rgba(0,230,118,0.4)';
+                 if (idx === arr.length - 2) bgStyle = 'rgba(0,230,118,0.6)';
+                 if (idx === arr.length - 1) bgStyle = Colors.primaryContainer;
+                 return (
+                   <View key={idx} style={[styles.sparkBar, { height: percentWidth(val), backgroundColor: bgStyle }]} />
+                 );
+               })}
             </View>
-          </View>
-          
-          <View style={styles.sparklineContainer}>
-             {data.hero.sparkline.map((val, idx) => {
-               // Render bar with height based on percentage of max (100)
-               const heightStr = `${val}%`;
-               let bgStyle = 'rgba(0,230,118,0.2)';
-               if (idx === data.hero.sparkline.length - 3) bgStyle = 'rgba(0,230,118,0.4)';
-               if (idx === data.hero.sparkline.length - 2) bgStyle = 'rgba(0,230,118,0.6)';
-               if (idx === data.hero.sparkline.length - 1) bgStyle = Colors.primaryContainer;
-               return (
-                 <View key={idx} style={[styles.sparkBar, { height: heightStr as any, backgroundColor: bgStyle }]} />
-               );
-             })}
-          </View>
+          ) : (
+            <View style={[styles.sparklineContainer, { alignItems: 'center', justifyContent: 'center' }]}>
+              <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant }]}>No sales history yet</Text>
+            </View>
+          )}
         </View>
 
         {/* Secondary Stats */}
@@ -116,21 +152,21 @@ const AnalyticsScreen = () => {
             <Text style={styles.bentoIcon}>📦</Text>
             <View>
               <Text style={styles.bentoLabel}>GROSS INV VALUE</Text>
-              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>${(data.secondary.grossInventoryValue / 1000).toFixed(1)}K</Text>
+              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>{formatCompactCurrency(data.secondary?.grossInventoryValue)}</Text>
             </View>
           </View>
           <View style={styles.bentoCardSmall}>
             <Text style={styles.bentoIcon}>⚡</Text>
             <View>
               <Text style={styles.bentoLabel}>AVG ROI (%)</Text>
-              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>{data.secondary.avgRoi}%</Text>
+              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>{formatPercent(data.secondary?.avgRoi, '0.0%')}</Text>
             </View>
           </View>
           <View style={styles.bentoCardLarge}>
             <Text style={styles.bentoIcon}>🛒</Text>
             <View>
               <Text style={styles.bentoLabel}>SELL-THROUGH RATE</Text>
-              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>{data.secondary.sellThroughRate}%</Text>
+              <Text style={[Typography.headlineMd, { color: Colors.onSurface }]}>{formatPercent(data.secondary?.sellThroughRate, '0.0%')}</Text>
             </View>
           </View>
         </View>
@@ -139,18 +175,22 @@ const AnalyticsScreen = () => {
         <View style={styles.chartsGrid}>
           <View style={[styles.chartCard, { shadowColor: Colors.secondary }]}>
             <Text style={[Typography.headlineMd, { color: Colors.onSurface, marginBottom: Spacing.lg }]}>Profit by Category</Text>
-            
-            {data.profitByCategory.map((cat, idx) => (
-              <View key={idx} style={styles.barChartRow}>
-                <View style={styles.barLabelRow}>
-                  <Text style={styles.barLabelText}>{cat.category}</Text>
-                  <Text style={styles.barLabelText}>${cat.amount.toLocaleString()}</Text>
+
+            {(data.profitByCategory?.length ?? 0) > 0 ? (
+              (data.profitByCategory ?? []).map((cat, idx) => (
+                <View key={idx} style={styles.barChartRow}>
+                  <View style={styles.barLabelRow}>
+                    <Text style={styles.barLabelText}>{cat.category}</Text>
+                    <Text style={styles.barLabelText}>${(Number.isFinite(cat.amount) ? cat.amount : 0).toLocaleString()}</Text>
+                  </View>
+                  <View style={styles.barTrack}>
+                    <View style={[styles.barFill, { width: percentWidth(cat.percentage) }]} />
+                  </View>
                 </View>
-                <View style={styles.barTrack}>
-                  <View style={[styles.barFill, { width: `${cat.percentage}%` as any }]} />
-                </View>
-              </View>
-            ))}
+              ))
+            ) : (
+              <Text style={styles.emptySectionText}>Sell items to see where your profit comes from.</Text>
+            )}
           </View>
 
           {/* Top Sourcing Heatmap (List version) */}
@@ -160,16 +200,20 @@ const AnalyticsScreen = () => {
                <Text style={{ fontSize: 20, color: Colors.onSurfaceVariant }}>📍</Text>
             </View>
             <View style={{ gap: Spacing.md }}>
-               {data.topSourcing.map((src, idx) => (
-                 <View key={idx} style={styles.sourcingRow}>
-                   <View style={styles.sourcingRank}><Text style={styles.sourcingRankText}>{src.rank}</Text></View>
-                   <View style={{ flex: 1 }}>
-                     <Text style={[Typography.labelBold, { color: Colors.onSurface }]}>{src.location}</Text>
-                     <Text style={{ fontSize: 12, color: Colors.onSurfaceVariant }}>{src.activePickups} Active Pickups</Text>
+               {(data.topSourcing?.length ?? 0) > 0 ? (
+                 (data.topSourcing ?? []).map((src, idx) => (
+                   <View key={idx} style={styles.sourcingRow}>
+                     <View style={styles.sourcingRank}><Text style={styles.sourcingRankText}>{src.rank}</Text></View>
+                     <View style={{ flex: 1 }}>
+                       <Text style={[Typography.labelBold, { color: Colors.onSurface }]}>{src.location}</Text>
+                       <Text style={{ fontSize: 12, color: Colors.onSurfaceVariant }}>{src.activePickups} Sold</Text>
+                     </View>
+                     <Text style={[Typography.dataMono, { color: Colors.primaryContainer }]}>{src.amount}</Text>
                    </View>
-                   <Text style={[Typography.dataMono, { color: Colors.primaryContainer }]}>{src.amount}</Text>
-                 </View>
-               ))}
+                 ))
+               ) : (
+                 <Text style={styles.emptySectionText}>Log a source location when you sell to rank your best spots.</Text>
+               )}
             </View>
           </View>
 
@@ -177,26 +221,32 @@ const AnalyticsScreen = () => {
           <View style={[styles.chartCard, { marginBottom: 30 }]}>
             <Text style={[Typography.headlineMd, { color: Colors.onSurface, marginBottom: Spacing.lg }]}>High-Margin Flips</Text>
             
-            <View style={styles.tableHeader}>
-              <Text style={styles.tableHeaderText}>PRODUCT</Text>
-              <Text style={styles.tableHeaderText}>MARGIN</Text>
-              <Text style={styles.tableHeaderText}>TREND</Text>
-            </View>
-
-            {data.highMarginFlips.map((flip, idx) => (
-              <View key={idx} style={[styles.tableRow, idx === data.highMarginFlips.length - 1 ? { borderBottomWidth: 0 } : {}]}>
-                <View style={styles.tableCellProd}>
-                  {flip.imageUrl ? (
-                    <Image source={{ uri: flip.imageUrl }} style={styles.tableImg} />
-                  ) : (
-                    <View style={[styles.tableImg, { backgroundColor: '#222' }]} />
-                  )}
-                  <Text style={[Typography.bodyMd, { color: Colors.onSurface }]} numberOfLines={1}>{flip.name}</Text>
+            {(data.highMarginFlips?.length ?? 0) > 0 ? (
+              <>
+                <View style={styles.tableHeader}>
+                  <Text style={styles.tableHeaderText}>PRODUCT</Text>
+                  <Text style={styles.tableHeaderText}>MARGIN</Text>
+                  <Text style={styles.tableHeaderText}>TREND</Text>
                 </View>
-                <Text style={[Typography.dataMono, styles.tableCellMargin]}>{flip.margin}</Text>
-                <Text style={styles.tableCellTrend}>{flip.trend}</Text>
-              </View>
-            ))}
+
+                {(data.highMarginFlips ?? []).map((flip, idx, arr) => (
+                  <View key={idx} style={[styles.tableRow, idx === arr.length - 1 ? { borderBottomWidth: 0 } : {}]}>
+                    <View style={styles.tableCellProd}>
+                      {flip.imageUrl ? (
+                        <Image source={{ uri: flip.imageUrl }} style={styles.tableImg} />
+                      ) : (
+                        <View style={[styles.tableImg, { backgroundColor: '#222' }]} />
+                      )}
+                      <Text style={[Typography.bodyMd, { color: Colors.onSurface }]} numberOfLines={1}>{flip.name}</Text>
+                    </View>
+                    <Text style={[Typography.dataMono, styles.tableCellMargin]}>{flip.margin}</Text>
+                    <Text style={styles.tableCellTrend}>{flip.trend}</Text>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <Text style={styles.emptySectionText}>Your best-margin sales will show up here once you mark items sold.</Text>
+            )}
           </View>
         </View>
 
@@ -209,6 +259,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  centerFill: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  retryButton: {
+    marginTop: 20,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: BorderRadius.lg,
+    backgroundColor: Colors.primaryContainer,
   },
   header: {
     flexDirection: 'row',
@@ -288,10 +349,19 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: BorderRadius.full,
   },
+  heroBadgeDown: {
+    backgroundColor: 'rgba(147, 0, 10, 0.15)',
+  },
   heroBadgeText: {
     color: Colors.primaryContainer,
     fontFamily: 'Inter_500Medium',
     fontSize: 12,
+  },
+  emptySectionText: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 13,
+    lineHeight: 19,
+    color: Colors.onSurfaceVariant,
   },
   sparklineContainer: {
     height: 64,

@@ -125,6 +125,14 @@ Fixed an iOS build compilation failure where `folly/coro/Coroutine.h` could not 
 
 ## Task: Resolve React Native Reanimated shadowTreeDidMount Typings Mismatch
 
+> **⚠️ OBSOLETE — DO NOT RE-APPLY (noted 2026-09-05).**
+> The hand-patch described below edited files inside `node_modules/react-native-reanimated`.
+> Those edits were overwritten by the very next `npm install` and no longer exist in the tree.
+> The fix ships upstream in **reanimated 4.1.7**, which guards the `shadowTreeDidMount`
+> signature with `REACT_NATIVE_MINOR_VERSION`. `package.json` already pins
+> `react-native-reanimated: ~4.1.1`, so a clean `npm install` picks up 4.1.7+ automatically.
+> Re-applying this manual patch would only re-introduce a change that a reinstall discards.
+
 ### Summary
 Fixed an iOS C++ compilation error in the `react-native-reanimated` Fabric hook where `shadowTreeDidMount` was marked `override` but type-mismatched the base virtual function in React Native 0.81.5.
 

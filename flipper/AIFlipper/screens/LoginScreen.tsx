@@ -1,14 +1,50 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { Colors, Typography } from '../constants/Theme';
+import { useAuth } from '../context/AuthContext';
+import { ApiError } from '../services/ApiClient';
 
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = () => {
+  const { login, register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = () => {
-    // Mock login for now
-    navigation.replace('Main');
+  // No navigation.replace here anymore: a successful login/register flips the
+  // AuthContext, and AppNavigator swaps Login out for Main on its own. The screen
+  // only has to report progress and errors.
+  const handleSubmit = async () => {
+    if (submitting) return;
+    setError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password) {
+      setError('Enter your email and password.');
+      return;
+    }
+    if (mode === 'register' && password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (mode === 'login') {
+        await login(trimmedEmail, password);
+      } else {
+        await register(trimmedEmail, password);
+      }
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Something went wrong. Try again.');
+      setSubmitting(false);
+    }
+  };
+
+  const toggleMode = () => {
+    setMode((m) => (m === 'login' ? 'register' : 'login'));
+    setError(null);
   };
 
   return (
@@ -49,13 +85,31 @@ const LoginScreen = ({ navigation }: any) => {
             />
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={[styles.loginButtonText, Typography.labelBold]}>INITIALIZE SESSION</Text>
+          {error && (
+            <Text style={[styles.errorText, Typography.bodyMd]}>{error}</Text>
+          )}
+
+          <TouchableOpacity
+            style={[styles.loginButton, submitting && styles.loginButtonDisabled]}
+            onPress={handleSubmit}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <ActivityIndicator color={Colors.onPrimary} />
+            ) : (
+              <Text style={[styles.loginButtonText, Typography.labelBold]}>
+                {mode === 'login' ? 'INITIALIZE SESSION' : 'CREATE ACCOUNT'}
+              </Text>
+            )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signupLink}>
+          <TouchableOpacity style={styles.signupLink} onPress={toggleMode} disabled={submitting}>
             <Text style={[styles.signupText, Typography.bodyMd, { color: Colors.onSurfaceVariant }]}>
-              New operator? <Text style={{ color: Colors.secondary }}>Request Access</Text>
+              {mode === 'login' ? (
+                <>New operator? <Text style={{ color: Colors.secondary }}>Create Account</Text></>
+              ) : (
+                <>Already registered? <Text style={{ color: Colors.secondary }}>Sign In</Text></>
+              )}
             </Text>
           </TouchableOpacity>
         </View>
@@ -120,9 +174,17 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
+  loginButtonDisabled: {
+    opacity: 0.6,
+  },
   loginButtonText: {
     color: Colors.onPrimary,
     fontSize: 16,
+  },
+  errorText: {
+    color: Colors.error || '#ff6b6b',
+    marginTop: 4,
+    textAlign: 'center',
   },
   signupLink: {
     marginTop: 30,

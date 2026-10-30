@@ -11,8 +11,10 @@ export const generateListing = async (productName: string, category: string, con
   
   let description = `🚀 **Upgrade your gear today!** Up for grabs is a premium **${productName}** in **${condition}** condition.\n\n`;
   description += `✨ **Key Highlights:**\n`;
-  description += `- 📸 Condition: Evaluated as ${condition} via FlipAI Smart Scan.\n`;
-  description += `- 💎 Authenticity: 100% Guaranteed authentic item.\n`;
+  description += `- 📸 Condition: ${condition}.\n`;
+  // No authenticity line. It was asserted unconditionally for every item — the
+  // app has no way to verify authenticity, so printing "100% Guaranteed
+  // authentic" into a live listing is a false claim the seller would be making.
   description += `- 📦 Shipping: Professionally packaged and shipped fast via flat-rate standard preset.\n\n`;
   description += `⚠️ *Listing is limited and priced to sell quickly based on real-time comps. Buy now before it's gone!*`;
 

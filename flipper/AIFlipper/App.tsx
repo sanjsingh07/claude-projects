@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AppNavigator from './navigation/AppNavigator';
+import { AuthProvider } from './context/AuthContext';
 import { useFonts, SpaceGrotesk_700Bold, SpaceGrotesk_600SemiBold } from '@expo-google-fonts/space-grotesk';
 import { Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
@@ -46,8 +47,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer theme={AppTheme}>
-      <AppNavigator />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer theme={AppTheme}>
+        <AppNavigator />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

@@ -1,0 +1,51 @@
+# CI for the FlipAI backend + shared package. Path-filtered so it never runs on
+# changes to the sibling projects that share this repo root. When the backend is
+# eventually split into its own repo (see the plan's Iteration 1), this moves
+# there and the path filters drop away.
+name: flipper-backend-ci
+
+on:
+  push:
+    paths:
+      - 'flipper/AIFlipper-backend/**'
+      - 'flipper/shared/**'
+      - '.github/workflows/flipper-backend-ci.yml'
+  pull_request:
+    paths:
+      - 'flipper/AIFlipper-backend/**'
+      - 'flipper/shared/**'
+
+jobs:
+  build-test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # shared must be built first — the backend resolves @flipper/shared from
+      # its dist/, and a raw-TS package fails at require() (green build, red run).
+      - name: Install & build shared
+        working-directory: flipper/shared
+        run: |
+          npm ci
+          npm run build
+          npm test
+
+      - name: Install backend
+        working-directory: flipper/AIFlipper-backend
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: flipper/AIFlipper-backend
+        run: npx tsc --noEmit
+
+      - name: Lint
+        working-directory: flipper/AIFlipper-backend
+        run: npm run lint
+
+      - name: Test
+        working-directory: flipper/AIFlipper-backend
+        run: npm test

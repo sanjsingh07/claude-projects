@@ -2,15 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, Image, ActivityIndicator, Modal, TextInput } from 'react-native';
 import { saveItem, deleteItem, InventoryItem } from '../database/db';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/Theme';
-import { Config } from '../constants/Config';
+import { api } from '../services/ApiClient';
+import { calculateDeal } from '@flipper/shared';
 
 const ResultScreen = ({ route, navigation }: any) => {
-  const { result, isSavedItem } = route.params;
-  const { id, productName, category, imageUrl, marketData, analysis } = result;
+  // A params-less navigation (a deep link, a restored back stack) used to throw
+  // on this destructure before the component could render, crashing to a blank
+  // red screen. Default to an empty object and show a real message below.
+  const { result, isSavedItem } = route.params ?? {};
+  const { id, productName, category, imageUrl, marketData, analysis } = result ?? {};
 
-  const [condition, setCondition] = useState(result.condition || 'LIKE NEW');
-  const [purchaseCost, setPurchaseCost] = useState(String(analysis?.breakdown?.purchaseCost || result.buyPrice || '50.00'));
-  const [status, setStatus] = useState<'Listed' | 'Sold' | 'Pending'>(result.status || 'Listed');
+  // Identification signals from the Vision service (absent on a saved Vault
+  // item, which was never a fresh scan). `confidence` is a real 0-1 score, not
+  // the old hardcoded "98% MATCH"; `alternates` are ranked runner-up guesses so
+  // a wrong top pick can be corrected without re-scanning.
+  const idConfidence: number | undefined =
+    typeof result?.confidence === 'number' ? result.confidence : undefined;
+  const alternates: Array<{ name: string; score: number }> = Array.isArray(result?.alternates)
+    ? result.alternates
+    : [];
+  const idIsMock = result?.isMock === true;
+
+  const [condition, setCondition] = useState(result?.condition || 'LIKE NEW');
+  const [purchaseCost, setPurchaseCost] = useState(String(analysis?.breakdown?.purchaseCost || result?.buyPrice || '50.00'));
+  const [status, setStatus] = useState<'Listed' | 'Sold' | 'Pending'>(result?.status || 'Listed');
+
+  // Realized-sale detail, captured only when the item is marked Sold. These feed
+  // Iteration 6 analytics (real profit, trend, top sourcing) — before they were
+  // recorded the dashboard was seeded with mockup constants. sold_at is stamped
+  // server-side to now() when a price is given but no date, so it's not exposed
+  // here. source_location is useful on any item, so it lives outside the Sold gate.
+  const [soldPrice, setSoldPrice] = useState(
+    result?.soldPrice != null ? String(result.soldPrice) : ''
+  );
+  const [actualFeesPaid, setActualFeesPaid] = useState(
+    result?.actualFeesPaid != null ? String(result.actualFeesPaid) : ''
+  );
+  const [shippingCostPaid, setShippingCostPaid] = useState(
+    result?.shippingCostPaid != null ? String(result.shippingCostPaid) : ''
+  );
+  const [sourceLocation, setSourceLocation] = useState(result?.sourceLocation || '');
+
   const [generatingCopy, setGeneratingCopy] = useState(false);
   const [copyData, setCopyData] = useState<any>(null);
   const [copyModalVisible, setCopyModalVisible] = useState(false);
@@ -19,15 +51,15 @@ const ResultScreen = ({ route, navigation }: any) => {
   const [defaultFee, setDefaultFee] = useState(13.5);
   const [targetRoi, setTargetRoi] = useState(45.0);
 
+  const [altPickerVisible, setAltPickerVisible] = useState(false);
+  const [reidentifying, setReidentifying] = useState(false);
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await fetch(`${Config.API_URL}/settings`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.defaultFee !== undefined) setDefaultFee(data.defaultFee);
-          if (data.targetRoi !== undefined) setTargetRoi(data.targetRoi);
-        }
+        const data = await api.get<any>('/settings');
+        if (data.defaultFee !== undefined) setDefaultFee(data.defaultFee);
+        if (data.targetRoi !== undefined) setTargetRoi(data.targetRoi);
       } catch (error) {
         console.warn('Failed to fetch settings for local calculation:', error);
       }
@@ -35,20 +67,33 @@ const ResultScreen = ({ route, navigation }: any) => {
     fetchSettings();
   }, []);
 
-  // Recalculate analysis when condition or purchase cost changes
+  // All hooks are above this line, so the early return keeps their order stable.
+  if (!result) {
+    return (
+      <View style={styles.emptyStateContainer}>
+        <Text style={[Typography.headlineMd, { color: Colors.error }]}>NO ITEM DATA</Text>
+        <Text style={[Typography.bodyMd, { color: Colors.outline, marginTop: 8, textAlign: 'center' }]}>
+          This screen was opened without a scan result. Head back and scan an item.
+        </Text>
+        <TouchableOpacity style={styles.emptyStateButton} onPress={() => navigation.goBack()}>
+          <Text style={[Typography.labelBold, { color: Colors.onPrimary }]}>GO BACK</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // The buy/pass math is calculateDeal from @flipper/shared — the exact function
+  // the backend runs per scan. This screen re-runs it live as the user edits the
+  // purchase cost, so the client can no longer disagree with the server the way
+  // the old hand-inlined copy did (it used a 13.5% fee while the server used
+  // 12.9%, and used a fixed max-buy divisor that ignored the target ROI).
   const currentAvgSold = marketData?.avgSoldPrice || result.avgSoldPrice || 240.00;
   const currentBuyCost = parseFloat(purchaseCost) || 0;
-  
-  // Calculate dynamic deal on client side if purchase cost changes
-  const defaultFeePercent = defaultFee / 100; // Loaded dynamically from backend settings
-  const estShipping = 20.90;
-  const fees = currentAvgSold * defaultFeePercent;
-  const netRevenue = currentAvgSold - fees - estShipping;
-  const estProfit = netRevenue - currentBuyCost;
-  const currentRoi = currentBuyCost > 0 ? (estProfit / currentBuyCost) * 100 : 0;
-  
-  const currentVerdict = estProfit > 0 && currentRoi >= targetRoi ? 'BUY' : estProfit > 0 ? 'RISKY' : 'PASS';
-  const currentConfidence = currentRoi >= (targetRoi + 15) ? 'Strong' : currentRoi >= 10 ? 'Medium' : 'Weak';
+  const feePercent = defaultFee / 100; // defaultFee is fetched from backend settings above
+
+  const deal = calculateDeal(currentAvgSold, currentBuyCost, feePercent, targetRoi);
+  const currentVerdict = deal.verdict;
+  const currentConfidence = deal.confidence;
   
   const getVerdictStyle = (verdict: string) => {
     switch (verdict) {
@@ -61,9 +106,37 @@ const ResultScreen = ({ route, navigation }: any) => {
 
   const vStyle = getVerdictStyle(currentVerdict);
 
+  // Data provenance. The backend distinguishes real sold comps from current
+  // asking prices (which run systematically high) and from sample data served
+  // when no API key / no results are available. Nothing used to read these, so
+  // every verdict looked equally authoritative — an asking-price ceiling and a
+  // fabricated Sony-headphone comp were presented identically to a real sale.
+  // Only meaningful for a fresh scan; a saved Vault item carries no marketData.
+  const priceBasis: 'sold' | 'asking' | 'none' | undefined = marketData?.priceBasis;
+  const isMockData = marketData?.isMock === true;
+  const marketNote: string | undefined = marketData?.error;
+  const showProvenance = !!marketData && (isMockData || priceBasis === 'asking' || priceBasis === 'none');
+  const provenanceIsError = isMockData || priceBasis === 'none';
+  const provenanceTitle = isMockData
+    ? '⚠ SAMPLE DATA — NOT REAL COMPS'
+    : priceBasis === 'asking'
+      ? '⚠ ASKING PRICES — NOT SOLD COMPS'
+      : '⚠ NO COMPS FOUND';
+
   const handleSave = async () => {
     try {
       setSaving(true);
+      // An empty text input means "not recorded" → send null so analytics can
+      // tell it from a genuine $0. The server also nulls every sold field when
+      // status isn't Sold, so a mistaken entry can't leave stale sale data behind.
+      const toMoney = (s: string): number | null => {
+        const t = s.trim();
+        if (t === '') return null;
+        const n = parseFloat(t);
+        return Number.isFinite(n) ? n : null;
+      };
+      const trimmedSource = sourceLocation.trim();
+
       const itemToSave: Partial<InventoryItem> = {
         id: id || undefined,
         productName: productName,
@@ -72,10 +145,14 @@ const ResultScreen = ({ route, navigation }: any) => {
         condition: condition,
         buyPrice: currentBuyCost,
         avgSoldPrice: currentAvgSold,
-        estimatedProfit: parseFloat(estProfit.toFixed(2)),
-        roi: parseFloat(currentRoi.toFixed(1)),
+        estimatedProfit: deal.estimatedProfit,
+        roi: deal.roi,
         verdict: currentVerdict,
         status: status,
+        soldPrice: status === 'Sold' ? toMoney(soldPrice) : null,
+        actualFeesPaid: status === 'Sold' ? toMoney(actualFeesPaid) : null,
+        shippingCostPaid: status === 'Sold' ? toMoney(shippingCostPaid) : null,
+        sourceLocation: trimmedSource === '' ? null : trimmedSource,
         createdAt: result.createdAt || undefined
       };
       
@@ -118,25 +195,56 @@ const ResultScreen = ({ route, navigation }: any) => {
     );
   };
 
+  // "Not this?" correction. Re-runs the backend pipeline with an explicit
+  // product name via the manual-entry branch (/identify accepts `productName`),
+  // so the market lookup and deal math redo against the right query. Replaces
+  // this screen with the corrected result rather than stacking a second one.
+  const reidentifyAs = async (name: string) => {
+    const chosen = name.trim();
+    if (!chosen) return;
+    try {
+      setAltPickerVisible(false);
+      setReidentifying(true);
+      const data = await api.post<any>('/identify', { productName: chosen });
+      navigation.replace('Result', { result: data });
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Could not re-identify with that name.');
+    } finally {
+      setReidentifying(false);
+    }
+  };
+
+  const promptManualEntry = () => {
+    setAltPickerVisible(false);
+    // Alert.prompt is iOS-only; guard so Android doesn't silently no-op.
+    const AlertAny = Alert as any;
+    if (typeof AlertAny.prompt === 'function') {
+      AlertAny.prompt(
+        'Correct the item',
+        'Enter the actual product name',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Search', onPress: (text: string) => reidentifyAs(text || '') },
+        ],
+        'plain-text',
+        productName
+      );
+    } else {
+      Alert.alert('Not available', 'Type-to-correct is only available on iOS for now. Pick from the suggestions instead.');
+    }
+  };
+
   const handleGenerateListing = async () => {
     try {
       setGeneratingCopy(true);
-      const response = await fetch(`${Config.API_URL}/generate-listing`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productName,
-          category: category || result.category || 'General',
-          condition
-        })
+      const copy = await api.post<any>('/generate-listing', {
+        productName,
+        category: category || result.category || 'General',
+        condition
       });
-      if (response.ok) {
-        const copy = await response.json();
-        setCopyData(copy);
-        setCopyModalVisible(true);
-      } else {
-        Alert.alert("Failed", "Could not generate copy listing from server.");
-      }
+      setCopyData(copy);
+      setCopyModalVisible(true);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Server connection timed out.");
@@ -222,11 +330,8 @@ const ResultScreen = ({ route, navigation }: any) => {
             ) : (
                <View style={[styles.heroImage, { backgroundColor: '#222' }]} />
             )}
-            <View style={styles.heroDots}>
-               <View style={[styles.dot, { backgroundColor: Colors.primaryContainer }]} />
-               <View style={[styles.dot, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-               <View style={[styles.dot, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-            </View>
+            {/* The three-dot carousel indicator implied multiple photos; there
+                is only ever one scan image, so it's removed. */}
           </View>
           
           <View style={styles.heroInfoRow}>
@@ -236,10 +341,33 @@ const ResultScreen = ({ route, navigation }: any) => {
               </Text>
               <Text style={[Typography.headlineLg, { color: Colors.onSurface }]} numberOfLines={2}>{productName}</Text>
             </View>
-            <View style={styles.matchBadge}>
-              <Text style={styles.matchText}>98% MATCH</Text>
-            </View>
+            {idConfidence !== undefined && !idIsMock ? (
+              <TouchableOpacity
+                style={[styles.matchBadge, idConfidence < 0.5 && styles.matchBadgeLow]}
+                onPress={() => setAltPickerVisible(true)}
+                disabled={reidentifying}
+              >
+                {reidentifying ? (
+                  <ActivityIndicator color={Colors.primaryContainer} size="small" />
+                ) : (
+                  <>
+                    <Text style={[styles.matchText, idConfidence < 0.5 && { color: Colors.tertiary }]}>
+                      {Math.round(idConfidence * 100)}% MATCH
+                    </Text>
+                    <Text style={styles.matchSub}>NOT THIS?</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            ) : null}
           </View>
+
+          {/* Low-confidence / mock nudge — the honest counterpart to the old
+              always-98% badge. A weak guess says so and invites a correction. */}
+          {idIsMock ? (
+            <Text style={styles.idHint}>Sample identification — add Vision credentials for real scans.</Text>
+          ) : idConfidence !== undefined && idConfidence < 0.5 ? (
+            <Text style={styles.idHint}>Low-confidence match. Tap the badge to pick a better name.</Text>
+          ) : null}
         </View>
 
         {/* VERDICT CARD (1:1 with scan_result design mockup) */}
@@ -259,6 +387,18 @@ const ResultScreen = ({ route, navigation }: any) => {
           </View>
         </View>
 
+        {/* Data provenance banner — real sold comps vs asking prices vs sample */}
+        {showProvenance && (
+          <View style={[styles.provenanceBanner, provenanceIsError ? styles.provenanceError : styles.provenanceWarn]}>
+            <Text style={[Typography.labelBold, { color: Colors.onSurface, fontSize: 12, letterSpacing: 0.5 }]}>
+              {provenanceTitle}
+            </Text>
+            {!!marketNote && (
+              <Text style={styles.provenanceBody}>{marketNote}</Text>
+            )}
+          </View>
+        )}
+
         {/* KPI Grid (1:1 with scan_result design mockup) */}
         <View style={styles.kpiGrid}>
           <View style={styles.kpiBox}>
@@ -267,11 +407,11 @@ const ResultScreen = ({ route, navigation }: any) => {
           </View>
           <View style={[styles.kpiBox, { borderColor: 'rgba(176,198,255,0.2)', borderWidth: 1 }]}>
             <Text style={styles.kpiLabel}>Max Buy</Text>
-            <Text style={[Typography.headlineMd, { color: Colors.secondary }]}>${(analysis?.maxBuyPrice || (netRevenue / 1.45)).toFixed(0)}</Text>
+            <Text style={[Typography.headlineMd, { color: Colors.secondary }]}>${(analysis?.maxBuyPrice || deal.maxBuyPrice).toFixed(0)}</Text>
           </View>
           <View style={[styles.kpiBox, { backgroundColor: Colors.onPrimaryContainer }]}>
             <Text style={[styles.kpiLabel, { color: 'rgba(0,230,118,0.6)' }]}>Est. Profit</Text>
-            <Text style={[Typography.headlineMd, { color: Colors.primaryContainer }]}>${estProfit.toFixed(0)}</Text>
+            <Text style={[Typography.headlineMd, { color: Colors.primaryContainer }]}>${deal.estimatedProfit.toFixed(0)}</Text>
           </View>
         </View>
 
@@ -295,17 +435,76 @@ const ResultScreen = ({ route, navigation }: any) => {
           </View>
         </View>
 
+        {/* Realized-sale capture — only when Sold. These are the numbers analytics
+            turns into real profit, trend and top-sourcing. Leaving fees/shipping
+            blank falls back to the fee estimate rather than counting as $0. */}
+        {status === 'Sold' && (
+          <View style={styles.soldCard}>
+            <Text style={[Typography.labelBold, { color: Colors.primaryContainer, fontSize: 12, letterSpacing: 1.5, marginBottom: Spacing.sm }]}>SALE DETAILS</Text>
+
+            <View style={styles.soldField}>
+              <Text style={styles.soldLabel}>Sold Price</Text>
+              <TextInput
+                style={styles.soldInput}
+                value={soldPrice}
+                onChangeText={setSoldPrice}
+                keyboardType="decimal-pad"
+                placeholder="0.00"
+                placeholderTextColor="rgba(255,255,255,0.3)"
+              />
+            </View>
+
+            <View style={styles.soldRow}>
+              <View style={[styles.soldField, { flex: 1, marginRight: Spacing.sm }]}>
+                <Text style={styles.soldLabel}>Fees Paid</Text>
+                <TextInput
+                  style={styles.soldInput}
+                  value={actualFeesPaid}
+                  onChangeText={setActualFeesPaid}
+                  keyboardType="decimal-pad"
+                  placeholder="est."
+                  placeholderTextColor="rgba(255,255,255,0.3)"
+                />
+              </View>
+              <View style={[styles.soldField, { flex: 1 }]}>
+                <Text style={styles.soldLabel}>Shipping Paid</Text>
+                <TextInput
+                  style={styles.soldInput}
+                  value={shippingCostPaid}
+                  onChangeText={setShippingCostPaid}
+                  keyboardType="decimal-pad"
+                  placeholder="est."
+                  placeholderTextColor="rgba(255,255,255,0.3)"
+                />
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Source location — where the item was picked up. Useful on any item,
+            not just sold, and drives the Top Sourcing ranking in analytics. */}
+        <View style={styles.conditionSection}>
+          <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 12, letterSpacing: 1.5, marginBottom: Spacing.xs }]}>SOURCE LOCATION</Text>
+          <TextInput
+            style={styles.soldInput}
+            value={sourceLocation}
+            onChangeText={setSourceLocation}
+            placeholder="e.g. Goodwill on 5th"
+            placeholderTextColor="rgba(255,255,255,0.3)"
+          />
+        </View>
+
         {/* Profit Calculator Card */}
         <View style={styles.profitCard}>
           <View style={styles.profitHeader}>
              <View>
                <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 12, letterSpacing: 1.5 }]}>ESTIMATED NET PROFIT</Text>
-               <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>${estProfit.toFixed(2)}</Text>
+               <Text style={[Typography.displayProfit, { color: Colors.primaryContainer }]}>${deal.estimatedProfit.toFixed(2)}</Text>
              </View>
              <View style={{ alignItems: 'flex-end' }}>
                <Text style={[Typography.labelBold, { color: 'rgba(255,255,255,0.4)', fontSize: 12, marginBottom: 4 }]}>ROI</Text>
                <View style={styles.roiBadge}>
-                 <Text style={{ color: Colors.primaryContainer, fontWeight: 'bold', fontSize: 14 }}>{currentRoi.toFixed(0)}%</Text>
+                 <Text style={{ color: Colors.primaryContainer, fontWeight: 'bold', fontSize: 14 }}>{deal.roi.toFixed(0)}%</Text>
                </View>
              </View>
           </View>
@@ -328,12 +527,12 @@ const ResultScreen = ({ route, navigation }: any) => {
                </View>
              </View>
              <View style={styles.breakdownRow}>
-               <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>Platform Fees (12.9%)</Text>
-               <Text style={[Typography.dataMono, { color: Colors.error }]}>-${fees.toFixed(2)}</Text>
+               <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>Platform Fees ({defaultFee}%)</Text>
+               <Text style={[Typography.dataMono, { color: Colors.error }]}>-${deal.breakdown.fees.toFixed(2)}</Text>
              </View>
              <View style={styles.breakdownRow}>
                <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>Shipping Estimate</Text>
-               <Text style={[Typography.dataMono, { color: Colors.error }]}>-${estShipping.toFixed(2)}</Text>
+               <Text style={[Typography.dataMono, { color: Colors.error }]}>-${deal.breakdown.shipping.toFixed(2)}</Text>
              </View>
           </View>
 
@@ -360,35 +559,25 @@ const ResultScreen = ({ route, navigation }: any) => {
           </View>
         </View>
 
-        {/* Market Comps & Sparkline Trend (1:1 with scan_result design mockup) */}
+        {/* Market Comps. The old "+12% / 90d" sparkline was a hardcoded decorative
+            wave — no price-history series backs it — so it's gone. The comps
+            below are the real sold/asking listings the market lookup returned. */}
         <View style={styles.compSection}>
-           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.md }}>
-              <View>
-                <Text style={[Typography.labelBold, { color: Colors.onSurface, fontSize: 16 }]}>Market Comps</Text>
-                <Text style={{ fontSize: 10, fontFamily: 'Inter_700Bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginTop: 2 }}>Price Trend (90d)</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <Text style={{ color: Colors.primaryContainer, fontSize: 14 }}>↗</Text>
-                <Text style={[Typography.labelBold, { color: Colors.primaryContainer, fontSize: 14 }]}>+12%</Text>
-              </View>
+           <View style={{ marginBottom: Spacing.md }}>
+              <Text style={[Typography.labelBold, { color: Colors.onSurface, fontSize: 16 }]}>Market Comps</Text>
            </View>
 
-           {/* Simple Sparkline Graph */}
-           <View style={styles.compsSparkline}>
-             <View style={[styles.sparklineBar, { height: '40%' }]} />
-             <View style={[styles.sparklineBar, { height: '55%' }]} />
-             <View style={[styles.sparklineBar, { height: '45%' }]} />
-             <View style={[styles.sparklineBar, { height: '70%' }]} />
-             <View style={[styles.sparklineBar, { height: '85%', backgroundColor: 'rgba(0,230,118,0.4)' }]} />
-             <View style={[styles.sparklineBar, { height: '75%', backgroundColor: 'rgba(0,230,118,0.6)' }]} />
-             <View style={[styles.sparklineBar, { height: '100%', backgroundColor: Colors.primaryContainer }]} />
-           </View>
+           {(marketData?.recentComps || result.recentComps || []).length === 0 && (
+             <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant, marginBottom: Spacing.md }]}>
+               No comparable listings returned for this item.
+             </Text>
+           )}
 
            {(marketData?.recentComps || result.recentComps || []).map((comp: any, idx: number) => (
              <View key={idx} style={styles.compCard}>
                 <View style={styles.compLeft}>
                    <View style={styles.compIconBox}>
-                     <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 16 }}>{comp.icon === 'shopping_bag' || comp.source.includes('eBay') ? '🛒' : comp.icon === 'token' || comp.source.includes('StockX') ? '🟢' : '🏪'}</Text>
+                     <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 16 }}>{comp.icon === 'shopping_bag' || (comp.source || '').includes('eBay') ? '🛒' : comp.icon === 'token' || (comp.source || '').includes('StockX') ? '🟢' : '🏪'}</Text>
                    </View>
                    <View style={{ flex: 1 }}>
                      <Text style={[Typography.labelBold, { color: Colors.onSurface }]} numberOfLines={1}>{comp.title || comp.source}</Text>
@@ -402,6 +591,48 @@ const ResultScreen = ({ route, navigation }: any) => {
 
       </ScrollView>
 
+      {/* "Not this?" — ranked alternates + manual entry. Lets a wrong top guess
+          be corrected without re-scanning; each choice re-runs the pipeline. */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={altPickerVisible}
+        onRequestClose={() => setAltPickerVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={[Typography.headlineMd, { color: Colors.primaryContainer }]}>Not this item?</Text>
+              <TouchableOpacity onPress={() => setAltPickerVisible(false)}><Text style={{ color: '#fff', fontSize: 24 }}>×</Text></TouchableOpacity>
+            </View>
+            <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant }]}>
+              Pick a closer match to re-run comps, or type the real name.
+            </Text>
+            <ScrollView style={styles.modalScroll}>
+              <View style={{ gap: Spacing.sm }}>
+                {alternates.length > 0 ? (
+                  alternates.map((alt, i) => (
+                    <TouchableOpacity key={i} style={styles.altRow} onPress={() => reidentifyAs(alt.name)}>
+                      <Text style={[Typography.bodyMd, { color: '#fff', flex: 1 }]} numberOfLines={1}>{alt.name}</Text>
+                      <Text style={[Typography.dataMono, { color: Colors.onSurfaceVariant, fontSize: 12 }]}>
+                        {Math.round(alt.score * 100)}%
+                      </Text>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant }]}>
+                    No other suggestions — enter the name manually.
+                  </Text>
+                )}
+              </View>
+            </ScrollView>
+            <TouchableOpacity style={styles.modalCloseBtn} onPress={promptManualEntry}>
+              <Text style={[Typography.labelBold, { color: Colors.onPrimaryContainer }]}>ENTER NAME MANUALLY</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {/* Modal for displaying copywriting listing */}
       <Modal
         animationType="slide"
@@ -412,7 +643,7 @@ const ResultScreen = ({ route, navigation }: any) => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={[Typography.headlineMd, { color: Colors.primaryContainer }]}>AI Listing Copywriter</Text>
+              <Text style={[Typography.headlineMd, { color: Colors.primaryContainer }]}>Listing Draft</Text>
               <TouchableOpacity onPress={() => setCopyModalVisible(false)}><Text style={{ color: '#fff', fontSize: 24 }}>×</Text></TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll}>
@@ -429,7 +660,7 @@ const ResultScreen = ({ route, navigation }: any) => {
                   <View>
                     <Text style={[Typography.labelBold, { color: Colors.secondary, fontSize: 11 }]}>SUGGESTED TAGS</Text>
                     <View style={styles.tagsContainer}>
-                      {copyData.suggestedTags.map((tag: string, i: number) => (
+                      {(copyData.suggestedTags || []).map((tag: string, i: number) => (
                         <View key={i} style={styles.tagChip}><Text style={{ color: Colors.primaryContainer, fontSize: 12 }}>#{tag}</Text></View>
                       ))}
                     </View>
@@ -487,6 +718,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  emptyStateContainer: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: Spacing.lg,
+  },
+  emptyStateButton: {
+    marginTop: 24,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: BorderRadius.lg,
+    backgroundColor: Colors.primaryContainer,
   },
   header: {
     flexDirection: 'row',
@@ -560,20 +805,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  heroDots: {
-    position: 'absolute',
-    bottom: 16,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
   heroInfoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -587,10 +818,38 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: BorderRadius.full,
   },
+  matchBadgeLow: {
+    borderColor: 'rgba(255, 186, 121, 0.4)',
+  },
   matchText: {
     color: Colors.primaryContainer,
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  matchSub: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: 9,
+    fontFamily: 'Inter_700Bold',
+    letterSpacing: 1,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  idHint: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 12,
+    color: Colors.onSurfaceVariant,
+    marginTop: 4,
+  },
+  altRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.md,
+    backgroundColor: Colors.glass,
+    borderWidth: 1,
+    borderColor: Colors.glassStroke,
+    borderRadius: BorderRadius.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 14,
   },
   verdictCard: {
     borderRadius: BorderRadius.xxl,
@@ -600,6 +859,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 15,
     elevation: 6,
+  },
+  provenanceBanner: {
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.md,
+    borderWidth: 1,
+  },
+  provenanceError: {
+    backgroundColor: 'rgba(147, 0, 10, 0.15)',
+    borderColor: 'rgba(255, 180, 171, 0.4)',
+  },
+  provenanceWarn: {
+    backgroundColor: 'rgba(255, 186, 121, 0.12)',
+    borderColor: 'rgba(255, 186, 121, 0.4)',
+  },
+  provenanceBody: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 12,
+    lineHeight: 17,
+    color: Colors.onSurfaceVariant,
+    marginTop: 4,
   },
   verdictDivider: {
     height: 1,
@@ -646,6 +925,38 @@ const styles = StyleSheet.create({
   conditionRow: {
     flexDirection: 'row',
     gap: Spacing.sm,
+  },
+  soldCard: {
+    backgroundColor: 'rgba(0, 230, 118, 0.06)',
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 230, 118, 0.2)',
+    padding: Spacing.md,
+    gap: Spacing.sm,
+  },
+  soldRow: {
+    flexDirection: 'row',
+  },
+  soldField: {
+    gap: 4,
+  },
+  soldLabel: {
+    fontSize: 11,
+    fontFamily: 'Inter_700Bold',
+    color: 'rgba(255,255,255,0.5)',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  soldInput: {
+    backgroundColor: Colors.glass,
+    borderRadius: BorderRadius.default,
+    borderWidth: 1,
+    borderColor: Colors.glassStroke,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    color: Colors.onSurface,
+    fontFamily: 'Inter_500Medium',
+    fontSize: 15,
   },
   conditionBtn: {
     flex: 1,
@@ -737,20 +1048,6 @@ const styles = StyleSheet.create({
   },
   compSection: {
     paddingBottom: Spacing.lg,
-  },
-  compsSparkline: {
-    height: 72,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 4,
-    paddingHorizontal: 4,
-    marginBottom: Spacing.md,
-  },
-  sparklineBar: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
   },
   compCard: {
     backgroundColor: Colors.glass,

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Switch, ActivityIndicator, Alert } from 'react-native';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/Theme';
-import { Config } from '../constants/Config';
+import { api } from '../services/ApiClient';
+import { useAuth } from '../context/AuthContext';
 import { useIsFocused } from '@react-navigation/native';
 
 const SettingsScreen = () => {
-  const [loading, setLoading] = useState(true);
+  const { user, logout } = useAuth();
+  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [ebayActive, setEbayActive] = useState(true);
   const [amazonActive, setAmazonActive] = useState(true);
   const [mercariActive, setMercariActive] = useState(false);
@@ -13,7 +15,7 @@ const SettingsScreen = () => {
   const [highDemand, setHighDemand] = useState(true);
   const [defaultFee, setDefaultFee] = useState('13.5');
   const [targetRoi, setTargetRoi] = useState('45.0');
-  
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -24,23 +26,27 @@ const SettingsScreen = () => {
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`${Config.API_URL}/settings`);
-      if (response.ok) {
-        const data = await response.json();
-        setEbayActive(data.ebayActive ?? true);
-        setAmazonActive(data.amazonActive ?? true);
-        setMercariActive(data.mercariActive ?? false);
-        setPriceDrops(data.priceDrops ?? true);
-        setHighDemand(data.highDemand ?? true);
-        setDefaultFee(String(data.defaultFee ?? '13.5'));
-        setTargetRoi(String(data.targetRoi ?? '45.0'));
-      }
+      setLoadState('loading');
+      const data = await api.get<any>('/settings');
+      setEbayActive(data.ebayActive ?? true);
+      setAmazonActive(data.amazonActive ?? true);
+      setMercariActive(data.mercariActive ?? false);
+      setPriceDrops(data.priceDrops ?? true);
+      setHighDemand(data.highDemand ?? true);
+      setDefaultFee(String(data.defaultFee ?? '13.5'));
+      setTargetRoi(String(data.targetRoi ?? '45.0'));
+      setLoadState('ready');
     } catch (error) {
+      // On failure this used to fall through and render the form pre-filled with
+      // default values — the user couldn't tell their saved config from a
+      // hardcoded 13.5% / 45%, and any edit would silently fail to persist.
       console.warn('Failed to load settings from backend:', error);
-    } finally {
-      setLoading(false);
+      setLoadState('error');
     }
+  };
+
+  const comingSoon = (feature: string) => {
+    Alert.alert(feature, 'This feature isn’t available yet.');
   };
 
   const saveSettings = async (updatedFields: any) => {
@@ -56,11 +62,7 @@ const SettingsScreen = () => {
         ...updatedFields
       };
 
-      await fetch(`${Config.API_URL}/settings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentSettings),
-      });
+      await api.post('/settings', currentSettings);
     } catch (error) {
       console.warn('Failed to save settings:', error);
     }
@@ -107,6 +109,21 @@ const SettingsScreen = () => {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      "End Session",
+      "Sign out of this account? Your synced data stays safe on the server.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign Out",
+          style: "destructive",
+          onPress: () => { logout(); },
+        }
+      ]
+    );
+  };
+
   const handleReset = () => {
     Alert.alert(
       "Confirm Factory Reset",
@@ -141,10 +158,24 @@ const SettingsScreen = () => {
     );
   };
 
-  if (loading) {
+  if (loadState === 'loading') {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View style={[styles.container, styles.centerFill]}>
         <ActivityIndicator color={Colors.primaryContainer} size="large" />
+      </View>
+    );
+  }
+
+  if (loadState === 'error') {
+    return (
+      <View style={[styles.container, styles.centerFill, { paddingHorizontal: Spacing.lg }]}>
+        <Text style={[Typography.headlineMd, { color: Colors.error }]}>CAN'T REACH SERVER</Text>
+        <Text style={[Typography.bodyMd, { color: Colors.onSurfaceVariant, marginTop: 8, textAlign: 'center' }]}>
+          Your configuration couldn't be loaded, so it can't be safely edited right now.
+        </Text>
+        <TouchableOpacity style={styles.retryButton} onPress={loadSettings}>
+          <Text style={[Typography.labelBold, { color: Colors.onPrimary }]}>RETRY</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -248,7 +279,7 @@ const SettingsScreen = () => {
         <View style={styles.section}>
            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.sm }}>
              <Text style={[styles.sectionTitle, { marginBottom: 0 }]}>SHIPPING PRESETS</Text>
-             <TouchableOpacity><Text style={{ color: Colors.primaryContainer, fontSize: 12, fontWeight: 'bold' }}>+ ADD PRESET</Text></TouchableOpacity>
+             <TouchableOpacity onPress={() => comingSoon('Add Shipping Preset')}><Text style={{ color: Colors.primaryContainer, fontSize: 12, fontWeight: 'bold' }}>+ ADD PRESET</Text></TouchableOpacity>
            </View>
            <View style={styles.glassCardSingle}>
               <View style={styles.listLeft}>
@@ -258,7 +289,7 @@ const SettingsScreen = () => {
                   <Text style={styles.listSubtext}>$4.25 Flat Rate</Text>
                 </View>
               </View>
-              <TouchableOpacity><Text style={{ color: Colors.onSurfaceVariant }}>✎</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => comingSoon('Edit Shipping Preset')}><Text style={{ color: Colors.onSurfaceVariant }}>✎</Text></TouchableOpacity>
            </View>
            <View style={[styles.glassCardSingle, { marginTop: Spacing.sm }]}>
               <View style={styles.listLeft}>
@@ -268,7 +299,7 @@ const SettingsScreen = () => {
                   <Text style={styles.listSubtext}>UPS Ground Calculation</Text>
                 </View>
               </View>
-              <TouchableOpacity><Text style={{ color: Colors.onSurfaceVariant }}>✎</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => comingSoon('Edit Shipping Preset')}><Text style={{ color: Colors.onSurfaceVariant }}>✎</Text></TouchableOpacity>
            </View>
         </View>
 
@@ -293,6 +324,22 @@ const SettingsScreen = () => {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>ACCOUNT</Text>
+          <View style={styles.glassCardSingle}>
+            <View style={styles.listLeft}>
+              <Text style={{ fontSize: 20, marginRight: 12 }}>👤</Text>
+              <View>
+                <Text style={[Typography.labelBold, { color: Colors.onSurface }]}>Signed in</Text>
+                <Text style={styles.listSubtext}>{user?.email ?? 'Unknown operator'}</Text>
+              </View>
+            </View>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text style={{ color: Colors.error, fontFamily: 'Inter_700Bold', fontSize: 12, letterSpacing: 1 }}>SIGN OUT</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={[styles.section, { marginBottom: 40 }]}>
            <TouchableOpacity style={styles.dangerButton} onPress={handleReset}>
               <Text style={styles.dangerButtonText}>FACTORY RESET LOGIC</Text>
@@ -308,6 +355,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  centerFill: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  retryButton: {
+    marginTop: 20,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: BorderRadius.lg,
+    backgroundColor: Colors.primaryContainer,
   },
   header: {
     flexDirection: 'row',

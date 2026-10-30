@@ -1,0 +1,6 @@
+**/node_modules
+**/dist
+**/.env
+**/google-key.json
+**/.git
+**/npm-debug.log

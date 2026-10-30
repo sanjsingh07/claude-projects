@@ -8,6 +8,8 @@ import LoginScreen from '../screens/LoginScreen';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { Colors, Typography } from '../constants/Theme';
+import { useAuth } from '../context/AuthContext';
+import { View, ActivityIndicator } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -67,10 +69,28 @@ const MainTabs = () => {
 };
 
 const AppNavigator = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // While we check secure storage for an existing session, hold on a spinner so
+  // the login screen doesn't flash for an already-signed-in user.
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color={Colors.primary} size="large" />
+      </View>
+    );
+  }
+
+  // Gate on auth state rather than imperative navigation.replace: mounting only
+  // the reachable screens means a signed-out user has no route into the tabs, and
+  // logout (which flips isAuthenticated) unmounts them automatically.
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Main" component={MainTabs} />
+      {isAuthenticated ? (
+        <Stack.Screen name="Main" component={MainTabs} />
+      ) : (
+        <Stack.Screen name="Login" component={LoginScreen} />
+      )}
     </Stack.Navigator>
   );
 };
